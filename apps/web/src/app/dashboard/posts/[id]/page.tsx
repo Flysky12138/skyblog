@@ -1,0 +1,304 @@
+'use client'
+
+import { Tiptap, useEditor } from '@repo/rich-text-editor'
+import { ExtensionKit } from '@repo/rich-text-editor/extensions'
+import { renderJSONContentToHTMLString } from '@repo/rich-text-editor/render'
+import { ToolBar } from '@repo/rich-text-editor/toolbar'
+import { toast } from '@repo/ui/base'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@repo/ui/components/alert-dialog'
+import { Button } from '@repo/ui/components/button'
+import { Dialog, DialogContent } from '@repo/ui/components/dialog'
+import { Separator } from '@repo/ui/components/separator'
+import { Spinner } from '@repo/ui/components/spinner'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui/components/tooltip'
+import { CloudUploadIcon, EyeClosedIcon, EyeIcon, PresentationIcon, ReceiptTextIcon, SaveIcon } from 'lucide-react'
+import { useRouter } from 'nextjs-toploader/app'
+import React from 'react'
+import useSWR from 'swr'
+import { useImmer } from 'use-immer'
+
+import { StorageUploadModal } from '@/app/dashboard/storage/_components/storage-upload-modal'
+import { Show } from '@/components/show'
+import { authClient } from '@/lib/auth/client'
+import { STORAGE } from '@/lib/constants'
+import { rpc, unwrap } from '@/lib/http/rpc'
+import { toastPromise } from '@/lib/toast'
+
+import { PostEditModal } from './_components/post-edit-modal'
+import { createInitialPost } from './utils'
+
+export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
+  const router = useRouter()
+  const { data: session } = authClient.useSession()
+
+  const { id } = React.use(params)
+  const isCreate = id === 'create'
+
+  const [open, setOpen] = React.useState(false)
+  const [doc, setDoc] = React.useState('')
+  const [isEditorEmpty, setIsEditorEmpty] = React.useState(true)
+  const [post, setPost] = useImmer(createInitialPost())
+
+  const actionsRef = React.useRef<NonNullable<React.ComponentProps<typeof AlertDialog>['actionsRef']>['current']>(null)
+
+  const editor = useEditor({
+    editable: true,
+    emitContentError: true,
+    enableContentCheck: false,
+    extensions: [ExtensionKit],
+    immediatelyRender: false,
+    editorProps: {
+      attributes: {
+        role: 'textbox',
+        spellcheck: 'false'
+      }
+    },
+    onUpdate: () => {
+      setIsEditorEmpty(editor?.isEmpty ?? true)
+    }
+  })
+
+  // 获取文章数据，仅仅为了缓存
+  const { data, isLoading } = useSWR(
+    isCreate ? null : ['019f84e6-d45f-7630-869b-bbab2af4a4f7', id],
+    () => rpc.dashboard.posts({ id }).get().then(unwrap),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      onSuccess: setPost
+    }
+  )
+
+  // 填充编辑器内容
+  React.useEffect(() => {
+    if (!data) return
+    if (!editor) return
+    const timer = setTimeout(() => {
+      const content = data.content?.startsWith('<') ? data.content : (JSON.parse(data.content ?? 'null') as object)
+      editor
+        .chain()
+        .setMeta('addToHistory', false)
+        .setContent(content, { contentType: typeof content === 'object' ? 'html' : 'json' })
+        .run()
+      setIsEditorEmpty(editor.isEmpty)
+    }, 0)
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [data, editor])
+
+  if (!editor) return null
+
+  // 创建
+  const handleCreate = async () => {
+    if (!post.title) {
+      toast.error('表单验证失败', { richColors: true })
+      return
+    }
+    if (!session?.user?.id) {
+      toast.error('请先登录', { richColors: true })
+      return
+    }
+    const data = await toastPromise(
+      rpc.dashboard.posts
+        .post({
+          authorId: session.user.id,
+          categories: post.categories.map(({ category }) => category.name),
+          content: JSON.stringify(editor.getJSON()),
+          isPublished: post.isPublished,
+          pinOrder: post.pinOrder,
+          slug: post.slug,
+          summary: post.summary,
+          tags: post.tags.map(({ tag }) => tag.name),
+          title: post.title,
+          visibilityMask: post.visibilityMask
+        })
+        .then(unwrap),
+      {
+        success: '创建成功'
+      }
+    )
+    setPost(createInitialPost())
+    router.replace(`/dashboard/posts/${data.id}`)
+  }
+
+  // 更新
+  const handleUpdate = async (type: 'normal' | 'secret') => {
+    try {
+      if (!post.title) {
+        toast.error('表单验证失败', { richColors: true })
+        return
+      }
+      actionsRef.current?.close()
+      await toastPromise(
+        rpc.dashboard
+          .posts({ id })
+          .put({
+            categories: post.categories.map(({ category }) => category.name),
+            content: JSON.stringify(editor.getJSON()),
+            isPublished: post.isPublished,
+            pinOrder: post.pinOrder,
+            slug: post.slug,
+            summary: post.summary,
+            tags: post.tags.map(({ tag }) => tag.name),
+            title: post.title,
+            updatedAt: type === 'normal' ? new Date().toISOString() : undefined,
+            visibilityMask: post.visibilityMask
+          })
+          .then(unwrap),
+        {
+          success: '更新成功'
+        }
+      )
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  // 预览
+  const handlePreview = async () => {
+    const json = editor.getJSON()
+    const html = await renderJSONContentToHTMLString(json, { extensions: editor.extensionManager.baseExtensions })
+    React.startTransition(() => {
+      setDoc(html)
+      setOpen(true)
+    })
+  }
+
+  return (
+    <div className="flex h-screen flex-col bg-card">
+      <Tiptap editor={editor}>
+        <div className="bg-sidebar shadow-xs">
+          <ToolBar className="flex flex-wrap justify-center p-3">
+            <hr className="h-4 w-0.5 rounded-full bg-divide" />
+            <Tooltip>
+              <StorageUploadModal id={STORAGE.ROOT_DIRECTORY_ID}>
+                <TooltipTrigger render={<Button aria-label="文件" disabled={isCreate} size="icon" variant="outline" />}>
+                  <CloudUploadIcon />
+                </TooltipTrigger>
+              </StorageUploadModal>
+              <TooltipContent>文件</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <PostEditModal value={post} onChange={setPost}>
+                <TooltipTrigger render={<Button aria-label="信息" size="icon" variant="outline" />}>
+                  <ReceiptTextIcon />
+                </TooltipTrigger>
+              </PostEditModal>
+              <TooltipContent>信息</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Button
+                    aria-label={post.isPublished ? '公开' : '隐藏'}
+                    size="icon"
+                    variant="outline"
+                    onClick={() => {
+                      setPost(state => {
+                        state.isPublished = !state.isPublished
+                      })
+                    }}
+                  />
+                }
+              >
+                {post.isPublished ? <EyeIcon /> : <EyeClosedIcon />}
+              </TooltipTrigger>
+              <TooltipContent>{post.isPublished ? '公开' : '隐藏'}</TooltipContent>
+            </Tooltip>
+            <AlertDialog actionsRef={actionsRef}>
+              <Tooltip>
+                <TooltipTrigger render={<AlertDialogTrigger render={<Button aria-label={isCreate ? '创建' : '更新'} size="icon" />} />}>
+                  <SaveIcon />
+                </TooltipTrigger>
+                <TooltipContent>{isCreate ? '创建' : '更新'}</TooltipContent>
+              </Tooltip>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>更新方式</AlertDialogTitle>
+                  <AlertDialogDescription>不修改更新时间，可以悄悄更新文章</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>取消</AlertDialogCancel>
+                  <Show
+                    fallback={
+                      <>
+                        <AlertDialogAction
+                          onClick={() => {
+                            void handleUpdate('secret')
+                          }}
+                        >
+                          悄悄更新
+                        </AlertDialogAction>
+                        <AlertDialogAction
+                          onClick={() => {
+                            void handleUpdate('normal')
+                          }}
+                        >
+                          更新
+                        </AlertDialogAction>
+                      </>
+                    }
+                    when={isCreate}
+                  >
+                    <AlertDialogAction
+                      onClick={() => {
+                        void handleCreate()
+                      }}
+                    >
+                      创建
+                    </AlertDialogAction>
+                  </Show>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            <hr className="h-4 w-0.5 rounded-full bg-divide" />
+            <Dialog open={open} onOpenChange={setOpen}>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <Button
+                      aria-label="预览"
+                      disabled={isEditorEmpty}
+                      size="icon-sm"
+                      variant="outline"
+                      onClick={() => {
+                        void handlePreview()
+                      }}
+                    />
+                  }
+                >
+                  <PresentationIcon />
+                </TooltipTrigger>
+                <TooltipContent>预览</TooltipContent>
+              </Tooltip>
+              <DialogContent className="max-w-5xl bg-card" fullScreen="sm">
+                <article dangerouslySetInnerHTML={{ __html: doc }} className="tiptap" />
+              </DialogContent>
+            </Dialog>
+          </ToolBar>
+          <Separator />
+        </div>
+        <div className="h-full scroll-fade-b overflow-y-auto px-3 py-5 md:px-5 md:py-8">
+          {isLoading ? (
+            <div className="flex h-full items-center justify-center">
+              <Spinner className="size-8" />
+            </div>
+          ) : (
+            <Tiptap.Content />
+          )}
+        </div>
+      </Tiptap>
+    </div>
+  )
+}

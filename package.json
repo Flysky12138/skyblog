@@ -1,0 +1,42 @@
+{
+  "name": "skyblog",
+  "version": "2.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "pnpm -r --parallel run lint",
+    "typecheck": "pnpm -r --parallel run typecheck",
+    "format": "prettier --write .",
+    "ncu": "ncu -i --format group -w",
+    "prepare": "husky",
+    "doctor": "pnpx react-doctor@latest --verbose"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "*.{md,json,yaml,ts,tsx}": "prettier --write"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "catalog:",
+    "@commitlint/config-conventional": "catalog:",
+    "@monaco-editor/loader": "catalog:",
+    "@repo/eslint-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "eslint": "catalog:",
+    "husky": "catalog:",
+    "lint-staged": "catalog:",
+    "monaco-editor": "catalog:",
+    "npm-check-updates": "catalog:",
+    "prettier": "catalog:",
+    "prettier-plugin-tailwindcss": "catalog:",
+    "typescript": "catalog:"
+  },
+  "packageManager": "pnpm@12.6.0",
+  "engines": {
+    "node": ">=24"
+  }
+}

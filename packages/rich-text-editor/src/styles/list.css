@@ -1,0 +1,28 @@
+.tiptap {
+  [data-type='taskList'] {
+    @apply list-none;
+    padding-inline-start: 0.25em;
+
+    li {
+      @apply grid;
+      grid-template-columns: auto minmax(1px, 1fr);
+    }
+
+    input[type='checkbox'] {
+      margin-inline-end: 0.5em;
+      vertical-align: -0.1em;
+      accent-color: var(--color-primary, currentColor);
+    }
+  }
+
+  li p {
+    @apply my-0;
+  }
+
+  /* 预览才有这个选择器 */
+  [data-type='taskItem'] {
+    label {
+      @apply pointer-events-none opacity-50;
+    }
+  }
+}

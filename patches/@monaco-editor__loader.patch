@@ -1,0 +1,10 @@
+diff --git a/lib/types.d.ts b/lib/types.d.ts
+index 6268d5a8f3406bb6908a80bb955cfda0606a2988..8a21abf3ff6a0a97cc5efa5975c7cc79d7a6633c 100644
+--- a/lib/types.d.ts
++++ b/lib/types.d.ts
+@@ -1,4 +1,4 @@
+-import * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api';
++import * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api.js';
+ 
+ export type Monaco = typeof monacoEditor;
+ 

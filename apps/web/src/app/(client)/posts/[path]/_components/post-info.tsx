@@ -1,0 +1,92 @@
+'use client'
+
+import { Treaty } from '@elysiajs/eden'
+import { Skeleton } from '@repo/ui/components/skeleton'
+import { produce } from 'immer'
+import Link from 'next/link'
+import React from 'react'
+import { useSessionStorage } from 'react-use'
+import useSWR from 'swr'
+
+import { authClient } from '@/lib/auth/client'
+import { SESSIONSTORAGE_KEY } from '@/lib/constants'
+import { TimeHelper } from '@/lib/helper/time'
+import { rpc, unwrap } from '@/lib/http/rpc'
+
+interface PostInfoProps {
+  defaultValue: Treaty.Data<ReturnType<typeof rpc.posts>['get']>
+  id: string
+}
+
+export function PostInfo({ defaultValue, id }: PostInfoProps) {
+  const {
+    data: post,
+    isLoading,
+    mutate
+  } = useSWR(['0198eb97-be8c-705d-9037-48eb6a95c13a', id], () => rpc.posts({ id }).get().then(unwrap), {
+    fallbackData: defaultValue,
+    refreshInterval: 20_000
+  })
+
+  // 增加访问量
+  const { data: session, isPending } = authClient.useSession()
+  const [viewed, setViewed] = useSessionStorage(SESSIONSTORAGE_KEY.POST_VIEW_SUBMITTED(id), false)
+  React.useEffect(() => {
+    if (viewed) return
+    if (!post?.isPublished) return
+    if (isPending) return
+    if (session?.user.role === 'admin') return
+
+    let ignore = false
+
+    const timer = setTimeout(() => {
+      void (async () => {
+        const { viewCount } = await rpc.posts({ id }).patch().then(unwrap)
+        if (ignore) return
+        await mutate(current => {
+          return produce(current!, draft => {
+            draft.viewCount = viewCount
+          })
+        }, false)
+        setViewed(true)
+      })()
+    }, 5_000)
+
+    return () => {
+      ignore = true
+      clearTimeout(timer)
+    }
+  }, [session?.user.role, id, isPending, mutate, post?.isPublished, setViewed, viewed])
+
+  if (!post) {
+    return <Skeleton className="h-5.25 w-60" />
+  }
+
+  return (
+    <p className="text-sm break-all text-muted-foreground">
+      这篇文章发布于 {TimeHelper.formatDate(post.createdAt, 'YYYY年MM月DD日，星期dd，HH:mm')}
+      {post.categories.length > 0 ? (
+        <>
+          ，归类于&nbsp;
+          {post.categories.map(({ category }, index) => (
+            <React.Fragment key={category.id}>
+              <Link
+                className="text-link-foreground focus-visible:ring-3"
+                href={{
+                  pathname: '/',
+                  query: {
+                    categories: category.name
+                  }
+                }}
+              >
+                {category.name}
+              </Link>
+              {index < post.categories.length - 1 ? '、' : null}
+            </React.Fragment>
+          ))}
+        </>
+      ) : null}
+      。{post.isPublished && `阅读 ${isLoading ? '?' : post.viewCount} 次，${isLoading ? '?' : post.commentCount} 条评论`}
+    </p>
+  )
+}

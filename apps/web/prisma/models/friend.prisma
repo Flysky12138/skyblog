@@ -1,0 +1,16 @@
+model Friend {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  name             String
+  description      String?
+  siteUrl          String  @map("site_url")
+  order            Int     @default(0) @map("sort_order")
+  isEnabled        Boolean @default(true) @map("is_enabled")
+  screenshotFileId String? @unique @map("screenshot_file_id") @db.Uuid
+
+  screenshotFile File? @relation(fields: [screenshotFileId], references: [id], onDelete: SetNull)
+
+  @@map("friends")
+}

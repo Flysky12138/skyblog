@@ -1,0 +1,69 @@
+@import 'tailwindcss';
+
+@source '../**/*.{ts,tsx}';
+
+@import '@repo/ui/globals.css';
+@import '@repo/components/style.css';
+
+@import './typeset.css';
+
+@import './emoji.css' layer(components);
+@import './excalidraw.css' layer(components);
+@import './img.css' layer(components);
+@import './list.css' layer(components);
+@import './math.css' layer(components);
+@import './shiki.css' layer(components);
+@import './table.css' layer(components);
+
+@layer components {
+  .tiptap {
+    @apply *:first:mt-0;
+
+    --tiptap-font-body: var(--font-article);
+    --tiptap-font-heading: var(--font-article);
+    --tiptap-font-mono: var(--font-code);
+    --tiptap-size: 13px;
+    --tiptap-leading: 1.6;
+    --tiptap-flow: 0.75em;
+
+    @variant md {
+      --tiptap-size: 15px;
+      --tiptap-leading: 1.7;
+      --tiptap-flow: 1em;
+    }
+
+    @variant lg {
+      --tiptap-size: 17px;
+      --tiptap-leading: 1.8;
+      --tiptap-flow: 1.25em;
+    }
+
+    a {
+      @apply text-link-foreground no-underline;
+      &[target='_blank']:not(:has(img))::after {
+        content: '\2197';
+        font-size: 0.85em;
+      }
+    }
+
+    :not(pre) > code {
+      @apply border;
+    }
+
+    /* 占位符 */
+    p.is-editor-empty:first-child::before,
+    p.is-empty::before {
+      @apply pointer-events-none float-left h-0 text-muted-foreground/50 content-[attr(data-placeholder)];
+    }
+
+    /* 加粗文字颜色 */
+    span[style*='color'] strong {
+      @apply text-inherit;
+    }
+
+    /* 避免段落空行高度坍缩 */
+    p:empty::before {
+      content: '\00a0';
+    }
+  }
+}

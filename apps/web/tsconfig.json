@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.nextjs.json",
+  "compilerOptions": {
+    "lib": ["DOM", "ESNext", "WebWorker", "DOM.AsyncIterable"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "~/*": ["./*"]
+    },
+    "types": ["wicg-file-system-access"]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "../../types/"],
+  "exclude": ["node_modules"]
+}

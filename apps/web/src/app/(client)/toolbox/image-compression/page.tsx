@@ -1,0 +1,286 @@
+'use client'
+
+import { Fancybox } from '@repo/components/fancybox'
+import { FileSelect } from '@repo/components/file-select'
+import { useObjectUrl } from '@repo/react-hooks'
+import { toast } from '@repo/ui/base'
+import { Badge } from '@repo/ui/components/badge'
+import { Button } from '@repo/ui/components/button'
+import { ButtonGroup, ButtonGroupSeparator } from '@repo/ui/components/button-group'
+import { Field, FieldDescription, FieldGroup, FieldLabel, FieldTitle } from '@repo/ui/components/field'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@repo/ui/components/select'
+import { Slider } from '@repo/ui/components/slider'
+import { Tabs, TabsList, TabsTrigger } from '@repo/ui/components/tabs'
+import { remove } from 'es-toolkit'
+import { ChevronLeftIcon, ChevronRightIcon, ImageUpIcon } from 'lucide-react'
+import React from 'react'
+import { useDebounce, useLocalStorage } from 'react-use'
+
+import { DirectoryHelper } from '@/lib/helper/directory'
+import { FileHelper } from '@/lib/helper/file'
+
+import { compressImageByCanvas, imageCompressionGroup } from './utils'
+
+const DEFAULT_QUALITY = 70
+
+export default function Page() {
+  const [files, setFiles] = React.useState<File[]>([])
+  const [compressedFile, setCompressedFile] = React.useState<Blob>()
+  const compressedFileCache = React.useRef(new WeakMap<File, Blob | undefined>())
+  const filesUrl = useObjectUrl(files)
+  const compressedFileUrl = useObjectUrl(compressedFile)
+
+  const [activeTab, setActiveTab] = React.useState<StringLiteralsOrString<'compressed' | 'original'>>('compressed')
+  const [activeFileIndex, setActiveFileIndex] = React.useState(0)
+
+  const [ext, setExt] = useLocalStorage<null | string>('image-compression:ext', null)
+  const [quality, setQuality] = useLocalStorage('image-compression:quality', DEFAULT_QUALITY)
+  const currentQuality = quality ?? DEFAULT_QUALITY
+
+  // 清除缓存
+  const handleResetCompressedFileCache = () => {
+    compressedFileCache.current = new WeakMap()
+  }
+  React.useEffect(() => {
+    handleResetCompressedFileCache()
+  }, [ext, quality])
+
+  // 当前图片
+  const activeFile = React.useMemo(() => {
+    if (!files.length) return null
+    return files[activeFileIndex]
+  }, [activeFileIndex, files])
+
+  // 压缩图片格式
+  const selectedItem = React.useMemo(() => {
+    if (!ext) return
+    return imageCompressionGroup.find(item => item.ext === ext)
+  }, [ext])
+
+  // 压缩图片的方法
+  const handleCompressImage = async (file: File | null) => {
+    if (!file) return
+    if (!selectedItem) return
+
+    return compressImageByCanvas({
+      file,
+      mimeType: selectedItem.mimeType,
+      quality: currentQuality / 100
+    })
+  }
+
+  // 压缩当前图片
+  useDebounce(
+    async () => {
+      if (!activeFile) return null
+      try {
+        if (compressedFileCache.current.has(activeFile)) {
+          setCompressedFile(compressedFileCache.current.get(activeFile))
+        } else {
+          const blob = await handleCompressImage(activeFile)
+          setCompressedFile(blob)
+          compressedFileCache.current.set(activeFile, blob)
+        }
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : String(error))
+      }
+    },
+    200,
+    [activeFile, ext, currentQuality]
+  )
+
+  // 压缩图片并保存
+  const handleSave = async () => {
+    if (!selectedItem) return
+
+    const id = '019c8598-4d0b-76be-8b70-b6ad9aecc69b'
+
+    try {
+      const helper = new DirectoryHelper()
+      await helper.openDirectory({ id: 'image-compression', mode: 'readwrite', startIn: 'desktop' })
+
+      toast.loading('正在保存图片', { id })
+
+      for (const file of files) {
+        const blob = await handleCompressImage(file)
+        if (!blob) continue
+        await helper.writeFile(`${file.name.split('.').slice(0, -1).join('.')}.${selectedItem.ext}`, blob)
+      }
+
+      toast.success('保存成功', { id })
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : String(error), { id })
+    }
+  }
+
+  // 图片预览
+  const handlePreview = () => {
+    switch (activeTab) {
+      case 'compressed':
+        Fancybox.show(
+          [
+            { caption: '原图', src: filesUrl[activeFileIndex] },
+            { caption: '压缩图', src: compressedFileUrl }
+          ],
+          {
+            startIndex: 1,
+            Carousel: {
+              transition: 'crossfade',
+              Thumbs: {
+                showOnStart: false
+              }
+            }
+          }
+        )
+        break
+      case 'original':
+        Fancybox.show(
+          filesUrl.map(item => ({ src: item })),
+          {
+            startIndex: activeFileIndex
+          }
+        )
+        break
+    }
+  }
+
+  if (!activeFile) {
+    return (
+      <FileSelect
+        multiple
+        accept="image/*"
+        className="bg-card"
+        logo={ImageUpIcon}
+        onChange={files => {
+          setFiles(remove(files, file => FileHelper.isFileType(file, 'image/*')))
+        }}
+      />
+    )
+  }
+
+  return (
+    <div className="flex min-h-[calc(var(--height-main)-2*var(--py))]">
+      <Tabs className="w-full" value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-60 grid-cols-2">
+          <TabsTrigger value="original">原图</TabsTrigger>
+          <TabsTrigger value="compressed">压缩图</TabsTrigger>
+        </TabsList>
+        <div className="flex grow gap-5 not-md:flex-col">
+          <Button className="relative h-auto grow rounded-md" variant="outline" onClick={handlePreview}>
+            <React.Activity mode={activeTab === 'original' ? 'visible' : 'hidden'}>
+              <img alt="original image" className="absolute size-full object-contain" src={filesUrl[activeFileIndex]} />
+            </React.Activity>
+            <React.Activity mode={activeTab === 'compressed' ? 'visible' : 'hidden'}>
+              {compressedFile && compressedFileUrl && (
+                <img alt="compressed image" className="absolute size-full object-contain" src={compressedFileUrl} />
+              )}
+            </React.Activity>
+            <ButtonGroup className="absolute top-2 right-2">
+              <Badge variant="secondary">{FileHelper.formatFileSize(activeFile.size)}</Badge>
+              <ButtonGroupSeparator />
+              <Badge>{compressedFile ? FileHelper.formatFileSize(compressedFile.size) : '?'}</Badge>
+            </ButtonGroup>
+          </Button>
+
+          <FieldGroup className="w-full md:w-80 lg:w-96">
+            <Field>
+              <FieldLabel>目标格式</FieldLabel>
+              <Select
+                items={imageCompressionGroup.map(item => ({
+                  label: item.name,
+                  value: item.ext
+                }))}
+                value={ext}
+                onValueChange={setExt}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="选择一种导出格式" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {imageCompressionGroup.map(item => (
+                      <SelectItem key={item.ext} value={item.ext}>
+                        {item.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field>
+              <FieldTitle>图片质量</FieldTitle>
+              {selectedItem ? (
+                <>
+                  <FieldDescription>质量范围为 (1~100)，当前质量 {currentQuality}</FieldDescription>
+                  <Slider
+                    className="mt-1"
+                    max={100}
+                    min={1}
+                    value={[quality!]}
+                    onValueChange={value => {
+                      setQuality(value as number)
+                    }}
+                  />
+                </>
+              ) : (
+                <Slider disabled className="mt-1" />
+              )}
+            </Field>
+            <Field className="mt-3">
+              <ButtonGroup>
+                {files.length > 1 && (
+                  <ButtonGroup>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setCompressedFile(undefined)
+                        setActiveFileIndex(i => (i + files.length - 1) % files.length)
+                      }}
+                    >
+                      <ChevronLeftIcon />
+                    </Button>
+                    <Button className="pointer-events-none" tabIndex={-1} variant="outline">
+                      {activeFileIndex + 1} / {files.length}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setCompressedFile(undefined)
+                        setActiveFileIndex(i => (i + 1) % files.length)
+                      }}
+                    >
+                      <ChevronRightIcon />
+                    </Button>
+                  </ButtonGroup>
+                )}
+                <ButtonGroup className="w-full">
+                  <Button
+                    className="w-full"
+                    variant="outline"
+                    onClick={() => {
+                      setFiles([])
+                      setCompressedFile(undefined)
+                      setActiveFileIndex(0)
+                      handleResetCompressedFileCache()
+                    }}
+                  >
+                    重新选择图片
+                  </Button>
+                </ButtonGroup>
+              </ButtonGroup>
+              <Button
+                disabled={!selectedItem}
+                onClick={() => {
+                  void handleSave()
+                }}
+              >
+                选择文件夹后保存
+              </Button>
+              <FieldDescription className="text-center text-xs">注意：文件覆盖不会有提示，请谨慎操作</FieldDescription>
+            </Field>
+          </FieldGroup>
+        </div>
+      </Tabs>
+    </div>
+  )
+}

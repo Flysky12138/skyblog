@@ -1,0 +1,29 @@
+{
+  "name": "@repo/monaco-editor",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "eslint --fix --max-warnings 0",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./style.css": "./src/index.css"
+  },
+  "dependencies": {
+    "@monaco-editor/loader": "catalog:",
+    "@shikijs/monaco": "catalog:",
+    "es-toolkit": "catalog:",
+    "monaco-editor": "catalog:",
+    "react": "catalog:",
+    "shiki": "catalog:",
+    "tm-grammars": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:"
+  }
+}

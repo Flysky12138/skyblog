@@ -1,0 +1,34 @@
+```javascript
+const pell_sqrt_10005 = digits => {
+  const D = 10005n
+  const Y_MIN = 10n ** BigInt(digits / 2 + 5)
+  let [x1, y1] = [1n, 0n]
+  let [x2, y2] = [4001n, 40n]
+  while (true) {
+    const [x, y] = [x1 * x2 + D * y1 * y2, x1 * y2 + y1 * x2]
+    ;[x1, y1, x2, y2] = [x2, y2, x, y]
+    if (y > Y_MIN) break
+  }
+  return [x2, y2]
+}
+
+const C = 640320n
+const C3_OVER_24 = C ** 3n / 24n
+
+const chudnovsky = digits => {
+  const PI_PRECISION = 10n ** BigInt(digits + 20)
+  let [k, a_k, a_sum, b_sum] = [1n, PI_PRECISION, PI_PRECISION, 0n]
+  while (true) {
+    a_k *= -(6n * k - 5n) * (2n * k - 1n) * (6n * k - 1n)
+    a_k /= k ** 3n * C3_OVER_24
+    a_sum += a_k
+    b_sum += k * a_k
+    k += 1n
+    if (a_k == 0n) break
+  }
+  const total = 13591409n * a_sum + 545140134n * b_sum
+  const [x, y] = pell_sqrt_10005(digits)
+  const pi = (426880n * x * PI_PRECISION ** 2n) / (total * y)
+  return `3.${pi.toString().slice(1, digits)}`
+}
+```

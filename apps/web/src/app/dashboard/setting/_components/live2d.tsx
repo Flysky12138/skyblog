@@ -1,0 +1,72 @@
+'use client'
+
+import { Button } from '@repo/ui/components/button'
+import { ButtonGroup } from '@repo/ui/components/button-group'
+import { Field, FieldGroup, FieldLabel } from '@repo/ui/components/field'
+import { Input } from '@repo/ui/components/input'
+import React from 'react'
+import { useAsyncFn } from 'react-use'
+import useSWR from 'swr'
+
+import { VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
+import { rpc, unwrap } from '@/lib/http/rpc'
+import { toastPromise } from '@/lib/toast'
+
+export function Live2D() {
+  const id = React.useId()
+
+  const { data, isLoading, mutate } = useSWR(
+    '0198eb99-8641-71ad-be7d-5ef3f52eda9b',
+    () => rpc['edge-config'].get({ query: { key: VERCEL_EDGE_CONFIG_KEY.LIVE2D_SRC } }).then(unwrap),
+    {
+      fallbackData: {
+        value: ''
+      }
+    }
+  )
+
+  const [{ loading }, handleUpdate] = useAsyncFn(async (value: string) => {
+    try {
+      await toastPromise(
+        rpc.dashboard['edge-config'].action.patch({ items: [{ key: VERCEL_EDGE_CONFIG_KEY.LIVE2D_SRC, operation: 'upsert', value }] }).then(unwrap),
+        {
+          success: '修改成功'
+        }
+      )
+    } catch (error) {
+      console.error(error)
+    }
+  }, [])
+
+  const disabled = isLoading || loading
+
+  return (
+    <FieldGroup>
+      <Field>
+        <FieldLabel htmlFor={id}>Live2D</FieldLabel>
+        <ButtonGroup>
+          <Input
+            autoComplete="off"
+            className="text-ellipsis"
+            disabled={disabled}
+            id={id}
+            placeholder=".json or .zip"
+            value={data.value}
+            onChange={event => {
+              void mutate({ value: event.target.value }, false)
+            }}
+          />
+          <Button
+            disabled={disabled}
+            variant="outline"
+            onClick={() => {
+              void handleUpdate(data.value ?? '')
+            }}
+          >
+            修改
+          </Button>
+        </ButtonGroup>
+      </Field>
+    </FieldGroup>
+  )
+}

@@ -1,0 +1,119 @@
+'use client'
+
+import { Treaty } from '@elysiajs/eden'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { MonacoEditor } from '@repo/monaco-editor'
+import { Badge } from '@repo/ui/components/badge'
+import { Button } from '@repo/ui/components/button'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui/components/dialog'
+import { Field, FieldError, FieldGroup, FieldLabel, FieldTitle } from '@repo/ui/components/field'
+import { Input } from '@repo/ui/components/input'
+import { pick } from 'es-toolkit'
+import React from 'react'
+import { Controller, useForm } from 'react-hook-form'
+
+import { ClashTemplateCreateBodySchema, ClashTemplateCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/clashes/templates/model'
+import { Show } from '@/components/show'
+import { rpc } from '@/lib/http/rpc'
+
+import { getVariablesNames } from './utils'
+
+interface ClashTemplateEditModalProps {
+  children: React.ReactElement
+  value?: Treaty.Data<typeof rpc.dashboard.clashes.templates.get>[number]
+  onSubmit: (payload: ClashTemplateCreateBodyType) => Promise<void>
+}
+
+export function ClashTemplateEditModal({ children, value, onSubmit }: ClashTemplateEditModalProps) {
+  const form = useForm({
+    defaultValues: { content: '', name: '' },
+    resolver: zodResolver(ClashTemplateCreateBodySchema)
+  })
+  const [content] = form.watch(['content'])
+
+  const variables = React.useMemo(() => getVariablesNames(content), [content])
+
+  return (
+    <Dialog
+      onOpenChange={newOpen => {
+        form.reset()
+        if (!newOpen) return
+        if (value) {
+          form.setValues(pick(value, ClashTemplateCreateBodySchema.keyof().options))
+        }
+      }}
+    >
+      <DialogTrigger render={children} />
+      <DialogContent className="max-w-7xl lg:h-[calc(100vh-120px)]" fullScreen="lg">
+        <DialogHeader>
+          <DialogTitle>通用模板</DialogTitle>
+          <DialogDescription>自定义 Clash 客户端订阅内容的模板，使用 {`#{name}`} 定义变量</DialogDescription>
+        </DialogHeader>
+        <form
+          className="grid h-full gap-6 lg:grid-cols-[1fr_400px]"
+          onSubmit={event => {
+            void form.handleSubmit(onSubmit)(event)
+          }}
+        >
+          <FieldGroup>
+            <Controller
+              control={form.control}
+              name="content"
+              render={({ field, fieldState }) => (
+                <Field className="h-full" data-invalid={fieldState.invalid}>
+                  <FieldTitle className="sr-only">内容</FieldTitle>
+                  <MonacoEditor
+                    aria-invalid={fieldState.invalid}
+                    className="not-lg:min-h-120"
+                    id={field.name}
+                    language="yaml"
+                    options={{
+                      minimap: {
+                        enabled: false
+                      }
+                    }}
+                    originalValue={value?.content}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                </Field>
+              )}
+            />
+          </FieldGroup>
+          <FieldGroup>
+            <Controller
+              control={form.control}
+              name="name"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel aria-required htmlFor={field.name}>
+                    名称
+                  </FieldLabel>
+                  <Input {...field} aria-invalid={fieldState.invalid} autoComplete="off" id={field.name} />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+            <Show when={variables.length > 0}>
+              <Field>
+                <FieldLabel>变量</FieldLabel>
+                <div className="flex flex-wrap gap-2">
+                  {variables.map((key, index) => (
+                    <Badge key={key + index} variant="secondary">
+                      {key}
+                    </Badge>
+                  ))}
+                </div>
+              </Field>
+            </Show>
+            <Field>
+              <Button loading={form.formState.isSubmitting} type="submit">
+                {value ? '更新' : '保存'}
+              </Button>
+            </Field>
+          </FieldGroup>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}

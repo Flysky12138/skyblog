@@ -1,0 +1,58 @@
+'use cache'
+
+import { Octokit } from '@octokit/rest'
+import { Alert, AlertDescription, AlertTitle } from '@repo/ui/components/alert'
+import { Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet } from '@repo/ui/components/field'
+import { Item, ItemActions, ItemContent, ItemTitle } from '@repo/ui/components/item'
+import { AlertCircleIcon, ChevronRightIcon } from 'lucide-react'
+import { cacheLife } from 'next/cache'
+
+export default async function Page() {
+  cacheLife('hours')
+
+  const octokit = new Octokit()
+
+  const [{ data: release1 }, { data: release2 }] = await Promise.all([
+    octokit.repos.getLatestRelease({ owner: 'MetaCubeX', repo: 'ClashMetaForAndroid' }),
+    octokit.repos.getLatestRelease({ owner: 'clash-verge-rev', repo: 'clash-verge-rev' })
+  ])
+
+  return (
+    <div className="mx-auto mt-4 max-w-md space-y-10 p-4 sm:mt-10">
+      <Alert>
+        <AlertCircleIcon />
+        <AlertTitle>禁止浏览器访问</AlertTitle>
+        <AlertDescription>这是 Clash 的订阅地址，请直接在客户端中添加订阅，不要用浏览器打开</AlertDescription>
+      </Alert>
+
+      <FieldSet>
+        <FieldLegend>客户端下载</FieldLegend>
+        <FieldDescription>点击将跳转到 Github Release 页面</FieldDescription>
+        <FieldGroup>
+          <Field>
+            <FieldLabel>Android</FieldLabel>
+            <Item render={<a href={release1.html_url} rel="noreferrer" target="_blank" />} size="sm" variant="outline">
+              <ItemContent>
+                <ItemTitle>ClashMetaForAndroid@{release1.tag_name}</ItemTitle>
+              </ItemContent>
+              <ItemActions>
+                <ChevronRightIcon className="size-4" />
+              </ItemActions>
+            </Item>
+          </Field>
+          <Field>
+            <FieldLabel>Windows / macOS / Linux</FieldLabel>
+            <Item render={<a href={release2.html_url} rel="noreferrer" target="_blank" />} size="sm" variant="outline">
+              <ItemContent>
+                <ItemTitle>clash-verge-rev@{release2.tag_name}</ItemTitle>
+              </ItemContent>
+              <ItemActions>
+                <ChevronRightIcon className="size-4" />
+              </ItemActions>
+            </Item>
+          </Field>
+        </FieldGroup>
+      </FieldSet>
+    </div>
+  )
+}

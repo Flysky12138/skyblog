@@ -1,0 +1,22 @@
+import { UrlQueryType } from '@/app/api/[[...elysia]]/client/netease-cloud-music/songs/model'
+
+export type LevelType = NonNullable<UrlQueryType['level']>
+
+/**
+ * 音质等级
+ */
+export const LEVEL_OPTIONS: { label: string; value: LevelType }[] = [
+  { label: '超清母带 20M~180M', value: 'jymaster' },
+  { label: '沉浸环绕声 20M~80M', value: 'sky' },
+  { label: '高清臻音 20M~100M', value: 'jyeffect' },
+  { label: '高解析度无损 30M', value: 'hires' },
+  { label: '无损 10~30M', value: 'lossless' },
+  { label: '极高 5~10M', value: 'exhigh' },
+  // { label: '较高', value: 'higher' },
+  { label: '标准 2~5M', value: 'standard' }
+]
+
+/**
+ * 移除的歌手名称
+ */
+export const REMOVE_ARTIST_BY_NAMES = ['杰伦', '杰倫', '蔡健雅', '曲婉婷']
