@@ -1,0 +1,172 @@
+'use client'
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@repo/ui/components/alert-dialog'
+import { Button } from '@repo/ui/components/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui/components/tooltip'
+import { cn } from '@repo/ui/lib/utils'
+import { RowData } from '@tanstack/react-table'
+import { pick } from 'es-toolkit'
+import { TrashIcon } from 'lucide-react'
+import React from 'react'
+import { useAsyncFn } from 'react-use'
+
+import { useTableContext } from '../hooks'
+
+/**
+ * 列表行操作按钮
+ */
+export function DataTableRowActionButton({
+  className,
+  tooltip,
+  variant = 'outline',
+  ...props
+}: React.ComponentProps<typeof Button> & {
+  tooltip?: React.ComponentProps<typeof TooltipContent> | string
+}) {
+  const button = (
+    <Button
+      className={cn(
+        'size-7',
+        'border-current/10! hover:border-current/30!',
+        {
+          'border-current/30! hover:border-current/50!': variant === 'destructive'
+        },
+        className
+      )}
+      size="icon"
+      variant={variant}
+      {...props}
+    />
+  )
+
+  if (!tooltip) {
+    return button
+  }
+
+  if (typeof tooltip === 'string') {
+    tooltip = {
+      children: tooltip
+    }
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger render={button} />
+      <TooltipContent {...tooltip} />
+    </Tooltip>
+  )
+}
+
+/**
+ * 列表行删除按钮
+ */
+export function DataTableRowDeleteButton({
+  description = '此操作无法撤消，将永久删除该项',
+  disabled,
+  title,
+  onConfirm
+}: {
+  description?: string
+  disabled?: boolean
+  title: string
+  onConfirm: (event: React.MouseEvent<HTMLButtonElement>) => Promise<void>
+}) {
+  const [{ loading }, handleConfirm] = useAsyncFn(onConfirm, [onConfirm])
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger render={<DataTableRowActionButton disabled={disabled} variant="destructive" />}>
+        <TrashIcon />
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel className="min-w-18">取消</AlertDialogCancel>
+          <AlertDialogAction
+            className="min-w-32"
+            disabled={loading}
+            onClick={event => {
+              void handleConfirm(event)
+            }}
+          >
+            确定
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
+}
+
+/**
+ * 列表行批量删除按钮
+ */
+export function DataTableRowsDeleteButton<T extends RowData>({
+  title,
+  onConfirm
+}: {
+  title: string
+  onConfirm: (payload: { rows: T[] }) => Promise<void>
+}) {
+  const table = useTableContext()
+
+  const actionsRef = React.useRef<NonNullable<React.ComponentProps<typeof AlertDialog>['actionsRef']>['current']>(null)
+
+  const [{ loading }, handleConfirm] = useAsyncFn(
+    async (rows: T[]) => {
+      await onConfirm({ rows })
+      actionsRef.current?.close()
+    },
+    [onConfirm]
+  )
+
+  return (
+    <table.Subscribe selector={state => pick(state, ['pagination', 'rowSelection'])}>
+      {() => {
+        const selectedRows = table.getFilteredSelectedRowModel().rows.map(row => row.original) as T[]
+
+        if (selectedRows.length === 0) {
+          return <i />
+        }
+
+        return (
+          <AlertDialog actionsRef={actionsRef}>
+            <AlertDialogTrigger render={<Button size="sm" variant="destructive" />}>已选择 {selectedRows.length} 项</AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{title}</AlertDialogTitle>
+                <AlertDialogDescription>{`此操作无法撤消，将永久删除 ${selectedRows.length} 项`}</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="min-w-18" disabled={loading}>
+                  取消
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  className="min-w-32"
+                  disabled={loading}
+                  onClick={() => {
+                    void handleConfirm(selectedRows)
+                  }}
+                >
+                  确定
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )
+      }}
+    </table.Subscribe>
+  )
+}

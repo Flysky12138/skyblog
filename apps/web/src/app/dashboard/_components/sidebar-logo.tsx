@@ -1,0 +1,21 @@
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@repo/ui/components/sidebar'
+import Link from 'next/link'
+
+import Icon from '@/app/icon.svg'
+import { Logo } from '@/components/static/logo'
+
+export function SidebarLogo() {
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          render={<Link aria-label="to home page" className="focus-visible:ring-2" href="/" />}
+          tooltip={process.env.NEXT_PUBLIC_TITLE}
+        >
+          <Icon className="size-5" />
+          <Logo />
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  )
+}

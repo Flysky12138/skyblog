@@ -1,0 +1,7 @@
+.tiptap {
+  [data-type='emoji'] {
+    img {
+      @apply m-0 inline-block size-[1em] rounded-none;
+    }
+  }
+}

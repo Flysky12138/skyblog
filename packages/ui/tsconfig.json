@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.react.json",
+  "compilerOptions": {
+    "paths": {
+      "@repo/ui/*": ["./src/*"]
+    },
+    "types": ["node"]
+  },
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,29 @@
+{
+  "files.eol": "\n",
+  "files.associations": {
+    "*.css": "tailwindcss",
+    "*.toml": "ini"
+  },
+  "eslint.format.enable": true,
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "json.schemaDownload.trustedDomains": {
+    "https://ui.shadcn.com/": true,
+    "https://openapi.vercel.sh/": true
+  },
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  // tailwindCSS 提示
+  "tailwindCSS.experimental.configFile": {
+    // 还提供了其他工具或类名
+    "apps/web/src/globals.css": "apps/web/src/**",
+    "packages/rich-text-editor/src/styles/index.css": "packages/rich-text-editor/src/**",
+    // 全局兜底
+    "packages/ui/src/styles/globals.css": "/**"
+  }
+}

@@ -1,0 +1,17 @@
+@utility rounded-* {
+  border-radius: --value('inherit', 'initial', 'unset');
+}
+
+@utility p-card {
+  @apply p-4 lg:p-5;
+}
+
+@utility gap-bp-* {
+  gap: --spacing(--value(integer));
+  @variant sm {
+    gap: calc(--spacing(--value(integer)) + --spacing(1));
+  }
+  @variant md {
+    gap: calc(--spacing(--value(integer)) + --spacing(3));
+  }
+}

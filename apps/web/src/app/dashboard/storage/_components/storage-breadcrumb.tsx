@@ -1,0 +1,67 @@
+'use client'
+
+import { Card } from '@repo/components/card'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@repo/ui/components/breadcrumb'
+import { Skeleton } from '@repo/ui/components/skeleton'
+import React from 'react'
+import useSWR from 'swr'
+
+import { Show } from '@/components/show'
+import { rpc, unwrap } from '@/lib/http/rpc'
+
+interface StorageBreadcrumbProps {
+  id: string
+  onChange?: (id: string) => void
+}
+
+export function StorageBreadcrumb({ id, onChange }: StorageBreadcrumbProps) {
+  const { data: paths, isLoading } = useSWR(
+    ['019b93bf-9819-71a7-933a-a1c87f1736cd', id],
+    () => rpc.dashboard.storage.paths({ id }).get().then(unwrap),
+    {
+      fallbackData: [],
+      keepPreviousData: true
+    }
+  )
+
+  if (isLoading && paths.length === 0) {
+    return <Skeleton className="h-9 w-60" />
+  }
+
+  return (
+    <Card
+      className="w-fit rounded-sm border-none px-3 py-2 dark:ring-0"
+      render={
+        <Breadcrumb>
+          <BreadcrumbList>
+            {paths.map((path, index) => (
+              <React.Fragment key={path.id}>
+                <Show when={index > 0}>
+                  <BreadcrumbSeparator />
+                </Show>
+                <BreadcrumbItem>
+                  <Show
+                    fallback={
+                      <BreadcrumbLink
+                        className="cursor-pointer"
+                        render={<span />}
+                        onClick={() => {
+                          onChange?.(path.id)
+                        }}
+                      >
+                        {path.name}
+                      </BreadcrumbLink>
+                    }
+                    when={index === paths.length - 1}
+                  >
+                    <BreadcrumbPage className="break-all">{path.name}</BreadcrumbPage>
+                  </Show>
+                </BreadcrumbItem>
+              </React.Fragment>
+            ))}
+          </BreadcrumbList>
+        </Breadcrumb>
+      }
+    />
+  )
+}

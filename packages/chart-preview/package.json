@@ -1,0 +1,27 @@
+{
+  "name": "@repo/chart-preview",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsdown",
+    "lint": "eslint --fix --max-warnings 0",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./style.css": "./src/index.css"
+  },
+  "dependencies": {
+    "@repo/react-hooks": "workspace:*",
+    "echarts": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "tsdown": "catalog:"
+  }
+}
