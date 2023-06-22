@@ -1,0 +1,29 @@
+model Clash {
+  id              String         @id @default(uuid(7))
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now())
+  name            String
+  subtitle        String?
+  content         String
+  subscribeLastAt DateTime?
+  clashTemplateId String?
+  /// [ClashVariables]
+  variables       Json           @default("{}")
+  enabled         Boolean        @default(true)
+  visitorInfos    VisitorLog[]
+  clashTemplates  ClashTemplate? @relation(fields: [clashTemplateId], references: [id])
+
+  @@unique([name, subtitle])
+  @@map("clashs")
+}
+
+model ClashTemplate {
+  id        String   @id @default(uuid(7))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  content   String
+  clashs    Clash[]
+
+  @@map("clash_templates")
+}

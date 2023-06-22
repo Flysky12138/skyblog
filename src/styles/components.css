@@ -1,0 +1,24 @@
+/* 移除 lottie 右下角水印 */
+.lottie {
+  g[clip-path] > g:nth-child(2) {
+    @apply hidden!;
+  }
+}
+
+/* shadcn 组建弹窗会隐藏滚动条；虽然他对 body 标签加了 mr 但是个别标签还是需要单独处理，避免页面抖动 */
+body[data-scroll-locked] {
+  [data-aria-hidden='true']:where(header) {
+    padding-inline-end: var(--removed-body-scroll-bar-size, 0);
+  }
+}
+
+/* shadcn label component */
+[data-slot='label'] {
+  &[aria-required='true'] {
+    @apply relative self-start;
+    &::after {
+      content: '*';
+      @apply absolute top-0 -right-2.5 text-rose-500;
+    }
+  }
+}

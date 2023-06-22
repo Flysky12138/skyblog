@@ -1,0 +1,41 @@
+* {
+  -webkit-tap-highlight-color: transparent;
+  @apply border-border outline-ring/50;
+}
+html {
+  @apply font-root antialiased;
+}
+body {
+  @apply bg-root text-foreground overscroll-none;
+}
+img {
+  @apply dark:brightness-80;
+}
+article {
+  @apply font-article overflow-hidden;
+  @apply prose prose-sm prose-sky dark:prose-invert md:prose-base;
+  @apply *:first:mt-0! *:last:mb-0!;
+  ul {
+    @apply list-disc;
+    ul {
+      @apply list-[circle];
+      ul {
+        @apply list-[square];
+        ul {
+          @apply list-decimal;
+        }
+      }
+    }
+  }
+}
+pre,
+code {
+  @apply font-code;
+}
+a {
+  @apply break-all;
+}
+button:not(:disabled),
+[role='button']:not(:disabled) {
+  @apply cursor-pointer;
+}

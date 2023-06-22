@@ -1,0 +1,70 @@
+@reference '../../../globals.css';
+
+/** 
+ * 整体上是为 `rehype-pretty-code` 生成的代码块添加样式
+ * 其他转换器插件的会单独标记出来
+ */
+
+/* 代码块 */
+figure[data-rehype-pretty-code-figure] {
+  @apply overflow-hidden rounded-sm border;
+  [data-rehype-pretty-code-title] {
+    @apply border-divide font-title m-0 border-b px-3 py-1 shadow-sm;
+  }
+  [data-rehype-pretty-code-caption] {
+    @apply m-0 px-3 py-1 text-xs;
+  }
+  pre {
+    @apply bg-sheet relative rounded-none p-0;
+    &:has(+ [data-rehype-pretty-code-caption]) {
+      @apply border-divide border-b;
+    }
+  }
+  code {
+    @apply overflow-x-auto py-2.5;
+  }
+}
+
+/* 代码着色 */
+code[data-theme] span {
+  @apply bg-(--shiki-light-bg) text-(--shiki-light) dark:bg-(--shiki-dark-bg) dark:text-(--shiki-dark);
+}
+
+/* 行号 */
+code[data-line-numbers] {
+  counter-reset: line;
+  & > [data-line]::before {
+    counter-increment: line;
+    content: counter(line);
+    @apply mr-6 inline-block w-4 text-right text-slate-500;
+  }
+}
+
+/* 行高亮 */
+pre [data-line] {
+  @apply border-l-2 border-transparent px-4;
+  &.highlighted, /** @shikijs/transformers transformerNotationHighlight */
+  &[data-highlighted-line] {
+    @apply border-slate-300 dark:border-slate-600;
+    @apply bg-slate-300/30 dark:bg-slate-600/30;
+  }
+}
+
+/** 
+ * 标记增删的行
+ * @shikijs/transformers transformerNotationDiff
+ */
+pre [data-line] {
+  &.diff {
+    @apply relative after:absolute after:left-1;
+    @apply border-transparent!;
+  }
+  &.diff.add {
+    @apply after:text-green-500 after:content-["+"];
+    @apply bg-green-100 dark:bg-green-900/30;
+  }
+  &.diff.remove {
+    @apply after:text-red-500 after:content-["-"];
+    @apply bg-red-100 dark:bg-red-900/30;
+  }
+}

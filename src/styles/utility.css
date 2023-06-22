@@ -1,0 +1,23 @@
+@utility scrollbar-hidden {
+  &::-webkit-scrollbar {
+    @apply hidden;
+  }
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+@utility gap-card-small {
+  @apply gap-2 sm:gap-3 md:gap-5;
+}
+
+@utility gap-card {
+  @apply gap-3 sm:gap-4 md:gap-6;
+}
+
+@utility gap-card-large {
+  @apply gap-4 sm:gap-5 md:gap-7;
+}
+
+@utility p-card {
+  @apply p-4 lg:p-5;
+}

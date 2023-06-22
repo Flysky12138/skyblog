@@ -1,0 +1,11 @@
+@reference '../../../globals.css';
+
+mjx-container {
+  &[display] {
+    @apply my-6 p-3 pt-4;
+    @apply overflow-x-auto overflow-y-clip;
+  }
+  svg {
+    @apply inline-block;
+  }
+}

@@ -1,0 +1,64 @@
+@import url('@/assets/font/FZSJ-ZHUZAYTE/result.css');
+@import url('@/assets/font/NotoColorEmoji-Regular/result.css');
+
+@custom-variant dark (&:is(.dark, .dark *));
+@custom-variant light (&:is(.light, .light *));
+
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@plugin '@tailwindcss/typography';
+
+@import './styles/shadcn.css';
+@import './styles/utility.css';
+@import './styles/base.css' layer(base);
+@import './styles/components.css' layer(components);
+
+:root {
+  --root: oklch(0.98 0 0);
+  --divide: oklch(0.93 0.01 0);
+  --card: --alpha(var(--color-white) / 70%);
+  --card-border: var(--color-slate-100);
+  --link: var(--color-slate-200);
+  --link-foreground: var(--color-sky-500);
+  --subtitle-foreground: oklch(0.48 0.02 251.08);
+  --sheet: --alpha(var(--color-slate-200) / 30%);
+}
+
+.dark {
+  --root: oklch(0.19 0.01 285.45);
+  --divide: var(--color-slate-700);
+  --card: --alpha(var(--color-zinc-700) / 30%);
+  --card-border: var(--color-zinc-700);
+  --link: var(--color-slate-700);
+  --link-foreground: var(--color-sky-500);
+  --subtitle-foreground: oklch(0.72 0.01 248.12);
+  --sheet: --alpha(var(--color-zinc-700) / 30%);
+}
+
+@theme inline {
+  /* override default variables */
+  --font-*: initial;
+  /* static variables */
+  --font-root: 'FZSJ-ZHUZAYTE';
+  --font-title: var(--font-title);
+  --font-emoji: 'Noto Color Emoji';
+  --font-article: 'Microsoft Yahei', '微软雅黑';
+  --font-code: var(--font-emoji), var(--font-code);
+  --height-header: 3.125rem;
+  --height-main: calc(100dvh - var(--height-header));
+  --height-footer: 9.375rem;
+  --z-index-footer: 20;
+  --z-index-header: 50;
+  --z-index-main: 30;
+  --z-index-nav: 40;
+  /* dark & light variables */
+  --color-root: var(--root);
+  --color-divide: var(--divide);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-link: var(--link);
+  --color-link-foreground: var(--link-foreground);
+  --color-subtitle-foreground: var(--subtitle-foreground);
+  --color-sheet: var(--sheet);
+}
