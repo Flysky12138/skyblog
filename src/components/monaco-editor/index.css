@@ -1,0 +1,9 @@
+@reference '../../globals.css';
+
+.monaco-editor,
+.monaco-diff-editor,
+.monaco-component {
+  --vscode-diffEditor-border: var(--vscode-dropdown-border);
+  @apply font-code! outline-none!;
+  @apply dark:[--vscode-editor-background:#202026] dark:[--vscode-editorGutter-background:#202026];
+}

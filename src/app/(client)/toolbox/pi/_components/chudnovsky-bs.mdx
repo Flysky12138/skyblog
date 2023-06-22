@@ -1,0 +1,93 @@
+在 `Chudnovsky` 的基础上使用 `Binary splitting`（一种加速各种有理项级数数值计算的技术）计算
+
+```math
+  \sum_{k=0}^{\infty} \frac{(-1)^k (6k)! (13591409 + 545140134k)}{(3k)!(k!)^3 640320^{3k}}
+```
+
+现有以下一般无穷级数的模型
+
+```math
+  S(0,\infty) = \frac{a_0p_0}{b_0q_0} + \frac{a_1p_0p_1}{b_1q_0q_1} + \frac{a_2p_0p_1p_2}{b_2q_0q_1q_2} + \frac{a_3p_0p_1p_2p_3}{b_3q_0q_1q_2q_3} + \cdots \\
+```
+
+该级数的部分和 $[a,b)$
+
+```math
+  S(a,b) = \frac{a_ap_a}{b_aq_a} + \frac{a_{a+1}p_ap_{a+1}}{b_{a+1}q_aq_{a+1}} + \frac{a_{a+2}p_ap_{a+1}p_{a+2}}{b_{a+2}q_aq_{a+1}q_{a+2}} + \cdots + \frac{a_{b-1}p_ap_{a+1}p_{a+2}\cdots p_{b-1}}{b_{b-1}q_aq_{a+1}\cdots p_{b-1}}
+```
+
+定义一些额外的函数
+
+```math
+  \begin{align}
+    P(a,b) &= p_{a}p_{a+1} \cdots p_{b-1} \\
+    Q(a,b) &= q_{a}q_{a+1} \cdots q_{b-1} \\
+    B(a,b) &= b_{a}b_{a+1} \cdots b_{b-1} \\
+    T(a,b) &= B(a,b)Q(a,b)S(a,b)
+  \end{align}
+```
+
+- 则存在以下关系
+
+  ```math
+  \begin{align}
+    P(a,a+1) &= p_a \\
+    Q(a,a+1) &= q_a \\
+    B(a,a+1) &= b_a \\
+    S(a,a+1) &= \frac{a_ap_a}{b_aq_a} \\
+    T(a,a+1) &= B(a,a+1)Q(a,a+1)S(a,a+1) \\
+    &= b_aq_a\frac{a_ap_a}{b_aq_a} \\
+    &= a_ap_a \\
+  \end{align}
+  ```
+
+- 若 $a <= m <= b$ 则
+
+  ```math
+    \begin{align}
+      P(a,b) &= P(a,m)P(m,b) \\
+      Q(a,b) &= Q(a,m)Q(m,b) \\
+      B(a,b) &= B(a,m)B(m,b) \\
+      T(a,b) &= B(m,b)Q(m,b)T(a,m) + B(a,m)P(a,m)T(m,b)
+    \end{align}
+  ```
+
+  - 其中 $T(a,b)$ 的证明
+
+    ```math
+      \begin{align}
+        T(a,b) &= B(m,b)Q(m,b)T(a,m) + B(a,m)P(a,m)T(m,b) \\
+              &= B(m,b)Q(m,b)B(a,m)Q(a,m)S(a,m) + B(a,m)P(a,m)B(m,b)Q(m,b)S(m,b) \\
+              &= B(a,b)Q(a,b)S(a,m) + B(a,b)P(a,m)Q(m,b)S(m,b) \\
+              &= B(a,b)\left(Q(a,b)S(a,m) + \frac{P(a,m)Q(a,b)}{Q(a,m)}S(m,b)\right) \\
+              &= B(a,b)Q(a,b)\left( \frac{a_ap_a}{b_aq_a} + \frac{a_{a+1}p_ap_{a+1}}{b_{a+1}q_aq_{a+1}} + \frac{a_{a+2}p_ap_{a+1}p_{a+2}}{b_{a+2}q_aq_{a+1}q_{a+2}} + \cdots + \frac{a_{m-1}p_ap_{a+1}p_{a+2} \cdots p_{m-1}}{b_{m-1}q_aq_{a+1} \cdots p_{m-1}} + \frac{p_ap_{a+1} \cdots p_{m-1}}{q_aq_{a+1} \cdots q_{m-1}} \cdot \left(\frac{a_mp_m}{b_mq_m} + \frac{a_{m+1}p_mp_{m+1}}{b_{m+1}q_mq_{m+1}} + \frac{a_{m+2}p_mp_{m+1}p_{m+2}}{b_{m+2}q_mq_{m+1}q_{m+2}} + \cdots + \frac{a_{b-1}p_mp_{m+1}p_{m+2} \cdots p_{b-1}}{b_{b-1}q_mq_{m+1} \cdots p_{b-1}} \right)\right) \\
+              &= B(a,b)Q(a,b)\left( \frac{a_ap_a}{b_aq_a} + \frac{a_{a+1}p_ap_{a+1}}{b_{a+1}q_aq_{a+1}} + \frac{a_{a+2}p_ap_{a+1}p_{a+2}}{b_{a+2}q_aq_{a+1}q_{a+2}} + \cdots + \frac{a_{m-1}p_ap_{a+1}p_{a+2} \cdots p_{m-1}}{b_{m-1}q_aq_{a+1} \cdots p_{m-1}} + \frac{p_ap_{a+1} \cdots p_{m-1}}{q_aq_{a+1} \cdots q_{m-1}} + \frac{a_mp_ap_{a+1} \cdots p_m}{b_mq_aq_{a+1} \cdots q_m} + \frac{a_{m+1}p_ap_{a+1} \cdots p_{m+1}}{b_{m+1}q_aq_{a+1} \cdots q_{m+1}} + \frac{a_{m+2}p_ap_{a+1} \cdots p_{m+2}}{b_{m+2}q_aq_{a+1} \cdots q_{m+2}} + \cdots + \frac{a_{b-1}p_ap_{a+1} \cdots p_{b-1}}{b_{b-1}q_aq_{a+1} \cdots p_{b-1}} \right) \\
+              &= B(a,b)Q(a,b)S(a,b) \\
+              &= T(a,b)
+      \end{align}
+    ```
+
+现在我们计算 $S(0,n)$，可以按照如下方式二分迭代计算（$m = \left \lfloor \frac{0 + n}{2} \right \rfloor $）。这样在计算结束时只进行一次除法，这会大大加快计算速度，因为除法比乘法慢。
+
+```math
+  S(0,n) = \frac{T(0,n)}{B(0,n)Q(0,n)} = \frac{B(m,n)Q(m,n)T(0,m) + B(0,m)P(0,m)T(m,n)}{B(0,m)B(m,n) \cdot Q(0,m)Q(m,n)} = \cdots
+```
+
+回到我们待计算的级数上，忽略待计算级数 $(-1)^k$ 项，则存在以下对应关系（之前的递推关系 $\frac{A_{k}}{A_{k-1}} = \frac{p_k}{q_k}$）
+
+```math
+  \begin{align}
+    a_k &= 13591409 + 545140134k \\
+    b_k &= 1 \\
+    p_0 &= 1 \\
+    q_0 &= 1 \\
+    p_k &= (6k - 5)(2k - 1)(6k - 1) \\
+    q_k &= \frac{k^{3} \cdot 640320^{3}}{24}
+  \end{align}
+```
+
+:::alert{title="引用文献"}
+[https://pi-calculator.netlify.app/](https://pi-calculator.netlify.app/)
+:br
+[https://www.craig-wood.com/nick/articles/pi-chudnovsky/](https://www.craig-wood.com/nick/articles/pi-chudnovsky/)
+:::
