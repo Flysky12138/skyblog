@@ -1,0 +1,12 @@
+@utility scrollbar-hidden {
+  &::-webkit-scrollbar {
+    @apply hidden;
+  }
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+@utility skeleton {
+  @apply animate-pulse bg-skeleton/30! backdrop-blur;
+}
+

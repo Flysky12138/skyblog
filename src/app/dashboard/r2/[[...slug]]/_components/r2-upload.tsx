@@ -1,0 +1,208 @@
+import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Table, TableActionButton } from '@/components/table'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { cn } from '@/lib/cn'
+import { getImageSize } from '@/lib/file/info'
+import { convertObjectValues } from '@/lib/parser/object'
+import { formatFileSize } from '@/lib/parser/size'
+import { promisePool } from '@/lib/promise'
+import { R2 } from '@/lib/server/r2'
+import { Toast } from '@/lib/toast'
+import { unionBy } from 'es-toolkit'
+import { FileUp, FolderUp, Loader2, Trash, Upload } from 'lucide-react'
+import React from 'react'
+import { useAsyncFn, useBeforeUnload } from 'react-use'
+import { useImmer } from 'use-immer'
+import { R2Table } from './r2-table'
+
+interface R2UploadProps extends React.PropsWithChildren {
+  onFinished?: () => void
+  onSubmit?: (payload: R2.FileInfo) => void
+  path: FilePathType & {}
+}
+
+export const R2Upload = ({ children, path, onSubmit, onFinished }: R2UploadProps) => {
+  const [basePath, setBasePath] = React.useState<R2UploadProps['path']>('/')
+
+  /** 检测 basePath 是否合法 */
+  const basePathIsValid = React.useMemo(() => {
+    if (!basePath.startsWith('/')) return false
+    if (!basePath.endsWith('/')) return false
+    return true
+  }, [basePath])
+
+  const [filelist, setFilelist] = useImmer<{ uploaded: File[]; waiting: File[] }>({
+    uploaded: [],
+    waiting: []
+  })
+
+  const isUploadFinished = filelist.waiting.length == 0
+
+  const onChange: React.ChangeEventHandler<HTMLInputElement> = event => {
+    setFilelist(state => {
+      state.waiting = unionBy(state.waiting, Array.from(event.target.files || []), getFileName)
+    })
+    event.target.value = ''
+  }
+
+  const [{ loading: isUploading }, handleUpload] = useAsyncFn(async () => {
+    return await promisePool(
+      Array.from(filelist.waiting).map(file => async () => {
+        const Metadata = {}
+        if (file.type.startsWith('image')) {
+          const imageSize = await getImageSize(file)
+          Object.assign(Metadata, convertObjectValues(imageSize, { height: String, width: String }))
+        }
+        const filename = getFileName(file)
+        const data = await Toast(R2.put({ Metadata, Body: file, ContentType: file.type, Key: `${basePath}${filename}`.slice(1) }), {
+          description: filename,
+          error: e => e.message,
+          success: '上传成功'
+        })
+        setFilelist(state => {
+          state.uploaded.push(file)
+          state.waiting.splice(
+            state.waiting.findIndex(it => it == file),
+            1
+          )
+        })
+        onSubmit?.(data)
+      })
+    )
+  }, [])
+
+  useBeforeUnload(isUploading, '正在上传中，不要关闭窗口')
+
+  return (
+    <Dialog
+      onOpenChange={open => {
+        if (open) {
+          setBasePath(decodeURIComponent(path) as R2UploadProps['path'])
+        } else if (isUploadFinished) {
+          setFilelist({ uploaded: [], waiting: [] })
+        }
+      }}
+    >
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent
+        className="max-w-5xl"
+        onCloseAutoFocus={event => {
+          event.preventDefault()
+        }}
+        onOpenAutoFocus={event => {
+          event.preventDefault()
+        }}
+      >
+        <DialogHeader>
+          <DialogTitle>文件上传</DialogTitle>
+          <DialogDescription>上传文件或文件夹内所有文件到 Cloudflare 的 R2 对象存储</DialogDescription>
+        </DialogHeader>
+        <div className="flex gap-4">
+          <Input
+            aria-invalid={!basePathIsValid}
+            disabled={isUploading}
+            value={basePath}
+            onChange={event => {
+              setBasePath((event.target.value.replace(/\/{2,}/g, '/') as R2UploadProps['path']) || '/')
+            }}
+          />
+          <div className="flex">
+            <Button asChild className="rounded-r-none focus-visible:z-10">
+              <label role="button" tabIndex={0}>
+                <FileUp strokeWidth={3} />
+                选择文件
+                <input hidden multiple type="file" onChange={onChange} />
+              </label>
+            </Button>
+            <span className="w-px" role="separator"></span>
+            <Button asChild className="rounded-l-none focus-visible:z-10">
+              <label role="button" tabIndex={0}>
+                <FolderUp strokeWidth={3} />
+                选择文件夹
+                <input hidden multiple directory="true" type="file" webkitdirectory="true" onChange={onChange} />
+              </label>
+            </Button>
+          </div>
+        </div>
+        <Tabs defaultValue="waiting">
+          <div className="flex justify-between">
+            <TabsList className="grid w-60 grid-cols-2">
+              <TabsTrigger value="waiting">待上传</TabsTrigger>
+              <TabsTrigger value="uploaded">已上传</TabsTrigger>
+            </TabsList>
+            <TabsContent asChild value="waiting">
+              <Button
+                className={cn('grow-0', {
+                  hidden: isUploadFinished
+                })}
+                disabled={!basePathIsValid || isUploading}
+                onClick={async () => {
+                  await handleUpload()
+                  onFinished?.()
+                }}
+              >
+                <DisplayByConditional condition={isUploading} fallback={<Upload />}>
+                  <Loader2 className="animate-spin" />
+                </DisplayByConditional>
+                上传
+              </Button>
+            </TabsContent>
+          </div>
+          <TabsContent value="waiting">
+            <Table
+              columns={[
+                {
+                  key: 'path',
+                  render: file => (
+                    <span className="block truncate" title={getFileName(file)}>
+                      {getFileName(file)}
+                    </span>
+                  ),
+                  title: '路径'
+                },
+                { dataIndex: 'size', headerClassName: 'w-28', render: formatFileSize, title: '大小' },
+                {
+                  align: 'right',
+                  headerClassName: 'w-12',
+                  key: 'action',
+                  render: (_, index) => (
+                    <TableActionButton
+                      disabled={isUploading}
+                      variant="destructive"
+                      onClick={() => {
+                        setFilelist(state => {
+                          state.waiting.splice(index, 1)
+                        })
+                      }}
+                    >
+                      <Trash />
+                    </TableActionButton>
+                  ),
+                  title: '操作'
+                }
+              ]}
+              dataSource={filelist.waiting}
+              rowClassName={file => ({
+                hidden: filelist.uploaded.includes(file)
+              })}
+              rowKey={getFileName}
+            />
+          </TabsContent>
+          <TabsContent value="uploaded">
+            <R2Table
+              hiddenParentDirectoryRow
+              hiddenUploadButton
+              // 验证失败使用默认值
+              paths={(basePathIsValid ? basePath : decodeURIComponent(path)).split('/').filter(Boolean)}
+            />
+          </TabsContent>
+        </Tabs>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+const getFileName = (file: File) => file.webkitRelativePath || file.name
