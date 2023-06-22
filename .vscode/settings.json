@@ -1,0 +1,14 @@
+{
+  "files.eol": "\n",
+  "files.associations": {
+    "*.scss": "tailwindcss"
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always",
+    "source.fixAll": "never",
+    "source.fixAll.eslint": "explicit"
+  }
+}

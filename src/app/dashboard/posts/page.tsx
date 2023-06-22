@@ -1,0 +1,248 @@
+'use client'
+
+import { PostDetailDeleteResponseType, PostDetailPatchRequestType, PostDetailPatchResponseType } from '@/app/api/dashboard/posts/[id]/route'
+import { PostsGetResponseType } from '@/app/api/dashboard/posts/route'
+import SelectClearable from '@/components/form/SelectClearable'
+import ModalDelete from '@/components/modal/ModalDelete'
+import TableTbodyEmpty from '@/components/table/TableTbodyEmpty'
+import TableTheadProgress from '@/components/table/TableTheadProgress'
+import TableWrapper from '@/components/table/TableWrapper'
+import { removeDuplicates } from '@/lib/removeDuplicates'
+import { CustomFetch } from '@/lib/server/fetch'
+import { deleteAllGithubRepos } from '@/lib/server/github'
+import { CustomToast } from '@/lib/toast'
+import { Search } from '@mui/icons-material'
+import { Button, FormControl, FormLabel, Input, Option, Switch, Table } from '@mui/joy'
+import { produce } from 'immer'
+import Link from 'next/link'
+import React from 'react'
+import useSWR from 'swr'
+import { useImmer } from 'use-immer'
+
+const getPosts = async () => {
+  return await CustomFetch<PostsGetResponseType>('/api/dashboard/posts')
+}
+const patchPost = async (id: string, payload: PostDetailPatchRequestType) => {
+  return await CustomFetch<PostDetailPatchResponseType>(`/api/dashboard/posts/${id}`, {
+    body: payload,
+    method: 'PATCH'
+  })
+}
+const deletePost = async (id: string) => {
+  return await CustomFetch<PostDetailDeleteResponseType>(`/api/dashboard/posts/${id}`, {
+    method: 'DELETE'
+  })
+}
+
+export default function Page() {
+  const {
+    data: posts,
+    isLoading,
+    mutate: setPosts
+  } = useSWR('/api/dashboard/posts', getPosts, {
+    fallbackData: []
+  })
+
+  // 获取所有分类和标签
+  const categories = React.useMemo(
+    () =>
+      removeDuplicates(
+        posts.flatMap(post => post.categories),
+        (pre, cur) => !pre.find(category => category.id == cur.id)
+      ),
+    [posts]
+  )
+  const tags = React.useMemo(
+    () =>
+      removeDuplicates(
+        posts.flatMap(post => post.tags),
+        (pre, cur) => !pre.find(tag => tag.id == cur.id)
+      ),
+    [posts]
+  )
+
+  // 过滤表单
+  const [form, setForm] = useImmer<{
+    categoryId: null | number
+    published: null | boolean
+    tagId: null | number
+    title: string
+  }>({ categoryId: null, published: null, tagId: null, title: '' })
+
+  const postsFilter = React.useMemo(() => {
+    return posts.filter(post => {
+      return (
+        (!form.title || post.title.toLowerCase().includes(form.title.toLowerCase())) &&
+        (form.published == null || post.published == form.published) &&
+        (form.categoryId == null || post.categories.find(({ id }) => id == form.categoryId)) &&
+        (form.tagId == null || post.tags.find(({ id }) => id == form.tagId))
+      )
+    })
+  }, [form.categoryId, form.published, form.tagId, form.title, posts])
+
+  return (
+    <section className="flex h-full flex-col">
+      <div className="flex flex-wrap gap-x-6 gap-y-4">
+        <div className="flex w-full grow gap-x-6 lg:w-auto">
+          <FormControl className="grow">
+            <FormLabel>标题</FormLabel>
+            <Input
+              startDecorator={<Search />}
+              value={form.title}
+              variant="outlined"
+              onChange={event => {
+                setForm(state => {
+                  state.title = event.target.value
+                })
+              }}
+            />
+          </FormControl>
+          <FormControl className="w-28">
+            <FormLabel>状态</FormLabel>
+            <SelectClearable
+              clearable={form.published != null}
+              value={form.published}
+              onChange={(_, newValue) => {
+                setForm(state => {
+                  state.published = newValue
+                })
+              }}
+              onClear={() => {
+                setForm(state => {
+                  state.published = null
+                })
+              }}
+            >
+              <Option value={true}>公开</Option>
+              <Option value={false}>隐藏</Option>
+            </SelectClearable>
+          </FormControl>
+        </div>
+        <div className="flex w-full gap-x-6 lg:w-96">
+          <FormControl className="flex-1">
+            <FormLabel>分类</FormLabel>
+            <SelectClearable
+              clearable={form.categoryId != null}
+              disabled={!categories.length}
+              value={form.categoryId}
+              onChange={(_, newValue) => {
+                setForm(state => {
+                  state.categoryId = newValue
+                })
+              }}
+              onClear={() => {
+                setForm(state => {
+                  state.categoryId = null
+                })
+              }}
+            >
+              {categories.map(({ id, name }) => (
+                <Option key={id} value={id}>
+                  {name}
+                </Option>
+              ))}
+            </SelectClearable>
+          </FormControl>
+          <FormControl className="flex-1">
+            <FormLabel>标签</FormLabel>
+            <SelectClearable
+              clearable={form.tagId != null}
+              disabled={!tags.length}
+              value={form.tagId}
+              onChange={(_, newValue) => {
+                setForm(state => {
+                  state.tagId = newValue
+                })
+              }}
+              onClear={() => {
+                setForm(state => {
+                  state.tagId = null
+                })
+              }}
+            >
+              {tags.map(({ id, name }) => (
+                <Option key={id} value={id}>
+                  {name}
+                </Option>
+              ))}
+            </SelectClearable>
+          </FormControl>
+        </div>
+      </div>
+      <TableWrapper className="mt-6">
+        <Table stickyFooter stickyHeader>
+          <thead>
+            <tr>
+              <th className="w-10">#</th>
+              <th className="w-52">标题</th>
+              <th className="w-80">描述</th>
+              <th className="w-40">分类</th>
+              <th className="w-40">标签</th>
+              <th className="w-16">公开</th>
+              <th className="w-44"></th>
+            </tr>
+            <TableTheadProgress colSpan={7} loading={isLoading} />
+          </thead>
+          <tbody>
+            {postsFilter.map((post, index) => (
+              <tr key={post.id}>
+                <td>{index + 1}</td>
+                <td>{post.title}</td>
+                <td>
+                  <p className="truncate">{post.description}</p>
+                </td>
+                <td>{post.categories.map(category => category.name).join('、')}</td>
+                <td>{post.tags.map(tag => tag.name).join('、')}</td>
+                <td className="align-bottom">
+                  <Switch
+                    checked={post.published}
+                    color={post.published ? 'success' : 'warning'}
+                    onChange={async () => {
+                      const data = await CustomToast(patchPost(post.id, { published: !post.published }), '更新成功')
+                      setPosts(
+                        produce(state => {
+                          state.splice(index, 1, data)
+                        })
+                      )
+                    }}
+                  />
+                </td>
+                <td className="text-end">
+                  <ModalDelete
+                    component={props => (
+                      <Button color="danger" size="sm" variant="plain" {...props}>
+                        删除
+                      </Button>
+                    )}
+                    title={`删除 《 ${post.title} 》?`}
+                    onSubmit={async () => {
+                      await deleteAllGithubRepos(`/posts/${post.id}/`, () => `delete files of post with id '${post.id}'`)
+                      await CustomToast(deletePost(post.id), '删除成功')
+                      setPosts(
+                        produce(state => {
+                          state.splice(index, 1)
+                        })
+                      )
+                    }}
+                  />
+                  <Button color="warning" component="a" href={`/posts/${post.id}`} size="sm" target="_blank" variant="plain">
+                    {post.published ? '查看' : '预览'}
+                  </Button>
+                  <Button component={Link} href={`/dashboard/posts/${post.id}`} size="sm" variant="plain">
+                    编辑
+                  </Button>
+                </td>
+              </tr>
+            ))}
+            <TableTbodyEmpty colSpan={7} enable={postsFilter.length == 0 && !isLoading} />
+          </tbody>
+          {/* <tfoot>
+            <tr>
+              <td colSpan={7}></td>
+            </tr>
+          </tfoot> */}
+        </Table>
+      </TableWrapper>
+    </section>
+  )
+}
