@@ -1,0 +1,39 @@
+import prisma from '@/lib/prisma'
+import { CustomResponse } from '@/lib/server/response'
+import { NextRequest, NextResponse } from 'next/server'
+import puppeteer, { Browser } from 'puppeteer-core'
+
+export const revalidate = 43200
+
+export const GET = async (request: NextRequest, { params }: DynamicRouteProps<{ id: string }>) => {
+  let browser: Browser | null = null
+  try {
+    const { id } = await params
+
+    if (!id) return CustomResponse.error('{id} 值缺失', 422)
+
+    const friend = await prisma.friend.findUnique({ where: { id } })
+    if (!friend) return CustomResponse.error('未找到资源', 404)
+
+    browser = await puppeteer.connect({
+      browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.TOKEN_BROWSERLESS}`,
+      defaultViewport: { height: 900, width: 1600 },
+      slowMo: 100
+    })
+    const page = await browser.newPage()
+    await page.goto(friend.url)
+    const uint8Array = await page.screenshot({ type: 'webp' })
+
+    return new NextResponse(uint8Array, {
+      headers: {
+        'Cache-Control': 'public, max-age=86400, s-maxage=43200, immutable',
+        'Content-Length': String(uint8Array.byteLength),
+        'Content-Type': 'image/webp'
+      }
+    })
+  } catch (error) {
+    return CustomResponse.error(error)
+  } finally {
+    await browser?.close()
+  }
+}

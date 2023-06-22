@@ -1,0 +1,37 @@
+@utility scrollbar-hidden {
+  &::-webkit-scrollbar {
+    @apply hidden;
+  }
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+@utility skeleton {
+  @apply animate-pulse bg-skeleton/30! backdrop-blur;
+}
+
+@utility s-bg-content {
+  @apply bg-white dark:bg-[#202026];
+}
+@utility s-bg-title {
+  @apply bg-white dark:bg-[#292d38];
+}
+@utility s-outline {
+  outline: var(--joy-focus-thickness, 2px) solid var(--joy-palette-focusVisible, #096bde);
+  outline-offset: var(--focus-outline-offset, var(--joy-focus-thickness, 2px));
+}
+@utility s-table-scrollbar {
+  &::-webkit-scrollbar {
+    @apply size-2;
+  }
+  &::-webkit-scrollbar-corner {
+    @apply bg-transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    @apply bg-zinc-300 dark:bg-zinc-600;
+  }
+  &::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  scrollbar-width: auto;
+}
