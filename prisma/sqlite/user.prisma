@@ -1,0 +1,12 @@
+model User {
+  id        String   @id @default(uuid(7))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email     String   @unique
+  name      String?
+  avatarUrl String?
+  role      String   @default("USER") // psql 使用枚举类型
+  posts     Post[]
+
+  @@map("users")
+}

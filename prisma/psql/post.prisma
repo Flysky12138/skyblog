@@ -1,0 +1,40 @@
+model Post {
+  id            String     @id @default(uuid(7))
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @default(now())
+  title         String
+  description   String?
+  content       String?
+  published     Boolean    @default(false)
+  authorId      String
+  views         Int        @default(0)
+  links         Int        @default(0)
+  sticky        Int        @default(0)
+  showTitleCard Boolean    @default(true)
+  categories    Category[]
+  tags          Tag[]
+  author        User       @relation(fields: [authorId], references: [id])
+
+  @@index([updatedAt(sort: Desc)])
+  @@map("posts")
+}
+
+model Category {
+  id        String   @id @default(uuid(7))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+  posts     Post[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id        String   @id @default(uuid(7))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+  posts     Post[]
+
+  @@map("tags")
+}

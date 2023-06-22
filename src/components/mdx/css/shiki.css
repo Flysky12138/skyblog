@@ -1,0 +1,43 @@
+figure[data-rehype-pretty-code-figure] {
+  @apply s-border-color-card overflow-hidden rounded-md border;
+  @apply selection:bg-[#c1def1] selection:text-[unset] dark:selection:bg-[#264f78];
+  [data-rehype-pretty-code-title] {
+    @apply s-bg-title s-border-color-divider m-0 border-b px-3 py-1 font-title text-base text-black shadow-sm dark:text-white;
+    & + pre {
+      @apply rounded-t-none;
+    }
+  }
+  pre {
+    @apply s-bg-sheet px-0 py-2.5;
+  }
+}
+
+code[data-theme] span {
+  @apply bg-[--shiki-light-bg] text-[--shiki-light] dark:bg-[--shiki-dark-bg] dark:text-[--shiki-dark];
+}
+
+/* 行号 */
+code[data-line-numbers] {
+  counter-reset: line;
+  & > [data-line]::before {
+    counter-increment: line;
+    content: counter(line);
+    @apply mr-6 inline-block w-4 text-right text-slate-500;
+  }
+}
+
+/* 行高亮 */
+pre [data-line] {
+  @apply border-l-2 border-transparent px-4;
+  &[data-highlighted-line] {
+    @apply border-slate-300 dark:border-slate-600;
+    @apply bg-slate-300/30 dark:bg-slate-600/30;
+  }
+}
+
+/* 代码名 */
+pre[data-language] {
+  @apply relative after:absolute after:right-3 after:top-1;
+  @apply after:hidden after:content-[attr(data-language)] after:hover:block;
+  @apply after:text-black/50 dark:after:text-white/50;
+}

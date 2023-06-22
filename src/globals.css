@@ -1,0 +1,66 @@
+@import './assets/font/FZSJ-ZHUZAYTE/result.css';
+@import './assets/font/CascadiaCodePL/result.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply font-root antialiased;
+    @apply selection:bg-teal-500 selection:text-white;
+    &[data-joy-color-scheme='light'] {
+      color-scheme: light;
+    }
+    &[data-joy-color-scheme='dark'] {
+      color-scheme: dark;
+    }
+  }
+  header {
+    @apply s-border-color-divider border-b bg-white/80 backdrop-blur dark:bg-[#131318]/80;
+  }
+  body,
+  main {
+    @apply s-bg-root;
+  }
+  img {
+    @apply dark:brightness-[0.8];
+  }
+  article {
+    @apply overflow-hidden p-5 font-body first:[&>*]:mt-2 last:[&>*]:mb-2;
+    @apply prose prose-sm prose-sky dark:prose-invert md:prose-base;
+
+    @apply prose-a:no-underline hover:prose-a:underline;
+    @apply prose-strong:font-bold;
+    @apply prose-blockquote:rounded-sm;
+    @apply prose-img:s-bg-sheet prose-img:rounded-lg;
+    @apply prose-p:my-2;
+    @apply prose-ul:[&_ul]:list-[circle];
+
+    @apply prose-table:block prose-table:overflow-auto;
+    @apply even:prose-tr:s-bg-sheet;
+    @apply dark:prose-th:s-border-color-card prose-th:border prose-th:border-b-2 prose-th:px-4 prose-th:py-2;
+    @apply dark:prose-td:s-border-color-card prose-td:whitespace-nowrap prose-td:border prose-td:px-4;
+
+    @apply prose-code:text-sm prose-code:font-normal;
+  }
+  pre,
+  code {
+    @apply font-code;
+  }
+  a {
+    @apply break-all;
+  }
+  :focus-visible {
+    @apply s-outline rounded-sm;
+  }
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+.lottie {
+  g[clip-path] {
+    @apply [&>g:nth-child(2)]:!hidden;
+  }
+}

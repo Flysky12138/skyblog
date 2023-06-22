@@ -1,0 +1,16 @@
+::view-transition-old(theme),
+::view-transition-new(theme) {
+  @apply animate-none mix-blend-normal;
+}
+
+[data-joy-color-scheme='light'] {
+  &::view-transition-new(theme) {
+    @apply z-10;
+  }
+}
+
+[data-joy-color-scheme='dark'] {
+  &::view-transition-old(theme) {
+    @apply z-10;
+  }
+}
