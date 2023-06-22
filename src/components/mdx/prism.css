@@ -1,0 +1,122 @@
+pre[class*='language-'],
+code[class*='language-'] {
+  tab-size: 4;
+  @apply hyphens-none whitespace-pre text-left text-sm font-normal leading-5;
+  @apply selection:bg-[#c1def1] selection:text-[unset] dark:selection:bg-[#264f78];
+  @apply text-slate-800 dark:text-slate-300;
+}
+
+pre[class*='language-'] {
+  @apply overflow-auto bg-zinc-50 px-4 py-2.5 dark:bg-[#1f1e1e];
+  code[class*='language-'] {
+    @apply block min-w-fit;
+  }
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.namespace {
+  @apply opacity-70;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  font-style: italic;
+  @apply text-green-700 dark:text-green-600;
+}
+
+.token.name,
+.token.attr-name,
+.token.regex,
+.token.entity {
+  @apply text-red-500 dark:text-sky-300;
+}
+
+.token.tag,
+.token.selector {
+  @apply text-red-900 dark:text-sky-500;
+}
+
+.token.punctuation,
+.token.operator {
+  @apply text-slate-800 dark:text-slate-400;
+}
+
+.token.atrule,
+.token.attr-value,
+.language-autohotkey .token.selector,
+code[class*='language-css'] {
+  @apply text-blue-700 dark:text-[#ce9178];
+}
+
+.token.builtin,
+.token.keyword {
+  @apply text-blue-700 dark:text-blue-400/90;
+}
+
+.token.url,
+.token.symbol,
+.token.number,
+.token.boolean,
+.token.variable,
+.token.constant,
+.token.inserted {
+  @apply text-cyan-500;
+}
+
+.token.class-name,
+.language-json .token.property {
+  @apply text-blue-800 dark:text-teal-400;
+}
+
+.token.string {
+  @apply text-red-600 dark:text-[#ce9178];
+}
+
+.token.function {
+  @apply text-amber-600 dark:text-amber-200/80;
+}
+
+.token.deleted,
+.language-autohotkey .token.tag {
+  color: #9a050f;
+}
+
+.token.selector,
+.language-autohotkey .token.keyword {
+  color: #00009f;
+}
+
+.token.important {
+  color: #e90;
+}
+
+.token.directive.tag .tag {
+  background: #ffff00;
+  color: #393a34;
+}
+
+/*********************************************************/
+.code-line {
+  @apply -mx-4 block px-4;
+  &.inserted {
+    background-color: #10b98133; /* Set inserted line (+) color */
+  }
+
+  &.deleted {
+    background-color: #ef444433; /* Set deleted line (-) color */
+  }
+}
+
+.highlight-line {
+  box-shadow: inset 3px 0 0 var(--tw-shadow-color);
+  @apply bg-sky-100/70 shadow-sky-400 dark:bg-green-600/10 dark:shadow-green-700;
+}
+
+.line-number::before {
+  @apply -ml-1 mr-4 inline-block w-4 text-right text-gray-400 content-[attr(line)];
+}

@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:dev.db"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email     String   @unique
+  name      String?
+  avatarUrl String?
+  role      String   @default("USER") // psql 使用枚举类型
+  posts     Post[]
+
+  @@map("users")
+}
+
+model Post {
+  id            String     @id @default(cuid())
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @default(now())
+  title         String
+  description   String?
+  content       String?
+  published     Boolean    @default(false)
+  authorId      Int
+  views         Int        @default(0)
+  links         Int        @default(0)
+  sticky        Int        @default(0)
+  showTitleCard Boolean    @default(true)
+  categories    Category[]
+  tags          Tag[]
+  author        User       @relation(fields: [authorId], references: [id])
+
+  @@index([updatedAt(sort: Desc)])
+  @@map("posts")
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+  posts     Post[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+  posts     Post[]
+
+  @@map("tags")
+}
+
+model Clash {
+  id              String         @id @default(uuid())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now())
+  name            String
+  subtitle        String?
+  content         String
+  subscribeLastAt DateTime?
+  clashTemplateId Int?
+  variables       String         @default("{}") // psql 使用 json 类型
+  visitorInfos    VisitorInfo[]
+  clashTemplates  ClashTemplate? @relation(fields: [clashTemplateId], references: [id])
+
+  @@unique([name, subtitle])
+  @@map("clashs")
+}
+
+model ClashTemplate {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  content   String
+  clashs    Clash[]
+
+  @@map("clash_templates")
+}
+
+model VisitorInfo {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  ip            String
+  city          String?
+  country       String?
+  countryRegion String?
+  latitude      String?
+  longitude     String?
+  agent         String?
+  referer       String?
+  clashs        Clash[]
+
+  @@map("visitor_infos")
+}
+
+model FriendLinks {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  name      String
+  subtitle  String?
+  url       String
+  cover     String?
+
+  @@map("friend_links")
+}
