@@ -1,0 +1,32 @@
+model Clash {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  name        String
+  description String?
+  content     String
+  isEnabled   Boolean @default(true) @map("is_enabled")
+  /// [ClashVariables]
+  variables   Json    @default("{}") @db.JsonB
+  templateId  String? @map("template_id") @db.Uuid
+
+  activityLogs ActivityLog[]
+  template     ClashTemplate? @relation(fields: [templateId], references: [id], onDelete: Restrict)
+
+  @@unique([name, description])
+  @@map("clashes")
+}
+
+model ClashTemplate {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  name    String
+  content String
+
+  clashes Clash[]
+
+  @@map("clash_templates")
+}

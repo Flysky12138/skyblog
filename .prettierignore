@@ -1,0 +1,7 @@
+.next/
+public/
+pnpm-lock.yaml
+src/assets/
+src/components/ui/
+src/generated/
+README.md

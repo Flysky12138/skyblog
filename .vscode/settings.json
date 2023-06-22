@@ -1,0 +1,26 @@
+{
+  "files.eol": "\n",
+  "files.associations": {
+    "*.css": "tailwindcss",
+    "*.toml": "ini"
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",
+    "source.fixAll.eslint": "always",
+    "source.organizeImports": "never"
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "tailwindCSS.classFunctions": ["tw"],
+  "tailwindCSS.classAttributes": ["class", "className", "ngClass", "class:list", "\\w+ClassName"],
+  "tailwindCSS.experimental.classRegex": [
+    // 在属性外使用 cn 函数
+    // https://github.com/tailwindlabs/tailwindcss-intellisense/issues/868#issuecomment-2013447372
+    ["cn\\(([^)(]*(?:\\([^)(]*(?:\\([^)(]*(?:\\([^)(]*\\)[^)(]*)*\\)[^)(]*)*\\)[^)(]*)*)\\)", "'([^']*)'"],
+    ["cn\\(([^)(]*(?:\\([^)(]*(?:\\([^)(]*(?:\\([^)(]*\\)[^)(]*)*\\)[^)(]*)*\\)[^)(]*)*)\\)", "\"([^\"]*)\""],
+    ["cn\\(([^)(]*(?:\\([^)(]*(?:\\([^)(]*(?:\\([^)(]*\\)[^)(]*)*\\)[^)(]*)*\\)[^)(]*)*)\\)", "`([^`]*)`"]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
