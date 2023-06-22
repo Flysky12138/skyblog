@@ -1,0 +1,21 @@
+import { CustomFetch } from '@/lib/server/fetch'
+import { CustomResponse } from '@/lib/server/response'
+import { NextRequest } from 'next/server'
+
+export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
+
+export type GET = MethodRequestType<{
+  return: {
+    hitokoto: string
+  }
+}>
+
+export const GET = async (request: NextRequest) => {
+  try {
+    const data = await CustomFetch('https://v1.hitokoto.cn')
+    return CustomResponse.encrypt(data)
+  } catch (error) {
+    return CustomResponse.error(error)
+  }
+}

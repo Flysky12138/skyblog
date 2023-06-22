@@ -1,0 +1,27 @@
+model Clash {
+  id              String         @id @default(uuid())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now())
+  name            String
+  subtitle        String?
+  content         String
+  subscribeLastAt DateTime?
+  clashTemplateId Int?
+  variables       String         @default("{}") // psql 使用 json 类型
+  visitorInfos    VisitorInfo[]
+  clashTemplates  ClashTemplate? @relation(fields: [clashTemplateId], references: [id])
+
+  @@unique([name, subtitle])
+  @@map("clashs")
+}
+
+model ClashTemplate {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  content   String
+  clashs    Clash[]
+
+  @@map("clash_templates")
+}

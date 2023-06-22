@@ -1,0 +1,21 @@
+::hr[数学逻辑]
+
+有如下公式
+
+```math
+\begin{align}
+  \arctan x &= \int \frac{1}{1+x^{2}} \mathrm{d}x \\
+            &= \int \sum_{n=0}^{\infty}{(-1)^n x^{2n}} \mathrm{d}x \\
+            &= \sum_{n=0}^{\infty}{(-1)^n \frac{x^{2n+1}}{2n+1}}
+\end{align}
+```
+
+迭代计算即可
+
+```math
+\begin{align}
+  \pi &= 4 \arctan(1) \\
+      &= 4 \sum_{n=0}^{\infty}{(-1)^n \frac{1}{2n+1}} \\
+      &= 4 \times (1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + \cdots)
+\end{align}
+```

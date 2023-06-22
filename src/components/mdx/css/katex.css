@@ -1,0 +1,9 @@
+.katex-display {
+  @apply s-bg-sheet s-border-color-card s-hidden-scrollbar overflow-x-auto overflow-y-clip rounded-md border px-3 pb-3 pt-4 backdrop-blur;
+  .katex {
+    @apply min-w-max;
+  }
+}
+.tag {
+  @apply hidden;
+}

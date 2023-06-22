@@ -1,0 +1,14 @@
+::view-transition-old(root),
+::view-transition-new(root) {
+  @apply animate-none mix-blend-normal;
+}
+
+[data-mui-color-scheme='light'] {
+  &::view-transition-new(root) {
+    @apply z-10;
+  }
+}
+
+::view-transition-old(root) {
+  @apply z-10;
+}
