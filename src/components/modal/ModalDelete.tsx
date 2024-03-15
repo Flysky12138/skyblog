@@ -3,15 +3,15 @@
 import { WarningRounded } from '@mui/icons-material'
 import { Button, Typography } from '@mui/joy'
 import React from 'react'
-import ModalCore, { ModalCorePropsType } from './ModalCore'
+import ModalCore, { ModalCoreProps } from './ModalCore'
 
-interface ModalDeletePropsType extends Pick<ModalCorePropsType, 'component' | 'onClose'> {
+interface ModalDeleteProps extends Pick<ModalCoreProps, 'component' | 'onClose'> {
   onCancel?: () => void
   onSubmit: () => void
   title: string
 }
 
-export default function ModalDelete({ component: Component, title, onClose, onCancel, onSubmit }: ModalDeletePropsType) {
+export default function ModalDelete({ component: Component, title, onClose, onCancel, onSubmit }: ModalDeleteProps) {
   const submitBtnRef = React.useRef<HTMLButtonElement>(null)
 
   return (

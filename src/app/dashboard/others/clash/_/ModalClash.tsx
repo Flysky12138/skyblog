@@ -1,5 +1,5 @@
-import { ClashPostRequestType } from '@/app/api/dashboard/clash/route'
-import ModalCore, { ModalCorePropsType } from '@/components/modal/ModalCore'
+import { ClashPostRequest } from '@/app/api/dashboard/clash/route'
+import ModalCore, { ModalCoreProps } from '@/components/modal/ModalCore'
 import MonacoEditor from '@/components/monaco-editor'
 import { yamlConfig } from '@/components/monaco-editor/yaml'
 import { Button, FormControl, FormLabel, Input } from '@mui/joy'
@@ -7,13 +7,13 @@ import dayjs from 'dayjs'
 import React from 'react'
 import { useImmer } from 'use-immer'
 
-interface ModalClashPropsType extends Pick<ModalCorePropsType, 'component'> {
-  onSubmit: (payload: ClashPostRequestType) => Promise<void>
-  value?: Pick<ClashPostRequestType, 'content' | 'name' | 'subtitle'>
+interface ModalClashProps extends Pick<ModalCoreProps, 'component'> {
+  onSubmit: (payload: ClashPostRequest) => Promise<void>
+  value?: Pick<ClashPostRequest, 'content' | 'name' | 'subtitle'>
 }
 
-export default function ModalClash({ component: Component, value, onSubmit }: ModalClashPropsType) {
-  const [form, setForm] = useImmer<NonNullable<ModalClashPropsType['value']>>({
+export default function ModalClash({ component: Component, value, onSubmit }: ModalClashProps) {
+  const [form, setForm] = useImmer<NonNullable<ModalClashProps['value']>>({
     content: '',
     name: '',
     subtitle: ''

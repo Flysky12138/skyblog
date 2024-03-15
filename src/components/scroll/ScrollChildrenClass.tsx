@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-interface ScrollChildrenClassPropsType {
+interface ScrollChildrenClassProps {
   children: React.ReactElement
   className: string
   down?: number
@@ -10,7 +10,7 @@ interface ScrollChildrenClassPropsType {
   up?: number
 }
 
-export default function ScrollChildrenClass({ selector, children, className, down = Infinity, up = 0 }: ScrollChildrenClassPropsType) {
+export default function ScrollChildrenClass({ selector, children, className, down = Infinity, up = 0 }: ScrollChildrenClassProps) {
   const childrenRef = React.useRef<HTMLElement>(null)
   const newChildren = React.cloneElement(children, { ref: childrenRef })
 

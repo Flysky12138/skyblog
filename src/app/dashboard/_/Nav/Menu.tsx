@@ -7,11 +7,11 @@ import { BlockOutlined, BubbleChart, GitHub, HomeOutlined, PermIdentityOutlined,
 import { List, ListItem, ListItemContent, ListItemDecorator } from '@mui/joy'
 import Admin from './Admin'
 
-export interface MenuPropsType {
+export interface MenuProps {
   className?: string
 }
 
-export default function Menu({ className }: MenuPropsType) {
+export default function Menu({ className }: MenuProps) {
   return (
     <List
       className={cn('s-divider h-full select-none overflow-auto overflow-x-hidden bg-zinc-50 p-0 dark:bg-zinc-800', className)}

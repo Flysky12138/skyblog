@@ -1,4 +1,4 @@
-import { ImageInfoGetResponseType, ImageInfoPostRequestType } from '@/app/api/dashboard/image-info/route'
+import { ImageInfoGetResponseType, ImageInfoPostRequest } from '@/app/api/dashboard/image-info/route'
 import { ImageFileInfoType, getImageFileInfo } from '@/lib/fileInfo'
 import { EXT } from '@/lib/keys'
 import { CustomFetch } from '@/lib/server/fetch'
@@ -15,16 +15,16 @@ const getImageInfo = async () => {
 }
 const postImageInfo = async (sha: string, payload: ImageFileInfoType) => {
   return await CustomFetch<ImageInfoGetResponseType>('/api/dashboard/image-info', {
-    body: { key: sha, value: payload } satisfies ImageInfoPostRequestType,
+    body: { key: sha, value: payload } satisfies ImageInfoPostRequest,
     method: 'POST'
   })
 }
 
-interface SyncImageInfoPropsType {
+interface SyncImageInfoProps {
   path: string
 }
 
-export default function SyncImageInfo({ path }: SyncImageInfoPropsType) {
+export default function SyncImageInfo({ path }: SyncImageInfoProps) {
   const [disabled, disabledToggle] = useToggle(false)
 
   const syncImagesInfo = React.useCallback(async () => {

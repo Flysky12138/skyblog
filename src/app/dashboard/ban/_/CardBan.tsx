@@ -7,7 +7,7 @@ import { motion } from 'framer-motion'
 import React from 'react'
 import { useClickAway, useSet, useToggle } from 'react-use'
 
-interface CardBanPropsType {
+interface CardBanProps {
   description?: string
   label: string
   onDelete: (payload: string[]) => Promise<void>
@@ -15,7 +15,7 @@ interface CardBanPropsType {
   value: string[]
 }
 
-export default function CardBan({ description, label, value, onDelete, onSubmit }: CardBanPropsType) {
+export default function CardBan({ description, label, value, onDelete, onSubmit }: CardBanProps) {
   const inputRef = React.useRef<HTMLInputElement>(null)
   const [showInput, showInputToggle] = useToggle(false)
   useClickAway(inputRef, showInputToggle)

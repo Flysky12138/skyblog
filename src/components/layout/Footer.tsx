@@ -1,11 +1,11 @@
 import { Typography } from '@mui/joy'
 import Link, { LinkProps } from 'next/link'
 
-interface OuterLinkPropsType extends LinkProps {
+interface OuterLinkProps extends LinkProps {
   children: React.ReactNode
 }
 
-const OuterLink: React.FC<OuterLinkPropsType> = ({ children, ...props }) => {
+const OuterLink: React.FC<OuterLinkProps> = ({ children, ...props }) => {
   return (
     <Typography
       className="s-link decoration-wavy underline-offset-2 hover:underline"

@@ -10,7 +10,7 @@ import { useBeforeUnload } from 'react-use'
 import { useImmer } from 'use-immer'
 import CopyLink, { CopyLinkRef } from './CopyLink'
 
-interface UploadFilesPropsType {
+interface UploadFilesProps {
   component: React.FunctionComponent<{
     onClick: React.MouseEventHandler<HTMLElement>
   }>
@@ -19,7 +19,7 @@ interface UploadFilesPropsType {
   path: string
 }
 
-export default function UploadFiles({ component: Component, isUploadDirectory, path, onSubmit }: UploadFilesPropsType) {
+export default function UploadFiles({ component: Component, isUploadDirectory, path, onSubmit }: UploadFilesProps) {
   const modalRef = React.useRef<ModalCoreRef>()
   const inputRef = React.useRef<HTMLInputElement>(null)
 

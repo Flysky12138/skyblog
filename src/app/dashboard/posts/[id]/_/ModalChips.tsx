@@ -4,13 +4,13 @@ import { Apps } from '@mui/icons-material'
 import { Chip, IconButton } from '@mui/joy'
 import { Tag } from '@prisma/client'
 
-interface ModalChipsPropsType<T> {
+interface ModalChipsProps<T> {
   onChange: (payload: T[]) => void
   select: T[]
   value: T[]
 }
 
-export default function ModalChips<T extends Pick<Tag, 'id' | 'name'>>({ select, value, onChange }: ModalChipsPropsType<T>) {
+export default function ModalChips<T extends Pick<Tag, 'id' | 'name'>>({ select, value, onChange }: ModalChipsProps<T>) {
   return (
     <ModalCore
       className="flex max-w-screen-md flex-row flex-wrap gap-4"

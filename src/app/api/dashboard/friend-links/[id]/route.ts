@@ -6,9 +6,9 @@ import { NextRequest } from 'next/server'
 import puppeteer, { Browser } from 'puppeteer-core'
 
 // 修改
-export interface FriendLinksPutRequestType extends Prisma.FriendLinksCreateInput {}
+export interface FriendLinksPutRequest extends Prisma.FriendLinksCreateInput {}
 
-const dbPut = async (id: number, data: FriendLinksPutRequestType) => {
+const dbPut = async (id: number, data: FriendLinksPutRequest) => {
   return await prisma.friendLinks.update({
     data: {
       updatedAt: new Date().toISOString(),
@@ -18,7 +18,7 @@ const dbPut = async (id: number, data: FriendLinksPutRequestType) => {
   })
 }
 
-export const PUT = async (request: NextRequest, { params }: DynamicRouteType<{ id: string }>) => {
+export const PUT = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
@@ -42,7 +42,7 @@ const dbPatch = async (id: number, data: Prisma.FriendLinksUpdateInput) => {
   })
 }
 
-export const PATCH = async (request: NextRequest, { params }: DynamicRouteType<{ id: string }>) => {
+export const PATCH = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   let browser: Browser | null = null
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
@@ -85,7 +85,7 @@ const dbDelete = async (id: number) => {
   })
 }
 
-export const DELETE = async (request: NextRequest, { params }: DynamicRouteType<{ id: string }>) => {
+export const DELETE = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 

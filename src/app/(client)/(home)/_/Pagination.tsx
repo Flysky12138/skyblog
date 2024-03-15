@@ -3,13 +3,13 @@
 import { Pagination as MuiPagination } from '@mui/material'
 import { useRouter } from 'next/navigation'
 
-interface PaginationPropsType {
+interface PaginationProps {
   count: number
   page: number
   pathname: string
 }
 
-export default function Pagination({ count, page: _page, pathname }: PaginationPropsType) {
+export default function Pagination({ count, page: _page, pathname }: PaginationProps) {
   const router = useRouter()
 
   // React.useEffect(() => {

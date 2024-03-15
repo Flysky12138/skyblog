@@ -16,7 +16,7 @@ const loadExternalResource = (url: string) => {
   })
 }
 
-interface Live2DPropsType {
+interface Live2DProps {
   hitAreaVisible: boolean
   path: string
   px: number
@@ -30,7 +30,7 @@ interface Live2DPropsType {
  * @see https://guansss.github.io/pixi-live2d-display/api/index.html
  * @see https://github.com/Stuk/jszip
  */
-export default async function Live2D({ path, px, py, view, hitAreaVisible }: Live2DPropsType) {
+export default async function Live2D({ path, px, py, view, hitAreaVisible }: Live2DProps) {
   try {
     // live2d v2/3+ support & pixi & pixi-live2d-display
     if (!window.PIXI) {

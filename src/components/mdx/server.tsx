@@ -7,10 +7,10 @@ import { options } from './options.mjs'
 import 'katex/dist/katex.min.css'
 import './prism.scss'
 
-interface MDXServerPropsType {
+interface MDXServerProps {
   value: MDXRemoteProps['source']
 }
 
-export const MDXServer = ({ value }: MDXServerPropsType) => {
+export const MDXServer = ({ value }: MDXServerProps) => {
   return <MDXRemote components={components} options={options} source={value} />
 }

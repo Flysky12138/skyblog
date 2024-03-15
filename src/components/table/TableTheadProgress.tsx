@@ -1,11 +1,11 @@
 import { LinearProgress } from '@mui/joy'
 
-interface TableTheadProgressPropsType {
+interface TableTheadProgressProps {
   colSpan: number
   loading: boolean
 }
 
-export default function TableTheadProgress({ loading, colSpan }: TableTheadProgressPropsType) {
+export default function TableTheadProgress({ loading, colSpan }: TableTheadProgressProps) {
   if (!loading) return null
 
   return (

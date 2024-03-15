@@ -5,11 +5,11 @@ import { ListItemButton, ListItemButtonProps } from '@mui/joy'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-interface ListItemLinkPropsType extends Omit<ListItemButtonProps, 'selected'> {
+interface ListItemLinkProps extends Omit<ListItemButtonProps, 'selected'> {
   href: string
 }
 
-export default function ListItemLink({ className, href, children, ...props }: ListItemLinkPropsType) {
+export default function ListItemLink({ className, href, children, ...props }: ListItemLinkProps) {
   const pathname = usePathname()
   const isSelected = pathname == href
 

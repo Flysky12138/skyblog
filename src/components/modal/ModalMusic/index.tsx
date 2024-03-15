@@ -2,7 +2,7 @@
 
 import { LyricGetResponseType } from '@/app/api/music/neteasecloud/lyric/route'
 import { MusicPlayListGetResponseType } from '@/app/api/music/neteasecloud/playlist/route'
-import ModalCore, { ModalCorePropsType } from '@/components/modal/ModalCore'
+import ModalCore, { ModalCoreProps } from '@/components/modal/ModalCore'
 import Loop from '@/components/svg-icon/Loop'
 import Random from '@/components/svg-icon/Random'
 import { cn } from '@/lib/cn'
@@ -14,15 +14,15 @@ import Image from 'next/image'
 import React from 'react'
 import { toast } from 'sonner'
 import { ImmerReducer, useImmerReducer } from 'use-immer'
-import Lyric, { LyricRefType } from './Lyric'
-import Playlist, { PlaylistRefType } from './Playlist'
-import ProgressBar, { ProgressBarRefType } from './ProgressBar'
+import Lyric, { LyricRef } from './Lyric'
+import Playlist, { PlaylistRef } from './Playlist'
+import ProgressBar, { ProgressBarRef } from './ProgressBar'
 
 const getSongUrl = async (id: number) => {
   return await CustomFetch<{ url: string }>(`/api/music/neteasecloud/song?id=${id}`)
 }
 
-export interface PlayerType {
+export interface Player {
   index: number
   list: MusicPlayListGetResponseType
   lyric: {
@@ -31,20 +31,20 @@ export interface PlayerType {
   }
   mode: 'loop' | 'order' | 'random'
   playing: boolean
-  randomList: PlayerType['list']
+  randomList: Player['list']
   url: string | null
 }
 type PlayerActionType =
-  | { payload: PlayerType['list']; type: 'setList' }
-  | { payload: PlayerType['lyric']['has']; type: 'setLyricHas' }
+  | { payload: Player['list']; type: 'setList' }
+  | { payload: Player['lyric']['has']; type: 'setLyricHas' }
   | { type: 'setLyricUseNext' }
-  | { payload: PlayerType['mode']; type: 'setMode' }
+  | { payload: Player['mode']; type: 'setMode' }
   | { payload: boolean; type: 'setStatus' }
   | { payload: string; type: 'setUrl' }
   | { payload: number; type: 'toggle' }
   | { payload: number; type: 'playIndex' }
 
-const reducer: ImmerReducer<PlayerType, PlayerActionType> = (state, action) => {
+const reducer: ImmerReducer<Player, PlayerActionType> = (state, action) => {
   switch (action.type) {
     case 'setList':
       state.list = action.payload
@@ -54,7 +54,7 @@ const reducer: ImmerReducer<PlayerType, PlayerActionType> = (state, action) => {
       state.lyric.has = action.payload
       break
     case 'setLyricUseNext':
-      const uses = Array.from<PlayerType['lyric']['use']>(['lrc', 'tlyric', 'romalrc', 'klyric'])
+      const uses = Array.from<Player['lyric']['use']>(['lrc', 'tlyric', 'romalrc', 'klyric'])
         .filter(key => key && state.lyric.has[key])
         .concat(null)
       if (uses.length <= 1) return
@@ -83,11 +83,11 @@ const reducer: ImmerReducer<PlayerType, PlayerActionType> = (state, action) => {
   }
 }
 
-export interface MusicPropsType extends Pick<ModalCorePropsType, 'component'> {
+export interface MusicProps extends Pick<ModalCoreProps, 'component'> {
   value: MusicPlayListGetResponseType
 }
 
-export default function Music({ value: playlist, component: Component }: MusicPropsType) {
+export default function Music({ value: playlist, component: Component }: MusicProps) {
   const [player, dispatch] = useImmerReducer(reducer, {
     index: 0,
     list: [],
@@ -140,11 +140,11 @@ export default function Music({ value: playlist, component: Component }: MusicPr
   // 播放器
   const audioRef = React.useRef<HTMLAudioElement>(null)
   // 播放列表
-  const playlistRef = React.useRef<PlaylistRefType>(null)
+  const playlistRef = React.useRef<PlaylistRef>(null)
   // 进度条
-  const progressBarRef = React.useRef<ProgressBarRefType>(null)
+  const progressBarRef = React.useRef<ProgressBarRef>(null)
   // 歌词
-  const lyricRef = React.useRef<LyricRefType>(null)
+  const lyricRef = React.useRef<LyricRef>(null)
 
   if (player.list.length == 0) return null
 

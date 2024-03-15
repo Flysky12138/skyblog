@@ -3,10 +3,10 @@ import Pagination from '../../_/Pagination'
 import Posts from '../../_/Posts'
 import { getPosts, where } from '../../_/fetch'
 
-type PagePropsType = DynamicRouteType<{ page: string }>
+interface PageProps extends DynamicRoute<{ page: string }> {}
 
-export const generateStaticParams = async (): Promise<Array<PagePropsType['params']>> => {
-  const ans: PagePropsType['params'][] = []
+export const generateStaticParams = async (): Promise<Array<PageProps['params']>> => {
+  const ans: PageProps['params'][] = []
   const take = Number.parseInt(process.env.NEXT_PUBLIC_PAGE_POSTCARD_COUNT)
 
   const count = await prisma.post.count({ where })
@@ -17,7 +17,7 @@ export const generateStaticParams = async (): Promise<Array<PagePropsType['param
   return ans
 }
 
-export default async function Page({ params }: PagePropsType) {
+export default async function Page({ params }: PageProps) {
   const page = Number.parseInt(params.page)
   const posts = await getPosts(page)
 

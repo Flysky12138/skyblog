@@ -3,7 +3,7 @@ import { formatFileSize } from '@/lib/parser/size'
 import { Folder, InsertDriveFileOutlined } from '@mui/icons-material'
 import { Box } from '@mui/joy'
 
-interface ListItemPropsType {
+interface ListItemProps {
   className?: string
   disabled?: boolean
   endDecorator?: React.ReactNode
@@ -11,7 +11,7 @@ interface ListItemPropsType {
   value?: GithubRepoFileType | GithubRepoFolderType
 }
 
-export default function ListItem({ value: file, className, disabled, endDecorator, onClick }: ListItemPropsType) {
+export default function ListItem({ value: file, className, disabled, endDecorator, onClick }: ListItemProps) {
   return (
     <section
       className={cn(

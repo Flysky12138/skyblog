@@ -7,7 +7,7 @@ import { useSelectedLayoutSegment } from 'next/navigation'
 import React from 'react'
 import { useToggle } from 'react-use'
 
-interface ListItemExpandPropsType {
+interface ListItemExpandProps {
   children?: React.ReactNode
   /**
    * true - 默认打开；string - 活动路由段匹配时打开
@@ -18,7 +18,7 @@ interface ListItemExpandPropsType {
   label: string
 }
 
-export default function ListItemExpand({ children, defaultExpanded = false, icon, label }: ListItemExpandPropsType) {
+export default function ListItemExpand({ children, defaultExpanded = false, icon, label }: ListItemExpandProps) {
   const segment = useSelectedLayoutSegment()
 
   const [open, openToggle] = useToggle(typeof defaultExpanded == 'boolean' ? defaultExpanded : segment == defaultExpanded)

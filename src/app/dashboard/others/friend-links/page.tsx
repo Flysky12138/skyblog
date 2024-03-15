@@ -1,6 +1,6 @@
 'use client'
 
-import { FriendLinksGetResponseType, FriendLinksPostRequestType, FriendLinksPostResponseType } from '@/app/api/dashboard/friend-links/route'
+import { FriendLinksGetResponseType, FriendLinksPostRequest, FriendLinksPostResponseType } from '@/app/api/dashboard/friend-links/route'
 import Card from '@/components/layout/Card'
 import ModalDelete from '@/components/modal/ModalDelete'
 import { CustomFetch } from '@/lib/server/fetch'
@@ -15,13 +15,13 @@ import ModalForm from './_/ModalForm'
 const getFriendLinks = async () => {
   return await CustomFetch<FriendLinksGetResponseType>('/api/dashboard/friend-links')
 }
-const postFriendLinks = async (payload: FriendLinksPostRequestType) => {
+const postFriendLinks = async (payload: FriendLinksPostRequest) => {
   return await CustomFetch<FriendLinksPostResponseType>('/api/dashboard/friend-links', {
     body: payload,
     method: 'POST'
   })
 }
-const putFriendLinks = async (id: number, payload: FriendLinksPostRequestType) => {
+const putFriendLinks = async (id: number, payload: FriendLinksPostRequest) => {
   return await CustomFetch<FriendLinksPostResponseType>(`/api/dashboard/friend-links/${id}`, {
     body: payload,
     method: 'PUT'

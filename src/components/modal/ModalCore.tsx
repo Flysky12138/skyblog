@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn'
 import { LinearProgress, Modal, ModalDialog, ModalDialogProps, ModalOverflow, ModalProps } from '@mui/joy'
 import React from 'react'
 
-export interface ModalCorePropsType extends Omit<ModalProps, 'children' | 'open' | 'onClose'> {
+export interface ModalCoreProps extends Omit<ModalProps, 'children' | 'open' | 'onClose'> {
   children?:
     | React.ReactNode
     | React.FunctionComponent<{
@@ -26,7 +26,7 @@ export interface ModalCoreRef {
   openToggle: (payload?: boolean) => void
 }
 
-export default React.forwardRef<ModalCoreRef | undefined, ModalCorePropsType>(function ModalCore(
+export default React.forwardRef<ModalCoreRef | undefined, ModalCoreProps>(function ModalCore(
   { children, component: Component, disabled, onClose, onOpen, loading, disableBackdropClickClose, className, layout, ...props },
   ref
 ) {

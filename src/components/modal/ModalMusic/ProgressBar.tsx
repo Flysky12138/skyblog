@@ -4,15 +4,15 @@ import { millisecondToTemplate } from '@/lib/parser/time'
 import { Slider } from '@mui/joy'
 import React from 'react'
 
-export interface ProgressBarRefType {
+export interface ProgressBarRef {
   setProgress: (ms: number) => void
 }
-interface ProgressBarPropsType {
+interface ProgressBarProps {
   maxValue: number
   onChange: (ms: number) => void
 }
 
-export default React.forwardRef<ProgressBarRefType, ProgressBarPropsType>(function ProgressBar({ maxValue, onChange }, ref) {
+export default React.forwardRef<ProgressBarRef, ProgressBarProps>(function ProgressBar({ maxValue, onChange }, ref) {
   const [duration, setDuration] = React.useState(0)
 
   // 手动控制中

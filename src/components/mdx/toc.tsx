@@ -8,11 +8,11 @@ import { options } from './options.mjs'
 import { headingAttr, rehypeHeadingOrder } from './rehype/rehype-heading-order'
 import { remarkOnlyHeading } from './remark/remark-only-heading'
 
-interface HeadingPropsType extends React.ComponentProps<'h1'> {
+interface HeadingProps extends React.ComponentProps<'h1'> {
   component: React.ElementType
 }
 
-const Heading: React.FC<HeadingPropsType> = ({ component: Component, className, children, id, ...props }) => {
+const Heading: React.FC<HeadingProps> = ({ component: Component, className, children, id, ...props }) => {
   const deep = Reflect.get(props, headingAttr).split('.').length - 1
 
   return (
@@ -48,11 +48,11 @@ const heading = {
   h6: (props: any) => <Heading component="h6" {...props} />
 }
 
-export interface MDXTocPropsType {
+export interface MDXTocProps {
   value: string
 }
 
-export const MDXToc = ({ value }: MDXTocPropsType) => {
+export const MDXToc = ({ value }: MDXTocProps) => {
   return (
     <MDXRemote
       components={heading}

@@ -1,6 +1,6 @@
 'use client'
 
-import { PostDetailDeleteResponseType, PostDetailPatchRequestType, PostDetailPatchResponseType } from '@/app/api/dashboard/posts/[id]/route'
+import { PostDetailDeleteResponseType, PostDetailPatchRequest, PostDetailPatchResponseType } from '@/app/api/dashboard/posts/[id]/route'
 import { PostsGetResponseType } from '@/app/api/dashboard/posts/route'
 import SelectClearable from '@/components/form/SelectClearable'
 import ModalDelete from '@/components/modal/ModalDelete'
@@ -22,7 +22,7 @@ import { useImmer } from 'use-immer'
 const getPosts = async () => {
   return await CustomFetch<PostsGetResponseType>('/api/dashboard/posts')
 }
-const patchPost = async (id: string, payload: PostDetailPatchRequestType) => {
+const patchPost = async (id: string, payload: PostDetailPatchRequest) => {
   return await CustomFetch<PostDetailPatchResponseType>(`/api/dashboard/posts/${id}`, {
     body: payload,
     method: 'PATCH'

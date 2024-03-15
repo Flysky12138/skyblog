@@ -5,14 +5,14 @@ import useTheme from '@/hooks/useTheme'
 import { DarkModeOutlined, LightMode } from '@mui/icons-material'
 import { IconButton, IconButtonProps, Tooltip, TooltipProps } from '@mui/joy'
 
-interface ToggleThemePropsType {
+interface ToggleThemeProps {
   slotsProps?: Partial<{
     iconbutton: Pick<IconButtonProps, 'color'>
     tooltip: Pick<TooltipProps, 'placement'>
   }>
 }
 
-export default function ToggleTheme({ slotsProps }: ToggleThemePropsType) {
+export default function ToggleTheme({ slotsProps }: ToggleThemeProps) {
   const { isDark, setTheme } = useTheme()
 
   const isClient = useIsClient()

@@ -1,11 +1,11 @@
-import { UserPostRequestType, UserPostResponseType } from '@/app/api/auth/user/route'
+import { UserPostRequest, UserPostResponseType } from '@/app/api/auth/user/route'
 import { Account } from '@auth/core/types'
 import NextAuth from 'next-auth'
 import { JWT } from 'next-auth/jwt'
 import GitHub from 'next-auth/providers/github'
 import { CustomFetch } from './server/fetch'
 
-const postUser = async (payload: UserPostRequestType) => {
+const postUser = async (payload: UserPostRequest) => {
   return await CustomFetch<UserPostResponseType>(`${process.env.NEXT_PUBLIC_WEBSITE_URL}/api/auth/user`, {
     body: payload,
     method: 'POST'

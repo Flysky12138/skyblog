@@ -3,7 +3,7 @@
  * @see https://vercel.com/docs/functions/serverless-functions/runtimes#size-limits
  */
 
-import { ImageInfoPostRequestType } from '@/app/api/dashboard/image-info/route'
+import { ImageInfoPostRequest } from '@/app/api/dashboard/image-info/route'
 import { CustomFetch } from '@/lib/server/fetch'
 import { toast } from 'sonner'
 import { getImageFileInfo } from '../fileInfo'
@@ -49,12 +49,12 @@ export const getAllGithubRepos = async (path: string) => {
   try {
     path = decodeURIComponent(path)
 
-    const ref = await CustomFetch<GithubRepoRefType>(
+    const ref = await CustomFetch<GithubRepoRef>(
       `https://api.github.com/repos/${process.env.NEXT_PUBLIC_GITHUB_ACCESS_OWNER_REPO}/git/ref/heads/main?t=${Date.now()}`,
       { headers }
     )
 
-    const trees = await CustomFetch<GithubRepoTreeType>(
+    const trees = await CustomFetch<GithubRepoTree>(
       `https://api.github.com/repos/${process.env.NEXT_PUBLIC_GITHUB_ACCESS_OWNER_REPO}/git/trees/${ref.object.sha}?recursive=true&t=${Date.now()}`,
       { headers }
     )
@@ -68,14 +68,14 @@ export const getAllGithubRepos = async (path: string) => {
 }
 
 // 上传/修改
-export interface GithubRepoPutRequestType {
+export interface GithubRepoPutRequest {
   branch?: string
   content: string
   message: string
   sha?: string
 }
 
-export const putGithubRepos = async (path: string, file: File, body: Partial<Omit<GithubRepoPutRequestType, 'content'>> = {}) => {
+export const putGithubRepos = async (path: string, file: File, body: Partial<Omit<GithubRepoPutRequest, 'content'>> = {}) => {
   try {
     const base64 = await file2base64(file)
     const [_, base64Content] = Array.from(base64.match(/;base64,(.*)$/)!)
@@ -91,7 +91,7 @@ export const putGithubRepos = async (path: string, file: File, body: Partial<Omi
     try {
       const info = await getImageFileInfo(file)
       await CustomFetch('/api/dashboard/image-info', {
-        body: { key: content.sha, value: info } satisfies ImageInfoPostRequestType,
+        body: { key: content.sha, value: info } satisfies ImageInfoPostRequest,
         method: 'POST'
       })
       Object.assign(content, info)
@@ -107,13 +107,13 @@ export const putGithubRepos = async (path: string, file: File, body: Partial<Omi
 }
 
 // 删除
-export interface GithubRepoDeleteRequestType {
+export interface GithubRepoDeleteRequest {
   branch?: string
   message: string
   sha: string
 }
 
-export const deleteGithubRepos = async (path: string, body: GithubRepoDeleteRequestType) => {
+export const deleteGithubRepos = async (path: string, body: GithubRepoDeleteRequest) => {
   try {
     const data = await CustomFetch(githubRepoApiUrl(path), {
       body,
@@ -133,7 +133,7 @@ export const deleteGithubRepos = async (path: string, body: GithubRepoDeleteRequ
 }
 
 // 删除所有
-export const deleteAllGithubRepos = async (path: string, message: (file: GithubRepoTreeType['tree'][number]) => GithubRepoDeleteRequestType['message']) => {
+export const deleteAllGithubRepos = async (path: string, message: (file: GithubRepoTree['tree'][number]) => GithubRepoDeleteRequest['message']) => {
   try {
     const files = await getAllGithubRepos(path)
     for (const file of files.tree) {

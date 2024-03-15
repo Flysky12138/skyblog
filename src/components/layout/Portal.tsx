@@ -1,14 +1,14 @@
 'use client'
 
-import { Portal as MuiPortal, PortalProps } from '@mui/material'
+import { Portal as MuiPortal, PortalProps as MuiPortalProps } from '@mui/material'
 import React from 'react'
 
-interface PortalPropsType extends Omit<PortalProps, 'container'> {
+interface PortalProps extends Omit<MuiPortalProps, 'container'> {
   delay?: number
   selector: string
 }
 
-export default function Portal({ children, selector, delay = 0, disablePortal, ...props }: PortalPropsType) {
+export default function Portal({ children, selector, delay = 0, disablePortal, ...props }: PortalProps) {
   const [portalContainer, setPortalContainer] = React.useState<Element>()
 
   React.useEffect(() => {

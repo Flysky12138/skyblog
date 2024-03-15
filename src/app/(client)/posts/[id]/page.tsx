@@ -16,14 +16,14 @@ const getPost = async (id: string) => {
   })
 }
 
-type PagePropsType = DynamicRouteType<{ id: string }>
+interface PageProps extends DynamicRoute<{ id: string }> {}
 
 export const dynamicParams = false
-export const generateStaticParams = async (): Promise<Array<PagePropsType['params']>> => {
+export const generateStaticParams = async (): Promise<Array<PageProps['params']>> => {
   const posts = await prisma.post.findMany({ select: { id: true } })
   return posts.map(post => ({ id: post.id }))
 }
-export const generateMetadata = async ({ params }: PagePropsType): Promise<Metadata> => {
+export const generateMetadata = async ({ params }: PageProps): Promise<Metadata> => {
   const post = await getPost(params.id)
   if (!post) return {}
   return {
@@ -35,7 +35,7 @@ export const generateMetadata = async ({ params }: PagePropsType): Promise<Metad
   }
 }
 
-export default async function Page({ params }: PagePropsType) {
+export default async function Page({ params }: PageProps) {
   const post = await getPost(params.id)
   if (!post) return notFound()
 

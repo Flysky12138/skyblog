@@ -3,9 +3,9 @@ import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
-export interface UserPostRequestType extends Prisma.UserCreateInput {}
+export interface UserPostRequest extends Prisma.UserCreateInput {}
 
-const dbPost = async (data: UserPostRequestType) => {
+const dbPost = async (data: UserPostRequest) => {
   const count = await prisma.user.count()
   if (count == 0) data.role = 'ADMIN'
 

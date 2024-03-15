@@ -52,7 +52,7 @@ const CardCopy = ({ title, values }: { title: string; values: string[] }) => {
 
 const imageAlt = (path: string) => path.split('/').at(-2) || ''
 
-type FileType = (GithubRepoCommonType | GithubRepoTreeType['tree'][number]) & Partial<ImageFileInfoType>
+type FileType = (GithubRepoCommon | GithubRepoTree['tree'][number]) & Partial<ImageFileInfoType>
 export interface CopyLinkRef {
   asyncOpen: (payload: FileType[]) => void
   open: (payload: FileType[]) => Promise<void>

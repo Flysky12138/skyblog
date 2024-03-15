@@ -39,10 +39,10 @@ const defaultOptions: editor.IStandaloneEditorConstructionOptions = {
 
 export type LanguagePropsType = Required<Pick<EditorProps, 'language' | 'beforeMount'>>
 
-export interface MonacoEditorRefType {
+export interface MonacoEditorRef {
   editor?: Parameters<OnMount>[0]
 }
-interface MonacoEditorPropsType extends LanguagePropsType, Pick<EditorProps, 'loading'> {
+interface MonacoEditorProps extends LanguagePropsType, Pick<EditorProps, 'loading'> {
   children?: React.ReactNode
   className?: string
   code: EditorProps['value']
@@ -52,12 +52,12 @@ interface MonacoEditorPropsType extends LanguagePropsType, Pick<EditorProps, 'lo
   options?: editor.IStandaloneEditorConstructionOptions
 }
 
-export default React.forwardRef<MonacoEditorRefType, MonacoEditorPropsType>(function MonacoEditor(
+export default React.forwardRef<MonacoEditorRef, MonacoEditorProps>(function MonacoEditor(
   { children, className, code, height, oldCode, options = {}, onChange, ...props },
   ref
 ) {
   const containerRef = React.useRef<HTMLDivElement>()
-  const editorRef = React.useRef<MonacoEditorRefType['editor']>()
+  const editorRef = React.useRef<MonacoEditorRef['editor']>()
 
   React.useImperativeHandle(ref, () => ({
     editor: editorRef.current

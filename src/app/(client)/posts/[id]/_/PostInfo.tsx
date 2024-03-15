@@ -19,11 +19,11 @@ const postPostView = async (id: string) => {
   })
 }
 
-interface PostInfoPropsType {
+interface PostInfoProps {
   id: string
 }
 
-export default function PostInfo({ id }: PostInfoPropsType) {
+export default function PostInfo({ id }: PostInfoProps) {
   const { data: post, isLoading } = useSWR(`/api/post/info?id=${id}`, () => getPostInfo(id), {
     refreshInterval: 10 * 1000
   })

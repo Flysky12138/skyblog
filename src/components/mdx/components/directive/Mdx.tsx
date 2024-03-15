@@ -2,11 +2,11 @@ import { Alert } from '@mui/material'
 import dynamic from 'next/dynamic'
 import Code from '../Code'
 
-interface MdxPropsType {
+interface MdxProps {
   path: string
 }
 
-export default function Page({ path }: MdxPropsType) {
+export default function Page({ path }: MdxProps) {
   const Componet = dynamic(() =>
     import(`@/mdx/${path}`).catch(() => (
       <Alert severity="error">

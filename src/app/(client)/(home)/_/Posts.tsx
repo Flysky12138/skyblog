@@ -7,12 +7,12 @@ import Link from 'next/link'
 import React from 'react'
 import { getPosts } from './fetch'
 
-interface PostsPropsType {
+interface PostsProps {
   children: React.ReactNode
   posts: Prisma.PromiseReturnType<typeof getPosts> | undefined
 }
 
-export default function Posts({ children, posts }: PostsPropsType) {
+export default function Posts({ children, posts }: PostsProps) {
   if (!posts || posts.data.length == 0) {
     return (
       <Typography className="text-center" level="body-md">

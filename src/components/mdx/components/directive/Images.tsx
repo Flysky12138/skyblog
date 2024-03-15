@@ -5,13 +5,13 @@ import { Chip } from '@mui/joy'
 import React from 'react'
 import { useToggle } from 'react-use'
 
-interface ImagesPropsType {
+interface ImagesProps {
   children: React.ReactNode
   className?: string
   defaultAlt?: string
 }
 
-export default function Images({ children, className, defaultAlt }: ImagesPropsType) {
+export default function Images({ children, className, defaultAlt }: ImagesProps) {
   const [open, openToggle] = useToggle(false)
 
   const images: React.ReactElement[] = []

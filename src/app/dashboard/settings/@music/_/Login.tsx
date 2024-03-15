@@ -15,11 +15,11 @@ const login = async (phone: string, password_captcha: string) => {
   return await CustomFetch(`/api/dashboard/music/neteasecloud/login/cellphone?phone=${phone}&password_captcha=${password_captcha}`)
 }
 
-interface LoginPropsType {
+interface LoginProps {
   onSuccess: () => void
 }
 
-export default function Login({ onSuccess }: LoginPropsType) {
+export default function Login({ onSuccess }: LoginProps) {
   const [form, setForm] = useImmer({ password_captcha: '', phone: '' })
 
   const [loading, setLoading] = React.useState(false)

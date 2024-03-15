@@ -16,17 +16,17 @@ export const GET = async () => {
 }
 
 export type ImageInfoGetResponseType = {
-  data: Record<string, ImageInfoPostRequestType['value']>
+  data: Record<string, ImageInfoPostRequest['value']>
 }
 
-export interface ImageInfoPostRequestType {
+export interface ImageInfoPostRequest {
   key: string
   value: ImageFileInfoType
 }
 
 export const POST = async (request: NextRequest) => {
   try {
-    const { key, value }: ImageInfoPostRequestType = await request.json()
+    const { key, value }: ImageInfoPostRequest = await request.json()
 
     if (!key) CustomResponse.error('{key} 值缺失', 422)
     if (!value) CustomResponse.error('{value} 值缺失', 422)
@@ -41,7 +41,7 @@ export const POST = async (request: NextRequest) => {
 
 export const DELETE = async (request: NextRequest) => {
   try {
-    const { key }: Pick<ImageInfoPostRequestType, 'key'> = await request.json()
+    const { key }: Pick<ImageInfoPostRequest, 'key'> = await request.json()
 
     if (!key) CustomResponse.error('{key} 值缺失', 422)
 

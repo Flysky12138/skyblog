@@ -4,9 +4,9 @@ import { VisitorInfo } from '@prisma/client'
 import { geolocation, ipAddress } from '@vercel/edge'
 import { NextRequest } from 'next/server'
 
-interface VisitorPostRequestType extends Omit<VisitorInfo, 'id' | 'createdAt'> {}
+interface VisitorPostRequest extends Omit<VisitorInfo, 'id' | 'createdAt'> {}
 
-const dbPost = async (data: VisitorPostRequestType) => {
+const dbPost = async (data: VisitorPostRequest) => {
   return await prisma.visitorInfo.create({ data })
 }
 

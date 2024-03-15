@@ -1,6 +1,6 @@
 'use client'
 
-import { BanGetResponseType, BanPutRequestType, EdgeBanKeys } from '@/app/api/dashboard/ban/route'
+import { BanGetResponseType, BanPutRequestType, EdgeBanKeysType } from '@/app/api/dashboard/ban/route'
 import { CustomFetch } from '@/lib/server/fetch'
 import { CustomToast } from '@/lib/toast'
 import { produce } from 'immer'
@@ -22,7 +22,7 @@ export default function Page() {
   const { data: edgeBanConfig, mutate } = useSWR('/api/dashboard/ban', getEdge)
 
   const editEdgeBanConfigItem = React.useCallback(
-    async (type: 'PUT' | 'DELETE', key: EdgeBanKeys, value: string[]) => {
+    async (type: 'PUT' | 'DELETE', key: EdgeBanKeysType, value: string[]) => {
       await CustomToast(putEdge({ key, value }), type == 'PUT' ? '添加成功' : '删除成功')
       mutate(
         produce(state => {

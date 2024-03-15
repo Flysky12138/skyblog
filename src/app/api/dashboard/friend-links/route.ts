@@ -18,9 +18,9 @@ export const GET = async () => {
 }
 
 // 创建
-export interface FriendLinksPostRequestType extends Prisma.FriendLinksCreateInput {}
+export interface FriendLinksPostRequest extends Prisma.FriendLinksCreateInput {}
 
-const dbPost = async (data: FriendLinksPostRequestType) => {
+const dbPost = async (data: FriendLinksPostRequest) => {
   return await prisma.friendLinks.create({
     data
   })

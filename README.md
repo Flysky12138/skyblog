@@ -57,8 +57,9 @@ AUTH_URL=
 2. 为了减少客户端包的大小并充分利用服务器，请尽可能将状态 `'use client'` 移动到组件树的较低位置 [参考 ↗](https://nextjs.org/docs/getting-started/react-essentials#moving-client-components-to-the-leaves)
 3. `/src/app/**/_` 是对应路由用的非通用组建。为了和文件路由区分，文件夹名用大驼峰
 4. 组件根标签是 `div` 等无意义标签，换成 `section`；`React.Fragment` 除外
-5. 接口请求体类型命名 `<name><Get|Post...>RequestType`，接口返回值类型命名 `<name><Get|Post...>ResponseType`
+5. 接口请求体类型命名 `<name><Get|Post...>Request`，接口返回值类型命名 `<name><Get|Post...>ResponseType`
 6. 对数据库的 CRUD 方法提取到外层，并命名为 `db<Get|Post...>`，以便使用 `Prisma.PromiseReturnType<typeof dbGet>` 获取返回类型
+7. 类型命名以 `Type` 结尾，接口不以 `Type` 结尾
 
 ### 坑
 

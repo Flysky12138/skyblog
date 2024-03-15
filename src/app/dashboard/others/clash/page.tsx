@@ -1,6 +1,6 @@
 'use client'
 
-import { ClashGetResponseType, ClashPostRequestType, ClashPostResponseType, ClashPutResponseType } from '@/app/api/dashboard/clash/route'
+import { ClashGetResponseType, ClashPostRequest, ClashPostResponseType, ClashPutResponseType } from '@/app/api/dashboard/clash/route'
 import ModalCore from '@/components/modal/ModalCore'
 import ModalDelete from '@/components/modal/ModalDelete'
 import TableTbodyEmpty from '@/components/table/TableTbodyEmpty'
@@ -19,13 +19,13 @@ import ModalClash from './_/ModalClash'
 const getClashs = async () => {
   return await CustomFetch<ClashGetResponseType>('/api/dashboard/clash')
 }
-const postClash = async (payload: ClashPostRequestType) => {
+const postClash = async (payload: ClashPostRequest) => {
   return await CustomFetch<ClashPostResponseType>('/api/dashboard/clash', {
     body: payload,
     method: 'POST'
   })
 }
-const putClash = async (id: string, payload: ClashPostRequestType) => {
+const putClash = async (id: string, payload: ClashPostRequest) => {
   return await CustomFetch<ClashPutResponseType>(`/api/dashboard/clash?id=${id}`, {
     body: payload,
     method: 'PUT'

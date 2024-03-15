@@ -10,13 +10,13 @@ import { IPhotoSliderProps } from 'react-photo-view/dist/PhotoSlider'
 
 import 'react-photo-view/dist/react-photo-view.css'
 
-export interface ImageViewerPropsType
+export interface ImageViewerProps
   extends Omit<
     IPhotoSliderProps,
     'brokenElement' | 'loadingElement' | 'maskClassName' | 'maskClosable' | 'photoWrapClassName' | 'pullClosable' | 'toolbarRender'
   > {}
 
-export default function ImageViewer({ onClose, ...props }: ImageViewerPropsType) {
+export default function ImageViewer({ onClose, ...props }: ImageViewerProps) {
   const [isFullScreen, setIsFullScreen] = React.useState(false)
 
   return (

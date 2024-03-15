@@ -92,7 +92,7 @@ class Point {
   }
 }
 
-interface OptionsType {
+interface Options {
   [key: string]: unknown
   // add animation effect to each ribbon section over time
   animateSections: boolean
@@ -133,9 +133,9 @@ class Ribbon {
   private _height: number
   private _scroll: number
   private _ribbons: Array<RibbonType[] | null>
-  private _options: OptionsType
+  private _options: Options
 
-  constructor(canvas: HTMLCanvasElement, options?: Partial<OptionsType>) {
+  constructor(canvas: HTMLCanvasElement, options?: Partial<Options>) {
     this._canvas = canvas
     this._width = 0
     this._height = 0
@@ -162,7 +162,7 @@ class Ribbon {
   }
 
   // Set and merge local options
-  private setOptions(options?: Partial<OptionsType>) {
+  private setOptions(options?: Partial<Options>) {
     for (const key in options) {
       if (Object.prototype.hasOwnProperty.call(this._options, key)) {
         this._options[key] = options[key]

@@ -7,17 +7,17 @@ import React from 'react'
 import { useAsync, useInterval, useLocalStorage } from 'react-use'
 import { useImmer } from 'use-immer'
 
-interface Live2DContextPropsType {
+interface Live2DContextProps {
   enable?: boolean
   loading: boolean
   message: { content: string | null; priority?: number; timeout?: number }
   setEnable: React.Dispatch<React.SetStateAction<boolean | undefined>>
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
-  setMessage: React.Dispatch<Live2DContextPropsType['message']>
+  setMessage: React.Dispatch<Live2DContextProps['message']>
   src?: string
 }
 
-export const Live2DContext = React.createContext<Live2DContextPropsType>({
+export const Live2DContext = React.createContext<Live2DContextProps>({
   enable: false,
   loading: false,
   message: { content: null },
@@ -28,7 +28,7 @@ export const Live2DContext = React.createContext<Live2DContextPropsType>({
 
 export const Live2DProvider = ({ children }: { children: React.ReactNode }) => {
   const [enable, setEnable] = useLocalStorage('live2d', false)
-  const [src, setSrc] = React.useState<Live2DContextPropsType['src']>()
+  const [src, setSrc] = React.useState<Live2DContextProps['src']>()
   const [loading, setLoading] = React.useState(false)
 
   // Live2D 资源地址
@@ -39,8 +39,8 @@ export const Live2DProvider = ({ children }: { children: React.ReactNode }) => {
 
   // 消息
   const timer = React.useRef<NodeJS.Timeout | undefined>(undefined)
-  const [message, changeMessage] = useImmer<Live2DContextPropsType['message']>({ content: null })
-  const setMessage = React.useCallback<Live2DContextPropsType['setMessage']>(
+  const [message, changeMessage] = useImmer<Live2DContextProps['message']>({ content: null })
+  const setMessage = React.useCallback<Live2DContextProps['setMessage']>(
     ({ content, priority = 0, timeout = 6000 }) => {
       if (priority < (message.priority || 0)) return
       clearTimeout(timer.current)

@@ -4,9 +4,9 @@ import { VisitorInfo } from '@prisma/client'
 import { ipAddress } from '@vercel/edge'
 import { NextRequest } from 'next/server'
 
-interface ClashGetRequestType extends Pick<VisitorInfo, 'agent' | 'ip'> {}
+interface ClashGetRequest extends Pick<VisitorInfo, 'agent' | 'ip'> {}
 
-const dbGet = async (id: string, data: ClashGetRequestType) => {
+const dbGet = async (id: string, data: ClashGetRequest) => {
   const clash = await prisma.clash.findUnique({
     include: {
       visitorInfos: true

@@ -5,23 +5,23 @@ import { Live2DContext } from '@/provider/live2d'
 import { AnimatePresence, AnimationProps, motion } from 'framer-motion'
 import React from 'react'
 import { useImmer } from 'use-immer'
-import { PlayerType } from './index'
+import { Player } from './index'
 
 const getLyric = async (id: number) => {
   return await CustomFetch<LyricGetResponseType>(`/api/music/neteasecloud/lyric?id=${id}`)
 }
 
-export interface LyricRefType {
+export interface LyricRef {
   setProgress: (second: number) => void
 }
-interface LyricPropsType {
+interface LyricProps {
   className?: string
   id: number
-  onLoad: (payload: PlayerType['lyric']['has']) => void
-  type: PlayerType['lyric']['use']
+  onLoad: (payload: Player['lyric']['has']) => void
+  type: Player['lyric']['use']
 }
 
-export default React.forwardRef<LyricRefType, LyricPropsType>(function Lyric({ className, id, type, onLoad }, ref) {
+export default React.forwardRef<LyricRef, LyricProps>(function Lyric({ className, id, type, onLoad }, ref) {
   const [lyric, setLyric] = useImmer<LyricGetResponseType | null>(null)
   const [showLyric, setShowLyric] = React.useState('')
 

@@ -6,11 +6,11 @@ import { BuiltInProviderType } from 'next-auth/providers'
 import { LiteralUnion, signIn } from 'next-auth/react'
 import { useToggle } from 'react-use'
 
-interface ButtonOAuthSignInPropsType extends Pick<ButtonProps, 'startDecorator' | 'children'> {
+interface ButtonOAuthSignInProps extends Pick<ButtonProps, 'startDecorator' | 'children'> {
   type: LiteralUnion<BuiltInProviderType>
 }
 
-export default function ButtonOAuthSignIn({ startDecorator, children, type }: ButtonOAuthSignInPropsType) {
+export default function ButtonOAuthSignIn({ startDecorator, children, type }: ButtonOAuthSignInProps) {
   const [loading, loadingToggle] = useToggle(false)
 
   return (

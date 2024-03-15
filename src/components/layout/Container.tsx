@@ -1,12 +1,12 @@
 import { cn } from '@/lib/cn'
 
-interface ContainerPropsType {
+interface ContainerProps {
   children: React.ReactNode
   className?: string
   variant?: 'header'
 }
 
-export default function Container({ children, className, variant }: ContainerPropsType) {
+export default function Container({ children, className, variant }: ContainerProps) {
   return (
     <section
       className={cn(

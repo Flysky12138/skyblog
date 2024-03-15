@@ -3,11 +3,11 @@
 import { Close, Menu as MenuIcon } from '@mui/icons-material'
 import { Drawer, IconButton } from '@mui/joy'
 import { useToggle } from 'react-use'
-import Menu, { MenuPropsType } from './Menu'
+import Menu, { MenuProps } from './Menu'
 
-interface MenuMobilePropsType extends MenuPropsType {}
+interface MenuMobileProps extends MenuProps {}
 
-export default function MenuMobile({ className }: MenuMobilePropsType) {
+export default function MenuMobile({ className }: MenuMobileProps) {
   const [open, openToggle] = useToggle(false)
 
   return (

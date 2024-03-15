@@ -2,9 +2,9 @@
 
 import {
   PostDetailGetResponseType,
-  PostDetailPostRequestType,
+  PostDetailPostRequest,
   PostDetailPostResponseType,
-  PostDetailPutRequestType,
+  PostDetailPutRequest,
   PostDetailPutResponseType
 } from '@/app/api/dashboard/posts/[id]/route'
 import { CategoriesGetResponseType } from '@/app/api/dashboard/posts/categories/route'
@@ -37,13 +37,13 @@ const getCategories = async () => {
 const getTags = async () => {
   return await CustomFetch<TagsGetResponseType>('/api/dashboard/posts/tags')
 }
-const putPostDetail = async (id: string, payload: PostDetailPutRequestType) => {
+const putPostDetail = async (id: string, payload: PostDetailPutRequest) => {
   return await CustomFetch<PostDetailPutResponseType>(`/api/dashboard/posts/${id}`, {
     body: payload,
     method: 'PUT'
   })
 }
-const postPostDetail = async (payload: PostDetailPostRequestType) => {
+const postPostDetail = async (payload: PostDetailPostRequest) => {
   return await CustomFetch<PostDetailPostResponseType>('/api/dashboard/posts/new', {
     body: payload,
     method: 'POST'

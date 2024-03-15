@@ -1,13 +1,13 @@
 import { cn } from '@/lib/cn'
 import React from 'react'
 
-interface CardPropsType extends React.HTMLAttributes<HTMLElement> {
+interface CardProps extends React.HTMLAttributes<HTMLElement> {
   component?: React.ElementType
   title?: string
 }
 
 export default React.forwardRef(function Card<T>(
-  { children, className, component: Component = 'section', title, ...props }: CardPropsType & T,
+  { children, className, component: Component = 'section', title, ...props }: CardProps & T,
   ref: React.Ref<HTMLElement | undefined>
 ) {
   return (

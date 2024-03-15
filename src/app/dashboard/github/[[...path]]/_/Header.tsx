@@ -6,11 +6,11 @@ import React from 'react'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
 
-interface HeaderPropsType {
+interface HeaderProps {
   children: React.ReactNode
 }
 
-export default function Header({ children }: HeaderPropsType) {
+export default function Header({ children }: HeaderProps) {
   const [_, copy] = useCopyToClipboard()
   const params = useParams<{ path?: string[] }>()
 

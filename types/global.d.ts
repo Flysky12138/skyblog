@@ -10,18 +10,18 @@ type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never }
 type XOR<T, U> = T | U extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U
 
 // error.tsx or global-error.tsx 错误边界捕获类型
-interface ErrorBoundaryType {
+interface ErrorBoundary {
   error: Error
   reset: () => void
 }
 
 // 动态路由动态段类型
-interface DynamicRouteType<T extends Record<string, string | string[]>, D extends Record<string, string | string[] | undefined> = {}> {
+interface DynamicRoute<T extends Record<string, string | string[]>, D extends Record<string, string | string[] | undefined> = {}> {
   params: T
   searchParams: Partial<D>
 }
 
 // 接口错误相应返回类型
-interface ErrorResponseType {
+interface ErrorResponse {
   message: string
 }

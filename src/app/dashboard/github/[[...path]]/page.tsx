@@ -1,6 +1,6 @@
 'use client'
 
-import ImageViewer, { ImageViewerPropsType } from '@/components/ImageViewer'
+import ImageViewer, { ImageViewerProps } from '@/components/ImageViewer'
 import Card from '@/components/layout/Card'
 import ModalDelete from '@/components/modal/ModalDelete'
 import { cn } from '@/lib/cn'
@@ -29,7 +29,7 @@ export default function Page() {
     fallbackData: []
   })
 
-  const [photoView, setPhotoView] = useImmer<Pick<ImageViewerPropsType, 'images' | 'visible' | 'index'>>({ images: [], index: 0, visible: false })
+  const [photoView, setPhotoView] = useImmer<Pick<ImageViewerProps, 'images' | 'visible' | 'index'>>({ images: [], index: 0, visible: false })
 
   const copyLinkRef = React.useRef<CopyLinkRef>(null)
 

@@ -29,9 +29,9 @@ export const GET = async () => {
 }
 
 // 创建
-export interface ClashPostRequestType extends Prisma.ClashCreateInput {}
+export interface ClashPostRequest extends Prisma.ClashCreateInput {}
 
-const dbPost = async (data: ClashPostRequestType) => {
+const dbPost = async (data: ClashPostRequest) => {
   return await prisma.clash.create({ data, include })
 }
 
@@ -47,7 +47,7 @@ export const POST = async (request: NextRequest) => {
 }
 
 // 修改
-const dbPut = async (id: string, data: ClashPostRequestType) => {
+const dbPut = async (id: string, data: ClashPostRequest) => {
   return await prisma.clash.update({
     data: {
       ...data,

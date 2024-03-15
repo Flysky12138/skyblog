@@ -2,7 +2,7 @@
 
 import CustomError from '@/components/CustomError'
 
-export default function GlobalError(props: ErrorBoundaryType) {
+export default function GlobalError(props: ErrorBoundary) {
   return (
     <html>
       <body>

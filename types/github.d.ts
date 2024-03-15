@@ -1,4 +1,4 @@
-interface GithubRepoCommonType {
+interface GithubRepoCommon {
   _links: {
     git: string | null
     html: string | null
@@ -34,7 +34,7 @@ type GithubRepoFolderType = {
   type: 'dir'
 } & GithubRepoCommonType
 
-interface GithubRepoRefType {
+interface GithubRepoRef {
   node_id: string
   object: {
     sha: string
@@ -45,7 +45,7 @@ interface GithubRepoRefType {
   url: string
 }
 
-interface GithubRepoTreeType {
+interface GithubRepoTree {
   sha: string
   tree: Array<{
     mode: string

@@ -2,12 +2,12 @@ import { CloseRounded } from '@mui/icons-material'
 import { IconButton, Select, SelectProps, SelectStaticProps } from '@mui/joy'
 import React from 'react'
 
-interface SelectClearablePropsType extends Omit<SelectProps<any, false>, 'action'> {
+interface SelectClearableProps extends Omit<SelectProps<any, false>, 'action'> {
   clearable: boolean
   onClear: () => void
 }
 
-export default function SelectClearable({ children, clearable, onClear, ...props }: SelectClearablePropsType) {
+export default function SelectClearable({ children, clearable, onClear, ...props }: SelectClearableProps) {
   const action: SelectStaticProps['action'] = React.useRef(null)
 
   return (

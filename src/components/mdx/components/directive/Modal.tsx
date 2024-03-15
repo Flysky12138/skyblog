@@ -1,7 +1,7 @@
-interface ModalPropsType {
+interface ModalProps {
   children?: React.ReactNode
 }
 
-export default function Modal({ children, ...props }: ModalPropsType) {
+export default function Modal({ children, ...props }: ModalProps) {
   return null
 }

@@ -7,18 +7,18 @@ import { ClickAwayListener } from '@mui/material'
 import { motion } from 'framer-motion'
 import React from 'react'
 import { FixedSizeList } from 'react-window'
-import { PlayerType } from '.'
+import { Player } from '.'
 
-export interface PlaylistRefType {
+export interface PlaylistRef {
   setOpen: (payload: boolean) => void
 }
-interface PlaylistPropsType {
+interface PlaylistProps {
   activeIndex: number
   onClick?: (index: number) => void
-  value: PlayerType['list']
+  value: Player['list']
 }
 
-export default React.forwardRef<PlaylistRefType, PlaylistPropsType>(function Playlist({ value: playlist, activeIndex, onClick }, ref) {
+export default React.forwardRef<PlaylistRef, PlaylistProps>(function Playlist({ value: playlist, activeIndex, onClick }, ref) {
   // 播放列表菜单开关；不使用组建默认内部控制器，是因为 MenuItem 组件会导致虚拟滚动抖动
   const [isOpen, setIsOpen] = React.useState(false)
   React.useImperativeHandle(ref, () => ({

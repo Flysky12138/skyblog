@@ -1,12 +1,12 @@
 import Card from '@/components/layout/Card'
-import { Tab as JoyTab, TabList as JoyTabList, TabPanel as JoyTabPanel, Tabs as JoyTabs, TabsProps } from '@mui/joy'
+import { Tab as JoyTab, TabList as JoyTabList, TabPanel as JoyTabPanel, Tabs as JoyTabs, TabsProps as JoyTabsProps } from '@mui/joy'
 import React from 'react'
 
-interface TabsPropsType extends TabsProps {
+interface TabsProps extends JoyTabsProps {
   activeIndex?: string
 }
 
-export default function Tabs({ children, activeIndex, ...props }: TabsPropsType) {
+export default function Tabs({ children, activeIndex, ...props }: TabsProps) {
   const TabList: React.ReactNode[] = []
   const TabPanel: React.ReactNode[] = []
 

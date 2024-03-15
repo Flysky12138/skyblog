@@ -5,14 +5,14 @@ import React from 'react'
 import { useSet } from 'react-use'
 import { toast } from 'sonner'
 
-interface InputMultiplePropsType<T> extends Pick<InputProps, 'endDecorator'> {
+interface InputMultipleProps<T> extends Pick<InputProps, 'endDecorator'> {
   getChipValue?: (payload: T) => string
   onAdd: (payload: string) => void
   onDelete: (payload: string[]) => void
   value: T[]
 }
 
-export default function InputMultiple<T = string>({ value, endDecorator, getChipValue, onAdd, onDelete }: InputMultiplePropsType<T>) {
+export default function InputMultiple<T = string>({ value, endDecorator, getChipValue, onAdd, onDelete }: InputMultipleProps<T>) {
   const [form, setForm] = React.useState('')
   const [selectChips, setSelectChips] = useSet<string>()
 

@@ -1,11 +1,11 @@
 import { cn } from '@/lib/cn'
-import { DividerProps, Divider as JoyDivider } from '@mui/joy'
+import { Divider as JoyDivider, DividerProps as MuiDividerProps } from '@mui/joy'
 
-interface DividerPropsType extends Omit<DividerProps, 'ref'> {
+interface DividerProps extends Omit<MuiDividerProps, 'ref'> {
   left?: string
 }
 
-export default function Divider({ children, className, left, ...props }: DividerPropsType) {
+export default function Divider({ children, className, left, ...props }: DividerProps) {
   return (
     <JoyDivider
       className={cn('my-3', className)}

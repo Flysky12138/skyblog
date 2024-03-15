@@ -6,8 +6,8 @@ import { NextRequest } from 'next/server'
 
 export const runtime = 'edge'
 
-export type EdgeBanKeys = (typeof EDGE_CONFIG)[keyof PickKeyStartWith<typeof EDGE_CONFIG, 'BAN'>]
-export type BanGetResponseType = Partial<Record<EdgeBanKeys, string[]>>
+export type EdgeBanKeysType = (typeof EDGE_CONFIG)[keyof PickKeyStartWith<typeof EDGE_CONFIG, 'BAN'>]
+export type BanGetResponseType = Partial<Record<EdgeBanKeysType, string[]>>
 
 export const GET = async (request: NextRequest) => {
   try {
@@ -29,7 +29,7 @@ export const GET = async (request: NextRequest) => {
 }
 
 export type BanPutRequestType = {
-  key: EdgeBanKeys
+  key: EdgeBanKeysType
   value: string[]
 }
 

@@ -1,14 +1,14 @@
 'use client'
 
 import { cn } from '@/lib/cn'
-import { MasonryProps, Masonry as MuiMasonry } from '@mui/lab'
+import { Masonry as MuiMasonry, MasonryProps as MuiMasonryProps } from '@mui/lab'
 import { useMeasure, useTimeout } from 'react-use'
 
-export interface MasonryPropsType extends MasonryProps {
+export interface MasonryProps extends MuiMasonryProps {
   minWidth?: string
 }
 
-export default function Masonry({ className, children, columns, minWidth, spacing = 1, ...props }: MasonryPropsType) {
+export default function Masonry({ className, children, columns, minWidth, spacing = 1, ...props }: MasonryProps) {
   const [ref, { width }] = useMeasure<HTMLElement>()
   if (minWidth) columns = (width / Number.parseFloat(minWidth)) >> 0
 

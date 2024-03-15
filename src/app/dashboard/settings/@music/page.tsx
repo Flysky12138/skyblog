@@ -23,14 +23,14 @@ const logout = async () => {
   return await CustomFetch('/api/dashboard/music/neteasecloud/logout')
 }
 
-interface MusicOptionsType {
+interface MusicOptions {
   playlist: Array<{ id: number; name: string }>
   selectId: number
   user: { avatarUrl: string; nickname: string }
 }
 
 export default function Page() {
-  const [music, setMusic] = useImmer<MusicOptionsType | null>(null)
+  const [music, setMusic] = useImmer<MusicOptions | null>(null)
 
   const { loading, retry } = useAsyncRetry(() => getMusicOptions().then(setMusic))
   if (loading) return <div className="s-skeleton my-px h-8 w-52 rounded"></div>

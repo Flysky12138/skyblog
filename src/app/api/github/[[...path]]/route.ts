@@ -6,7 +6,7 @@ export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
 // 由于 vercel 限制，大于 4M 就重定向
-export const GET = async (request: NextRequest, { params }: DynamicRouteType<{ path?: string[] }>) => {
+export const GET = async (request: NextRequest, { params }: DynamicRoute<{ path?: string[] }>) => {
   try {
     const path = params.path?.join('/') || ''
 

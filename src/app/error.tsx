@@ -2,6 +2,6 @@
 
 import CustomError from '@/components/CustomError'
 
-export default function Error(props: ErrorBoundaryType) {
+export default function Error(props: ErrorBoundary) {
   return <CustomError className="rounded-none border-none" {...props} />
 }

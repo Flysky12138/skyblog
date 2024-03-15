@@ -1,21 +1,21 @@
-import { ImageInfoPostRequestType } from '@/app/api/dashboard/image-info/route'
+import { ImageInfoPostRequest } from '@/app/api/dashboard/image-info/route'
 import { EXT, REDIS } from '@/lib/keys'
 import { getAllGithubRepos, githubFileDirectUrl } from '@/lib/server/github'
 import { kv } from '@vercel/kv'
 import Img from '../Img'
 import Images from './Images'
-import Masonry, { MasonryPropsType } from './Masonry'
+import Masonry, { MasonryProps } from './Masonry'
 
-interface GithubImagesPropsType extends MasonryPropsType {
+interface GithubImagesProps extends MasonryProps {
   groupDeep: string
   path: string
 }
 
-export default async function GithubImages({ path, groupDeep, ...props }: GithubImagesPropsType) {
+export default async function GithubImages({ path, groupDeep, ...props }: GithubImagesProps) {
   const files = await getAllGithubRepos(path)
 
-  const fileGroupMap = new Map<string, Array<GithubRepoTreeType['tree'][number] & ImageInfoPostRequestType['value']>>()
-  const imagesInfo: Partial<Record<string, ImageInfoPostRequestType['value']>> = await kv.json.get(REDIS.IMAGES)
+  const fileGroupMap = new Map<string, Array<GithubRepoTree['tree'][number] & ImageInfoPostRequest['value']>>()
+  const imagesInfo: Partial<Record<string, ImageInfoPostRequest['value']>> = await kv.json.get(REDIS.IMAGES)
 
   for (const file of files.tree) {
     if (!EXT.IMAGE.some(ext => file.path.endsWith(ext))) continue
