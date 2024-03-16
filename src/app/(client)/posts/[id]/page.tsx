@@ -56,7 +56,7 @@ export default async function Page({ params }: PageProps) {
             <MDXServer value={post.content} />
           </Card>
           <Card
-            className="s-hidden-scrollbar sticky top-[calc(theme(height.header)+theme(height.9))] hidden max-h-[calc(100dvh-theme(height.header)-2*theme(height.9))] w-52 shrink-0 space-y-1.5 self-start overflow-auto p-3 empty:hidden lg:block"
+            className="s-hidden-scrollbar sticky top-[calc(theme(height.header)+theme(height.9))] hidden max-h-[calc(100dvh-theme(height.header)-2*theme(height.9))] w-52 shrink-0 space-y-1.5 self-start overflow-auto p-3 pr-1.5 empty:hidden lg:block"
             id={SELECTOR.IDS.TOC}
           >
             <LocateToc />

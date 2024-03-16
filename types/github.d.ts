@@ -26,13 +26,13 @@ interface gt1MB {
 type GithubRepoFileType = {
   download_url: string
   type: 'file'
-} & GithubRepoCommonType &
+} & GithubRepoCommon &
   (le1MB | gt1MB)
 
 type GithubRepoFolderType = {
   download_url: null
   type: 'dir'
-} & GithubRepoCommonType
+} & GithubRepoCommon
 
 interface GithubRepoRef {
   node_id: string

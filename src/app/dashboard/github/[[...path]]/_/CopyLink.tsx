@@ -79,7 +79,7 @@ export default React.forwardRef<CopyLinkRef, {}>(function CopyLink(props, ref) {
 
   return (
     <ModalCore ref={modalCoreRef} className="w-full max-w-screen-md select-none gap-y-10 py-7" onClose={() => setFiles([])}>
-      <CardCopy title="url" values={files.map(file => githubFileDirectUrl(file.path))} />
+      <CardCopy title="url" values={files.map(file => process.env.NEXT_PUBLIC_WEBSITE_URL + githubFileDirectUrl(file.path))} />
       <CardCopy title="markdown - img" values={imageFiles.map(file => `![${imageAlt(file.path)}](${githubFileDirectUrl(file.path)})`)} />
       <CardCopy
         title="component - img"

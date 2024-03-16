@@ -9,21 +9,25 @@ export const dynamic = 'force-dynamic'
 export const GET = async (request: NextRequest, { params }: DynamicRoute<{ path?: string[] }>) => {
   try {
     const path = params.path?.join('/') || ''
-
     const data = await getGithubRepos(path)
 
     if (Array.isArray(data)) return CustomResponse.error('资源响应错误', 504)
 
-    if (data.size >= 4 * 1024 * 1024) return NextResponse.redirect(data.download_url)
+    if (data.size >= 4 * 1024 * 1024) {
+      const url = process.env.CDN_URL ? `${process.env.CDN_URL}/${data.download_url}` : data.download_url
+      return NextResponse.redirect(url, {
+        headers: {
+          'Cache-Control': 'private, max-age=31536000, immutable'
+        }
+      })
+    }
 
-    const res = await fetch(data.download_url)
-    const blob = await res.blob()
-    return new Response(blob, {
-      headers: {
+    const { body, headers, ...res } = await fetch(data.download_url)
+    return new Response(body, {
+      ...res,
+      headers: Object.assign({}, headers, {
         'Cache-Control': 'public, max-age=31536000, s-maxage=2592000, immutable'
-      },
-      status: res.status,
-      statusText: res.statusText
+      })
     })
   } catch (error) {
     return CustomResponse.error(error)

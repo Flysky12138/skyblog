@@ -20,7 +20,7 @@ const headers = {
 }
 
 // 直链
-export const githubFileDirectUrl = (path: string) => `${process.env.NEXT_PUBLIC_WEBSITE_URL}/api/github/${encodeURIComponent(path).replace(/%2F/g, '/')}`
+export const githubFileDirectUrl = (path: string) => `/api/github/${encodeURIComponent(path).replace(/%2F/g, '/')}`
 
 // 获取
 export type GithubRepoGetResponseType = Array<GithubRepoFileType | GithubRepoFolderType> | GithubRepoFileType

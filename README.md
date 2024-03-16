@@ -30,6 +30,7 @@ TOKEN_VERCEL=Z6Wn8v7YkAf5Ml0DxJzI1gBp
 
 # github assets
 ## https://github.com/settings/tokens
+## 用于对私有仓库的管理
 NEXT_PUBLIC_TOKEN_GITHUB_ACCESS=ghp_v9Lq4GjDn5Nh2Tg1Yz3Rb7Oc8Jw0Ee5Pf
 NEXT_PUBLIC_GITHUB_ACCESS_OWNER_REPO=flysky12138/repository-name
 
@@ -43,6 +44,31 @@ GITHUB_SECRET=5c8e2b4f7a3d9b1e6c0g2a5h9j1k4l6m7n0o
 NEXTAUTH_SECRET=8j1a9s2d0f5g4h7j6k8l3m4n5b0v
 ## 使用自己的 CDN 一定要在 vercel 控制面板里添加 CDN 域名。未知原因，添加在 .env 里无效
 AUTH_URL=
+
+# CDN
+## 用于对 GitHub 仓库中大于 4M 的资源代理
+## $CDN_URL/https://example.com -> https://example.com
+CDN_URL=
+```
+
+## Cloudflare Workers
+
+```js
+export default {
+  async fetch(request) {
+    const url = new URL(request.url)
+    const { body, headers, ...response } = await fetch(url.href.replace(url.origin + '/', ''), request)
+    return new Response(body, {
+      ...response,
+      headers: Object.assign({}, headers, {
+        'Cache-Control': 'public, max-age=31536000, s-maxage=2592000, immutable',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+        'Access-Control-Allow-Headers': '*'
+      })
+    })
+  }
+}
 ```
 
 ## 开发

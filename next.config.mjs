@@ -5,10 +5,10 @@ const githubRepoUrl = `raw.githubusercontent.com/${process.env.NEXT_PUBLIC_GITHU
 
 const cspHeader = [
   "default-src 'self'",
-  `connect-src 'self' blob: data: api.github.com v1.hitokoto.cn ${githubRepoUrl}`,
+  `connect-src 'self' blob: data: api.github.com ${githubRepoUrl} ${process.env.CDN_URL}`,
   "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
-  `img-src 'self' blob: data: *.music.126.net ${githubRepoUrl}`,
+  `img-src 'self' blob: data: *.music.126.net ${githubRepoUrl} ${process.env.CDN_URL}`,
   "media-src 'self' *.music.126.net",
   "font-src 'self'",
   "object-src 'none'",
