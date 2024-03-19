@@ -1,5 +1,4 @@
 import { cn } from '@/lib/cn'
-import Card from '../layout/Card'
 
 interface TableWrapperProps {
   children: React.ReactNode
@@ -7,5 +6,9 @@ interface TableWrapperProps {
 }
 
 export default function TableWrapper({ children, className }: TableWrapperProps) {
-  return <Card className={cn('max-h-full overflow-auto rounded-md bg-inherit', '[&_th]:bg-[#eef1f6] [&_th]:dark:bg-[#292d38]', className)}>{children}</Card>
+  return (
+    <section className={cn('s-bg-card s-border-card max-h-full overflow-auto rounded-md border', '[&_th]:bg-[#eef1f6] [&_th]:dark:bg-[#292d38]', className)}>
+      {children}
+    </section>
+  )
 }

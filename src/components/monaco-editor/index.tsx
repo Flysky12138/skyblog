@@ -64,7 +64,7 @@ export default React.forwardRef<MonacoEditorRef, MonacoEditorProps>(function Mon
   }))
 
   // 设置编辑器全屏高度
-  const cardRef = React.useRef<HTMLElement>()
+  const cardRef = React.useRef<HTMLDivElement>(null)
   const [zoom, zoomToggle] = useToggle(false)
   if (zoom) height = `calc(100dvh - ${cardRef.current?.offsetHeight ?? 50}px)`
 
@@ -107,12 +107,7 @@ export default React.forwardRef<MonacoEditorRef, MonacoEditorProps>(function Mon
           if (event.key == 's' && (event.ctrlKey || event.metaKey)) event.preventDefault()
         }}
       >
-        <Card
-          ref={cardRef}
-          className={cn('flex h-header items-center gap-3 overflow-auto rounded-md rounded-b-none border-x-0 border-t-0 px-3.5', {
-            'rounded-none': zoom
-          })}
-        >
+        <div ref={cardRef} className="s-bg-card s-border-card flex h-header items-center gap-3 overflow-auto border-b px-3.5">
           <p className="s-subtitle select-none font-title text-xl">{props.language}</p>
           <span aria-hidden="true" className="grow"></span>
           {children}
@@ -144,7 +139,7 @@ export default React.forwardRef<MonacoEditorRef, MonacoEditorProps>(function Mon
           >
             {zoom ? <ZoomInMap /> : <ZoomOutMap />}
           </IconButton>
-        </Card>
+        </div>
         {diffMode ? (
           <DiffEditor height={height} modified={code} options={Object.assign({}, defaultOptions, options)} original={oldCode} theme={theme} {...props} />
         ) : (

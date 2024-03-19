@@ -16,7 +16,7 @@ const getImageInfo = async () => {
   return await CustomFetch<ImageInfoGetResponseType>('/api/dashboard/image-info')
 }
 
-const CardCopy = ({ title, values }: { title: string; values: string[] }) => {
+const CardCopy: React.FC<{ title: string; values: string[] }> = ({ title, values }) => {
   const [_, copy] = useCopyToClipboard()
 
   const handleCopy = () => {

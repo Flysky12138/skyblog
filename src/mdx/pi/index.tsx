@@ -1,6 +1,5 @@
 'use client'
 
-import Card from '@/components/layout/Card'
 import ModalCore from '@/components/modal/ModalCore'
 import { download } from '@/lib/download'
 import { Button, FormControl, FormLabel, Option, Radio, RadioGroup, Select } from '@mui/joy'
@@ -146,11 +145,7 @@ export default function Pi() {
         ) : (
           <div className="mb-5">
             <div className="pb-1">
-              耗时
-              <Card className="mx-2 px-1" component="span">
-                {result.time}
-              </Card>
-              毫秒；
+              耗时 {result.time} 毫秒；
               <Button
                 className="text-base"
                 size="sm"
@@ -166,7 +161,7 @@ export default function Pi() {
                 下载
               </Button>
             </div>
-            <Card className="overflow-hidden py-2 pl-3 font-code">
+            <div className="s-bg-card s-border-card overflow-hidden rounded-lg border py-2 pl-3 font-code">
               <FixedSizeList height={400} itemCount={piStr.length} itemData={piStr} itemSize={20} overscanCount={10} width="100%">
                 {({ data, style, index }) => (
                   <span key={index} style={style}>
@@ -174,7 +169,7 @@ export default function Pi() {
                   </span>
                 )}
               </FixedSizeList>
-            </Card>
+            </div>
           </div>
         )
       ) : null}

@@ -15,8 +15,8 @@ export default function Header({ children }: HeaderProps) {
   const params = useParams<{ path?: string[] }>()
 
   return (
-    <ScrollChildrenClass className="sticky -top-8 rounded-none border-t-0 transition-[border,border-radius]" selector="main" up={32}>
-      <div className="s-border-card z-10 flex items-center gap-x-2 rounded-lg rounded-b-none border bg-zinc-100 px-3 py-2 dark:bg-zinc-800">
+    <ScrollChildrenClass className="sticky -top-8 !rounded-none border-t-0 transition-[border,border-radius]" selector="main" up={32}>
+      <div className="s-border-card z-10 flex flex-wrap items-center gap-2 rounded-t-lg border bg-zinc-100 px-3 py-2 dark:bg-zinc-800">
         <Link
           className="s-bg-slate s-divider s-link rounded border px-2"
           href={`https://github.com/${process.env.NEXT_PUBLIC_GITHUB_ACCESS_OWNER_REPO}/`}
@@ -60,8 +60,7 @@ export default function Header({ children }: HeaderProps) {
             </React.Fragment>
           ))}
         </Breadcrumbs>
-        <span aria-hidden="true" className="grow"></span>
-        <div className="flex shrink-0 items-center gap-x-3">{children}</div>
+        <div className="ml-auto flex shrink-0 items-center gap-x-3">{children}</div>
       </div>
     </ScrollChildrenClass>
   )

@@ -8,7 +8,7 @@ import { options } from './options.mjs'
 import { headingAttr, rehypeHeadingOrder } from './rehype/rehype-heading-order'
 import { remarkOnlyHeading } from './remark/remark-only-heading'
 
-interface HeadingProps extends React.ComponentProps<'h1'> {
+interface HeadingProps extends React.ComponentProps<'a'> {
   component: React.ElementType
 }
 
@@ -16,15 +16,18 @@ const Heading: React.FC<HeadingProps> = ({ component: Component, className, chil
   const deep = Reflect.get(props, headingAttr).split('.').length - 1
 
   return (
-    <Component
+    <Link
+      replace
       className={cn(
         'group s-subtitle block rounded-md py-0.5 pr-2',
         'data-[active=true]:s-bg-slate data-[active=true]:s-link',
         'relative data-[active=true]:before:absolute data-[active=true]:before:inset-y-0.5 data-[active=true]:before:-left-2 data-[active=true]:before:w-1',
         'data-[active=true]:before:rounded data-[active=true]:before:bg-cyan-500/70',
+        'hover:s-bg-card',
         className
       )}
       data-active="false"
+      href={`#${id}`}
       style={
         {
           paddingLeft: `${0.5 + deep * 1}rem`
@@ -32,10 +35,8 @@ const Heading: React.FC<HeadingProps> = ({ component: Component, className, chil
       }
       {...props}
     >
-      <Link replace className="block truncate" href={`#${id}`}>
-        {children}
-      </Link>
-    </Component>
+      {children}
+    </Link>
   )
 }
 

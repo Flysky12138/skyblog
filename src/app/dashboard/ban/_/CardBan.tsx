@@ -24,7 +24,7 @@ export default function CardBan({ description, label, value, onDelete, onSubmit 
 
   return (
     <Card className="overflow-hidden">
-      <Card className="flex h-10 items-center gap-x-3 rounded-none border-none px-3">
+      <div className="s-bg-card flex h-10 items-center gap-x-3 px-3">
         <Typography level="title-sm">{label}</Typography>
         {description && (
           <Typography className="pt-1" level="body-xs">
@@ -73,7 +73,7 @@ export default function CardBan({ description, label, value, onDelete, onSubmit 
             <Add />
           </IconButton>
         )}
-      </Card>
+      </div>
       <div
         className={cn('flex flex-wrap items-center gap-3 border-inherit', {
           'border-t p-3': value.length > 0

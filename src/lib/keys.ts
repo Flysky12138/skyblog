@@ -21,6 +21,8 @@ export const EDGE_CONFIG = {
 export const SELECTOR = {
   CLASSES: {},
   IDS: {
+    ISSUES_MOBILE: 'issues-mobile',
+    ISSUES_PC: 'issues-pc',
     TOC: 'toc'
   }
 } as const

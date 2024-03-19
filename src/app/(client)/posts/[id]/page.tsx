@@ -6,6 +6,7 @@ import { Typography } from '@mui/joy'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Edit from './_/Edit'
+import Issues from './_/Issues'
 import LocateToc from './_/LocateToc'
 import PostInfo from './_/PostInfo'
 
@@ -64,6 +65,7 @@ export default async function Page({ params }: PageProps) {
           </Card>
         </section>
       ) : null}
+      <Issues />
     </section>
   )
 }

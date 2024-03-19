@@ -32,10 +32,10 @@ export const {
       return session
     },
     signIn: async ({ profile = {}, account }) => {
-      const { email, login } = profile
+      const { email, login, avatar_url } = profile
       if (!email || !login || !account) return false
 
-      const { id, role } = await postUser({ email: email, name: login as string })
+      const { id, role } = await postUser({ avatarUrl: avatar_url as string, email: email, name: login as string })
       account.id = id
       account.role = role as Account['role']
 

@@ -9,6 +9,7 @@ import ScrollChildrenClass from '@/components/scroll/ScrollChildrenClass'
 import ScrollToTop from '@/components/scroll/ScrollToTop'
 import ToggleLive2D from '@/components/toggle/ToggleLive2D'
 import ToggleTheme from '@/components/toggle/ToggleTheme'
+import { SELECTOR } from '@/lib/keys'
 import { Live2DBreakpoint, Live2DEnable, Live2DProvider } from '@/provider/live2d'
 import React from 'react'
 
@@ -24,6 +25,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Container className="flex h-full items-center gap-x-4" variant="header">
             <Logo />
             <span aria-hidden="true" className="grow"></span>
+            <div id={SELECTOR.IDS.ISSUES_MOBILE}></div>
             <React.Suspense fallback={<span className="s-skeleton h-8 w-8 rounded-md"></span>}>
               <Music />
             </React.Suspense>
@@ -40,6 +42,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </main>
       <nav className="mui-fixed fixed inset-x-0 bottom-[calc(theme(height.footer)+theme(spacing.12))] z-nav">
         <Container className="flex h-0 flex-col items-end justify-end gap-y-3" variant="header">
+          <div id={SELECTOR.IDS.ISSUES_PC}></div>
           <Breakpoint up="md">
             <ScrollToTop />
           </Breakpoint>
