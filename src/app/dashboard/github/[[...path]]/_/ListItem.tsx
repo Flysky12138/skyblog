@@ -35,14 +35,14 @@ export default function ListItem({ value: file, className, disabled, endDecorato
         onClick()
       }}
     >
-      <span className="justify-self-center" tabIndex={disabled ? -1 : 0}>
-        {file?.type == 'file' ? <InsertDriveFileOutlined /> : <Folder />}
+      <span className="justify-self-center">{file?.type == 'file' ? <InsertDriveFileOutlined /> : <Folder />}</span>
+      <span className="truncate py-1 text-slate-700 dark:text-white" tabIndex={disabled ? -1 : 0}>
+        {file?.name || '..'}
       </span>
-      <span className="truncate text-slate-700 dark:text-white">{file?.name || '..'}</span>
       {file?.type == 'file' && <span className="justify-self-end group-focus-within:opacity-0 group-hover:opacity-0">{formatFileSize(file.size)}</span>}
       {endDecorator && (
         <Box
-          className="absolute right-3 hidden space-x-2 group-focus-within:block group-hover:block"
+          className="absolute right-3 space-x-2 opacity-0 group-focus-within:opacity-100 group-hover:opacity-100"
           sx={{
             button: {
               '--IconButton-radius': '6px',

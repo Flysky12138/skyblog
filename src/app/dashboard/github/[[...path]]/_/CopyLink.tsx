@@ -16,13 +16,15 @@ const getImageInfo = async () => {
   return await CustomFetch<ImageInfoGetResponseType>('/api/dashboard/image-info')
 }
 
-const CardCopy: React.FC<{ title: string; values: string[] }> = ({ title, values }) => {
+const CardCopy: React.FC<{ loading: boolean; title: string; values: string[] }> = ({ title, values, loading }) => {
   const [_, copy] = useCopyToClipboard()
 
   const handleCopy = () => {
     copy(values.join('\n'))
     toast.success('复制成功')
   }
+
+  if (!loading && values.length == 0) return null
 
   return (
     <Card
@@ -37,7 +39,7 @@ const CardCopy: React.FC<{ title: string; values: string[] }> = ({ title, values
     >
       <div
         className={cn('s-hidden-scrollbar overflow-x-auto', {
-          's-skeleton h-8 rounded': values.length == 0
+          's-skeleton h-8 rounded': loading
         })}
       >
         {values.map((v, i) => (
@@ -61,15 +63,22 @@ export interface CopyLinkRef {
 export default React.forwardRef<CopyLinkRef, {}>(function CopyLink(props, ref) {
   const modalCoreRef = React.useRef<ModalCoreRef>()
 
+  const [loading, setLoading] = React.useState(false)
   const [files, setFiles] = React.useState<FileType[]>([])
   const imageFiles = React.useMemo(() => files.filter(file => EXT.IMAGE.some(ext => file.path.endsWith(ext))), [files])
 
   React.useImperativeHandle(ref, () => ({
     asyncOpen: async payload => {
       modalCoreRef.current?.openToggle()
-      const info = await getImageInfo()
-      const infoMap = new Map(Object.entries(info.data))
-      setFiles(payload.map(v => Object.assign({}, v, infoMap.has(v.sha) ? infoMap.get(v.sha) : {})))
+      setLoading(true)
+      try {
+        const info = await getImageInfo()
+        const infoMap = new Map(Object.entries(info.data))
+        setFiles(payload.map(v => Object.assign({}, v, infoMap.has(v.sha) ? infoMap.get(v.sha) : {})))
+      } catch (error) {
+        console.error(error)
+      }
+      setLoading(false)
     },
     open: async payload => {
       setFiles(payload)
@@ -79,9 +88,10 @@ export default React.forwardRef<CopyLinkRef, {}>(function CopyLink(props, ref) {
 
   return (
     <ModalCore ref={modalCoreRef} className="w-full max-w-screen-md select-none gap-y-10 py-7" onClose={() => setFiles([])}>
-      <CardCopy title="url" values={files.map(file => process.env.NEXT_PUBLIC_WEBSITE_URL + githubFileDirectUrl(file.path))} />
-      <CardCopy title="markdown - img" values={imageFiles.map(file => `![${imageAlt(file.path)}](${githubFileDirectUrl(file.path)})`)} />
+      <CardCopy loading={loading} title="url" values={files.map(file => process.env.NEXT_PUBLIC_WEBSITE_URL + githubFileDirectUrl(file.path))} />
+      <CardCopy loading={loading} title="markdown - img" values={imageFiles.map(file => `![${imageAlt(file.path)}](${githubFileDirectUrl(file.path)})`)} />
       <CardCopy
+        loading={loading}
         title="component - img"
         values={imageFiles.map(
           file =>
@@ -89,6 +99,7 @@ export default React.forwardRef<CopyLinkRef, {}>(function CopyLink(props, ref) {
         )}
       />
       <CardCopy
+        loading={loading}
         title="component - images"
         values={Array.from(
           imageFiles

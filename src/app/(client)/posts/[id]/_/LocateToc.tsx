@@ -2,6 +2,7 @@
 
 import { getElementDistanceFromTop } from '@/lib/dom/getElementDistanceFromTop'
 import { SELECTOR } from '@/lib/keys'
+import { isBetween } from '@/lib/parser/number'
 import React from 'react'
 
 export default function LocateToc() {
@@ -33,7 +34,15 @@ export default function LocateToc() {
   }, [])
 
   React.useEffect(() => {
-    document.querySelectorAll(`#${SELECTOR.IDS.TOC} > *`).forEach((el, i) => {
+    document.querySelectorAll<HTMLHeadingElement>(`#${SELECTOR.IDS.TOC} > *`).forEach((el, i) => {
+      if (activeIndex == i) {
+        const parentElement = el.parentElement!
+        const { offsetHeight: parentHeight, scrollTop } = parentElement
+        const { offsetTop, offsetHeight } = el
+        if (!isBetween(offsetTop - scrollTop, offsetHeight + 20, parentHeight - offsetHeight - 20)) {
+          parentElement.scroll({ behavior: 'smooth', top: offsetTop - parentHeight * 0.5 })
+        }
+      }
       el.setAttribute('data-active', String(activeIndex == i))
     })
   }, [activeIndex])

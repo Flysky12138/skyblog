@@ -79,7 +79,7 @@ export default function Page() {
                       toast.dismiss(toastId)
                       copyLinkRef.current?.asyncOpen(files.tree)
                     } else {
-                      copyLinkRef.current?.asyncOpen(data)
+                      copyLinkRef.current?.open(data)
                     }
                   }}
                 >
@@ -105,7 +105,7 @@ export default function Page() {
                         variant="soft"
                         onClick={event => {
                           event.stopPropagation()
-                          copyLinkRef.current?.asyncOpen([file])
+                          copyLinkRef.current?.open([file])
                         }}
                       >
                         <LinkIcon />

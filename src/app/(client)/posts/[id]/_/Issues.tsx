@@ -43,10 +43,13 @@ const IssuesContent = () => {
               className: 'transition-[height] duration-300 ease-out delay-50'
             }
           }}
+          spellCheck="false"
           onBlur={() => setMinRows(1)}
           onFocus={() => setMinRows(3)}
         />
-        <Button className="shrink-0 self-end">提交</Button>
+        <Button disabled className="shrink-0 self-end">
+          提交
+        </Button>
       </div>
     </section>
   )
@@ -58,6 +61,7 @@ export default function Issues() {
       <Breakpoint down="lg">
         <Portal selector={`#${SELECTOR.IDS.ISSUES_MOBILE}`}>
           <ModalCore
+            keepMounted
             className="overflow-hidden p-0"
             component={props => (
               <Tooltip title="评论">
@@ -76,6 +80,7 @@ export default function Issues() {
       <Breakpoint up="lg">
         <Portal selector={`#${SELECTOR.IDS.ISSUES_PC}`}>
           <ModalCore
+            keepMounted
             className="h-full w-full max-w-screen-md overflow-hidden p-0"
             component={props => (
               <IconButton color="success" variant="solid" {...props}>
