@@ -19,7 +19,7 @@ const Fish = React.lazy(() => import('@/components/canvas/fish'))
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <Live2DProvider>
-      <Analytic />
+      {process.env.NODE_ENV != 'development' && <Analytic />}
       <ScrollChildrenClass className="shadow-md" up={40}>
         <header className="mui-fixed fixed inset-x-0 top-0 z-header h-header transition-shadow">
           <Container className="flex h-full items-center gap-x-4" variant="header">

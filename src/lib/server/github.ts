@@ -88,15 +88,17 @@ export const putGithubRepos = async (path: string, file: File, body: Partial<Omi
       method: 'PUT'
     })
 
-    try {
-      const info = await getImageFileInfo(file)
-      await CustomFetch('/api/dashboard/image-info', {
-        body: { key: content.sha, value: info } satisfies ImageInfoPostRequest,
-        method: 'POST'
-      })
-      Object.assign(content, info)
-    } catch (error) {
-      toast.error('同步图片信息失败')
+    if (file.type.startsWith('image')) {
+      try {
+        const info = await getImageFileInfo(file)
+        await CustomFetch('/api/dashboard/image-info', {
+          body: { key: content.sha, value: info } satisfies ImageInfoPostRequest,
+          method: 'POST'
+        })
+        Object.assign(content, info)
+      } catch (error) {
+        toast.error('同步图片信息失败')
+      }
     }
 
     return content

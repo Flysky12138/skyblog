@@ -5,6 +5,7 @@ import { SESSIONSTORAGE } from '@/lib/keys'
 import { formatISOTime2 } from '@/lib/parser/time'
 import { CustomFetch } from '@/lib/server/fetch'
 import { Typography } from '@mui/joy'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React from 'react'
 import { useTimeoutFn } from 'react-use'
@@ -28,9 +29,12 @@ export default function PostInfo({ id }: PostInfoProps) {
     refreshInterval: 10 * 1000
   })
 
+  const session = useSession()
+
   useTimeoutFn(async () => {
-    if (window.sessionStorage.getItem(SESSIONSTORAGE.POST_VIEW_SUBMITTED(id)) == '1') return
     if (!post?.published) return
+    if (session.data?.role == 'ADMIN') return
+    if (window.sessionStorage.getItem(SESSIONSTORAGE.POST_VIEW_SUBMITTED(id)) == '1') return
     await postPostView(id)
     window.sessionStorage.setItem(SESSIONSTORAGE.POST_VIEW_SUBMITTED(id), '1')
   }, 10 * 1000)

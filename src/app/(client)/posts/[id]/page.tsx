@@ -50,9 +50,9 @@ export default async function Page({ params }: PageProps) {
         <Typography level="body-md">{post.description}</Typography>
         <PostInfo id={post.id} />
       </Card>
-      <style>{`html { scroll-padding-top: 60px }`}</style>
       {post.content ? (
         <section className="flex gap-x-4">
+          <style>{`html { scroll-padding-top: 60px }`}</style>
           <Card className="max-w-none grow" component="article">
             <MDXServer value={post.content} />
           </Card>

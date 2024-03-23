@@ -25,4 +25,4 @@ export const GET = async (request: NextRequest) => {
   }
 }
 
-export type LyricGetResponseType = Record<'lrc' | 'klyric' | 'tlyric' | 'romalrc', Array<{ lyric: string; time: number }> | null>
+export type LyricGetResponseType = Partial<Record<'lrc' | 'klyric' | 'tlyric' | 'romalrc', Array<{ lyric: string; time: number }> | null>>

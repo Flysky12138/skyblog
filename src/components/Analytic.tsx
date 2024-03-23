@@ -2,6 +2,7 @@
 
 import { SESSIONSTORAGE } from '@/lib/keys'
 import { CustomFetch } from '@/lib/server/fetch'
+import { useSession } from 'next-auth/react'
 import { useAsync } from 'react-use'
 
 const postAnalytic = async () => {
@@ -11,7 +12,10 @@ const postAnalytic = async () => {
 }
 
 export default function Analytic() {
+  const session = useSession()
+
   useAsync(async () => {
+    if (session.data?.role == 'ADMIN') return
     if (window.sessionStorage.getItem(SESSIONSTORAGE.ANALYTIC_SUBMITTED) == '1') return
     await postAnalytic()
     window.sessionStorage.setItem(SESSIONSTORAGE.ANALYTIC_SUBMITTED, '1')

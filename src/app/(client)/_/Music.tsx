@@ -1,10 +1,11 @@
 'use client'
 
 import { MusicPlayListGetResponseType } from '@/app/api/music/neteasecloud/playlist/route'
-import ModalMusic from '@/components/modal/ModalMusic'
+import ModalCore from '@/components/modal/ModalCore'
+import MusicCard from '@/components/music'
 import { CustomFetch } from '@/lib/server/fetch'
 import { MusicNoteRounded } from '@mui/icons-material'
-import { IconButton, Tooltip } from '@mui/joy'
+import { IconButton, ModalClose, Tooltip } from '@mui/joy'
 import { useAsync } from 'react-use'
 
 const getPlaylist = async () => {
@@ -18,7 +19,10 @@ export default function Music() {
   if (!value || value.length == 0) return null
 
   return (
-    <ModalMusic
+    <ModalCore
+      disableBackdropClickClose
+      keepMounted
+      className="overflow-hidden rounded-xl p-0"
       component={props => (
         <Tooltip title="音乐">
           <IconButton {...props}>
@@ -26,7 +30,9 @@ export default function Music() {
           </IconButton>
         </Tooltip>
       )}
-      value={value}
-    />
+    >
+      <ModalClose className="rounded-full bg-transparent" />
+      <MusicCard value={value} />
+    </ModalCore>
   )
 }
