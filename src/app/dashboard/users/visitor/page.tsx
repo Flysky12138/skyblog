@@ -26,8 +26,14 @@ export default function Page() {
 
   return (
     <>
-      <TableWrapper className="max-h-[calc(100%-theme(height.12))]">
-        <Table stickyFooter stickyHeader>
+      <TableWrapper
+        slotProps={{
+          wrap: {
+            className: 'max-h-[calc(100dvh-theme(height.28)-2px)]'
+          }
+        }}
+      >
+        <Table stickyHeader>
           <thead>
             <tr>
               <th className="w-10">#</th>

@@ -45,6 +45,22 @@ module.exports = {
           '.s-subtitle': {
             '@apply text-gray-500 dark:text-slate-400': {}
           },
+          '.s-table-scrollbar': {
+            '&::-webkit-scrollbar': {
+              height: '10px',
+              width: '10px'
+            },
+            '&::-webkit-scrollbar-corner': {
+              background: 'transparent'
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: 'var(--sb-thumb-bg)'
+            },
+            '&::-webkit-scrollbar-track': {
+              background: 'var(--sb-track-bg)'
+            },
+            '@apply [--sb-thumb-bg:#c1c1c1] [--sb-track-bg:#fafafa] dark:[--sb-thumb-bg:#6b6b6b] dark:[--sb-track-bg:#2c2c2c]': {}
+          },
           '.s-underline': {
             '@apply decoration-2 underline-offset-2 underline': {}
           }
