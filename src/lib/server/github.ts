@@ -6,7 +6,7 @@
 import { ImageInfoPostRequest } from '@/app/api/dashboard/image-info/route'
 import { CustomFetch } from '@/lib/server/fetch'
 import { toast } from 'sonner'
-import { getImageFileInfo } from '../fileInfo'
+import { getImageFileInfo } from '../file/info'
 import { formatFileSize } from '../parser/size'
 import { file2base64 } from '../parser/transcode'
 
@@ -91,6 +91,7 @@ export const putGithubRepos = async (path: string, file: File, body: Partial<Omi
     if (file.type.startsWith('image')) {
       try {
         const info = await getImageFileInfo(file)
+        console.log('info:', info)
         await CustomFetch('/api/dashboard/image-info', {
           body: { key: content.sha, value: info } satisfies ImageInfoPostRequest,
           method: 'POST'

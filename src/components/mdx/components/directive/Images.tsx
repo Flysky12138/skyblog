@@ -1,6 +1,6 @@
 'use client'
 
-import ImageViewer from '@/components/ImageViewer'
+import ImageViewer from '@/components/image/ImageViewer'
 import { Chip } from '@mui/joy'
 import React from 'react'
 import { useToggle } from 'react-use'

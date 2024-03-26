@@ -1,4 +1,4 @@
-import { ImageFileInfoType } from '@/lib/fileInfo'
+import { ImageFileInfoType } from '@/lib/file/info'
 import { REDIS } from '@/lib/keys'
 import { CustomResponse } from '@/lib/server/response'
 import { kv } from '@vercel/kv'

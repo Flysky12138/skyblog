@@ -1,7 +1,7 @@
 'use client'
 
 import ModalCore from '@/components/modal/ModalCore'
-import { download } from '@/lib/download'
+import { download } from '@/lib/file/download'
 import { Button, FormControl, FormLabel, Option, Radio, RadioGroup, Select } from '@mui/joy'
 import { Alert } from '@mui/material'
 import Link from 'next/link'

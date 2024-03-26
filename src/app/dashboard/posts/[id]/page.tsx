@@ -15,8 +15,8 @@ import { markdownConfig } from '@/components/monaco-editor/markdown'
 import { cn } from '@/lib/cn'
 import { CustomFetch } from '@/lib/server/fetch'
 import { CustomToast } from '@/lib/toast'
-import { AddPhotoAlternate, ArrowUpward, OpenInNew, Save } from '@mui/icons-material'
-import { FormControl, FormLabel, IconButton, Input, Textarea, Tooltip } from '@mui/joy'
+import { AddPhotoAlternate, ArrowUpward, Close, OpenInNew, Save } from '@mui/icons-material'
+import { Checkbox, FormControl, FormLabel, IconButton, Input, Textarea, Tooltip } from '@mui/joy'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
@@ -25,7 +25,7 @@ import { useAsync, useScroll } from 'react-use'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
-import UploadFiles from '../../github/[[...path]]/_/UploadFiles'
+import UploadFiles from '../../github/_/UploadFiles'
 import ModalChips from './_/ModalChips'
 
 const getPostDetail = async (id: string) => {
@@ -59,6 +59,7 @@ const defaultPost: NonNullable<PostDetailGetResponseType> = {
   id: '-1',
   links: 0,
   published: false,
+  showTitleCard: true,
   sticky: 0,
   tags: [],
   title: '',
@@ -101,34 +102,18 @@ export default function Page() {
 
   return (
     <section className="grid grid-cols-2 gap-x-6 gap-y-4">
-      <div className="col-span-2 flex gap-[inherit]">
-        <FormControl required className="grow">
-          <FormLabel>标题</FormLabel>
-          <Input
-            value={post.title}
-            variant="outlined"
-            onChange={event => {
-              setPost(state => {
-                state.title = event.target.value
-              })
-            }}
-          />
-        </FormControl>
-        <FormControl required className="w-32">
-          <FormLabel>置顶</FormLabel>
-          <Input
-            type="number"
-            value={post.sticky}
-            variant="outlined"
-            onChange={event => {
-              setPost(state => {
-                state.sticky = Math.max(0, Number.parseInt(event.target.value || '0'))
-              })
-            }}
-            onFocus={event => event.target.select()}
-          />
-        </FormControl>
-      </div>
+      <FormControl required className="col-span-2">
+        <FormLabel>标题</FormLabel>
+        <Input
+          value={post.title}
+          variant="outlined"
+          onChange={event => {
+            setPost(state => {
+              state.title = event.target.value
+            })
+          }}
+        />
+      </FormControl>
       <FormControl className="col-span-2">
         <FormLabel>描述</FormLabel>
         <Textarea
@@ -199,6 +184,37 @@ export default function Page() {
           }}
         />
       </FormControl>
+      <div className="col-span-2 my-1 flex gap-x-10">
+        <FormControl className="w-32" orientation="horizontal">
+          <FormLabel className="shrink-0">置顶</FormLabel>
+          <Input
+            type="number"
+            value={post.sticky}
+            variant="outlined"
+            onChange={event => {
+              setPost(state => {
+                state.sticky = Math.max(0, Number.parseInt(event.target.value || '0'))
+              })
+            }}
+            onFocus={event => event.target.select()}
+          />
+        </FormControl>
+        <FormControl orientation="horizontal">
+          <FormLabel>显示标题卡片</FormLabel>
+          <Checkbox
+            checked={post.showTitleCard}
+            className="items-center"
+            color={post.showTitleCard ? 'success' : 'neutral'}
+            uncheckedIcon={<Close />}
+            variant="solid"
+            onChange={event => {
+              setPost(state => {
+                state.showTitleCard = event.target.checked
+              })
+            }}
+          />
+        </FormControl>
+      </div>
       <FormControl className="col-span-2">
         <FormLabel>内容</FormLabel>
         <MonacoEditor
@@ -234,6 +250,7 @@ export default function Page() {
                         categories: post.categories.map(({ name }) => name),
                         content: post.content,
                         description: post.description,
+                        showTitleCard: post.showTitleCard,
                         sticky: post.sticky,
                         tags: post.tags.map(({ name }) => name),
                         title: post.title
@@ -242,6 +259,7 @@ export default function Page() {
                         categories: post.categories.map(({ name }) => name),
                         content: post.content,
                         description: post.description,
+                        showTitleCard: post.showTitleCard,
                         sticky: post.sticky,
                         tags: post.tags.map(({ name }) => name),
                         title: post.title

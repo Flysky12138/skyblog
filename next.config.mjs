@@ -43,8 +43,12 @@ const nextConfig = {
       { hostname: '*.public.blob.vercel-storage.com', protocol: 'https' },
       { hostname: 'raw.githubusercontent.com', protocol: 'https' },
       {
-        hostname: process.env.NEXT_PUBLIC_WEBSITE_URL.replace(/https?:\/\//, '').replace(/:\d+/, ''),
-        protocol: process.env.NODE_ENV == 'development' ? 'http' : 'https'
+        hostname: new URL(process.env.NEXT_PUBLIC_WEBSITE_URL).hostname,
+        protocol: new URL(process.env.NEXT_PUBLIC_WEBSITE_URL).protocol.slice(0, -1)
+      },
+      process.env.CDN_URL && {
+        hostname: new URL(process.env.CDN_URL).hostname,
+        protocol: new URL(process.env.CDN_URL).protocol.slice(0, -1)
       }
     ]
   },

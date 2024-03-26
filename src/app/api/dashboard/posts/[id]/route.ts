@@ -26,7 +26,7 @@ export const GET = async (request: NextRequest, { params }: DynamicRoute<{ id: s
 }
 
 // 创建
-export interface PostDetailPostRequest extends Pick<Post, 'title' | 'description' | 'content' | 'authorId' | 'sticky'> {
+export interface PostDetailPostRequest extends Pick<Post, 'title' | 'description' | 'content' | 'authorId' | 'sticky' | 'showTitleCard'> {
   categories: Category['name'][]
   tags: Tag['name'][]
 }
@@ -47,6 +47,7 @@ const dbPost = async (data: PostDetailPostRequest) => {
       },
       content: data.content,
       description: data.description,
+      showTitleCard: data.showTitleCard,
       sticky: data.sticky,
       tags: {
         connectOrCreate: data.tags.map(name => ({
@@ -95,6 +96,7 @@ const dbPut = async (id: string, data: PostDetailPutRequest) => {
       },
       content: data.content,
       description: data.description,
+      showTitleCard: data.showTitleCard,
       sticky: data.sticky,
       tags: {
         connectOrCreate: data.tags.map(name => ({

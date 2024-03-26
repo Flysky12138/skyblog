@@ -16,7 +16,7 @@ interface ErrorBoundary {
 }
 
 // 动态路由动态段类型
-interface DynamicRoute<T extends Record<string, string | string[]>, D extends Record<string, string | string[] | undefined> = {}> {
+interface DynamicRoute<T extends Record<string, string | string[]>, D extends Record<string, string | undefined> = {}> {
   params: T
   searchParams: Partial<D>
 }

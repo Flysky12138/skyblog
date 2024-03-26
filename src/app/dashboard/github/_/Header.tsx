@@ -1,7 +1,8 @@
 import ScrollChildrenClass from '@/components/scroll/ScrollChildrenClass'
+import { Home } from '@mui/icons-material'
 import { Breadcrumbs } from '@mui/joy'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import React from 'react'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
@@ -12,11 +13,27 @@ interface HeaderProps {
 
 export default function Header({ children }: HeaderProps) {
   const [_, copy] = useCopyToClipboard()
-  const params = useParams<{ path?: string[] }>()
+
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const path = searchParams.get('path') || ''
+  const paths = path.split('/').filter(v => v) || []
+
+  const id = React.useId()
+  const [top, setTop] = React.useState(0)
+  React.useEffect(() => {
+    setTop(document.getElementById(id)?.offsetTop || 0)
+  }, [id])
 
   return (
-    <ScrollChildrenClass className="sticky -top-8 !rounded-none border-t-0 transition-[border,border-radius]" selector="main" up={32}>
-      <div className="s-border-card z-10 flex flex-wrap items-center gap-2 rounded-t-lg border bg-zinc-100 px-3 py-2 dark:bg-zinc-800">
+    <ScrollChildrenClass className="sticky !rounded-none border-t-0 transition-[border,border-radius]" selector="main" up={top}>
+      <div
+        className="s-border-card z-10 flex flex-wrap items-center gap-2 rounded-t-lg border bg-zinc-100 px-3 py-2 dark:bg-zinc-800"
+        id={id}
+        style={{
+          top: `-${top}px`
+        }}
+      >
         <Link
           className="s-bg-slate s-divider s-link rounded border px-2"
           href={`https://github.com/${process.env.NEXT_PUBLIC_GITHUB_ACCESS_OWNER_REPO}/`}
@@ -38,9 +55,14 @@ export default function Header({ children }: HeaderProps) {
             '--Breadcrumbs-gap': '2px'
           }}
         >
-          {params.path?.map((item, index) => (
+          {paths.length > 0 && (
+            <Link className="s-link" href={pathname}>
+              <Home className="mb-0.5 text-lg" />
+            </Link>
+          )}
+          {paths.map((item, index) => (
             <React.Fragment key={item}>
-              {params.path?.length == index + 1 ? (
+              {paths.length == index + 1 ? (
                 <span
                   className="cursor-copy"
                   onClick={event => {
@@ -53,7 +75,7 @@ export default function Header({ children }: HeaderProps) {
                   {decodeURIComponent(item)}
                 </span>
               ) : (
-                <Link className="s-link" href={`/dashboard/github/${params.path?.slice(0, index + 1).join('/')}`}>
+                <Link className="s-link" href={`${pathname}?path=${paths.slice(0, index + 1).join('/')}`}>
                   {decodeURIComponent(item)}
                 </Link>
               )}

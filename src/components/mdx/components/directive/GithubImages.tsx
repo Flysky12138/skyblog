@@ -1,8 +1,8 @@
 import { ImageInfoPostRequest } from '@/app/api/dashboard/image-info/route'
+import Image from '@/components/image/Image'
 import { EXT, REDIS } from '@/lib/keys'
 import { getAllGithubRepos, githubFileDirectUrl } from '@/lib/server/github'
 import { kv } from '@vercel/kv'
-import Img from '../Img'
 import Images from './Images'
 import Masonry, { MasonryProps } from './Masonry'
 
@@ -30,7 +30,7 @@ export default async function GithubImages({ path, groupDeep, ...props }: Github
       {Array.from(fileGroupMap).map(([key, files]) => (
         <Images key={key} defaultAlt={key}>
           {files.map(file => (
-            <Img key={file.sha} alt={file.path} height={file.height} src={githubFileDirectUrl(file.path)} width={file.width} />
+            <Image key={file.sha} alt={file.path} height={file.height} src={githubFileDirectUrl(file.path)} width={file.width} />
           ))}
         </Images>
       ))}

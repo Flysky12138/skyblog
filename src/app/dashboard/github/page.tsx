@@ -1,6 +1,6 @@
 'use client'
 
-import ImageViewer, { ImageViewerProps } from '@/components/ImageViewer'
+import ImageViewer, { ImageViewerProps } from '@/components/image/ImageViewer'
 import ModalDelete from '@/components/modal/ModalDelete'
 import { cn } from '@/lib/cn'
 import { EXT } from '@/lib/keys'
@@ -8,7 +8,7 @@ import { deleteAllGithubRepos, deleteGithubRepos, getAllGithubRepos, getGithubRe
 import { CustomToast } from '@/lib/toast'
 import { Close, Link as LinkIcon } from '@mui/icons-material'
 import { Button, IconButton } from '@mui/joy'
-import { useParams, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import React from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
@@ -21,9 +21,11 @@ import UploadFiles from './_/UploadFiles'
 
 export default function Page() {
   const router = useRouter()
-  const params = useParams<{ path?: string[] }>()
 
-  const path = (params.path || []).join('/')
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const path = searchParams.get('path') || ''
+  const paths = path.split('/').filter(v => v) || []
   const { isLoading, data, mutate } = useSWR(`/api/dashboard/github/repo/${path}`, () => getGithubRepos(path), {
     fallbackData: []
   })
@@ -87,7 +89,10 @@ export default function Page() {
                 </IconButton>
               )
             })}
-            onClick={() => router.replace(`/dashboard/github/${(params.path || []).slice(0, -1).join('/')}`)}
+            onClick={() => {
+              const prePath = paths.slice(0, -1).join('/')
+              router.replace(`${pathname}${prePath ? `?path=${prePath}` : ''}`)
+            }}
           />
         )}
         {isLoading ? (
@@ -135,7 +140,7 @@ export default function Page() {
                 }
                 value={file}
                 onClick={() => {
-                  if (file.type == 'dir') router.replace(`/dashboard/github/${(params.path || []).concat(file.name).join('/')}`)
+                  if (file.type == 'dir') router.replace(`${pathname}?path=${paths.concat(file.name).join('/')}`)
                   else if (EXT.IMAGE.some(ext => file.name.endsWith(ext))) {
                     const images = data.filter(f => EXT.IMAGE.some(ext => f.name.endsWith(ext)))
                     setPhotoView({

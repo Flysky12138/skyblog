@@ -42,14 +42,16 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <section className="space-y-5">
-      <Card className="flex flex-col gap-y-2 p-5">
-        <Edit className="absolute right-5 top-5" id={post.id} />
-        <Typography className="font-title font-normal" component="h1" level="h2">
-          {post.title}
-        </Typography>
-        <Typography level="body-md">{post.description}</Typography>
-        <PostInfo id={post.id} />
-      </Card>
+      {post.showTitleCard && (
+        <Card className="flex flex-col gap-y-2 p-5">
+          <Edit className="absolute right-5 top-5" id={post.id} />
+          <Typography className="font-title font-normal" component="h1" level="h2">
+            {post.title}
+          </Typography>
+          <Typography level="body-md">{post.description}</Typography>
+          <PostInfo id={post.id} />
+        </Card>
+      )}
       {post.content ? (
         <section className="flex gap-x-4">
           <style>{`html { scroll-padding-top: 60px }`}</style>

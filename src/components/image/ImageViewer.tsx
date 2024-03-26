@@ -1,6 +1,6 @@
 'use client'
 
-import { download } from '@/lib/download'
+import { download } from '@/lib/file/download'
 import { AddCircleOutline, BrokenImage, FileDownloadOutlined, Fullscreen, FullscreenExit, Refresh, RemoveCircleOutline } from '@mui/icons-material'
 import { Box, CircularProgress } from '@mui/joy'
 import { motion } from 'framer-motion'
@@ -45,7 +45,7 @@ export default function ImageViewer({ onClose, ...props }: ImageViewerProps) {
               const src = props.images[index].src
               if (!src) return
               const blob = await fetch(src).then(res => res.blob())
-              download(blob, src.slice(0, src.lastIndexOf('.')))
+              download(blob, decodeURIComponent(src.slice(src.lastIndexOf('/') + 1)))
             }}
           />
           <AddCircleOutline onClick={() => onScale(scale + 1)} />
