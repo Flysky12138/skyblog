@@ -8,7 +8,7 @@ interface OuterLinkProps extends LinkProps {
 const OuterLink: React.FC<OuterLinkProps> = ({ children, ...props }) => {
   return (
     <Typography
-      className="s-link decoration-wavy underline-offset-2 hover:underline"
+      className="text-sky-500 decoration-wavy underline-offset-2 hover:underline"
       component={Link}
       level="body-sm"
       rel="noreferrer nofollow"
@@ -23,7 +23,7 @@ const OuterLink: React.FC<OuterLinkProps> = ({ children, ...props }) => {
 
 export default function Footer() {
   return (
-    <div className="flex select-none flex-col items-center gap-y-2 opacity-60">
+    <section className="flex select-none flex-col items-center gap-y-2 opacity-60">
       <Typography level="body-sm">©2020 - {new Date().getFullYear()} By Flysky</Typography>
       <div className="flex gap-x-1">
         <Typography level="body-sm">框架</Typography>
@@ -33,6 +33,7 @@ export default function Footer() {
         <OuterLink href="https://mui.com/joy-ui/getting-started/overview/">Joy UI</OuterLink>
       </div>
       <OuterLink href="https://beian.miit.gov.cn">蜀 ICP 备 2023031507 号</OuterLink>
-    </div>
+      <Typography level="body-xs">Built by vercel on {new Date().toUTCString()}</Typography>
+    </section>
   )
 }

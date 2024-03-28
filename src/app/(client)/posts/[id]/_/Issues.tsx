@@ -13,7 +13,7 @@ import React from 'react'
 const IssuesItem = () => {
   const { data: session } = useSession()
   return (
-    <section className="s-bg-card s-border-card h-10 rounded-md border">
+    <section className="s-bg-card s-border-color-card h-10 rounded-md border">
       {/* <Avatar sx={{ '--Avatar-size': '3rem' }}>
         {session?.user && (
           <Image priority alt={session.user.name || ''} height={200} src={session.user.image?.replace('https://', '/cdn/') || ''} width={200} />
@@ -33,7 +33,7 @@ const IssuesContent = () => {
           <IssuesItem key={i} />
         ))}
       </div>
-      <div className="s-bg-card s-border-card flex gap-x-4 border-t p-5">
+      <div className="s-bg-card s-border-color-card flex gap-x-4 border-t p-5">
         <Textarea
           className="grow"
           maxRows={10}

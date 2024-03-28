@@ -14,7 +14,7 @@ export default React.forwardRef(function Card<T>(
     <Component
       ref={ref}
       className={cn(
-        's-bg-card s-border-card rounded-lg border backdrop-blur',
+        's-bg-card s-border-color-card rounded-lg border backdrop-blur',
         {
           'p-5 pt-7': title
         },

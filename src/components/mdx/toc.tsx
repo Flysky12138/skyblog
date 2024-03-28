@@ -20,7 +20,7 @@ const Heading: React.FC<HeadingProps> = ({ component: Component, className, chil
       replace
       className={cn(
         'group s-subtitle block rounded-md py-0.5 pr-2',
-        'data-[active=true]:s-bg-slate data-[active=true]:s-link',
+        'data-[active=true]:s-bg-slate data-[active=true]:text-sky-500',
         'relative data-[active=true]:before:absolute data-[active=true]:before:inset-y-0.5 data-[active=true]:before:-left-2 data-[active=true]:before:w-1',
         'data-[active=true]:before:rounded data-[active=true]:before:bg-cyan-500/70',
         'hover:s-bg-card',

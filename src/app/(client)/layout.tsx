@@ -36,7 +36,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Container>
         </header>
       </ScrollChildrenClass>
-      <main className="s-divider relative z-main mb-[theme(height.footer)] mt-[theme(height.header)] min-h-[calc(100dvh-theme(height.header))] border-b">
+      <main className="s-divider-color relative z-main mb-[theme(height.footer)] mt-[theme(height.header)] min-h-[calc(100dvh-theme(height.header))] border-b">
         <Container className="py-9">{children}</Container>
         {/* <Ribbon /> */}
       </main>

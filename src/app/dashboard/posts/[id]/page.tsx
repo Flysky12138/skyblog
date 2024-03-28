@@ -274,7 +274,7 @@ export default function Page() {
               <Save />
             </IconButton>
           </Tooltip>
-          <hr className="s-divider mx-2 h-4 border" />
+          <hr className="s-divider-color mx-2 h-4 border" />
           {!isCreate && (
             <UploadFiles
               component={props => (
@@ -300,7 +300,7 @@ export default function Page() {
               />
             </IconButton>
           </Tooltip>
-          <hr className="s-divider mx-2 h-4 border" />
+          <hr className="s-divider-color mx-2 h-4 border" />
         </MonacoEditor>
       </FormControl>
     </section>

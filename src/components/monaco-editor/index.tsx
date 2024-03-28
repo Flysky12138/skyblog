@@ -107,7 +107,7 @@ export default React.forwardRef<MonacoEditorRef, MonacoEditorProps>(function Mon
           if (event.key == 's' && (event.ctrlKey || event.metaKey)) event.preventDefault()
         }}
       >
-        <div ref={cardRef} className="s-bg-card s-border-card flex h-header items-center gap-3 overflow-auto border-b px-3.5">
+        <div ref={cardRef} className="s-bg-card s-border-color-card flex h-header items-center gap-3 overflow-auto border-b px-3.5">
           <p className="s-subtitle select-none font-title text-xl">{props.language}</p>
           <span aria-hidden="true" className="grow"></span>
           {children}

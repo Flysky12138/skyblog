@@ -53,7 +53,7 @@ export default function PostInfo({ id }: PostInfoProps) {
           ，归类于&nbsp;
           {post.categories.map((category, index) => (
             <React.Fragment key={category.id}>
-              <Link className="s-link hover:s-underline" href={`/categories/${category.name}/1`}>
+              <Link className="text-sky-500 hover:s-underline" href={`/categories/${category.name}/1`}>
                 {category.name}
               </Link>
               {index < post.categories.length - 1 ? '、' : null}

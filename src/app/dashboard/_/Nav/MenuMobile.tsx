@@ -24,7 +24,7 @@ export default function MenuMobile({ className }: MenuMobileProps) {
         onClose={openToggle}
       >
         <>
-          <div className="s-divider flex h-header items-center justify-end border-b bg-zinc-50 px-8 dark:bg-zinc-800">
+          <div className="s-divider-color flex h-header items-center justify-end border-b bg-zinc-50 px-8 dark:bg-zinc-800">
             <IconButton onClick={openToggle}>
               <Close />
             </IconButton>

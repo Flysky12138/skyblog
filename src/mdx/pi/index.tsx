@@ -161,7 +161,7 @@ export default function Pi() {
                 下载
               </Button>
             </div>
-            <div className="s-bg-card s-border-card overflow-hidden rounded-lg border py-2 pl-3 font-code">
+            <div className="s-bg-card s-border-color-card overflow-hidden rounded-lg border py-2 pl-3 font-code">
               <FixedSizeList height={400} itemCount={piStr.length} itemData={piStr} itemSize={20} overscanCount={10} width="100%">
                 {({ data, style, index }) => (
                   <span key={index} style={style}>

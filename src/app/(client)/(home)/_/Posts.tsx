@@ -26,7 +26,7 @@ export default function Posts({ children, posts }: PostsProps) {
       {posts.data.map(post => (
         <Card key={post.id} className="space-y-4 break-all p-5">
           <Typography
-            className="inline-block font-title font-normal hover:s-link focus-visible:s-link"
+            className="inline-block font-title font-normal hover:text-sky-500 focus-visible:text-sky-500"
             component={Link}
             href={`/posts/${post.id}`}
             level="h4"
@@ -54,7 +54,7 @@ export default function Posts({ children, posts }: PostsProps) {
                 <Typography level="body-xs" startDecorator={<Category sx={{ fontSize: '1.1em' }} />}>
                   {post.categories.map((category, index) => (
                     <React.Fragment key={category.id}>
-                      <Link className="hover:s-link hover:s-underline focus-visible:s-link" href={`/categories/${category.name}/1`}>
+                      <Link className="hover:s-underline hover:text-sky-500 focus-visible:text-sky-500" href={`/categories/${category.name}/1`}>
                         {category.name}
                       </Link>
                       {index < post.categories.length - 1 ? '、' : null}
@@ -69,7 +69,7 @@ export default function Posts({ children, posts }: PostsProps) {
                 <Typography level="body-xs" startDecorator={<Loyalty sx={{ fontSize: '1.1em' }} />}>
                   {post.tags.map((tag, index) => (
                     <React.Fragment key={tag.id}>
-                      <Link className="hover:s-link hover:s-underline focus-visible:s-link" href={`/tags/${tag.name}/1`}>
+                      <Link className="hover:s-underline hover:text-sky-500 focus-visible:text-sky-500" href={`/tags/${tag.name}/1`}>
                         {tag.name}
                       </Link>
                       {index < post.tags.length - 1 ? '、' : null}

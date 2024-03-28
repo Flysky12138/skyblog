@@ -29,18 +29,23 @@ export default function Pre({ children, className, ...props }: React.ComponentPr
   return (
     <figure
       ref={figureRef}
-      className="group s-divider relative overflow-hidden rounded-lg border aria-expanded:max-h-80"
+      className="group s-border-color-card relative overflow-hidden rounded-lg border aria-expanded:max-h-80"
       {...(defaultExpanded && {
         'aria-expanded': defaultExpanded
       })}
     >
       <IconButton
         aria-label="Copy"
-        className={cn('absolute right-1 top-1 z-10 rounded-lg opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100', {
-          'pointer-events-none': isCopied
-        })}
+        className={cn(
+          'absolute right-1 top-1 z-10 rounded-lg',
+          'border border-solid border-slate-300 dark:border-zinc-700',
+          'opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100',
+          {
+            'pointer-events-none': isCopied
+          }
+        )}
         color={isCopied ? 'success' : 'neutral'}
-        variant="outlined"
+        variant="soft"
         onClick={() => {
           const code = preRef.current?.textContent
           if (!code) return

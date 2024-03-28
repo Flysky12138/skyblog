@@ -11,7 +11,7 @@ export const metadata = {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <nav className="s-divider fixed inset-y-0 left-0 hidden border-r md:block md:w-52">
+      <nav className="s-divider-color fixed inset-y-0 left-0 hidden border-r md:block md:w-52">
         <Menu />
       </nav>
       <ScrollChildrenClass className="shadow-md" selector="main" up={40}>

@@ -14,7 +14,7 @@ export interface MenuProps {
 export default function Menu({ className }: MenuProps) {
   return (
     <List
-      className={cn('s-divider h-full select-none overflow-auto overflow-x-hidden bg-zinc-50 p-0 dark:bg-zinc-800', className)}
+      className={cn('s-divider-color h-full select-none overflow-auto overflow-x-hidden bg-zinc-50 p-0 dark:bg-zinc-800', className)}
       size="sm"
       sx={{
         '--List-gap': '10px',

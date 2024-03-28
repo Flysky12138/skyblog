@@ -28,14 +28,14 @@ export default function Header({ children }: HeaderProps) {
   return (
     <ScrollChildrenClass className="sticky !rounded-none border-t-0 transition-[border,border-radius]" selector="main" up={top}>
       <div
-        className="s-border-card z-10 flex flex-wrap items-center gap-2 rounded-t-lg border bg-zinc-100 px-3 py-2 dark:bg-zinc-800"
+        className="s-border-color-card z-10 flex flex-wrap items-center gap-2 rounded-t-lg border bg-zinc-100 px-3 py-2 dark:bg-zinc-800"
         id={id}
         style={{
           top: `-${top}px`
         }}
       >
         <Link
-          className="s-bg-slate s-divider s-link rounded border px-2"
+          className="s-bg-slate s-divider-color rounded border px-2 text-sky-500"
           href={`https://github.com/${process.env.NEXT_PUBLIC_GITHUB_ACCESS_OWNER_REPO}/`}
           target="_blank"
         >
@@ -45,7 +45,7 @@ export default function Header({ children }: HeaderProps) {
           className="py-0 pl-0"
           slotProps={{
             li: {
-              className: 'px-1 hover:s-bg-slate border rounded border-transparent hover:s-divider'
+              className: 'px-1 hover:s-bg-slate border rounded border-transparent hover:s-divider-color'
             },
             separator: {
               className: 'opacity-30'
@@ -56,7 +56,7 @@ export default function Header({ children }: HeaderProps) {
           }}
         >
           {paths.length > 0 && (
-            <Link className="s-link" href={pathname}>
+            <Link className="text-sky-500" href={pathname}>
               <Home className="mb-0.5 text-lg" />
             </Link>
           )}
@@ -75,7 +75,7 @@ export default function Header({ children }: HeaderProps) {
                   {decodeURIComponent(item)}
                 </span>
               ) : (
-                <Link className="s-link" href={`${pathname}?path=${paths.slice(0, index + 1).join('/')}`}>
+                <Link className="text-sky-500" href={`${pathname}?path=${paths.slice(0, index + 1).join('/')}`}>
                   {decodeURIComponent(item)}
                 </Link>
               )}

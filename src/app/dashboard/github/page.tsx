@@ -66,7 +66,7 @@ export default function Page() {
         </div>
       </Header>
       {/* 文件列表 */}
-      <div className="s-bg-card s-border-card relative divide-y overflow-clip rounded-lg rounded-t-none border border-t-0 bg-transparent *:border-inherit">
+      <div className="s-border-color-card relative divide-y overflow-clip rounded-lg rounded-t-none border border-t-0 dark:s-bg-card *:border-inherit">
         {path.length > 0 && (
           <ListItem
             {...(Array.isArray(data) && {
