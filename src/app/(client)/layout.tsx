@@ -13,11 +13,12 @@ import { SELECTOR } from '@/lib/constants'
 import { Live2DBreakpoint, Live2DEnable, Live2DProvider } from '@/provider/live2d'
 import { Dashboard } from '@mui/icons-material'
 import { IconButton, Tooltip } from '@mui/joy'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import React from 'react'
 
-const Music = React.lazy(() => import('./_/Music'))
-const Fish = React.lazy(() => import('@/components/canvas/fish'))
+const Music = dynamic(() => import('./_/Music'), { ssr: false })
+const Fish = dynamic(() => import('@/components/canvas/fish'), { ssr: false })
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -39,9 +40,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </>
             )}
             <div className="empty:hidden" id={SELECTOR.IDS.ISSUES_MOBILE}></div>
-            <React.Suspense fallback={<span className="s-skeleton h-8 w-8 rounded-md"></span>}>
-              <Music />
-            </React.Suspense>
+            <Music />
             <Live2DBreakpoint>
               <ToggleLive2D />
             </Live2DBreakpoint>
@@ -64,9 +63,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <footer className="mui-fixed fixed inset-x-0 bottom-0 z-footer flex h-footer items-center justify-center">
         <Footer />
         <Breakpoint up="md">
-          <React.Suspense>
-            <Fish />
-          </React.Suspense>
+          <Fish />
         </Breakpoint>
       </footer>
       <Live2DBreakpoint>
