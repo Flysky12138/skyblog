@@ -1,6 +1,6 @@
 /**
  * vercel 有请求尺寸限制，所以直接从客户端上传到 github 仓库。当然 token 会暴露
- * https://vercel.com/docs/functions/serverless-functions/runtimes#size-limits
+ * @see https://vercel.com/docs/functions/serverless-functions/runtimes#size-limits
  */
 
 import { ImageInfoPostRequest } from '@/app/api/dashboard/image-info/route'
@@ -10,7 +10,9 @@ import { getImageFileInfo } from '../file/info'
 import { formatFileSize } from '../parser/size'
 import { file2base64 } from '../parser/transcode'
 
-/** 直链 */
+/**
+ * 直链
+ */
 export const githubFileDirectUrl = (path: string) => `/api/github/${encodeURIComponent(path).replace(/%2F/g, '/')}`
 
 const githubRepoApiUrl = (path: string) => {
@@ -24,7 +26,9 @@ const headers = {
 
 export type GithubRepoGetResponseType = Array<GithubRepoFileType | GithubRepoFolderType> | GithubRepoFileType
 
-/** 获取内容 */
+/**
+ * 获取内容
+ */
 export const getGithubRepos = async (path: string) => {
   try {
     const data = await CustomFetch<GithubRepoGetResponseType>(githubRepoApiUrl(path), { headers })
@@ -44,7 +48,9 @@ export const getGithubRepos = async (path: string) => {
   }
 }
 
-/** 获取所有内容 */
+/**
+ * 获取所有内容
+ */
 export const getAllGithubRepos = async (path: string) => {
   try {
     path = decodeURIComponent(path)
@@ -74,7 +80,9 @@ export interface GithubRepoPutRequest {
   sha?: string
 }
 
-/** 上传/修改 */
+/**
+ * 上传/修改
+ */
 export const putGithubRepos = async (path: string, file: File, body: Partial<Omit<GithubRepoPutRequest, 'content'>> = {}) => {
   try {
     const base64 = await file2base64(file)
@@ -115,7 +123,9 @@ export interface GithubRepoDeleteRequest {
   sha: string
 }
 
-/** 删除 */
+/**
+ * 删除
+ */
 export const deleteGithubRepos = async (path: string, body: GithubRepoDeleteRequest) => {
   try {
     const data = await CustomFetch(githubRepoApiUrl(path), {
@@ -135,7 +145,9 @@ export const deleteGithubRepos = async (path: string, body: GithubRepoDeleteRequ
   }
 }
 
-/** 删除所有 */
+/**
+ * 删除所有
+ */
 export const deleteAllGithubRepos = async (path: string, message: (file: GithubRepoTree['tree'][number]) => GithubRepoDeleteRequest['message']) => {
   try {
     const files = await getAllGithubRepos(path)

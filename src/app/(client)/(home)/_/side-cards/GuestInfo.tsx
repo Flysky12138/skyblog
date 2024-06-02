@@ -1,6 +1,7 @@
 'use client'
 
 import Card from '@/components/layout/Card'
+import Collapse from '@/components/transitions/Collapse'
 import { CustomFetch } from '@/lib/server/fetch'
 import { Public } from '@mui/icons-material'
 import { Typography } from '@mui/joy'
@@ -16,7 +17,7 @@ export default function GuestInfo() {
   if (!ipinfo) return null
 
   return (
-    <Card className="space-y-3 p-6">
+    <Card className="space-y-3 overflow-clip p-6" component={Collapse}>
       <Typography startDecorator={<Public color="secondary" />}>访客信息</Typography>
       <div className="flex flex-col gap-y-1">
         {Object.entries(ipinfo).map(([label, content]) => (

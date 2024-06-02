@@ -4,7 +4,7 @@ import { CustomFetch } from './fetch'
 type EdgeRequestItemType = { key: string; operation: 'create' | 'update' | 'upsert' | 'delete'; value?: any }
 
 /**
- * https://vercel.com/docs/storage/edge-config/vercel-api
+ * @see https://vercel.com/docs/storage/edge-config/vercel-api
  */
 export const edgeFetch = async (items?: EdgeRequestItemType[]) => {
   try {

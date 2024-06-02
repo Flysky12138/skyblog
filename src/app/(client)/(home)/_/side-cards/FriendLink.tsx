@@ -4,7 +4,7 @@ import { Diversity3 } from '@mui/icons-material'
 import { Button } from '@mui/joy'
 import Link from 'next/link'
 
-export default async function Navigate() {
+export default async function FriendLink() {
   const count = await prisma.friendLinks.count()
 
   return (

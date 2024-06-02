@@ -1,11 +1,11 @@
 import Card from '@/components/layout/Card'
 import dynamic from 'next/dynamic'
 import React from 'react'
-import Developer from './_/Developer'
-import GuestInfo from './_/GuestInfo'
-import Navigate from './_/Navigate'
+import Developer from './_/side-cards/Developer'
+import FriendLink from './_/side-cards/FriendLink'
+import GuestInfo from './_/side-cards/GuestInfo'
 
-const ReactUwU = dynamic(() => import('./_/ReactUwU'), { ssr: false })
+const ReactUwU = dynamic(() => import('./_/side-cards/ReactUwU'), { ssr: false })
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="flex shrink-0 flex-col gap-y-6 sm:w-56 md:w-64">
         <Developer />
         <ReactUwU />
-        <Navigate />
+        <FriendLink />
         <div className="sticky top-[calc(theme(height.header)+theme(height.9))] empty:hidden">
           <GuestInfo />
         </div>
