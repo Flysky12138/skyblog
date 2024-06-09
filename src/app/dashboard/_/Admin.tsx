@@ -12,7 +12,7 @@ export default function Admin() {
   if (!session.data?.user) return null
 
   return (
-    <Link className="flex grow items-center gap-x-2 rounded-lg p-1 hover:bg-slate-200 dark:hover:bg-slate-700" href="/auth/signout">
+    <Link className="flex items-center gap-x-2 rounded-lg p-1 hover:bg-slate-200 dark:hover:bg-slate-700" href="/auth/signout">
       <Avatar size="md">
         <Image priority alt={session.data.user.name || ''} height={200} src={session.data.user.image?.replace('https://', '/cdn/') || ''} width={200} />
       </Avatar>

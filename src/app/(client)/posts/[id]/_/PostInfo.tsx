@@ -8,7 +8,7 @@ import { Typography } from '@mui/joy'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React from 'react'
-import { useTimeoutFn } from 'react-use'
+import { useSessionStorage, useTimeoutFn } from 'react-use'
 import useSWR from 'swr'
 
 const getPostInfo = async (id: string) => {
@@ -30,13 +30,13 @@ export default function PostInfo({ id }: PostInfoProps) {
   })
 
   const session = useSession()
-
+  const [submitted, setSubmitted] = useSessionStorage(SESSIONSTORAGE.POST_VIEW_SUBMITTED(id), false)
   useTimeoutFn(async () => {
     if (!post?.published) return
     if (session.data?.role == 'ADMIN') return
-    if (window.sessionStorage.getItem(SESSIONSTORAGE.POST_VIEW_SUBMITTED(id)) == '1') return
+    if (submitted) return
     await postPostView(id)
-    window.sessionStorage.setItem(SESSIONSTORAGE.POST_VIEW_SUBMITTED(id), '1')
+    setSubmitted(true)
   }, 10 * 1000)
 
   if (isLoading) {

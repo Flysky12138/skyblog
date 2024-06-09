@@ -24,6 +24,7 @@ export default function ListItemLink({ className, href, children, ...props }: Li
       )}
       component={Link}
       href={href}
+      scroll={false}
       selected={isSelected}
       {...props}
     >

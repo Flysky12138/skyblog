@@ -1,0 +1,11 @@
+model FriendLinks {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  name      String
+  subtitle  String?
+  url       String
+  cover     String?
+
+  @@map("friend_links")
+}

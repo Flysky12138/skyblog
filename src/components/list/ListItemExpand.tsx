@@ -7,7 +7,7 @@ import { useSelectedLayoutSegment } from 'next/navigation'
 import React from 'react'
 import { useToggle } from 'react-use'
 
-interface ListItemExpandProps {
+export interface ListItemExpandProps {
   children?: React.ReactNode
   /**
    * true - 默认打开；string - 活动路由段匹配时打开

@@ -1,8 +1,7 @@
-import Container from '@/components/layout/Container'
 import Logo from '@/components/layout/Logo'
-import ScrollChildrenClass from '@/components/scroll/ScrollChildrenClass'
 import ToggleTheme from '@/components/toggle/ToggleTheme'
-import { Menu, MenuMobile } from './_/Nav'
+import Admin from './_/Admin'
+import Menu from './_/Menu'
 
 export const metadata = {
   title: 'Dashboard'
@@ -11,20 +10,22 @@ export const metadata = {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <nav className="s-border-color-divider fixed inset-y-0 left-0 hidden border-r md:block md:w-52">
-        <Menu />
+      <nav className="s-border-color-divider fixed inset-y-0 left-0 flex w-52 flex-col border-r bg-white dark:bg-zinc-800">
+        <div className="flex justify-between rounded-none border-b border-inherit px-4 py-2">
+          <Logo />
+          <ToggleTheme
+            slotsProps={{
+              iconbutton: { color: 'neutral' },
+              tooltip: { placement: 'left' }
+            }}
+          />
+        </div>
+        <Menu className="px-4 py-3" />
+        <div className="border-t border-inherit p-2 empty:hidden">
+          <Admin />
+        </div>
       </nav>
-      <ScrollChildrenClass className="shadow-md" selector="main" up={40}>
-        <header className="sticky top-0 z-header h-header transition-shadow md:hidden">
-          <Container className="flex h-full items-center gap-x-4" variant="header">
-            <Logo />
-            <span aria-hidden="true" className="flex-1"></span>
-            <ToggleTheme />
-            <MenuMobile />
-          </Container>
-        </header>
-      </ScrollChildrenClass>
-      <main className="relative h-[calc(100dvh-theme(height.header))] overflow-auto p-6 md:ml-52 md:h-screen md:p-8">{children}</main>
+      <main className="ml-52 min-h-screen p-8">{children}</main>
     </>
   )
 }

@@ -21,7 +21,7 @@ const OuterLink: React.FC<OuterLinkProps> = ({ children, ...props }) => {
   )
 }
 
-export default function Footer() {
+export default function About() {
   return (
     <section className="flex select-none flex-col items-center gap-y-2 opacity-60">
       <Typography level="body-sm">©2020 - {new Date().getFullYear()} By Flysky</Typography>

@@ -1,0 +1,15 @@
+model VisitorInfo {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  ip            String
+  city          String?
+  country       String?
+  countryRegion String?
+  latitude      String?
+  longitude     String?
+  agent         String?
+  referer       String?
+  clashs        Clash[]
+
+  @@map("visitor_infos")
+}

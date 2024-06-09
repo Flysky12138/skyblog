@@ -9,8 +9,8 @@ import { IconButton, IconButtonProps, Tooltip, TooltipProps } from '@mui/joy'
 
 interface ToggleThemeProps {
   slotsProps?: Partial<{
-    iconbutton: Pick<IconButtonProps, 'color'>
-    tooltip: Pick<TooltipProps, 'placement'>
+    iconbutton: IconButtonProps
+    tooltip: Omit<TooltipProps, 'children' | 'title'>
   }>
 }
 
