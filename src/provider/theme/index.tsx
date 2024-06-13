@@ -20,8 +20,14 @@ import mui from './mui'
 
 type ThemeProviderPropsType = Omit<Parameters<typeof JoyCssVarsProvider>[0], 'defaultMode' | 'theme'>
 
+/**
+ * - 在同一个项目中一起使用 Joy UI 和 Material UI
+ * - 在 App Router 中使用 Joy & Material Components 无需添加 `use client`
+ *
+ * @see https://mui.com/joy-ui/integrations/next-js-app-router/
+ * @see https://mui.com/joy-ui/integrations/material-ui/
+ */
 export const ThemeProvider = ({ children, ...props }: ThemeProviderPropsType) => {
-  // 在 App Router 中使用 Joy & Material UI 无需添加 'use client'
   const [{ cache, flush }] = React.useState(() => {
     const cache = createCache({ key: 'theme' })
     cache.compat = true

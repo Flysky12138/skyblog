@@ -1,6 +1,8 @@
 import { BreakpointsOptions } from '@mui/material/styles'
 
-// same with tailwindcss
+/**
+ * 和 tailwindcss 一样的断点
+ */
 const breakpoints: BreakpointsOptions = {
   values: {
     '2xl': 1536,

@@ -38,7 +38,7 @@ export default function Pre({ children, className, ...props }: React.ComponentPr
         aria-label="Copy"
         className={cn(
           'absolute right-1 top-1 z-10 rounded-lg',
-          'border border-solid border-slate-300 dark:border-zinc-700',
+          'border border-solid border-slate-200 dark:border-zinc-700',
           'opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100',
           {
             'pointer-events-none': isCopied

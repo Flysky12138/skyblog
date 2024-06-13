@@ -6,7 +6,7 @@ import Link from 'next/link'
 import rehypeSlug from 'rehype-slug'
 import { options } from './options.mjs'
 import { headingAttr, rehypeHeadingOrder } from './rehype/rehype-heading-order'
-import { remarkOnlyHeading } from './remark/remark-only-heading'
+import { remarkPickHeading } from './remark/remark-pick-heading'
 
 interface HeadingProps extends React.ComponentProps<'a'> {
   component: React.ElementType
@@ -52,14 +52,14 @@ export interface MDXTocProps {
   value: string
 }
 
-export const MDXToc = ({ value }: MDXTocProps) => {
+export const MDXToc = async ({ value }: MDXTocProps) => {
   return (
     <MDXRemote
       components={heading}
       options={{
         mdxOptions: {
           rehypePlugins: [rehypeSlug, rehypeHeadingOrder],
-          remarkPlugins: (options?.mdxOptions?.remarkPlugins || []).concat(remarkOnlyHeading)
+          remarkPlugins: (options?.mdxOptions?.remarkPlugins || []).concat(remarkPickHeading)
         }
       }}
       source={value}

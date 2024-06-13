@@ -18,7 +18,7 @@ export default function Code({ children, className, ...props }: React.ComponentP
 
   return (
     <code
-      className="cursor-pointer select-none rounded bg-slate-200/70 px-1.5 py-1 before:content-none after:content-none dark:bg-slate-600/70"
+      className="cursor-pointer select-none rounded bg-slate-200/70 px-1.5 py-1 font-medium before:content-none after:content-none dark:bg-slate-600/70"
       onDoubleClick={event => {
         const code = (event.target as HTMLElement).textContent
         if (code) {

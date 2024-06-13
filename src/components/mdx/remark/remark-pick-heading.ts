@@ -1,7 +1,7 @@
 import { Root, RootContent } from 'mdast'
 import { visit } from 'unist-util-visit'
 
-export const remarkOnlyHeading = () => {
+export const remarkPickHeading = () => {
   return (tree: Root) => {
     const children: RootContent[] = []
     visit(tree, 'heading', (node: any) => {

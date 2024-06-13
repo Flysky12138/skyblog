@@ -12,7 +12,7 @@ module.exports = {
     '@apply bg-white dark:bg-[#292d38]': {}
   },
   '.s-border-color-card': {
-    '@apply border-slate-200 dark:border-zinc-700': {}
+    '@apply border-slate-100 dark:border-zinc-700': {}
   },
   '.s-border-color-divider': {
     '@apply dark:border-slate-700': {}

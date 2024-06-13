@@ -8,12 +8,31 @@ import { useAsync, useInterval, useLocalStorage } from 'react-use'
 import { useImmer } from 'use-immer'
 
 interface Live2DContextProps {
+  /** 开关 */
   enable?: boolean
+  /** 加载中 */
   loading: boolean
-  message: { content: string | null; priority?: number; timeout?: number }
+  /** 消息 */
+  message: {
+    /** 文本内容 */
+    content: string | null
+    /**
+     * 权重，大的覆盖小的
+     * @default
+     * 0
+     */
+    priority?: number
+    /**
+     * 显示时间
+     * @default
+     * 6000 ms
+     */
+    timeout?: number
+  }
   setEnable: React.Dispatch<React.SetStateAction<boolean | undefined>>
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
   setMessage: React.Dispatch<Live2DContextProps['message']>
+  /** 模型资源 */
   src?: string
 }
 
@@ -33,8 +52,8 @@ export const Live2DProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Live2D 资源地址
   useAsync(async () => {
-    const data = await CustomFetch<Live2DGetResponseType>('/api/live2d')
-    setSrc(data.src)
+    const { src } = await CustomFetch<Live2DGetResponseType>('/api/live2d')
+    setSrc(src)
   })
 
   // 消息
@@ -82,13 +101,17 @@ export const Live2DProvider = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-// 开关
+/**
+ * 开关
+ */
 export const Live2DEnable = ({ children }: { children: React.ReactNode }) => {
   const { enable } = React.useContext(Live2DContext)
   return <>{enable ? children : null}</>
 }
 
-// 断点
+/**
+ * 断点
+ */
 export const Live2DBreakpoint = ({ children }: { children: React.ReactNode }) => {
   return <Breakpoint up="xl">{children}</Breakpoint>
 }
