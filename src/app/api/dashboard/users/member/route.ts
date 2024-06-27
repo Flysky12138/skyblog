@@ -4,6 +4,10 @@ import { Prisma } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
 
+export type GET = MethodRequestType<{
+  return: Prisma.PromiseReturnType<typeof dbGet>
+}>
+
 const dbGet = async () => {
   return await prisma.user.findMany({
     orderBy: {
@@ -20,5 +24,3 @@ export const GET = async () => {
     return CustomResponse.error(error)
   }
 }
-
-export type MemberGetResponseType = Prisma.PromiseReturnType<typeof dbGet>

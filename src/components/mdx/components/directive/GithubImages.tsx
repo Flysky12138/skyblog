@@ -1,4 +1,4 @@
-import { ImageInfoPostRequest } from '@/app/api/dashboard/image-info/route'
+import { POST } from '@/app/api/dashboard/image-info/route'
 import Image from '@/components/Image'
 import { EXT, REDIS } from '@/lib/constants'
 import { getAllGithubRepos, githubFileDirectUrl } from '@/lib/server/github'
@@ -14,8 +14,8 @@ interface GithubImagesProps extends MasonryProps {
 export default async function GithubImages({ path, groupDeep, ...props }: GithubImagesProps) {
   const files = await getAllGithubRepos(path)
 
-  const fileGroupMap = new Map<string, Array<GithubRepoTree['tree'][number] & ImageInfoPostRequest['value']>>()
-  const imagesInfo: Partial<Record<string, ImageInfoPostRequest['value']>> = await kv.json.get(REDIS.IMAGES)
+  const fileGroupMap = new Map<string, Array<GithubRepoTree['tree'][number] & POST['body']['value']>>()
+  const imagesInfo: Partial<Record<string, POST['body']['value']>> = await kv.json.get(REDIS.IMAGES)
 
   for (const file of files.tree) {
     if (!EXT.IMAGE.some(ext => file.path.endsWith(ext))) continue

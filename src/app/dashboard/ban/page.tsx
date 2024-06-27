@@ -1,29 +1,19 @@
 'use client'
 
-import { BanGetResponseType, BanPutRequestType, EdgeBanKeysType } from '@/app/api/dashboard/ban/route'
-import { CustomFetch } from '@/lib/server/fetch'
+import { EdgeBanKeysType } from '@/app/api/dashboard/ban/route'
+import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
 import { produce } from 'immer'
 import React from 'react'
 import useSWR from 'swr'
 import CardBan from './_/CardBan'
 
-const getEdge = async () => {
-  return await CustomFetch<BanGetResponseType>('/api/dashboard/ban')
-}
-const putEdge = async (payload: BanPutRequestType) => {
-  return await CustomFetch('/api/dashboard/ban', {
-    body: payload,
-    method: 'PUT'
-  })
-}
-
 export default function Page() {
-  const { data: edgeBanConfig, mutate } = useSWR('/api/dashboard/ban', getEdge)
+  const { data: edgeBanConfig, mutate } = useSWR('/api/dashboard/ban', () => CustomRequest('GET api/dashboard/ban', {}))
 
   const editEdgeBanConfigItem = React.useCallback(
     async (type: 'PUT' | 'DELETE', key: EdgeBanKeysType, value: string[]) => {
-      await Toast(putEdge({ key, value }), type == 'PUT' ? '添加成功' : '删除成功')
+      await Toast(CustomRequest('PUT api/dashboard/ban', { body: { key, value } }), type == 'PUT' ? '添加成功' : '删除成功')
       mutate(
         produce(state => {
           state[key] = value

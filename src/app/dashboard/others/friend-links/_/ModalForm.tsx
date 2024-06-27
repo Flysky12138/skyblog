@@ -1,15 +1,15 @@
-import { FriendLinksPostRequest } from '@/app/api/dashboard/friend-links/route'
+import { POST } from '@/app/api/dashboard/friend-links/route'
 import ModalCore, { ModalCoreProps, ModalCoreRef } from '@/components/modal/ModalCore'
 import { Button, FormControl, FormLabel, Input } from '@mui/joy'
 import React from 'react'
 import { useImmer } from 'use-immer'
 
 interface ModalFormProps extends Pick<ModalCoreProps, 'component'> {
-  onSubmit: (payload: FriendLinksPostRequest) => Promise<void>
-  value?: FriendLinksPostRequest
+  onSubmit: (payload: POST['body']) => Promise<void>
+  value?: POST['body']
 }
 
-const defaultValue: FriendLinksPostRequest = {
+const defaultValue: POST['body'] = {
   name: '',
   url: ''
 }

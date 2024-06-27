@@ -1,11 +1,11 @@
 'use client'
 
-import { LyricGetResponseType } from '@/app/api/music/neteasecloud/lyric/route'
-import { MusicPlayListGetResponseType } from '@/app/api/music/neteasecloud/playlist/route'
+import { GET } from '@/app/api/music/neteasecloud/lyric/route'
+import { GET as GET2 } from '@/app/api/music/neteasecloud/playlist/route'
 import Loop from '@/components/svg-icon/Loop'
 import Random from '@/components/svg-icon/Random'
 import { cn } from '@/lib/cn'
-import { CustomFetch } from '@/lib/server/fetch'
+import { CustomRequest } from '@/lib/server/request'
 import { KeyboardDoubleArrowRight, Pause, PlayArrow, Refresh, SkipNext, SkipPrevious } from '@mui/icons-material'
 import { IconButton } from '@mui/joy'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -18,20 +18,12 @@ import Lyric, { LyricRef } from './Lyric'
 import Playlist from './Playlist'
 import ProgressBar, { ProgressBarRef } from './ProgressBar'
 
-const getSongUrl = async (id: number) => {
-  const data = await CustomFetch<{ url: string }>(`/api/music/neteasecloud/song?id=${id}`)
-  return data.url
-}
-const getLyric = async (id: number) => {
-  return await CustomFetch<LyricGetResponseType>(`/api/music/neteasecloud/lyric?id=${id}`)
-}
-
 export interface Player {
   index: number
   list: MusicProps['value']
   lyrics: {
-    use: keyof LyricGetResponseType | null
-    value: LyricGetResponseType
+    use: keyof GET['return'] | null
+    value: GET['return']
   }
   mode: 'loop' | 'order' | 'random'
   playing: boolean
@@ -90,7 +82,7 @@ const reducer: ImmerReducer<Player, PlayerActionType> = (state, action) => {
 
 export interface MusicProps {
   className?: string
-  value: Array<MusicPlayListGetResponseType[number] & { lyrics?: Player['lyrics']['value']; url?: string }>
+  value: Array<GET2['return'][number] & { lyrics?: Player['lyrics']['value']; url?: string }>
 }
 
 export default function Music({ value: playlist, className }: MusicProps) {
@@ -120,7 +112,10 @@ export default function Music({ value: playlist, className }: MusicProps) {
     void (async () => {
       try {
         let { url } = player.list[player.index]
-        if (!url) url = await getSongUrl(player.list[player.index].id)
+        if (!url) {
+          const data = await CustomRequest('GET api/music/neteasecloud/song', { search: { id: player.list[player.index].id } })
+          url = data.url
+        }
         if (!url) throw `《${player.list[player.index].name}》地址获取失败`
         dispatch({ payload: url, type: 'setUrl' })
         toggleCount.current = 0
@@ -139,7 +134,7 @@ export default function Music({ value: playlist, className }: MusicProps) {
   // 获取歌词
   useAsync(async () => {
     let { lyrics } = player.list[player.index]
-    if (!lyrics) lyrics = await getLyric(player.list[player.index].id)
+    if (!lyrics) lyrics = await CustomRequest('GET api/music/neteasecloud/lyric', { search: { id: player.list[player.index].id } })
     dispatch({ payload: lyrics, type: 'setLyrics' })
   }, [player.index, player.list])
 

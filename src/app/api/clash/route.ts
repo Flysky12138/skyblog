@@ -8,9 +8,11 @@ import { parseVariable } from '../dashboard/clash/lib'
 
 export const runtime = 'edge'
 
-interface ClashGetRequest extends Pick<VisitorInfo, 'agent' | 'ip'> {}
+export type GET = MethodRequestType<{
+  body: Pick<VisitorInfo, 'agent' | 'ip'>
+}>
 
-const dbGet = async (id: string, data: ClashGetRequest) => {
+const dbGet = async (id: string, data: GET['body']) => {
   // 添加订阅记录
   const subscribeLastAt = new Date().toISOString()
   const clash = await prisma.clash.update({
@@ -33,15 +35,15 @@ const dbGet = async (id: string, data: ClashGetRequest) => {
   return parseVariable(clash)
 }
 
-export const GET = async (request: NextRequest) => {
+export const GET = async (CustomRequest: NextRequest) => {
   try {
-    const id = request.nextUrl.searchParams.get('subscribe')
+    const id = CustomRequest.nextUrl.searchParams.get('subscribe')
     if (!id) return CustomResponse.error('{subscribe} 值缺失', 422)
 
-    const ip = process.env.NODE_ENV == 'development' ? '1.1.1.1' : ipAddress(request)
+    const ip = process.env.NODE_ENV == 'development' ? '1.1.1.1' : ipAddress(CustomRequest)
     if (!ip) return CustomResponse.error('未知访问', 400)
 
-    const agent = request.headers.get('user-agent')
+    const agent = CustomRequest.headers.get('user-agent')
     if (!agent?.toLowerCase().includes('clash')) {
       return new Response(`<p align="center" style="margin-top:30dvh">禁止从非客户端获取资源</p>`, {
         headers: {

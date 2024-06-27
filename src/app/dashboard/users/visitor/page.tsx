@@ -1,26 +1,31 @@
 'use client'
 
-import { VisitorGetResponseType } from '@/app/api/dashboard/users/visitor/route'
 import TableTbodyEmpty from '@/components/table/TableTbodyEmpty'
 import TableTheadProgress from '@/components/table/TableTheadProgress'
 import TableWrapper from '@/components/table/TableWrapper'
 import { formatISOTime } from '@/lib/parser/time'
-import { CustomFetch } from '@/lib/server/fetch'
+import { CustomRequest } from '@/lib/server/request'
 import { Table } from '@mui/joy'
 import { Pagination } from '@mui/material'
 import React from 'react'
 import useSWR from 'swr'
 
-const getVisitors = async (page: number) => {
-  return await CustomFetch<VisitorGetResponseType>(`/api/dashboard/users/visitor?take=${50}&page=${page}`)
-}
-
 export default function Page() {
-  const [pageIndex, setPageIndex] = React.useState(1)
+  const [page, setPage] = React.useState(1)
 
-  const { isLoading, data: visitors } = useSWR(`api/dashboard/users/visitor?page=${pageIndex}`, () => getVisitors(pageIndex), {
-    refreshInterval: 10 * 1000
-  })
+  const { isLoading, data: visitors } = useSWR(
+    `api/dashboard/users/visitor?page=${page}`,
+    () =>
+      CustomRequest('GET api/dashboard/users/visitor', {
+        search: {
+          take: 50,
+          page
+        }
+      }),
+    {
+      refreshInterval: 10 * 1000
+    }
+  )
 
   const pageTotal = visitors ? Math.ceil(visitors.pagination.total / visitors.pagination.take) : 1
 
@@ -64,7 +69,7 @@ export default function Page() {
       </TableWrapper>
       {pageTotal > 1 ? (
         <div className="mt-auto flex justify-center pt-4">
-          <Pagination className="inline-block" count={pageTotal} page={pageIndex} onChange={(_, page) => setPageIndex(page)} />
+          <Pagination className="inline-block" count={pageTotal} page={page} onChange={(_, p) => setPage(p)} />
         </div>
       ) : null}
     </>

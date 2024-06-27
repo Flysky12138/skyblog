@@ -5,9 +5,16 @@ import { NextRequest } from 'next/server'
 
 export const runtime = 'edge'
 
-export const GET = async (request: NextRequest) => {
+export type GET = MethodRequestType<{
+  search: {
+    id: number
+  }
+  return: Partial<Record<'lrc' | 'klyric' | 'tlyric' | 'romalrc', Array<{ lyric: string; time: number }> | null>>
+}>
+
+export const GET = async (CustomRequest: NextRequest) => {
   try {
-    const id = request.nextUrl.searchParams.get('id')
+    const id = CustomRequest.nextUrl.searchParams.get('id')
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
     const data = await CustomFetch(`${process.env.API_NETEASECLOUDMUSIC}/lyric?id=${id}`)
@@ -24,5 +31,3 @@ export const GET = async (request: NextRequest) => {
     return CustomResponse.error(error)
   }
 }
-
-export type LyricGetResponseType = Partial<Record<'lrc' | 'klyric' | 'tlyric' | 'romalrc', Array<{ lyric: string; time: number }> | null>>

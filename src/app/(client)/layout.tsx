@@ -72,11 +72,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Live2DEnable>
         </Live2DBreakpoint>
       </aside>
-      <>
-        {process.env.NODE_ENV != 'development' && <Analytic />}
-        <Analytics />
-        <SpeedInsights />
-      </>
+      {process.env.NODE_ENV != 'development' && (
+        <>
+          <Analytic />
+          <Analytics />
+          <SpeedInsights />
+        </>
+      )}
     </Live2DProvider>
   )
 }

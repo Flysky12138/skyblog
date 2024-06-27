@@ -1,16 +1,8 @@
-import { UserPostRequest, UserPostResponseType } from '@/app/api/auth/user/route'
 import { Account } from '@auth/core/types'
 import NextAuth from 'next-auth'
 import { JWT } from 'next-auth/jwt'
 import GitHub from 'next-auth/providers/github'
-import { CustomFetch } from './server/fetch'
-
-const postUser = async (payload: UserPostRequest) => {
-  return await CustomFetch<UserPostResponseType>(`${process.env.NEXT_PUBLIC_WEBSITE_URL}/api/auth/user`, {
-    body: payload,
-    method: 'POST'
-  })
-}
+import { CustomRequest } from './server/request'
 
 // https://next-auth.js.org/configuration/callbacks
 export const {
@@ -35,7 +27,13 @@ export const {
       const { email, login, avatar_url } = profile
       if (!email || !login || !account) return false
 
-      const { id, role } = await postUser({ avatarUrl: avatar_url as string, email: email, name: login as string })
+      const { id, role } = await CustomRequest('POST api/auth/user', {
+        body: {
+          avatarUrl: avatar_url as string,
+          email: email,
+          name: login as string
+        }
+      })
       account.id = id
       account.role = role as Account['role']
 

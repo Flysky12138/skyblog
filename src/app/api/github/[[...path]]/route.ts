@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
 export const runtime = 'edge'
 
 // 由于 vercel 限制，大于 4M 就重定向
-export const GET = async (request: NextRequest, { params }: DynamicRoute<{ path?: string[] }>) => {
+export const GET = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ path?: string[] }>) => {
   try {
     const path = params.path?.join('/') || ''
     const data = await getGithubRepos(path)

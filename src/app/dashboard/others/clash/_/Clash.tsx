@@ -1,13 +1,12 @@
 'use client'
 
-import { ClashGetResponseType, ClashPostRequest, ClashPostResponseType, ClashPutResponseType } from '@/app/api/dashboard/clash/route'
 import ModalCore from '@/components/modal/ModalCore'
 import ModalDelete from '@/components/modal/ModalDelete'
 import TableTbodyEmpty from '@/components/table/TableTbodyEmpty'
 import TableTheadProgress from '@/components/table/TableTheadProgress'
 import TableWrapper from '@/components/table/TableWrapper'
 import { formatISOTime } from '@/lib/parser/time'
-import { CustomFetch } from '@/lib/server/fetch'
+import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
 import { Button, Chip, Table, Typography } from '@mui/joy'
 import { produce } from 'immer'
@@ -16,27 +15,6 @@ import { toast } from 'sonner'
 import useSWR from 'swr'
 import ModalClash from './ModalClash'
 
-const getClashs = async () => {
-  return await CustomFetch<ClashGetResponseType>('/api/dashboard/clash')
-}
-const postClash = async (payload: ClashPostRequest) => {
-  return await CustomFetch<ClashPostResponseType>('/api/dashboard/clash', {
-    body: payload,
-    method: 'POST'
-  })
-}
-const putClash = async (id: string, payload: ClashPostRequest) => {
-  return await CustomFetch<ClashPutResponseType>(`/api/dashboard/clash?id=${id}`, {
-    body: payload,
-    method: 'PUT'
-  })
-}
-const deleteClash = async (id: string) => {
-  return await CustomFetch<ClashPutResponseType>(`/api/dashboard/clash?id=${id}`, {
-    method: 'DELETE'
-  })
-}
-
 export default function Clash() {
   const [{}, copy] = useCopyToClipboard()
 
@@ -44,7 +22,7 @@ export default function Clash() {
     data: clashs,
     isLoading,
     mutate: setClashs
-  } = useSWR('/api/dashboard/clash', getClashs, {
+  } = useSWR('/api/dashboard/clash', () => CustomRequest('GET api/dashboard/clash', {}), {
     fallbackData: [],
     refreshInterval: 10 * 1000
   })
@@ -67,8 +45,8 @@ export default function Clash() {
                     新建
                   </Button>
                 )}
-                onSubmit={async payload => {
-                  const data = await Toast(postClash(payload), '添加成功')
+                onSubmit={async body => {
+                  const data = await Toast(CustomRequest('POST api/dashboard/clash', { body }), '添加成功')
                   setClashs(
                     produce(state => {
                       state.unshift(data)
@@ -122,7 +100,7 @@ export default function Clash() {
                   )}
                   title="删除"
                   onSubmit={async () => {
-                    await Toast(deleteClash(clash.id), '删除成功')
+                    await Toast(CustomRequest('DELETE api/dashboard/clash', { search: { id: clash.id } }), '删除成功')
                     setClashs(
                       produce(state => {
                         state.splice(index, 1)
@@ -150,12 +128,15 @@ export default function Clash() {
                   value={clash}
                   onSubmit={async ({ name, subtitle, content, variables, clashTemplateId }) => {
                     const data = await Toast(
-                      putClash(clash.id, {
-                        name,
-                        subtitle,
-                        content: clash.clashTemplateId ? '' : content,
-                        variables,
-                        clashTemplateId
+                      CustomRequest('PUT api/dashboard/clash', {
+                        search: { id: clash.id },
+                        body: {
+                          name,
+                          subtitle,
+                          content: clash.clashTemplateId ? '' : content,
+                          variables,
+                          clashTemplateId
+                        }
                       }),
                       '修改成功'
                     )

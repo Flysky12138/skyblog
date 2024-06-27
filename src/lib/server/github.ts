@@ -3,7 +3,7 @@
  * @see https://vercel.com/docs/functions/serverless-functions/runtimes#size-limits
  */
 
-import { ImageInfoPostRequest } from '@/app/api/dashboard/image-info/route'
+import { POST } from '@/app/api/dashboard/image-info/route'
 import { CustomFetch } from '@/lib/server/fetch'
 import { toast } from 'sonner'
 import { getImageFileInfo } from '../file/info'
@@ -101,7 +101,7 @@ export const putGithubRepos = async (path: string, file: File, body: Partial<Omi
         const info = await getImageFileInfo(file)
         console.log('info:', info)
         await CustomFetch('/api/dashboard/image-info', {
-          body: { key: content.sha, value: info } satisfies ImageInfoPostRequest,
+          body: { key: content.sha, value: info } satisfies POST['body'],
           method: 'POST'
         })
         Object.assign(content, info)

@@ -2,7 +2,7 @@ import prisma from '@/lib/prisma'
 import { MetadataRoute } from 'next'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const urls: Array<StringStartWith<'/'>> = ['/']
+  const urls: Array<StartsWith<'/'>> = ['/']
 
   // posts
   const postsId = await prisma.post.findMany({

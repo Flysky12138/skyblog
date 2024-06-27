@@ -5,10 +5,19 @@ import { del, put } from '@vercel/blob'
 import { NextRequest } from 'next/server'
 import puppeteer, { Browser } from 'puppeteer-core'
 
-// 修改
-export interface FriendLinksPutRequest extends Prisma.FriendLinksCreateInput {}
+export type PUT = MethodRequestType<{
+  body: Prisma.FriendLinksCreateInput
+  return: Prisma.PromiseReturnType<typeof dbPut>
+}>
+export type PATCH = MethodRequestType<{
+  return: Prisma.PromiseReturnType<typeof dbPatch>
+}>
+export type DELETE = MethodRequestType<{
+  return: Prisma.PromiseReturnType<typeof dbDelete>
+}>
 
-const dbPut = async (id: number, data: FriendLinksPutRequest) => {
+// 修改
+const dbPut = async (id: number, data: PUT['body']) => {
   return await prisma.friendLinks.update({
     data: {
       updatedAt: new Date().toISOString(),
@@ -18,11 +27,11 @@ const dbPut = async (id: number, data: FriendLinksPutRequest) => {
   })
 }
 
-export const PUT = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const PUT = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
-    const data = await request.json()
+    const data = await CustomRequest.json()
     const res = await dbPut(Number.parseInt(params.id), data)
 
     return CustomResponse.encrypt(res)
@@ -42,7 +51,7 @@ const dbPatch = async (id: number, data: Prisma.FriendLinksUpdateInput) => {
   })
 }
 
-export const PATCH = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const PATCH = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   let browser: Browser | null = null
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
@@ -85,7 +94,7 @@ const dbDelete = async (id: number) => {
   })
 }
 
-export const DELETE = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const DELETE = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
@@ -96,7 +105,3 @@ export const DELETE = async (request: NextRequest, { params }: DynamicRoute<{ id
     return CustomResponse.error(error)
   }
 }
-
-export type FriendLinksPutResponseType = Prisma.PromiseReturnType<typeof dbPut>
-export type FriendLinksPatchResponseType = Prisma.PromiseReturnType<typeof dbPatch>
-export type FriendLinksDeleteResponseType = Prisma.PromiseReturnType<typeof dbDelete>

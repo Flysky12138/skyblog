@@ -1,20 +1,15 @@
 'use client'
 
-import { ImageInfoGetResponseType } from '@/app/api/dashboard/image-info/route'
 import Card from '@/components/layout/Card'
 import ModalCore, { ModalCoreRef } from '@/components/modal/ModalCore'
 import { cn } from '@/lib/cn'
 import { EXT } from '@/lib/constants'
 import { ImageFileInfoType } from '@/lib/file/info'
-import { CustomFetch } from '@/lib/server/fetch'
 import { githubFileDirectUrl } from '@/lib/server/github'
+import { CustomRequest } from '@/lib/server/request'
 import React from 'react'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
-
-const getImageInfo = async () => {
-  return await CustomFetch<ImageInfoGetResponseType>('/api/dashboard/image-info')
-}
 
 const CardCopy: React.FC<{ loading: boolean; title: string; values: string[] }> = ({ title, values, loading }) => {
   const [_, copy] = useCopyToClipboard()
@@ -72,7 +67,7 @@ export default React.forwardRef<CopyLinkRef, {}>(function CopyLink(props, ref) {
       modalCoreRef.current?.openToggle()
       setLoading(true)
       try {
-        const info = await getImageInfo()
+        const info = await CustomRequest('GET api/dashboard/image-info', {})
         const infoMap = new Map(Object.entries(info.data))
         setFiles(payload.map(v => Object.assign({}, v, infoMap.has(v.sha) ? infoMap.get(v.sha) : {})))
       } catch (error) {

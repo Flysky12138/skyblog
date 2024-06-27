@@ -1,27 +1,21 @@
 'use client'
 
 import ModalCore from '@/components/modal/ModalCore'
-import { CustomFetch } from '@/lib/server/fetch'
+import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
 import { Button, FormControl, FormHelperText, FormLabel, Input } from '@mui/joy'
 import React from 'react'
 import { toast } from 'sonner'
 import { useImmer } from 'use-immer'
 
-const getCaptcha = async (phone: string) => {
-  return await CustomFetch(`/api/dashboard/music/neteasecloud/login/captcha?phone=${phone}`)
-}
-const login = async (phone: string, password_captcha: string) => {
-  return await CustomFetch(`/api/dashboard/music/neteasecloud/login/cellphone?phone=${phone}&password_captcha=${password_captcha}`)
-}
-
 interface LoginProps {
   onSuccess: () => void
 }
 
-export default function Login({ onSuccess }: LoginProps) {
-  const [form, setForm] = useImmer({ password_captcha: '', phone: '' })
+export default function Login(props: LoginProps) {
+  const { onSuccess } = props
 
+  const [form, setForm] = useImmer({ password_captcha: '', phone: '' })
   const [loading, setLoading] = React.useState(false)
 
   return (
@@ -56,7 +50,7 @@ export default function Login({ onSuccess }: LoginProps) {
                   toast.error('手机号验证错误')
                   return
                 }
-                await toast.promise(getCaptcha(form.phone), {
+                await toast.promise(CustomRequest('GET api/dashboard/music/neteasecloud/login/captcha', { search: { phone: form.phone } }), {
                   error: '获取验证码失败',
                   loading: '获取验证码中',
                   success: '已发送验证码'
@@ -85,7 +79,7 @@ export default function Login({ onSuccess }: LoginProps) {
             onClick={async () => {
               setLoading(true)
               try {
-                await Toast(login(form.phone, form.password_captcha), '登陆成功')
+                await Toast(CustomRequest('GET api/dashboard/music/neteasecloud/login/cellphone', { search: form }), '登陆成功')
                 onSuccess()
                 close()
               } catch (error) {}

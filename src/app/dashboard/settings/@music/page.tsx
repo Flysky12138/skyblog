@@ -1,27 +1,11 @@
 'use client'
 
-import { CustomFetch } from '@/lib/server/fetch'
+import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
 import { Avatar, Dropdown, Menu, MenuButton, MenuItem } from '@mui/joy'
 import { useAsyncRetry } from 'react-use'
 import { useImmer } from 'use-immer'
 import Login from './_/Login'
-
-const getMusicOptions = async () => {
-  return await CustomFetch('/api/dashboard/music/neteasecloud/options')
-}
-const patchSelectPlaylist = async (id: number) => {
-  return await CustomFetch(`/api/dashboard/music/neteasecloud/options`, {
-    body: { id },
-    method: 'PATCH'
-  })
-}
-const checkStatus = async () => {
-  return await CustomFetch('/api/dashboard/music/neteasecloud/login/status')
-}
-const logout = async () => {
-  return await CustomFetch('/api/dashboard/music/neteasecloud/logout')
-}
 
 interface MusicOptions {
   playlist: Array<{ id: number; name: string }>
@@ -32,7 +16,7 @@ interface MusicOptions {
 export default function Page() {
   const [music, setMusic] = useImmer<MusicOptions | null>(null)
 
-  const { loading, retry } = useAsyncRetry(() => getMusicOptions().then(setMusic))
+  const { loading, retry } = useAsyncRetry(() => CustomRequest('GET api/dashboard/music/neteasecloud/options', {}).then(setMusic))
   if (loading) return <div className="s-skeleton my-px h-8 w-52 rounded"></div>
 
   if (!music) return <Login onSuccess={() => setTimeout(retry, 2000)} />
@@ -46,10 +30,10 @@ export default function Page() {
             {music.user.nickname}
           </MenuButton>
           <Menu className="dark:bg-zinc-900" placement="bottom-start">
-            <MenuItem onClick={() => Toast(checkStatus(), '已登录')}>检查状态</MenuItem>
+            <MenuItem onClick={() => Toast(CustomRequest('GET api/dashboard/music/neteasecloud/login/status', {}), '已登录')}>检查状态</MenuItem>
             <MenuItem
               onClick={async () => {
-                await Toast(logout(), '已退出登录')
+                await Toast(CustomRequest('GET api/dashboard/music/neteasecloud/logout', {}), '已退出登录')
                 setMusic(null)
               }}
             >
@@ -74,7 +58,7 @@ export default function Page() {
                   title={name}
                   onClick={async () => {
                     if (music.selectId == id) return
-                    await Toast(patchSelectPlaylist(id))
+                    await Toast(CustomRequest('PATCH api/dashboard/music/neteasecloud/options', { body: { id } }))
                     setMusic(state => {
                       if (state) {
                         state.selectId = id

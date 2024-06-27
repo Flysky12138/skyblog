@@ -1,8 +1,7 @@
 'use client'
 
-import { Live2DGetResponseType } from '@/app/api/dashboard/live2d/route'
 import Breakpoint from '@/components/layout/Breakpoint'
-import { CustomFetch } from '@/lib/server/fetch'
+import { CustomRequest } from '@/lib/server/request'
 import React from 'react'
 import { useAsync, useInterval, useLocalStorage } from 'react-use'
 import { useImmer } from 'use-immer'
@@ -52,7 +51,7 @@ export const Live2DProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Live2D 资源地址
   useAsync(async () => {
-    const { src } = await CustomFetch<Live2DGetResponseType>('/api/live2d')
+    const { src } = await CustomRequest('GET api/live2d', {})
     setSrc(src)
   })
 
@@ -75,7 +74,7 @@ export const Live2DProvider = ({ children }: { children: React.ReactNode }) => {
   const phraseMessage = React.useCallback(async () => {
     if (!enable || loading) return
     try {
-      const data = await CustomFetch('/api/phrase')
+      const data = await CustomRequest('GET api/phrase', {})
       if (!data.hitokoto) return
       setMessage({ content: data.hitokoto, priority: 100 })
     } catch (error) {

@@ -43,16 +43,10 @@ const Core = async (promise: () => Promise<Response>) => {
   }
 }
 
-interface Request extends Omit<RequestInit, 'method' | 'headers' | 'body'> {
-  body?: any
-  headers?: Record<string, string>
-  method?: 'POST' | 'DELETE' | 'GET' | 'PUT' | 'PATCH' | 'HEAD'
-}
-
 /**
- * 封装的请求方法
+ * 封装的基础请求方法
  */
-export const CustomFetch = async <T = any>(input: RequestInfo | URL, { body, headers = {}, ...init }: Request = {}): Promise<T> => {
+export const CustomFetch = async <T = any>(input: RequestInfo | URL, { body, headers = {}, ...init }: FetchOption = {}): Promise<T> => {
   if (!headers['Content-Type']) headers['Content-Type'] = 'application/json'
   if (headers['Content-Type'].includes('application/json')) body = JSON.stringify(body)
 

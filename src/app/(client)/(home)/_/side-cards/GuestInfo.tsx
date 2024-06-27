@@ -2,17 +2,13 @@
 
 import Card from '@/components/layout/Card'
 import Collapse from '@/components/transitions/Collapse'
-import { CustomFetch } from '@/lib/server/fetch'
+import { CustomRequest } from '@/lib/server/request'
 import { Public } from '@mui/icons-material'
 import { Typography } from '@mui/joy'
 import useSWR from 'swr'
 
-const getIpInfo = async () => {
-  return await CustomFetch<Record<string, string>>('/api/ipinfo')
-}
-
 export default function GuestInfo() {
-  const { data: ipinfo } = useSWR('/api/ipinfo', getIpInfo)
+  const { data: ipinfo } = useSWR('/api/ipinfo', () => CustomRequest('GET api/ipinfo', {}))
 
   if (!ipinfo) return null
 

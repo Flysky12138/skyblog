@@ -4,14 +4,23 @@ import { edgeFetch } from '@/lib/server/vercel-edge'
 import { getAll } from '@vercel/edge-config'
 import { NextRequest } from 'next/server'
 
-export type EdgeBanKeysType = (typeof EDGE_CONFIG)[keyof PickKeyStartWith<typeof EDGE_CONFIG, 'BAN'>]
-export type BanGetResponseType = Partial<Record<EdgeBanKeysType, string[]>>
+export type EdgeBanKeysType = (typeof EDGE_CONFIG)[keyof PickStartsWith<typeof EDGE_CONFIG, 'BAN'>]
 
-export const GET = async (request: NextRequest) => {
+export type GET = MethodRequestType<{
+  return: Partial<Record<EdgeBanKeysType, string[]>>
+}>
+export type PUT = MethodRequestType<{
+  body: {
+    key: EdgeBanKeysType
+    value: string[]
+  }
+}>
+
+export const GET = async (CustomRequest: NextRequest) => {
   try {
     const data = await getAll<Partial<Record<(typeof EDGE_CONFIG)[keyof typeof EDGE_CONFIG], any>>>()
 
-    const res: BanGetResponseType = {
+    const res: GET['return'] = {
       'ban-agents': data['ban-agents'],
       'ban-cities': data['ban-cities'],
       'ban-countries': data['ban-countries'],
@@ -26,14 +35,9 @@ export const GET = async (request: NextRequest) => {
   }
 }
 
-export type BanPutRequestType = {
-  key: EdgeBanKeysType
-  value: string[]
-}
-
-export const PUT = async (request: NextRequest) => {
+export const PUT = async (CustomRequest: NextRequest) => {
   try {
-    const { key, value }: BanPutRequestType = await request.json()
+    const { key, value }: PUT['body'] = await CustomRequest.json()
 
     await edgeFetch([{ key, operation: 'upsert', value }])
 

@@ -56,9 +56,9 @@ CDN_URL=
 
 ```js
 export default {
-  async fetch(request) {
-    const url = new URL(request.url)
-    const { body, headers, ...response } = await fetch(url.href.replace(url.origin + '/', ''), request)
+  async fetch(CustomRequest) {
+    const url = new URL(CustomRequest.url)
+    const { body, headers, ...response } = await fetch(url.href.replace(url.origin + '/', ''), CustomRequest)
     return new Response(body, {
       ...response,
       headers: Object.assign({}, headers, {

@@ -4,6 +4,21 @@ import { CustomResponse } from '@/lib/server/response'
 import { kv } from '@vercel/kv'
 import { NextRequest } from 'next/server'
 
+export type GET = MethodRequestType<{
+  return: {
+    data: Record<string, POST['body']['value']>
+  }
+}>
+export type POST = MethodRequestType<{
+  body: {
+    key: string
+    value: ImageFileInfoType
+  }
+}>
+export type DELETE = MethodRequestType<{
+  body: Pick<POST['body'], 'key'>
+}>
+
 export const GET = async () => {
   try {
     const data = await kv.json.get(REDIS.IMAGES)
@@ -13,18 +28,9 @@ export const GET = async () => {
   }
 }
 
-export type ImageInfoGetResponseType = {
-  data: Record<string, ImageInfoPostRequest['value']>
-}
-
-export interface ImageInfoPostRequest {
-  key: string
-  value: ImageFileInfoType
-}
-
-export const POST = async (request: NextRequest) => {
+export const POST = async (CustomRequest: NextRequest) => {
   try {
-    const { key, value }: ImageInfoPostRequest = await request.json()
+    const { key, value }: POST['body'] = await CustomRequest.json()
 
     if (!key) CustomResponse.error('{key} 值缺失', 422)
     if (!value) CustomResponse.error('{value} 值缺失', 422)
@@ -37,9 +43,9 @@ export const POST = async (request: NextRequest) => {
   }
 }
 
-export const DELETE = async (request: NextRequest) => {
+export const DELETE = async (CustomRequest: NextRequest) => {
   try {
-    const { key }: Pick<ImageInfoPostRequest, 'key'> = await request.json()
+    const { key }: DELETE['body'] = await CustomRequest.json()
 
     if (!key) CustomResponse.error('{key} 值缺失', 422)
 

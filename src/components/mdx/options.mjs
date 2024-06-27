@@ -6,17 +6,16 @@ import remarkDirectiveRehype from 'remark-directive-rehype'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 
+/** @type {import("rehype-katex").Options} */
+const rehypeKatexOptions = {
+  output: 'html',
+  strict: false
+}
+
 /** @type {import("next-mdx-remote/rsc").MDXRemoteProps['options']} */
 export const options = {
   mdxOptions: {
-    rehypePlugins: [
-      rehypeKatex.bind(null, {
-        output: 'html',
-        strict: false
-      }),
-      rehypePrismPlus,
-      rehypeSlug
-    ],
+    rehypePlugins: [[rehypeKatex, rehypeKatexOptions], rehypePrismPlus, rehypeSlug],
     remarkPlugins: [remarkGfm, remarkMath, remarkDirective, remarkDirectiveRehype]
   }
 }

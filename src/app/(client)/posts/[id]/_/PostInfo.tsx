@@ -1,9 +1,8 @@
 'use client'
 
-import { PostInfoGetResponseType } from '@/app/api/post/info/route'
 import { SESSIONSTORAGE } from '@/lib/constants'
 import { formatISOTime2 } from '@/lib/parser/time'
-import { CustomFetch } from '@/lib/server/fetch'
+import { CustomRequest } from '@/lib/server/request'
 import { Typography } from '@mui/joy'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -11,21 +10,12 @@ import React from 'react'
 import { useSessionStorage, useTimeoutFn } from 'react-use'
 import useSWR from 'swr'
 
-const getPostInfo = async (id: string) => {
-  return await CustomFetch<PostInfoGetResponseType>(`/api/post/info?id=${id}`)
-}
-const postPostView = async (id: string) => {
-  return await CustomFetch<PostInfoGetResponseType>(`/api/post/view?id=${id}`, {
-    method: 'POST'
-  })
-}
-
 interface PostInfoProps {
   id: string
 }
 
 export default function PostInfo({ id }: PostInfoProps) {
-  const { data: post, isLoading } = useSWR(`/api/post/info?id=${id}`, () => getPostInfo(id), {
+  const { data: post, isLoading } = useSWR(`/api/post/info?id=${id}`, () => CustomRequest('GET api/post/info', { search: { id } }), {
     refreshInterval: 10 * 1000
   })
 
@@ -35,7 +25,7 @@ export default function PostInfo({ id }: PostInfoProps) {
     if (!post?.published) return
     if (session.data?.role == 'ADMIN') return
     if (submitted) return
-    await postPostView(id)
+    await CustomRequest('POST api/post/view', { search: { id } })
     setSubmitted(true)
   }, 10 * 1000)
 

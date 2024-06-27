@@ -2,9 +2,18 @@ import { CustomFetch } from '@/lib/server/fetch'
 import { CustomResponse } from '@/lib/server/response'
 import { NextRequest } from 'next/server'
 
-export const GET = async (request: NextRequest) => {
+export type GET = MethodRequestType<{
+  search: {
+    phone: string
+  }
+  return: {
+    status: 'ok'
+  }
+}>
+
+export const GET = async (CustomRequest: NextRequest) => {
   try {
-    const phone = request.nextUrl.searchParams.get('phone')
+    const phone = CustomRequest.nextUrl.searchParams.get('phone')
     if (!phone) return CustomResponse.error('{phone} 值缺失', 422)
 
     const data = await CustomFetch(`${process.env.API_NETEASECLOUDMUSIC}/captcha/sent?phone=${phone}&t=${Date.now()}`)

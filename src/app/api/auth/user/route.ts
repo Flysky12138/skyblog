@@ -5,9 +5,12 @@ import { NextRequest } from 'next/server'
 
 export const runtime = 'edge'
 
-export interface UserPostRequest extends Prisma.UserCreateInput {}
+export type POST = MethodRequestType<{
+  body: Prisma.UserCreateInput
+  return: Prisma.PromiseReturnType<typeof dbPost>
+}>
 
-const dbPost = async (data: UserPostRequest) => {
+const dbPost = async (data: POST['body']) => {
   const count = await prisma.user.count()
   if (count == 0) data.role = 'ADMIN'
 
@@ -18,9 +21,9 @@ const dbPost = async (data: UserPostRequest) => {
   })
 }
 
-export const POST = async (request: NextRequest) => {
+export const POST = async (CustomRequest: NextRequest) => {
   try {
-    const data = await request.json()
+    const data = await CustomRequest.json()
     const res = await dbPost(data)
 
     return CustomResponse.encrypt(res)
@@ -28,5 +31,3 @@ export const POST = async (request: NextRequest) => {
     return CustomResponse.error(error)
   }
 }
-
-export type UserPostResponseType = Prisma.PromiseReturnType<typeof dbPost>

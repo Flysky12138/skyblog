@@ -6,28 +6,26 @@ import { NextRequest } from 'next/server'
 
 export const runtime = 'edge'
 
-interface VisitorPostRequest extends Omit<VisitorInfo, 'id' | 'createdAt'> {}
-
-const dbPost = async (data: VisitorPostRequest) => {
+const dbPost = async (data: Omit<VisitorInfo, 'id' | 'createdAt'>) => {
   return await prisma.visitorInfo.create({ data })
 }
 
-export const POST = async (request: NextRequest) => {
+export const POST = async (CustomRequest: NextRequest) => {
   try {
-    const ip = process.env.NODE_ENV == 'development' ? '1.1.1.1' : ipAddress(request)
+    const ip = process.env.NODE_ENV == 'development' ? '1.1.1.1' : ipAddress(CustomRequest)
     if (!ip) return CustomResponse.error('未知访问', 400)
 
-    const { city = null, country = null, countryRegion = null, latitude = null, longitude = null } = geolocation(request)
+    const { city = null, country = null, countryRegion = null, latitude = null, longitude = null } = geolocation(CustomRequest)
 
     await dbPost({
-      agent: request.headers.get('user-agent'),
+      agent: CustomRequest.headers.get('user-agent'),
       city,
       country,
       countryRegion,
       ip,
       latitude,
       longitude,
-      referer: request.headers.get('referer')
+      referer: CustomRequest.headers.get('referer')
     })
 
     return new Response()

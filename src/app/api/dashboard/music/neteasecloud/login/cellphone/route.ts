@@ -4,12 +4,19 @@ import { CustomResponse } from '@/lib/server/response'
 import { edgeFetch } from '@/lib/server/vercel-edge'
 import { NextRequest } from 'next/server'
 
-export const GET = async (request: NextRequest) => {
+export type GET = MethodRequestType<{
+  search: {
+    phone: string
+    password_captcha: string
+  }
+}>
+
+export const GET = async (CustomRequest: NextRequest) => {
   try {
-    const phone = request.nextUrl.searchParams.get('phone')
+    const phone = CustomRequest.nextUrl.searchParams.get('phone')
     if (!phone) return CustomResponse.error('{phone} 值缺失', 422)
 
-    const password_captcha = request.nextUrl.searchParams.get('password_captcha')
+    const password_captcha = CustomRequest.nextUrl.searchParams.get('password_captcha')
     if (!password_captcha) return CustomResponse.error('{password_captcha} 值缺失', 422)
 
     // 获取 cookie

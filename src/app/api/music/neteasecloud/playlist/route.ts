@@ -5,6 +5,16 @@ import { get } from '@vercel/edge-config'
 
 export const runtime = 'edge'
 
+export type GET = MethodRequestType<{
+  return: Array<{
+    ar: string[]
+    dt: number
+    id: number
+    name: string
+    picUrl: string
+  }>
+}>
+
 export const GET = async () => {
   const id = await get<number>(EDGE_CONFIG.NETEASECLOUD_PLAYLIST_ID)
   if (!id) return CustomResponse.error('{id} 值缺失', 422)
@@ -26,11 +36,3 @@ export const GET = async () => {
     return CustomResponse.error(error)
   }
 }
-
-export type MusicPlayListGetResponseType = Array<{
-  ar: string[]
-  dt: number
-  id: number
-  name: string
-  picUrl: string
-}>

@@ -1,4 +1,4 @@
-import { ClashTemplatePostRequest, ClashTemplatePutRequest } from '@/app/api/dashboard/clash/template/route'
+import { POST, PUT } from '@/app/api/dashboard/clash/template/route'
 import Card from '@/components/layout/Card'
 import ModalCore, { ModalCoreProps } from '@/components/modal/ModalCore'
 import MonacoEditor from '@/components/monaco-editor'
@@ -10,7 +10,7 @@ import { getVariableNames } from './lib'
 
 interface ModalTemplateProps extends Pick<ModalCoreProps, 'component'> {
   onSubmit: (payload: NonNullable<ModalTemplateProps['value']>) => Promise<void>
-  value?: Pick<ClashTemplatePostRequest, keyof ClashTemplatePutRequest>
+  value?: Pick<POST['body'], keyof PUT['body']>
 }
 
 export default function ModalTemplate({ component: Component, value, onSubmit }: ModalTemplateProps) {

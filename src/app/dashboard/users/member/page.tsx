@@ -1,20 +1,15 @@
 'use client'
 
-import { MemberGetResponseType } from '@/app/api/dashboard/users/member/route'
 import TableTbodyEmpty from '@/components/table/TableTbodyEmpty'
 import TableTheadProgress from '@/components/table/TableTheadProgress'
 import TableWrapper from '@/components/table/TableWrapper'
 import { formatISOTime } from '@/lib/parser/time'
-import { CustomFetch } from '@/lib/server/fetch'
+import { CustomRequest } from '@/lib/server/request'
 import { Table } from '@mui/joy'
 import useSWR from 'swr'
 
-const getMembers = async () => {
-  return await CustomFetch<MemberGetResponseType>('/api/dashboard/users/member')
-}
-
 export default function Page() {
-  const { data: members, isLoading } = useSWR('/api/dashboard/users/member', getMembers, {
+  const { data: members, isLoading } = useSWR('/api/dashboard/users/member', () => CustomRequest('GET api/dashboard/users/member', {}), {
     fallbackData: []
   })
 

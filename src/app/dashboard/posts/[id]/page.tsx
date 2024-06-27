@@ -1,19 +1,11 @@
 'use client'
 
-import {
-  PostDetailGetResponseType,
-  PostDetailPostRequest,
-  PostDetailPostResponseType,
-  PostDetailPutRequest,
-  PostDetailPutResponseType
-} from '@/app/api/dashboard/posts/[id]/route'
-import { CategoriesGetResponseType } from '@/app/api/dashboard/posts/categories/route'
-import { TagsGetResponseType } from '@/app/api/dashboard/posts/tags/route'
+import { GET } from '@/app/api/dashboard/posts/[id]/route'
 import InputMultiple from '@/components/form/InputMultiple'
 import MonacoEditor from '@/components/monaco-editor'
 import { markdownConfig } from '@/components/monaco-editor/markdown'
 import { cn } from '@/lib/cn'
-import { CustomFetch } from '@/lib/server/fetch'
+import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
 import { AddPhotoAlternate, ArrowUpward, Close, OpenInNew, Save } from '@mui/icons-material'
 import { Checkbox, FormControl, FormLabel, IconButton, Input, Textarea, Tooltip } from '@mui/joy'
@@ -28,29 +20,7 @@ import { useImmer } from 'use-immer'
 import UploadFiles from '../../github/_/UploadFiles'
 import ModalChips from './_/ModalChips'
 
-const getPostDetail = async (id: string) => {
-  return await CustomFetch<PostDetailGetResponseType>(`/api/dashboard/posts/${id}`)
-}
-const getCategories = async () => {
-  return await CustomFetch<CategoriesGetResponseType>('/api/dashboard/posts/categories')
-}
-const getTags = async () => {
-  return await CustomFetch<TagsGetResponseType>('/api/dashboard/posts/tags')
-}
-const putPostDetail = async (id: string, payload: PostDetailPutRequest) => {
-  return await CustomFetch<PostDetailPutResponseType>(`/api/dashboard/posts/${id}`, {
-    body: payload,
-    method: 'PUT'
-  })
-}
-const postPostDetail = async (payload: PostDetailPostRequest) => {
-  return await CustomFetch<PostDetailPostResponseType>('/api/dashboard/posts/new', {
-    body: payload,
-    method: 'POST'
-  })
-}
-
-const defaultPost: NonNullable<PostDetailGetResponseType> = {
+const defaultPost: NonNullable<GET['return']> = {
   authorId: 1,
   categories: [],
   content: null,
@@ -91,14 +61,14 @@ export default function Page() {
 
   useAsync(async () => {
     if (isCreate) return
-    const data = await Toast(getPostDetail(id))
+    const data = await Toast(CustomRequest('GET api/dashboard/posts/[id]', { params: { id } }))
     if (!data) return
     setPost(data)
     setOldCode(data.content || '')
   }, [id, setPost])
 
-  const { data: categories } = useSWR('/api/dashboard/posts/categories', getCategories)
-  const { data: tags } = useSWR('/api/dashboard/posts/tags', getTags)
+  const { data: categories } = useSWR('/api/dashboard/posts/categories', () => CustomRequest('GET api/dashboard/posts/categories', {}))
+  const { data: tags } = useSWR('/api/dashboard/posts/tags', () => CustomRequest('GET api/dashboard/posts/tags', {}))
 
   return (
     <section className="grid grid-cols-2 gap-x-6 gap-y-4">
@@ -245,24 +215,30 @@ export default function Page() {
                 }
                 const data = await Toast(
                   isCreate
-                    ? postPostDetail({
-                        authorId: session.data?.id || 1,
-                        categories: post.categories.map(({ name }) => name),
-                        content: post.content,
-                        description: post.description,
-                        showTitleCard: post.showTitleCard,
-                        sticky: post.sticky,
-                        tags: post.tags.map(({ name }) => name),
-                        title: post.title
+                    ? CustomRequest('POST api/dashboard/posts/[id]', {
+                        params: { id: 'new' },
+                        body: {
+                          authorId: session.data?.id || 1,
+                          categories: post.categories.map(({ name }) => name),
+                          content: post.content,
+                          description: post.description,
+                          showTitleCard: post.showTitleCard,
+                          sticky: post.sticky,
+                          tags: post.tags.map(({ name }) => name),
+                          title: post.title
+                        }
                       })
-                    : putPostDetail(post.id, {
-                        categories: post.categories.map(({ name }) => name),
-                        content: post.content,
-                        description: post.description,
-                        showTitleCard: post.showTitleCard,
-                        sticky: post.sticky,
-                        tags: post.tags.map(({ name }) => name),
-                        title: post.title
+                    : CustomRequest('PUT api/dashboard/posts/[id]', {
+                        params: { id: post.id },
+                        body: {
+                          categories: post.categories.map(({ name }) => name),
+                          content: post.content,
+                          description: post.description,
+                          showTitleCard: post.showTitleCard,
+                          sticky: post.sticky,
+                          tags: post.tags.map(({ name }) => name),
+                          title: post.title
+                        }
                       }),
                   '保存成功'
                 )

@@ -5,7 +5,13 @@ import { NextRequest } from 'next/server'
 export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
-export const GET = async (request: NextRequest) => {
+export type GET = MethodRequestType<{
+  return: {
+    hitokoto: string
+  }
+}>
+
+export const GET = async (CustomRequest: NextRequest) => {
   try {
     const data = await CustomFetch('https://v1.hitokoto.cn')
     return CustomResponse.encrypt(data)

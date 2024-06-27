@@ -1,9 +1,9 @@
 'use client'
 
-import { FriendLinksGetResponseType, FriendLinksPostRequest, FriendLinksPostResponseType } from '@/app/api/dashboard/friend-links/route'
+import { GET } from '@/app/api/dashboard/friend-links/route'
 import Card from '@/components/layout/Card'
 import ModalDelete from '@/components/modal/ModalDelete'
-import { CustomFetch } from '@/lib/server/fetch'
+import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
 import { Add, Delete, Edit, Sync } from '@mui/icons-material'
 import { IconButton, Tooltip } from '@mui/joy'
@@ -12,35 +12,9 @@ import { useAsync } from 'react-use'
 import { useImmer } from 'use-immer'
 import ModalForm from './_/ModalForm'
 
-const getFriendLinks = async () => {
-  return await CustomFetch<FriendLinksGetResponseType>('/api/dashboard/friend-links')
-}
-const postFriendLinks = async (payload: FriendLinksPostRequest) => {
-  return await CustomFetch<FriendLinksPostResponseType>('/api/dashboard/friend-links', {
-    body: payload,
-    method: 'POST'
-  })
-}
-const putFriendLinks = async (id: number, payload: FriendLinksPostRequest) => {
-  return await CustomFetch<FriendLinksPostResponseType>(`/api/dashboard/friend-links/${id}`, {
-    body: payload,
-    method: 'PUT'
-  })
-}
-const patchFriendLinks = async (id: number) => {
-  return await CustomFetch<FriendLinksPostResponseType>(`/api/dashboard/friend-links/${id}`, {
-    method: 'PATCH'
-  })
-}
-const deleteFriendLinks = async (id: number) => {
-  return await CustomFetch<FriendLinksPostResponseType>(`/api/dashboard/friend-links/${id}`, {
-    method: 'DELETE'
-  })
-}
-
 export default function Page() {
-  const [friendlinks, setFriendlinks] = useImmer<FriendLinksGetResponseType>([])
-  useAsync(() => getFriendLinks().then(setFriendlinks))
+  const [friendlinks, setFriendlinks] = useImmer<GET['return']>([])
+  useAsync(() => CustomRequest('GET api/dashboard/friend-links', {}).then(setFriendlinks))
 
   return (
     <>
@@ -57,8 +31,14 @@ export default function Page() {
                 </Tooltip>
               )}
               value={friendlink}
-              onSubmit={async payload => {
-                const data = await Toast(putFriendLinks(friendlink.id, payload), '更新成功')
+              onSubmit={async body => {
+                const data = await Toast(
+                  CustomRequest('PUT api/dashboard/friend-links/[id]', {
+                    params: { id: String(friendlink.id) },
+                    body
+                  }),
+                  '更新成功'
+                )
                 setFriendlinks(state => {
                   state.splice(index, 1, data)
                 })
@@ -68,7 +48,12 @@ export default function Page() {
               <IconButton
                 color="warning"
                 onClick={async () => {
-                  const data = await Toast(patchFriendLinks(friendlink.id), '获取封面成功')
+                  const data = await Toast(
+                    CustomRequest('PATCH api/dashboard/friend-links/[id]', {
+                      params: { id: String(friendlink.id) }
+                    }),
+                    '获取封面成功'
+                  )
                   setFriendlinks(state => {
                     state.splice(index, 1, data)
                   })
@@ -87,7 +72,9 @@ export default function Page() {
               )}
               title={`删除《${friendlink.name}》？`}
               onSubmit={async () => {
-                deleteFriendLinks(friendlink.id)
+                CustomRequest('DELETE api/dashboard/friend-links/[id]', {
+                  params: { id: String(friendlink.id) }
+                })
                 setFriendlinks(state => {
                   state.splice(index, 1)
                 })
@@ -102,8 +89,8 @@ export default function Page() {
             <Add fontSize="large" />
           </Card>
         )}
-        onSubmit={async payload => {
-          const data = await Toast(postFriendLinks(payload), '保存成功')
+        onSubmit={async body => {
+          const data = await Toast(CustomRequest('POST api/dashboard/friend-links', { body }), '保存成功')
           setFriendlinks(state => {
             state.push(data)
           })

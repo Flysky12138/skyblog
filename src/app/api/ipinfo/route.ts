@@ -5,8 +5,12 @@ import { NextRequest } from 'next/server'
 
 export const runtime = 'edge'
 
-export const GET = async (request: NextRequest) => {
-  const ip = process.env.NODE_ENV == 'development' ? '1.1.1.1' : ipAddress(request)
+export type GET = MethodRequestType<{
+  return: Record<string, string>
+}>
+
+export const GET = async (CustomRequest: NextRequest) => {
+  const ip = process.env.NODE_ENV == 'development' ? '1.1.1.1' : ipAddress(CustomRequest)
   if (!ip) return CustomResponse.error('未知访问', 400)
 
   try {
@@ -18,6 +22,6 @@ export const GET = async (request: NextRequest) => {
     })
     return CustomResponse.encrypt(data)
   } catch (error) {
-    return CustomResponse.encrypt({ ip, ...geolocation(request) })
+    return CustomResponse.encrypt({ ip, ...geolocation(CustomRequest) })
   }
 }

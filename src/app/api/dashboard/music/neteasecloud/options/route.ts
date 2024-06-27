@@ -6,6 +6,12 @@ import { edgeFetch } from '@/lib/server/vercel-edge'
 import { get } from '@vercel/edge-config'
 import { NextRequest } from 'next/server'
 
+export type PATCH = MethodRequestType<{
+  body: {
+    id: number
+  }
+}>
+
 export const GET = async () => {
   try {
     const cookie = await get<string>(EDGE_CONFIG.NETEASECLOUD_COOKIE)
@@ -28,9 +34,9 @@ export const GET = async () => {
   }
 }
 
-export const PATCH = async (request: NextRequest) => {
+export const PATCH = async (CustomRequest: NextRequest) => {
   try {
-    const { id } = await request.json()
+    const { id } = await CustomRequest.json()
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
     await edgeFetch([{ key: EDGE_CONFIG.NETEASECLOUD_PLAYLIST_ID, operation: 'upsert', value: id }])

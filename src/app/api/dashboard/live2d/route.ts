@@ -4,11 +4,18 @@ import { edgeFetch } from '@/lib/server/vercel-edge'
 import { get } from '@vercel/edge-config'
 import { NextRequest } from 'next/server'
 
-export type Live2DGetResponseType = {
-  src?: string
-}
+export type GET = MethodRequestType<{
+  return: {
+    src?: string
+  }
+}>
+export type PUT = MethodRequestType<{
+  body: {
+    src: string
+  }
+}>
 
-export const GET = async (request: NextRequest) => {
+export const GET = async (CustomRequest: NextRequest) => {
   try {
     const src = await get<string>(EDGE_CONFIG.LIVE2D_SRC)
     return CustomResponse.encrypt({ src })
@@ -17,11 +24,9 @@ export const GET = async (request: NextRequest) => {
   }
 }
 
-export type Live2DPutRequestType = Live2DGetResponseType
-
-export const PUT = async (request: NextRequest) => {
+export const PUT = async (CustomRequest: NextRequest) => {
   try {
-    const data: Live2DPutRequestType = await request.json()
+    const data: PUT['body'] = await CustomRequest.json()
 
     await edgeFetch([{ key: EDGE_CONFIG.LIVE2D_SRC, operation: 'upsert', value: data.src }])
 

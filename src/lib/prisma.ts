@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { PrismaClient as PrismaClientEdge } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
-const isDev = process.env.NODE_ENV == 'development'
+const isDev = !process.env.NODE_ENV || process.env.NODE_ENV == 'development'
 
 const prismaClientSingleton = () => {
   const Prisma = isDev ? PrismaClient : PrismaClientEdge

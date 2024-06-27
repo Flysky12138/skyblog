@@ -3,6 +3,27 @@ import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
+export type GET = MethodRequestType<{
+  return: Prisma.PromiseReturnType<typeof dbGet>
+}>
+export type POST = MethodRequestType<{
+  body: Prisma.ClashTemplateCreateInput
+  return: Prisma.PromiseReturnType<typeof dbPost>
+}>
+export type PUT = MethodRequestType<{
+  search: {
+    id: number
+  }
+  body: Pick<Prisma.ClashTemplateUpdateInput, 'name' | 'content'>
+  return: Prisma.PromiseReturnType<typeof dbPut>
+}>
+export type DELETE = MethodRequestType<{
+  search: {
+    id: number
+  }
+  return: Prisma.PromiseReturnType<typeof dbGet>
+}>
+
 const select = Prisma.validator<Prisma.ClashTemplateSelect>()({
   id: true,
   name: true,
@@ -34,15 +55,13 @@ export const GET = async () => {
 }
 
 // 创建
-export interface ClashTemplatePostRequest extends Prisma.ClashTemplateCreateInput {}
-
-const dbPost = async (data: ClashTemplatePostRequest) => {
+const dbPost = async (data: POST['body']) => {
   return await prisma.clashTemplate.create({ data, select })
 }
 
-export const POST = async (request: NextRequest) => {
+export const POST = async (CustomRequest: NextRequest) => {
   try {
-    const data = await request.json()
+    const data = await CustomRequest.json()
     const res = await dbPost(data)
 
     return CustomResponse.encrypt(res)
@@ -52,9 +71,7 @@ export const POST = async (request: NextRequest) => {
 }
 
 // 修改
-export interface ClashTemplatePutRequest extends Pick<Prisma.ClashTemplateUpdateInput, 'name' | 'content'> {}
-
-const dbPut = async (id: number, data: ClashTemplatePutRequest) => {
+const dbPut = async (id: number, data: PUT['body']) => {
   return await prisma.clashTemplate.update({
     data,
     select,
@@ -62,12 +79,12 @@ const dbPut = async (id: number, data: ClashTemplatePutRequest) => {
   })
 }
 
-export const PUT = async (request: NextRequest) => {
+export const PUT = async (CustomRequest: NextRequest) => {
   try {
-    const id = request.nextUrl.searchParams.get('id')
+    const id = CustomRequest.nextUrl.searchParams.get('id')
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
-    const data = await request.json()
+    const data = await CustomRequest.json()
     const res = await dbPut(Number.parseInt(id), data)
 
     return CustomResponse.encrypt(res)
@@ -81,9 +98,9 @@ const dbDelete = async (id: number) => {
   return await prisma.clashTemplate.delete({ select, where: { id } })
 }
 
-export const DELETE = async (request: NextRequest) => {
+export const DELETE = async (CustomRequest: NextRequest) => {
   try {
-    const id = request.nextUrl.searchParams.get('id')
+    const id = CustomRequest.nextUrl.searchParams.get('id')
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
     const res = await dbDelete(Number.parseInt(id))
@@ -93,8 +110,3 @@ export const DELETE = async (request: NextRequest) => {
     return CustomResponse.error(error)
   }
 }
-
-export type ClashTemplateGetResponseType = Prisma.PromiseReturnType<typeof dbGet>
-export type ClashTemplatePostResponseType = Prisma.PromiseReturnType<typeof dbPost>
-export type ClashTemplatePutResponseType = Prisma.PromiseReturnType<typeof dbPut>
-export type ClashTemplateDeleteResponseType = Prisma.PromiseReturnType<typeof dbDelete>

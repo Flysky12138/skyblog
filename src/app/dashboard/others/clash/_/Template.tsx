@@ -1,51 +1,23 @@
 'use client'
 
-import {
-  ClashTemplateGetResponseType,
-  ClashTemplatePostRequest,
-  ClashTemplatePostResponseType,
-  ClashTemplatePutRequest,
-  ClashTemplatePutResponseType
-} from '@/app/api/dashboard/clash/template/route'
 import ModalDelete from '@/components/modal/ModalDelete'
 import TableTbodyEmpty from '@/components/table/TableTbodyEmpty'
 import TableTheadProgress from '@/components/table/TableTheadProgress'
 import TableWrapper from '@/components/table/TableWrapper'
 import { formatISOTime } from '@/lib/parser/time'
-import { CustomFetch } from '@/lib/server/fetch'
+import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
 import { Button, Table } from '@mui/joy'
 import { produce } from 'immer'
 import useSWR from 'swr'
 import ModalTemplate from './ModalTemplate'
 
-const getClashTemplates = async () => {
-  return await CustomFetch<ClashTemplateGetResponseType>('/api/dashboard/clash/template')
-}
-const postClashTemplate = async (payload: ClashTemplatePostRequest) => {
-  return await CustomFetch<ClashTemplatePostResponseType>('/api/dashboard/clash/template', {
-    body: payload,
-    method: 'POST'
-  })
-}
-const putClashTemplate = async (id: number, payload: ClashTemplatePutRequest) => {
-  return await CustomFetch<ClashTemplatePutResponseType>(`/api/dashboard/clash/template?id=${id}`, {
-    body: payload,
-    method: 'PUT'
-  })
-}
-const deleteClashTemplate = async (id: number) => {
-  return await CustomFetch<ClashTemplatePutResponseType>(`/api/dashboard/clash/template?id=${id}`, {
-    method: 'DELETE'
-  })
-}
-
 export default function Template() {
   const {
     data: clashTemplates,
     isLoading,
     mutate: setClashTemplates
-  } = useSWR('/api/dashboard/clash/template', getClashTemplates, {
+  } = useSWR('/api/dashboard/clash/template', () => CustomRequest('GET api/dashboard/clash/template', {}), {
     fallbackData: []
   })
 
@@ -66,8 +38,8 @@ export default function Template() {
                     新建
                   </Button>
                 )}
-                onSubmit={async payload => {
-                  const data = await Toast(postClashTemplate(payload), '添加成功')
+                onSubmit={async body => {
+                  const data = await Toast(CustomRequest('POST api/dashboard/clash/template', { body }), '添加成功')
                   setClashTemplates(
                     produce(state => {
                       state.unshift(data)
@@ -96,7 +68,7 @@ export default function Template() {
                   )}
                   title="删除"
                   onSubmit={async () => {
-                    await Toast(deleteClashTemplate(clashTemplate.id), '删除成功')
+                    await Toast(CustomRequest('DELETE api/dashboard/clash/template', { search: { id: clashTemplate.id } }), '删除成功')
                     setClashTemplates(
                       produce(state => {
                         state.splice(index, 1)
@@ -112,7 +84,13 @@ export default function Template() {
                   )}
                   value={clashTemplate}
                   onSubmit={async ({ name, content }) => {
-                    const data = await Toast(putClashTemplate(clashTemplate.id, { name, content }), '修改成功')
+                    const data = await Toast(
+                      CustomRequest('PUT api/dashboard/clash/template', {
+                        search: { id: clashTemplate.id },
+                        body: { name, content }
+                      }),
+                      '修改成功'
+                    )
                     setClashTemplates(
                       produce(state => {
                         state.splice(index, 1, data)

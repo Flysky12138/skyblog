@@ -6,6 +6,13 @@ import { NextRequest } from 'next/server'
 export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
+export type GET = MethodRequestType<{
+  search: {
+    id: string
+  }
+  return: Prisma.PromiseReturnType<typeof dbGet>
+}>
+
 const dbGet = async (id: string) => {
   return await prisma.post.findUnique({
     select: {
@@ -20,9 +27,9 @@ const dbGet = async (id: string) => {
   })
 }
 
-export const GET = async (request: NextRequest) => {
+export const GET = async (CustomRequest: NextRequest) => {
   try {
-    const id = request.nextUrl.searchParams.get('id')
+    const id = CustomRequest.nextUrl.searchParams.get('id')
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
     const res = await dbGet(id)
@@ -31,5 +38,3 @@ export const GET = async (request: NextRequest) => {
     return CustomResponse.error(error)
   }
 }
-
-export type PostInfoGetResponseType = Prisma.PromiseReturnType<typeof dbGet>

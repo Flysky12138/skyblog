@@ -1,15 +1,13 @@
 'use client'
 
-import { PostDetailDeleteResponseType, PostDetailPatchRequest, PostDetailPatchResponseType } from '@/app/api/dashboard/posts/[id]/route'
-import { PostsGetResponseType } from '@/app/api/dashboard/posts/route'
 import SelectClearable from '@/components/form/SelectClearable'
 import ModalDelete from '@/components/modal/ModalDelete'
 import TableTbodyEmpty from '@/components/table/TableTbodyEmpty'
 import TableTheadProgress from '@/components/table/TableTheadProgress'
 import TableWrapper from '@/components/table/TableWrapper'
 import { removeDuplicates } from '@/lib/parser/array'
-import { CustomFetch } from '@/lib/server/fetch'
 import { deleteAllGithubRepos } from '@/lib/server/github'
+import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
 import { Search } from '@mui/icons-material'
 import { Button, FormControl, FormLabel, Input, Option, Switch, Table } from '@mui/joy'
@@ -19,27 +17,12 @@ import React from 'react'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
 
-const getPosts = async () => {
-  return await CustomFetch<PostsGetResponseType>('/api/dashboard/posts')
-}
-const patchPost = async (id: string, payload: PostDetailPatchRequest) => {
-  return await CustomFetch<PostDetailPatchResponseType>(`/api/dashboard/posts/${id}`, {
-    body: payload,
-    method: 'PATCH'
-  })
-}
-const deletePost = async (id: string) => {
-  return await CustomFetch<PostDetailDeleteResponseType>(`/api/dashboard/posts/${id}`, {
-    method: 'DELETE'
-  })
-}
-
 export default function Page() {
   const {
     data: posts,
     isLoading,
     mutate: setPosts
-  } = useSWR('/api/dashboard/posts', getPosts, {
+  } = useSWR('/api/dashboard/posts', () => CustomRequest('GET api/dashboard/posts', {}), {
     fallbackData: []
   })
 
@@ -198,7 +181,13 @@ export default function Page() {
                     checked={post.published}
                     color={post.published ? 'success' : 'warning'}
                     onChange={async () => {
-                      const data = await Toast(patchPost(post.id, { published: !post.published }), '更新成功')
+                      const data = await Toast(
+                        CustomRequest('PATCH api/dashboard/posts/[id]', {
+                          params: { id: post.id },
+                          body: { published: !post.published }
+                        }),
+                        '更新成功'
+                      )
                       setPosts(
                         produce(state => {
                           state.splice(index, 1, data)
@@ -217,7 +206,7 @@ export default function Page() {
                     title={`删除 《 ${post.title} 》?`}
                     onSubmit={async () => {
                       await deleteAllGithubRepos(`/posts/${post.id}/`, () => `delete files of post with id '${post.id}'`)
-                      await Toast(deletePost(post.id), '删除成功')
+                      await Toast(CustomRequest('DELETE api/dashboard/posts/[id]', { params: { id: post.id } }), '删除成功')
                       setPosts(
                         produce(state => {
                           state.splice(index, 1)

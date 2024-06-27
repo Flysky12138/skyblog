@@ -1,19 +1,16 @@
 'use client'
 
-import { MusicPlayListGetResponseType } from '@/app/api/music/neteasecloud/playlist/route'
 import ModalCore from '@/components/modal/ModalCore'
 import MusicCard from '@/components/music'
-import { CustomFetch } from '@/lib/server/fetch'
+import { CustomRequest } from '@/lib/server/request'
 import { MusicNoteRounded } from '@mui/icons-material'
 import { IconButton, ModalClose, Tooltip } from '@mui/joy'
 import { useAsync } from 'react-use'
 
-const getPlaylist = async () => {
-  return await CustomFetch<MusicPlayListGetResponseType>('/api/music/neteasecloud/playlist')
-}
-
 export default function Music() {
-  const { loading, value } = useAsync(getPlaylist)
+  const { loading, value } = useAsync(async () => {
+    return await CustomRequest('GET api/music/neteasecloud/playlist', {})
+  })
 
   if (loading) return null
   if (!value || value.length == 0) return null

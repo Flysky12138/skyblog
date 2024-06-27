@@ -1,5 +1,5 @@
-import { ClashPostRequest, ClashPutRequest } from '@/app/api/dashboard/clash/route'
-import { ClashTemplateGetResponseType } from '@/app/api/dashboard/clash/template/route'
+import { POST, PUT } from '@/app/api/dashboard/clash/route'
+import { GET } from '@/app/api/dashboard/clash/template/route'
 import ModalCore, { ModalCoreProps } from '@/components/modal/ModalCore'
 import MonacoEditor from '@/components/monaco-editor'
 import { yamlConfig } from '@/components/monaco-editor/yaml'
@@ -12,7 +12,7 @@ import { getVariableNames, replaceTextWithObjectValues } from './lib'
 
 interface ModalClashProps extends Pick<ModalCoreProps, 'component'> {
   onSubmit: (payload: NonNullable<ModalClashProps['value']>) => Promise<void>
-  value?: Pick<ClashPostRequest, keyof ClashPutRequest>
+  value?: Pick<POST['body'], keyof PUT['body']>
 }
 
 export default function ModalClash({ component: Component, value, onSubmit }: ModalClashProps) {
@@ -27,7 +27,7 @@ export default function ModalClash({ component: Component, value, onSubmit }: Mo
   const [oldContent, setOldContent] = React.useState('')
 
   // 响应式模版内容，从缓存中获取。在 ./Template.tsx 中请求的。
-  const { data: clashTemplates, isLoading } = useSWR<ClashTemplateGetResponseType>('/api/dashboard/clash/template')
+  const { data: clashTemplates, isLoading } = useSWR<GET['return']>('/api/dashboard/clash/template')
 
   const currentSelectClashTemplate = React.useMemo(() => clashTemplates?.find(it => it.id == form.clashTemplateId), [form.clashTemplateId, clashTemplates])
 

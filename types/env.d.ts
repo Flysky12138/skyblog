@@ -1,6 +1,6 @@
 namespace NodeJS {
   interface ProcessEnv {
-    API_NETEASECLOUDMUSIC: StringStartWith<'https://'>
+    API_NETEASECLOUDMUSIC: StartsWith<'https://'>
     CDN_URL: string | undefined
     EDGE_ID: string
     GITHUB_ID: string
@@ -11,7 +11,7 @@ namespace NodeJS {
     NEXT_PUBLIC_PAGE_POSTCARD_COUNT: string
     NEXT_PUBLIC_TITLE: string
     NEXT_PUBLIC_TOKEN_GITHUB_ACCESS: string
-    NEXT_PUBLIC_WEBSITE_URL: StringStartWith<'http://' | 'https://'>
+    NEXT_PUBLIC_WEBSITE_URL: StartsWith<'http://' | 'https://'>
     TOKEN_BROWSERLESS: string
     TOKEN_IPINFO: string | undefined
     TOKEN_VERCEL: string

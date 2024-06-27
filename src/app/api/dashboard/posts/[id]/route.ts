@@ -5,6 +5,28 @@ import { Category, Post, Prisma, Tag } from '@prisma/client'
 import { NextRequest } from 'next/server'
 import { include } from '../prisma.config'
 
+export type GET = MethodRequestType<{
+  return: Prisma.PromiseReturnType<typeof dbGet>
+}>
+export type POST = MethodRequestType<{
+  body: Pick<Post, 'title' | 'description' | 'content' | 'authorId' | 'sticky' | 'showTitleCard'> & {
+    categories: Category['name'][]
+    tags: Tag['name'][]
+  }
+  return: Prisma.PromiseReturnType<typeof dbPost>
+}>
+export type PUT = MethodRequestType<{
+  body: Omit<POST['body'], 'authorId'>
+  return: Prisma.PromiseReturnType<typeof dbPut>
+}>
+export type PATCH = MethodRequestType<{
+  body: Pick<Post, 'published'>
+  return: Prisma.PromiseReturnType<typeof dbPatch>
+}>
+export type DELETE = MethodRequestType<{
+  return: Prisma.PromiseReturnType<typeof dbDelete>
+}>
+
 // 获取
 const dbGet = async (id: string) => {
   return await prisma.post.findUnique({
@@ -13,7 +35,7 @@ const dbGet = async (id: string) => {
   })
 }
 
-export const GET = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const GET = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
@@ -26,12 +48,7 @@ export const GET = async (request: NextRequest, { params }: DynamicRoute<{ id: s
 }
 
 // 创建
-export interface PostDetailPostRequest extends Pick<Post, 'title' | 'description' | 'content' | 'authorId' | 'sticky' | 'showTitleCard'> {
-  categories: Category['name'][]
-  tags: Tag['name'][]
-}
-
-const dbPost = async (data: PostDetailPostRequest) => {
+const dbPost = async (data: POST['body']) => {
   return await prisma.post.create({
     data: {
       author: {
@@ -61,11 +78,11 @@ const dbPost = async (data: PostDetailPostRequest) => {
   })
 }
 
-export const POST = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const POST = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (params.id != 'new') return CustomResponse.error("{id} 值不为 'new'", 422)
 
-    const data = await request.json()
+    const data = await CustomRequest.json()
     const res = await dbPost(data)
 
     return CustomResponse.encrypt(res)
@@ -75,9 +92,7 @@ export const POST = async (request: NextRequest, { params }: DynamicRoute<{ id: 
 }
 
 // 修改
-export interface PostDetailPutRequest extends Omit<PostDetailPostRequest, 'authorId'> {}
-
-const dbPut = async (id: string, data: PostDetailPutRequest) => {
+const dbPut = async (id: string, data: PUT['body']) => {
   await prisma.post.update({
     data: {
       categories: { set: [] },
@@ -112,11 +127,11 @@ const dbPut = async (id: string, data: PostDetailPutRequest) => {
   })
 }
 
-export const PUT = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const PUT = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
-    const data = await request.json()
+    const data = await CustomRequest.json()
     const res = await dbPut(params.id, data)
     CacheClear.post(params.id)
 
@@ -127,9 +142,7 @@ export const PUT = async (request: NextRequest, { params }: DynamicRoute<{ id: s
 }
 
 // 修改部分
-export interface PostDetailPatchRequest extends Pick<Post, 'published'> {}
-
-const dbPatch = async (id: string, data: PostDetailPatchRequest) => {
+const dbPatch = async (id: string, data: PATCH['body']) => {
   return await prisma.post.update({
     data,
     include,
@@ -137,11 +150,11 @@ const dbPatch = async (id: string, data: PostDetailPatchRequest) => {
   })
 }
 
-export const PATCH = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const PATCH = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
-    const data = await request.json()
+    const data = await CustomRequest.json()
     const res = await dbPatch(params.id, data)
     CacheClear.post(params.id)
 
@@ -158,7 +171,7 @@ const dbDelete = async (id: string) => {
   })
 }
 
-export const DELETE = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const DELETE = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
@@ -170,9 +183,3 @@ export const DELETE = async (request: NextRequest, { params }: DynamicRoute<{ id
     return CustomResponse.error(error)
   }
 }
-
-export type PostDetailGetResponseType = Prisma.PromiseReturnType<typeof dbGet>
-export type PostDetailPostResponseType = Prisma.PromiseReturnType<typeof dbPost>
-export type PostDetailPutResponseType = Prisma.PromiseReturnType<typeof dbPut>
-export type PostDetailPatchResponseType = Prisma.PromiseReturnType<typeof dbPatch>
-export type PostDetailDeleteResponseType = Prisma.PromiseReturnType<typeof dbDelete>

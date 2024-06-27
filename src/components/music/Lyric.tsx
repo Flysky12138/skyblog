@@ -1,4 +1,4 @@
-import { LyricGetResponseType } from '@/app/api/music/neteasecloud/lyric/route'
+import { GET } from '@/app/api/music/neteasecloud/lyric/route'
 import { cn } from '@/lib/cn'
 import { Live2DContext } from '@/provider/live2d'
 import { AnimatePresence, AnimationProps, motion } from 'framer-motion'
@@ -10,7 +10,7 @@ export interface LyricRef {
 
 interface LyricProps {
   className?: string
-  value: LyricGetResponseType['lrc']
+  value: GET['return']['lrc']
 }
 
 export default React.forwardRef<LyricRef, LyricProps>(function Lyric({ className, value: lyric }, ref) {
