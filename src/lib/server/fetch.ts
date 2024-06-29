@@ -1,6 +1,6 @@
 import { HEADER } from '@/lib/constants'
 import { toast } from 'sonner'
-import { decrypt } from '../crypto/aes-gcm'
+import { AesGcm } from '../crypto/aes-gcm'
 
 const Core = async (promise: () => Promise<Response>) => {
   try {
@@ -22,7 +22,7 @@ const Core = async (promise: () => Promise<Response>) => {
     const ivJwk = res.headers.get(HEADER.AES_GCM_IVJWK)
     if (ivJwk && contentType?.includes('application/octet-stream')) {
       const buffer = await res.arrayBuffer()
-      return await decrypt(buffer, ivJwk)
+      return await AesGcm.decrypt(buffer, ivJwk)
     }
 
     // text

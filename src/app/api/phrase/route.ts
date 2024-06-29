@@ -11,7 +11,7 @@ export type GET = MethodRequestType<{
   }
 }>
 
-export const GET = async (CustomRequest: NextRequest) => {
+export const GET = async (request: NextRequest) => {
   try {
     const data = await CustomFetch('https://v1.hitokoto.cn')
     return CustomResponse.encrypt(data)

@@ -27,9 +27,9 @@ const dbGet = async (id: string) => {
   })
 }
 
-export const GET = async (CustomRequest: NextRequest) => {
+export const GET = async (request: NextRequest) => {
   try {
-    const id = CustomRequest.nextUrl.searchParams.get('id')
+    const id = request.nextUrl.searchParams.get('id')
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
     const res = await dbGet(id)

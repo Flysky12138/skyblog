@@ -34,9 +34,9 @@ export const GET = async () => {
   }
 }
 
-export const PATCH = async (CustomRequest: NextRequest) => {
+export const PATCH = async (request: NextRequest) => {
   try {
-    const { id } = await CustomRequest.json()
+    const { id } = await request.json()
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
     await edgeFetch([{ key: EDGE_CONFIG.NETEASECLOUD_PLAYLIST_ID, operation: 'upsert', value: id }])

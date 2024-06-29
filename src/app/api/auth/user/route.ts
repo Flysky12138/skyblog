@@ -21,9 +21,9 @@ const dbPost = async (data: POST['body']) => {
   })
 }
 
-export const POST = async (CustomRequest: NextRequest) => {
+export const POST = async (request: NextRequest) => {
   try {
-    const data = await CustomRequest.json()
+    const data = await request.json()
     const res = await dbPost(data)
 
     return CustomResponse.encrypt(res)

@@ -14,7 +14,7 @@ import Card from '../layout/Card'
 
 loader.config({
   paths: {
-    vs: '/cdn/cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs'
+    vs: '/cdn/cdn.jsdelivr.net/npm/monaco-editor@0.50.0/min/vs'
   },
   'vs/nls': {
     availableLanguages: {

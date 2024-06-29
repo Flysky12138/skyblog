@@ -12,9 +12,9 @@ export type GET = MethodRequestType<{
   return: Partial<Record<'lrc' | 'klyric' | 'tlyric' | 'romalrc', Array<{ lyric: string; time: number }> | null>>
 }>
 
-export const GET = async (CustomRequest: NextRequest) => {
+export const GET = async (request: NextRequest) => {
   try {
-    const id = CustomRequest.nextUrl.searchParams.get('id')
+    const id = request.nextUrl.searchParams.get('id')
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
     const data = await CustomFetch(`${process.env.API_NETEASECLOUDMUSIC}/lyric?id=${id}`)

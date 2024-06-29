@@ -16,7 +16,7 @@ export type PUT = MethodRequestType<{
   }
 }>
 
-export const GET = async (CustomRequest: NextRequest) => {
+export const GET = async (request: NextRequest) => {
   try {
     const data = await getAll<Partial<Record<(typeof EDGE_CONFIG)[keyof typeof EDGE_CONFIG], any>>>()
 
@@ -35,9 +35,9 @@ export const GET = async (CustomRequest: NextRequest) => {
   }
 }
 
-export const PUT = async (CustomRequest: NextRequest) => {
+export const PUT = async (request: NextRequest) => {
   try {
-    const { key, value }: PUT['body'] = await CustomRequest.json()
+    const { key, value }: PUT['body'] = await request.json()
 
     await edgeFetch([{ key, operation: 'upsert', value }])
 

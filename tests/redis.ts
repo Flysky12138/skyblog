@@ -5,6 +5,6 @@ import dotenv from 'dotenv'
 dotenv.config({ path: '.env.local' })
 
 void (async () => {
-  const images = await kv.json.get(REDIS.IMAGES)
+  const images = (await kv.json.get<object>(REDIS.IMAGES)) || {}
   console.log(Object.keys(images).length)
 })()

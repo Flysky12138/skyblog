@@ -31,10 +31,10 @@ const dbGet = async (page: number, take: number) => {
   }
 }
 
-export const GET = async (CustomRequest: NextRequest) => {
+export const GET = async (request: NextRequest) => {
   try {
-    const page = Number.parseInt(CustomRequest.nextUrl.searchParams.get('page') || '1')
-    const take = Number.parseInt(CustomRequest.nextUrl.searchParams.get('take') || '50')
+    const page = Number.parseInt(request.nextUrl.searchParams.get('page') || '1')
+    const take = Number.parseInt(request.nextUrl.searchParams.get('take') || '50')
 
     const res = await dbGet(page, take)
     return CustomResponse.encrypt(res)

@@ -14,10 +14,10 @@ const live2dInit = async (view: HTMLCanvasElement, path?: string) => {
 
   const { app, model } = await live2d({ hitAreaVisible: false, path, px: 10, py: 10, view })
 
-  model.on('hit', hitAreas => {
-    if (hitAreas.includes('breast_l')) model.toggle()
-    if (hitAreas.includes('breast_r')) model.motion('breast', 0)
-  })
+  // model.on('hit', hitAreas => {
+  //   if (hitAreas.includes('breast_l')) model.toggle()
+  //   if (hitAreas.includes('breast_r')) model.motion('breast', 0)
+  // })
 
   return () => {
     app?.destroy(true, true)

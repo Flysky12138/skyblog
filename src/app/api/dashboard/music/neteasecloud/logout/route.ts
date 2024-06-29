@@ -5,7 +5,7 @@ import { edgeFetch } from '@/lib/server/vercel-edge'
 import { get } from '@vercel/edge-config'
 import { NextRequest } from 'next/server'
 
-export const GET = async (CustomRequest: NextRequest) => {
+export const GET = async (request: NextRequest) => {
   try {
     const cookie = await get<string>(EDGE_CONFIG.NETEASECLOUD_COOKIE)
     if (!cookie) return CustomResponse.error('{cookie} 值缺失', 400)

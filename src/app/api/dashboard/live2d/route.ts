@@ -15,7 +15,7 @@ export type PUT = MethodRequestType<{
   }
 }>
 
-export const GET = async (CustomRequest: NextRequest) => {
+export const GET = async (request: NextRequest) => {
   try {
     const src = await get<string>(EDGE_CONFIG.LIVE2D_SRC)
     return CustomResponse.encrypt({ src })
@@ -24,9 +24,9 @@ export const GET = async (CustomRequest: NextRequest) => {
   }
 }
 
-export const PUT = async (CustomRequest: NextRequest) => {
+export const PUT = async (request: NextRequest) => {
   try {
-    const data: PUT['body'] = await CustomRequest.json()
+    const data: PUT['body'] = await request.json()
 
     await edgeFetch([{ key: EDGE_CONFIG.LIVE2D_SRC, operation: 'upsert', value: data.src }])
 

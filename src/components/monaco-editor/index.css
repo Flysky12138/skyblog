@@ -2,7 +2,7 @@
 .monaco-editor {
   --vscode-editor-background: #f9fafc !important;
   --vscode-editorGutter-background: transparent !important;
-  @apply font-code dark:bg-[#202026] !important;
+  @apply font-code outline-none dark:bg-[#202026] !important;
 }
 .monaco-diff-editor {
   --vscode-scrollbar-shadow: transparent !important;

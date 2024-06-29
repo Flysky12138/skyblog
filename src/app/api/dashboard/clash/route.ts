@@ -65,9 +65,9 @@ const dbPost = async (data: POST['body']) => {
   )
 }
 
-export const POST = async (CustomRequest: NextRequest) => {
+export const POST = async (request: NextRequest) => {
   try {
-    const data = await CustomRequest.json()
+    const data = await request.json()
     const res = await dbPost(data)
 
     return CustomResponse.encrypt(res)
@@ -90,12 +90,12 @@ const dbPut = async (id: string, data: PUT['body']) => {
   )
 }
 
-export const PUT = async (CustomRequest: NextRequest) => {
+export const PUT = async (request: NextRequest) => {
   try {
-    const id = CustomRequest.nextUrl.searchParams.get('id')
+    const id = request.nextUrl.searchParams.get('id')
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
-    const data = await CustomRequest.json()
+    const data = await request.json()
     const res = await dbPut(id, data)
 
     return CustomResponse.encrypt(res)
@@ -109,9 +109,9 @@ const dbDelete = async (id: string) => {
   return parseVariable(await prisma.clash.delete({ include, where: { id } }))
 }
 
-export const DELETE = async (CustomRequest: NextRequest) => {
+export const DELETE = async (request: NextRequest) => {
   try {
-    const id = CustomRequest.nextUrl.searchParams.get('id')
+    const id = request.nextUrl.searchParams.get('id')
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
     const res = await dbDelete(id)

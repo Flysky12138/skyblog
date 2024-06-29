@@ -15,13 +15,13 @@ export default async function GithubImages({ path, groupDeep, ...props }: Github
   const files = await getAllGithubRepos(path)
 
   const fileGroupMap = new Map<string, Array<GithubRepoTree['tree'][number] & POST['body']['value']>>()
-  const imagesInfo: Partial<Record<string, POST['body']['value']>> = await kv.json.get(REDIS.IMAGES)
+  const imagesInfo = await kv.json.get<Partial<Record<string, POST['body']['value']>>>(REDIS.IMAGES)
 
   for (const file of files.tree) {
     if (!EXT.IMAGE.some(ext => file.path.endsWith(ext))) continue
     const endIndex = path.split('/').length + Number.parseInt(groupDeep)
     const key = file.path.split('/').slice(0, endIndex).join('/')
-    const imageInfo = imagesInfo[file.sha]
+    const imageInfo = imagesInfo?.[file.sha]
     if (imageInfo) fileGroupMap.set(key, (fileGroupMap.get(key) || []).concat(Object.assign({}, file, imageInfo)))
   }
 

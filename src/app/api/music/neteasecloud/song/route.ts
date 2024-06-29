@@ -16,15 +16,15 @@ export type GET = MethodRequestType<{
   }
 }>
 
-export const GET = async (CustomRequest: NextRequest) => {
+export const GET = async (request: NextRequest) => {
   try {
-    const id = CustomRequest.nextUrl.searchParams.get('id')
+    const id = request.nextUrl.searchParams.get('id')
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
     const cookie = await get<string>(EDGE_CONFIG.NETEASECLOUD_COOKIE)
     if (!cookie) return CustomResponse.error('{cookie} 值缺失', 400)
 
-    const ip = ipAddress(CustomRequest) || '125.70.91.151'
+    const ip = ipAddress(request) || '125.70.91.151'
 
     // 验证可用性
     const data1 = await CustomFetch(`${process.env.API_NETEASECLOUDMUSIC}/check/music?id=${id}&cookie=${cookie}&realIP=${ip}`)

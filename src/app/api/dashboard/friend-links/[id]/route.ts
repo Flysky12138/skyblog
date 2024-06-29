@@ -27,11 +27,11 @@ const dbPut = async (id: number, data: PUT['body']) => {
   })
 }
 
-export const PUT = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const PUT = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
-    const data = await CustomRequest.json()
+    const data = await request.json()
     const res = await dbPut(Number.parseInt(params.id), data)
 
     return CustomResponse.encrypt(res)
@@ -51,7 +51,7 @@ const dbPatch = async (id: number, data: Prisma.FriendLinksUpdateInput) => {
   })
 }
 
-export const PATCH = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const PATCH = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   let browser: Browser | null = null
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
@@ -94,7 +94,7 @@ const dbDelete = async (id: number) => {
   })
 }
 
-export const DELETE = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const DELETE = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 

@@ -10,22 +10,22 @@ const dbPost = async (data: Omit<VisitorInfo, 'id' | 'createdAt'>) => {
   return await prisma.visitorInfo.create({ data })
 }
 
-export const POST = async (CustomRequest: NextRequest) => {
+export const POST = async (request: NextRequest) => {
   try {
-    const ip = process.env.NODE_ENV == 'development' ? '1.1.1.1' : ipAddress(CustomRequest)
+    const ip = process.env.NODE_ENV == 'development' ? '1.1.1.1' : ipAddress(request)
     if (!ip) return CustomResponse.error('未知访问', 400)
 
-    const { city = null, country = null, countryRegion = null, latitude = null, longitude = null } = geolocation(CustomRequest)
+    const { city = null, country = null, countryRegion = null, latitude = null, longitude = null } = geolocation(request)
 
     await dbPost({
-      agent: CustomRequest.headers.get('user-agent'),
+      agent: request.headers.get('user-agent'),
       city,
       country,
       countryRegion,
       ip,
       latitude,
       longitude,
-      referer: CustomRequest.headers.get('referer')
+      referer: request.headers.get('referer')
     })
 
     return new Response()

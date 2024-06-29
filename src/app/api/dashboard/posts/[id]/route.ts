@@ -35,7 +35,7 @@ const dbGet = async (id: string) => {
   })
 }
 
-export const GET = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const GET = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
@@ -78,11 +78,11 @@ const dbPost = async (data: POST['body']) => {
   })
 }
 
-export const POST = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const POST = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (params.id != 'new') return CustomResponse.error("{id} 值不为 'new'", 422)
 
-    const data = await CustomRequest.json()
+    const data = await request.json()
     const res = await dbPost(data)
 
     return CustomResponse.encrypt(res)
@@ -127,11 +127,11 @@ const dbPut = async (id: string, data: PUT['body']) => {
   })
 }
 
-export const PUT = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const PUT = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
-    const data = await CustomRequest.json()
+    const data = await request.json()
     const res = await dbPut(params.id, data)
     CacheClear.post(params.id)
 
@@ -150,11 +150,11 @@ const dbPatch = async (id: string, data: PATCH['body']) => {
   })
 }
 
-export const PATCH = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const PATCH = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
-    const data = await CustomRequest.json()
+    const data = await request.json()
     const res = await dbPatch(params.id, data)
     CacheClear.post(params.id)
 
@@ -171,7 +171,7 @@ const dbDelete = async (id: string) => {
   })
 }
 
-export const DELETE = async (CustomRequest: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
+export const DELETE = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
