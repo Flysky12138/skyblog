@@ -6,7 +6,7 @@ interface MdxProps {
   path: string
 }
 
-export default function Page({ path }: MdxProps) {
+export default function Mdx({ path }: MdxProps) {
   const Componet = dynamic(() =>
     import(`@/mdx/${path}`).catch(() => (
       <Alert severity="error">

@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['next/core-web-vitals', 'plugin:react/jsx-runtime', 'plugin:prettier/recommended'],
+  extends: ['next/core-web-vitals', 'plugin:prettier/recommended'],
   ignorePatterns: ['public'],
   parser: '@typescript-eslint/parser',
   rules: {
@@ -7,6 +7,8 @@ module.exports = {
     'func-style': ['error', 'expression'],
     'react/destructuring-assignment': ['error', 'always'],
     'react/hook-use-state': ['error', { allowDestructuredState: true }],
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
     'react/jsx-sort-props': [
       'error',
       {

@@ -28,11 +28,11 @@ interface Live2DContextProps {
      */
     timeout?: number
   }
+  /** 模型资源 */
+  src?: string
   setEnable: React.Dispatch<React.SetStateAction<boolean | undefined>>
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
   setMessage: React.Dispatch<Live2DContextProps['message']>
-  /** 模型资源 */
-  src?: string
 }
 
 export const Live2DContext = React.createContext<Live2DContextProps>({
@@ -46,13 +46,19 @@ export const Live2DContext = React.createContext<Live2DContextProps>({
 
 export const Live2DProvider = ({ children }: { children: React.ReactNode }) => {
   const [enable, setEnable] = useLocalStorage('live2d', false)
-  const [src, setSrc] = React.useState<Live2DContextProps['src']>()
   const [loading, setLoading] = React.useState(false)
 
   // Live2D 资源地址
+  const [src, setSrc] = React.useState<Live2DContextProps['src']>()
   useAsync(async () => {
-    const { src } = await CustomRequest('GET api/live2d', {})
-    setSrc(src)
+    try {
+      const { src } = await CustomRequest('GET api/live2d', {})
+      if (!src) throw new Error()
+      setSrc(src)
+    } catch (error) {
+      setEnable(false)
+      setLoading(false)
+    }
   })
 
   // 消息
@@ -73,13 +79,9 @@ export const Live2DProvider = ({ children }: { children: React.ReactNode }) => {
   // 网络语消息显示
   const phraseMessage = React.useCallback(async () => {
     if (!enable || loading) return
-    try {
-      const data = await CustomRequest('GET api/phrase', {})
-      if (!data.hitokoto) return
-      setMessage({ content: data.hitokoto, priority: 100 })
-    } catch (error) {
-      console.error(error)
-    }
+    const data = await CustomRequest('GET api/phrase', {})
+    if (!data.hitokoto) return
+    setMessage({ content: data.hitokoto, priority: 100 })
   }, [enable, loading, setMessage])
   useInterval(phraseMessage, 1000 * 30)
 
@@ -89,10 +91,10 @@ export const Live2DProvider = ({ children }: { children: React.ReactNode }) => {
         enable,
         loading,
         message,
+        src,
         setEnable,
         setLoading,
-        setMessage,
-        src
+        setMessage
       }}
     >
       {children}

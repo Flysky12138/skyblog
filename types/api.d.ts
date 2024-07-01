@@ -1,6 +1,9 @@
 /** 请求方法 */
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD'
 
+/** 协议 */
+type Protocol = 'http:' | 'https:'
+
 /** `fetch` 请求配置 */
 interface FetchOption extends Omit<RequestInit, 'method' | 'headers' | 'body'> {
   body?: any

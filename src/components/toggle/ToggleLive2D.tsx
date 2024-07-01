@@ -8,10 +8,7 @@ import React from 'react'
 export default function ToggleLive2D() {
   const { enable, setEnable, loading, src } = React.useContext(Live2DContext)
 
-  if (!src) {
-    setEnable(false)
-    return null
-  }
+  if (!src) return null
 
   return (
     <Tooltip title={enable ? 'Live2D 关' : 'Live2D 开'}>

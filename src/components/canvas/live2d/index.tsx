@@ -2,54 +2,36 @@
 
 import './live2d.css'
 
+import useLive2D from '@/hooks/useLive2D'
 import { cn } from '@/lib/cn'
 import { sleep } from '@/lib/sleep'
 import { Live2DContext } from '@/provider/live2d'
 import { AnimatePresence, motion } from 'framer-motion'
 import React from 'react'
-import live2d from './live2d'
-
-const live2dInit = async (view: HTMLCanvasElement, path?: string) => {
-  if (!path) throw new Error()
-
-  const { app, model } = await live2d({ hitAreaVisible: false, path, px: 10, py: 10, view })
-
-  // model.on('hit', hitAreas => {
-  //   if (hitAreas.includes('breast_l')) model.toggle()
-  //   if (hitAreas.includes('breast_r')) model.motion('breast', 0)
-  // })
-
-  return () => {
-    app?.destroy(true, true)
-  }
-}
 
 export default function Live2D() {
   const containerRef = React.useRef<HTMLElement>(null)
-  const live2dRef = React.useRef<HTMLCanvasElement>(null)
-
-  const live2dDestroy = React.useRef<() => void>()
-
   const { setLoading, setEnable, message, src } = React.useContext(Live2DContext)
 
-  // 初始化
-  React.useEffect(() => {
-    void (async () => {
-      setLoading(true)
-      try {
-        if (!live2dRef.current) throw new Error()
-        live2dDestroy.current = await live2dInit(live2dRef.current, src)
+  const { live2dRef, model } = useLive2D(src, {
+    model: {
+      onError: () => {
+        setEnable(false)
+        setLoading(false)
+      },
+      onLoad: async () => {
         await sleep(500) // 让电脑缓缓再显示，防止卡顿掉帧
         containerRef.current?.classList.remove('-translate-x-full', 'opacity-0')
-      } catch (error) {
-        setEnable(false)
+        setLoading(false)
+        setEnable(true)
       }
-      setLoading(false)
-    })()
-    return () => {
-      live2dDestroy.current?.()
     }
-  }, [setLoading, setEnable, src])
+  })
+
+  model?.on('hit', hitAreas => {
+    if (hitAreas.includes('breast_l')) model.textures.push(model.textures.shift()!)
+    if (hitAreas.includes('breast_r')) model.motion('breast', 0)
+  })
 
   return (
     <AnimatePresence>
