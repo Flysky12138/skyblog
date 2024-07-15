@@ -38,4 +38,5 @@ next-env.d.ts
 /prisma/migrations/
 /prisma/schema.prisma
 
-/api.d.ts
+# types
+api.d.ts

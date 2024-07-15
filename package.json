@@ -13,7 +13,6 @@
     "lint:fix": "next lint --fix",
     "lint:type": "tsc --noEmit",
     "format": "prettier --write .",
-    "cz": "cz",
     "prepare": "husky",
     "predev": "npm run db:dev:gen && npm run script:api",
     "prebuild": "npm run db:prod:gen && npm run script:api",
@@ -89,7 +88,6 @@
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
-    "@eslint/js": "^9.6.0",
     "@konghayao/cn-font-split": "^4.15.0",
     "@tailwindcss/typography": "^0.5.13",
     "@types/mdast": "^4.0.4",
@@ -98,10 +96,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-window": "^1.8.8",
-    "@typescript-eslint/parser": "^7.16.0",
     "autoprefixer": "^10.4.19",
-    "commitizen": "^4.3.0",
-    "cz-git": "^1.9.3",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
     "eslint": "^8.57.0",
@@ -110,7 +105,6 @@
     "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-sort-keys-plus": "^1.4.0",
     "eslint-plugin-typescript-sort-keys": "^3.2.0",
-    "globals": "^15.8.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
     "pixi-live2d-display": "^0.4.0",
@@ -127,16 +121,16 @@
     "typescript": "^5.5.3",
     "typescript-eslint": "^7.16.0"
   },
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-git"
-    }
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "browserslist": [
     "supports bigint"
   ],
   "engines": {
-    "node": ">=18.20.0",
+    "node": ">=20",
     "pnpm": ">=9.0.0"
   }
 }
