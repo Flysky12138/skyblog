@@ -11,7 +11,7 @@ import { useSession } from 'next-auth/react'
 // import Image from 'next/image'
 import React from 'react'
 
-const IssuesItem = () => {
+const PostIssuesItem = () => {
   const { data: session } = useSession()
   return (
     <Card className="h-10 rounded-md">
@@ -24,14 +24,14 @@ const IssuesItem = () => {
   )
 }
 
-const IssuesContent = () => {
+const PostIssuesContent = () => {
   const [minRows, setMinRows] = React.useState(1)
 
   return (
     <section className="flex h-full flex-col">
       <div className="grow space-y-6 overflow-y-auto p-5">
         {Array.from({ length: 20 }).map((_, i) => (
-          <IssuesItem key={i} />
+          <PostIssuesItem key={i} />
         ))}
       </div>
       <Card className="flex gap-x-4 rounded-none border-x-0 border-b-0 p-5">
@@ -56,7 +56,7 @@ const IssuesContent = () => {
   )
 }
 
-export default function Issues() {
+export default function PostIssues() {
   return (
     <>
       <Breakpoint down="lg">
@@ -74,7 +74,7 @@ export default function Issues() {
             layout="fullscreen"
           >
             <ModalClose variant="soft" />
-            <IssuesContent />
+            <PostIssuesContent />
           </ModalCore>
         </Portal>
       </Breakpoint>
@@ -89,7 +89,7 @@ export default function Issues() {
               </IconButton>
             )}
           >
-            <IssuesContent />
+            <PostIssuesContent />
           </ModalCore>
         </Portal>
       </Breakpoint>

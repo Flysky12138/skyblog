@@ -4,12 +4,12 @@ import { Edit as EditIcon } from '@mui/icons-material'
 import { IconButton, Link, Tooltip } from '@mui/joy'
 import { useSession } from 'next-auth/react'
 
-interface EditProps {
+interface PostEditProps {
   className?: string
   id: string
 }
 
-export default function Edit({ id, className }: EditProps) {
+export default function PostEdit({ id, className }: PostEditProps) {
   const session = useSession()
 
   if (session?.data?.role != 'ADMIN') return null

@@ -5,10 +5,10 @@ import prisma from '@/lib/prisma'
 import { Typography } from '@mui/joy'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import Edit from './_components/Edit'
-import Issues from './_components/Issues'
-import LocateToc from './_components/LocateToc'
+import PostEdit from './_components/PostEdit'
 import PostInfo from './_components/PostInfo'
+import PostIssues from './_components/PostIssues'
+import PostToc from './_components/PostToc'
 
 const getPost = async (id: string) => {
   return await prisma.post.findUnique({
@@ -44,7 +44,7 @@ export default async function Page({ params }: PageProps) {
     <section className="space-y-5">
       {post.showTitleCard && (
         <Card className="flex flex-col gap-y-2 p-5">
-          <Edit className="absolute right-5 top-5" id={post.id} />
+          <PostEdit className="absolute right-5 top-5" id={post.id} />
           <Typography className="font-title font-normal" component="h1" level="h2">
             {post.title}
           </Typography>
@@ -62,12 +62,12 @@ export default async function Page({ params }: PageProps) {
             className="s-hidden-scrollbar sticky top-[calc(theme(height.header)+theme(height.9))] hidden max-h-[calc(100dvh-theme(height.header)-2*theme(height.9))] w-52 shrink-0 space-y-1.5 self-start overflow-auto p-3 pr-1.5 empty:hidden lg:block"
             id={SELECTOR.IDS.TOC}
           >
-            <LocateToc />
+            <PostToc />
             <MDXToc value={post.content} />
           </Card>
         </section>
       ) : null}
-      <Issues />
+      <PostIssues />
     </section>
   )
 }

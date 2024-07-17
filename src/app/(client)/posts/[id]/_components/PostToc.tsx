@@ -5,7 +5,7 @@ import { getElementDistanceFromTop } from '@/lib/dom/getElementDistanceFromTop'
 import { isBetween } from '@/lib/parser/number'
 import React from 'react'
 
-export default function LocateToc() {
+export default function PostToc() {
   const offsetTop = React.useRef<number[]>([])
 
   React.useEffect(() => {

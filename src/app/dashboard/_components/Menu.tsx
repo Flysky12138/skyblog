@@ -36,8 +36,8 @@ const listOptions: ListOptionType[] = [
   },
   {
     children: [
-      { href: '/dashboard/users/member', label: '成员' },
-      { href: '/dashboard/users/visitor', label: '访客' }
+      { href: '/dashboard/user/member', label: '成员' },
+      { href: '/dashboard/user/visitor', label: '访客' }
     ],
     defaultExpanded: 'users',
     icon: <PermIdentityOutlined />,
@@ -45,8 +45,8 @@ const listOptions: ListOptionType[] = [
   },
   {
     children: [
-      { href: '/dashboard/others/clash', label: 'Clash 共享' },
-      { href: '/dashboard/others/friend-links', label: '友情链接' }
+      { href: '/dashboard/other/clash', label: 'Clash 共享' },
+      { href: '/dashboard/other/friend-link', label: '友情链接' }
     ],
     defaultExpanded: 'others',
     icon: <BubbleChart />,
@@ -63,7 +63,7 @@ const listOptions: ListOptionType[] = [
     label: '仓库'
   },
   {
-    href: '/dashboard/settings',
+    href: '/dashboard/setting',
     icon: <SettingsOutlined />,
     label: '设置'
   }

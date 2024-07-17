@@ -11,7 +11,7 @@ export default async function CardFriendLink() {
     <>
       {count > 0 ? (
         <Card className="flex flex-col gap-y-3 p-6">
-          <Button component={Link} href="/friend-links" startDecorator={<Diversity3 />} variant="outlined">
+          <Button component={Link} href="/friend-link" startDecorator={<Diversity3 />} variant="outlined">
             友链({count})
           </Button>
         </Card>
