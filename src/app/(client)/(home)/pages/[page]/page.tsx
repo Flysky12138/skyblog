@@ -1,6 +1,5 @@
-import Pagination from '@/components/pagination/Pagination'
 import prisma from '@/lib/prisma'
-import PostLists, { getPosts, POST_WHERE_INPUT } from '../../_components/PostLists'
+import PostList, { getPosts, POST_WHERE_INPUT } from '../../_components/PostList'
 
 interface PageProps extends DynamicRoute<{ page: string }> {}
 
@@ -20,9 +19,5 @@ export default async function Page({ params }: PageProps) {
   const page = Number.parseInt(params.page)
   const posts = await getPosts(page)
 
-  return (
-    <PostLists posts={posts}>
-      <Pagination className="mx-auto" count={Math.ceil(posts.pagination.total / posts.pagination.take)} page={page} path="/pages/[page]" />
-    </PostLists>
-  )
+  return <PostList page={page} path="/pages/[page]" posts={posts} />
 }

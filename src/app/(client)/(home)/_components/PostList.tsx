@@ -1,4 +1,5 @@
 import Card from '@/components/layout/Card'
+import PaginationForServer, { PaginationForServerProps } from '@/components/pagination/PaginationForServer'
 import prisma from '@/lib/prisma'
 import { CalendarMonth, Category, Loyalty, Publish } from '@mui/icons-material'
 import { Typography } from '@mui/joy'
@@ -42,12 +43,12 @@ export const getPosts = async (page: number, where: Prisma.PostWhereInput = {}) 
   }
 }
 
-interface PostListsProps {
-  children: React.ReactNode
+interface PostListProps extends Pick<PaginationForServerProps, 'path'> {
+  page: number
   posts: Prisma.PromiseReturnType<typeof getPosts> | undefined
 }
 
-export default function PostLists({ children, posts }: PostListsProps) {
+export default function PostList({ page, posts, path }: PostListProps) {
   if (!posts || posts.data.length == 0) {
     return (
       <Typography className="text-center" level="body-md">
@@ -121,7 +122,7 @@ export default function PostLists({ children, posts }: PostListsProps) {
           )}
         </Card>
       ))}
-      {children}
+      <PaginationForServer className="mx-auto" count={Math.ceil(posts.pagination.total / posts.pagination.take)} page={page} path={path} />
     </>
   )
 }

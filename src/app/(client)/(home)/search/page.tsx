@@ -1,5 +1,4 @@
-import Pagination from '@/components/pagination/Pagination'
-import PostLists, { getPosts } from '../_components/PostLists'
+import PostList, { getPosts } from '../_components/PostList'
 
 interface PageProps extends DynamicRoute<{}, { categories: string; page: string; tags: string }> {}
 
@@ -25,9 +24,5 @@ export default async function Page({ searchParams }: PageProps) {
       : undefined
   })
 
-  return (
-    <PostLists posts={posts}>
-      <Pagination className="mx-auto" count={Math.ceil(posts.pagination.total / posts.pagination.take)} page={page} />
-    </PostLists>
-  )
+  return <PostList page={page} posts={posts} />
 }

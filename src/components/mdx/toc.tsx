@@ -5,7 +5,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc'
 import Link from 'next/link'
 import rehypeSlug from 'rehype-slug'
 import { options } from './options.mjs'
-import { headingAttr, rehypeHeadingOrder } from './rehype/rehype-heading-order'
+import { HEADING_ATTR, rehypeHeadingOrder } from './rehype/rehype-heading-order'
 import { remarkPickHeading } from './remark/remark-pick-heading'
 
 interface HeadingProps extends React.ComponentProps<'a'> {
@@ -13,7 +13,7 @@ interface HeadingProps extends React.ComponentProps<'a'> {
 }
 
 const Heading: React.FC<HeadingProps> = ({ component: Component, className, children, id, ...props }) => {
-  const deep = Reflect.get(props, headingAttr).split('.').length - 1
+  const deep = Reflect.get(props, HEADING_ATTR).split('.').length - 1
 
   return (
     <Link

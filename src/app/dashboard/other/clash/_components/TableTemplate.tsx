@@ -12,7 +12,7 @@ import { produce } from 'immer'
 import useSWR from 'swr'
 import ModalTemplate from './ModalTemplate'
 
-export default function Template() {
+export default function TableTemplate() {
   const {
     data: clashTemplates,
     isLoading,

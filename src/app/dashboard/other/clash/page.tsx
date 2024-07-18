@@ -1,11 +1,11 @@
-import Clash from './_components/Clash'
-import Template from './_components/Template'
+import TableClash from './_components/TableClash'
+import TableTemplate from './_components/TableTemplate'
 
 export default function Page() {
   return (
     <section className="flex flex-col gap-y-12">
-      <Template />
-      <Clash />
+      <TableTemplate />
+      <TableClash />
     </section>
   )
 }

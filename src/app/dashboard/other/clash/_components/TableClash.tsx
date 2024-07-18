@@ -15,7 +15,7 @@ import { toast } from 'sonner'
 import useSWR from 'swr'
 import ModalClash from './ModalClash'
 
-export default function Clash() {
+export default function TableClash() {
   const [{}, copy] = useCopyToClipboard()
 
   const {

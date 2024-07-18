@@ -1,22 +1,25 @@
 'use client'
 
-import { Pagination as MuiPagination } from '@mui/material'
+import { Pagination } from '@mui/material'
 import { useRouter } from 'next/navigation'
 
-interface PaginationProps {
+export interface PaginationForServerProps {
   className?: string
   count: number
   page: number
+  /**
+   * 提供跳转链接模板；否则会自动在当前路由 `search` 里添加 `page` 字段进行跳转
+   */
   path?: `${string}[page]${string}`
 }
 
-export default function Pagination({ path, className, ...props }: PaginationProps) {
+export default function PaginationForServer({ path, className, ...props }: PaginationForServerProps) {
   const router = useRouter()
 
   if (props.count <= 1) return null
 
   return (
-    <MuiPagination
+    <Pagination
       className={className}
       onChange={(_, page) => {
         let href = ''
