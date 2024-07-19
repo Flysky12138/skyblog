@@ -26,10 +26,10 @@ export interface ModalCoreRef {
   openToggle: (payload?: boolean) => void
 }
 
-export default React.forwardRef<ModalCoreRef | undefined, ModalCoreProps>(function ModalCore(
+const ModalCore: React.ForwardRefRenderFunction<ModalCoreRef | undefined, ModalCoreProps> = (
   { children, component: Component, disabled, onClose, onOpen, loading, disableBackdropClickClose, className, layout, ...props },
   ref
-) {
+) => {
   const [isOpen, setIsOpen] = React.useState(false)
 
   const handleOpenToggle = (payload: boolean) => {
@@ -96,4 +96,6 @@ export default React.forwardRef<ModalCoreRef | undefined, ModalCoreProps>(functi
       </Modal>
     </>
   )
-})
+}
+
+export default React.forwardRef(ModalCore)

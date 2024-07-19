@@ -1,8 +1,8 @@
 import { EDGE_CONFIG } from '@/lib/constants'
 import { CustomFetch } from '@/lib/server/fetch'
 import { CustomResponse } from '@/lib/server/response'
-import { ipAddress } from '@vercel/edge'
 import { get } from '@vercel/edge-config'
+import { ipAddress } from '@vercel/functions'
 import { NextRequest } from 'next/server'
 
 export const runtime = 'edge'

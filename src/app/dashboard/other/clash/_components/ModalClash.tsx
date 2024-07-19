@@ -125,31 +125,32 @@ export default function ModalClash({ component: Component, value, onSubmit }: Mo
                 minimap: { enabled: false },
                 readOnly: form.clashTemplateId != null
               }}
+              toolbarRender={() => (
+                <Select
+                  disabled={clashTemplates?.length == 0 || isLoading}
+                  size="sm"
+                  value={form.clashTemplateId}
+                  onChange={(_, id) =>
+                    setForm(state => {
+                      state.clashTemplateId = id
+                    })
+                  }
+                >
+                  <Option value={null}>自定义</Option>
+                  {clashTemplates?.map(({ id, name }) => (
+                    <Option key={id} value={id}>
+                      {name}
+                    </Option>
+                  ))}
+                </Select>
+              )}
               onChange={payload => {
                 setForm(state => {
                   state.content = payload || ''
                 })
               }}
               {...yamlConfig}
-            >
-              <Select
-                disabled={clashTemplates?.length == 0 || isLoading}
-                size="sm"
-                value={form.clashTemplateId}
-                onChange={(_, id) =>
-                  setForm(state => {
-                    state.clashTemplateId = id
-                  })
-                }
-              >
-                <Option value={null}>自定义</Option>
-                {clashTemplates?.map(({ id, name }) => (
-                  <Option key={id} value={id}>
-                    {name}
-                  </Option>
-                ))}
-              </Select>
-            </MonacoEditor>
+            />
           </FormControl>
           <Button
             fullWidth

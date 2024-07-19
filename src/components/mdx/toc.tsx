@@ -12,7 +12,7 @@ interface HeadingProps extends React.ComponentProps<'a'> {
   component: React.ElementType
 }
 
-const Heading: React.FC<HeadingProps> = ({ component: Component, className, children, id, ...props }) => {
+const Heading: React.FunctionComponent<HeadingProps> = ({ component: Component, className, children, id, ...props }) => {
   const deep = Reflect.get(props, HEADING_ATTR).split('.').length - 1
 
   return (

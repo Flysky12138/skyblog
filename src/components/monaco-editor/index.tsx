@@ -3,7 +3,7 @@
 import useTheme from '@/hooks/useTheme'
 import { cn } from '@/lib/cn'
 import { DiffEditor, DiffEditorProps, Editor, EditorProps, loader, OnChange, OnMount } from '@monaco-editor/react'
-import { AutoAwesome, SettingsEthernet, ZoomInMap, ZoomOutMap } from '@mui/icons-material'
+import { AutoAwesome, Code, CodeOff, ZoomInMap, ZoomOutMap } from '@mui/icons-material'
 import { IconButton, Tooltip } from '@mui/joy'
 import { editor } from 'monaco-editor'
 import React from 'react'
@@ -42,63 +42,62 @@ export interface MonacoEditorRef {
   editor?: Parameters<OnMount>[0]
 }
 interface MonacoEditorProps extends LanguagePropsType, Pick<EditorProps, 'loading'> {
-  children?: React.ReactNode
   className?: string
   code: EditorProps['value']
   height: number | string
   oldCode: DiffEditorProps['original']
   onChange: OnChange
   options?: editor.IStandaloneEditorConstructionOptions
+  toolbarRender?: (params: { diffMode: boolean; mounted: boolean; zoomIn: boolean }) => React.ReactNode
 }
 
-export default React.forwardRef<MonacoEditorRef, MonacoEditorProps>(function MonacoEditor(
-  { children, className, code, height, oldCode, options = {}, onChange, ...props },
+const MonacoEditor: React.ForwardRefRenderFunction<MonacoEditorRef, MonacoEditorProps> = (
+  { toolbarRender, className, code = '', height, oldCode = '', options = {}, onChange, ...props },
   ref
-) {
-  const containerRef = React.useRef<HTMLDivElement>()
-  const editorRef = React.useRef<MonacoEditorRef['editor']>()
-
-  React.useImperativeHandle(ref, () => ({
-    editor: editorRef.current
-  }))
-
+) => {
   // 设置编辑器全屏高度
-  const cardRef = React.useRef<HTMLDivElement>(null)
-  const [zoom, zoomToggle] = useToggle(false)
-  if (zoom) height = `calc(100dvh - ${cardRef.current?.offsetHeight ?? 50}px)`
+  const cardToolbarRef = React.useRef<HTMLDivElement>(null)
+  const [zoomIn, zoomInToggle] = useToggle(false)
+  if (zoomIn) height = `calc(100dvh - ${cardToolbarRef.current?.offsetHeight ?? 50}px)`
 
   // 隐藏滚动条
   React.useEffect(() => {
     const scrollBarWidth = window.innerWidth - document.documentElement.offsetWidth
-    document.documentElement.style.overflow = zoom ? 'hidden' : ''
-    document.body.style.paddingRight = zoom ? `${scrollBarWidth}px` : ''
+    document.documentElement.style.overflow = zoomIn ? 'hidden' : ''
+    document.body.style.paddingRight = zoomIn ? `${scrollBarWidth}px` : ''
     document.querySelectorAll<HTMLElement>('.mui-fixed').forEach(el => {
-      el.style.paddingRight = zoom ? `${scrollBarWidth}px` : ''
-      el.ariaHidden = zoom ? 'true' : null
+      el.style.paddingRight = zoomIn ? `${scrollBarWidth}px` : ''
+      el.ariaHidden = zoomIn ? 'true' : null
     })
-  }, [zoom])
+  }, [zoomIn])
 
-  // 模式
+  // 对比模式
   const [diffMode, diffModeToggle] = useToggle(false)
 
   // 主题
   const { isDark } = useTheme()
   const theme = isDark ? 'vs-dark' : 'vs'
 
-  // 容器高度；用于放大时填充高度，避免布局抖动
-  const containerHeight = React.useRef(0)
+  // 组件整体高度；用于放大时填充高度，避免布局抖动
+  const cardHeight = React.useRef(0)
 
   // 加载完成
   const [mounted, setMounted] = React.useState(false)
 
+  const cardRef = React.useRef<HTMLDivElement>()
+  const editorRef = React.useRef<MonacoEditorRef['editor']>()
+  React.useImperativeHandle(ref, () => ({
+    editor: editorRef.current
+  }))
+
   return (
     <>
       <Card
-        ref={containerRef}
+        ref={cardRef}
         className={cn(
           'z-50 overflow-hidden rounded-md',
           {
-            'fixed inset-0 z-header rounded-none border-0 backdrop-blur-3xl': zoom
+            'fixed inset-0 z-header rounded-none border-0 backdrop-blur-3xl': zoomIn
           },
           className
         )}
@@ -106,10 +105,10 @@ export default React.forwardRef<MonacoEditorRef, MonacoEditorProps>(function Mon
           if (event.key == 's' && (event.ctrlKey || event.metaKey)) event.preventDefault()
         }}
       >
-        <div ref={cardRef} className="s-bg-title s-border-color-card flex h-header items-center gap-3 overflow-auto border-b px-3.5">
+        <div ref={cardToolbarRef} className="s-bg-title s-border-color-card flex h-header items-center gap-3 overflow-auto border-b px-3.5">
           <p className="s-subtitle select-none font-title text-xl">{props.language}</p>
           <span aria-hidden="true" className="grow"></span>
-          {children}
+          {toolbarRender?.({ diffMode, mounted, zoomIn })}
           {mounted && (
             <>
               {diffMode || (
@@ -119,24 +118,26 @@ export default React.forwardRef<MonacoEditorRef, MonacoEditorProps>(function Mon
                   </IconButton>
                 </Tooltip>
               )}
-              <Tooltip title="差异对比">
-                <IconButton variant="outlined" onClick={diffModeToggle}>
-                  <SettingsEthernet />
-                </IconButton>
-              </Tooltip>
+              {code != oldCode && (
+                <Tooltip title="差异对比">
+                  <IconButton variant="outlined" onClick={diffModeToggle}>
+                    {diffMode ? <CodeOff /> : <Code />}
+                  </IconButton>
+                </Tooltip>
+              )}
             </>
           )}
           <IconButton
-            aria-label={zoom ? '还原尺寸' : '全屏'}
+            aria-label={zoomIn ? '还原尺寸' : '全屏'}
             variant="outlined"
             onClick={() => {
-              if (!zoom) {
-                containerHeight.current = containerRef.current?.offsetHeight || 0
+              if (!zoomIn) {
+                cardHeight.current = cardRef.current?.offsetHeight || 0
               }
-              zoomToggle()
+              zoomInToggle()
             }}
           >
-            {zoom ? <ZoomInMap /> : <ZoomOutMap />}
+            {zoomIn ? <ZoomInMap /> : <ZoomOutMap />}
           </IconButton>
         </div>
         {diffMode ? (
@@ -156,7 +157,9 @@ export default React.forwardRef<MonacoEditorRef, MonacoEditorProps>(function Mon
           />
         )}
       </Card>
-      {zoom && <span aria-hidden="true" className="block" style={{ height: `${containerHeight.current}px` }}></span>}
+      {zoomIn && <span aria-hidden="true" className="block" style={{ height: `${cardHeight.current}px` }}></span>}
     </>
   )
-})
+}
+
+export default React.forwardRef(MonacoEditor)

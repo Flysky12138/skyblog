@@ -8,12 +8,13 @@ export interface MusicProgressRef {
   setProgress: (ms: number) => void
 }
 interface MusicProgressProps {
+  defaultDuration?: number
   maxValue: number
   onChange: (ms: number) => void
 }
 
-export default React.forwardRef<MusicProgressRef, MusicProgressProps>(function MusicProgress({ maxValue, onChange }, ref) {
-  const [duration, setDuration] = React.useState(0)
+const MusicProgress: React.ForwardRefRenderFunction<MusicProgressRef, MusicProgressProps> = ({ defaultDuration = 0, maxValue, onChange }, ref) => {
+  const [duration, setDuration] = React.useState(defaultDuration)
 
   // 手动控制中
   const [control, setControl] = React.useState(false)
@@ -50,4 +51,6 @@ export default React.forwardRef<MusicProgressRef, MusicProgressProps>(function M
       onChangeCommitted={(_, value) => onChange(value as number)}
     />
   )
-})
+}
+
+export default React.forwardRef(MusicProgress)

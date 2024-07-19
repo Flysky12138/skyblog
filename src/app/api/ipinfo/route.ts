@@ -1,6 +1,6 @@
 import { CustomFetch } from '@/lib/server/fetch'
 import { CustomResponse } from '@/lib/server/response'
-import { geolocation, ipAddress } from '@vercel/edge'
+import { geolocation, ipAddress } from '@vercel/functions'
 import { NextRequest } from 'next/server'
 
 export const runtime = 'edge'

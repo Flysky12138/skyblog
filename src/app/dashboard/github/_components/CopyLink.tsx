@@ -11,7 +11,7 @@ import React from 'react'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
 
-const CardCopy: React.FC<{ loading: boolean; title: string; values: string[] }> = ({ title, values, loading }) => {
+const CardCopy: React.FunctionComponent<{ loading: boolean; title: string; values: string[] }> = ({ title, values, loading }) => {
   const [_, copy] = useCopyToClipboard()
 
   const handleCopy = () => {
@@ -55,7 +55,7 @@ export interface CopyLinkRef {
   open: (payload: FileType[]) => Promise<void>
 }
 
-export default React.forwardRef<CopyLinkRef, {}>(function CopyLink(props, ref) {
+const CopyLink: React.ForwardRefRenderFunction<CopyLinkRef, {}> = (props, ref) => {
   const modalCoreRef = React.useRef<ModalCoreRef>()
 
   const [loading, setLoading] = React.useState(false)
@@ -115,4 +115,6 @@ export default React.forwardRef<CopyLinkRef, {}>(function CopyLink(props, ref) {
       />
     </ModalCore>
   )
-})
+}
+
+export default React.forwardRef(CopyLink)

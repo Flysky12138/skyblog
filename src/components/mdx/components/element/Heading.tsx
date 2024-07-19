@@ -7,7 +7,7 @@ interface HeadingProps extends React.ComponentProps<'h1'> {
   component: React.ElementType
 }
 
-const Heading: React.FC<HeadingProps> = ({ component: Component, className, children, ...props }) => {
+const Heading: React.FunctionComponent<HeadingProps> = ({ component: Component, className, children, ...props }) => {
   return (
     <Component className={cn('group block [&_code]:py-0', className)} {...props}>
       {children}

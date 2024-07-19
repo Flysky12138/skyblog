@@ -185,92 +185,96 @@ export default function Page() {
           height={height - 125}
           loading="Loading..."
           oldCode={oldCode}
+          toolbarRender={({ zoomIn }) => (
+            <>
+              {!isCreate && post.id != '-1' && (
+                <Tooltip title="查看">
+                  <IconButton component={Link} href={`/posts/${post.id}`} target="_blank">
+                    <OpenInNew />
+                  </IconButton>
+                </Tooltip>
+              )}
+              <Tooltip title={isCreate ? '创建' : '更新'}>
+                <IconButton
+                  onClick={async () => {
+                    if (!post.title) {
+                      toast.error('表单验证失败')
+                      return
+                    }
+                    const data = await Toast(
+                      isCreate
+                        ? CustomRequest('POST api/dashboard/posts/[id]', {
+                            body: {
+                              authorId: session.data?.id || 1,
+                              categories: post.categories.map(({ name }) => name),
+                              content: post.content,
+                              description: post.description,
+                              showTitleCard: post.showTitleCard,
+                              sticky: post.sticky,
+                              tags: post.tags.map(({ name }) => name),
+                              title: post.title
+                            },
+                            params: { id: 'new' }
+                          })
+                        : CustomRequest('PUT api/dashboard/posts/[id]', {
+                            body: {
+                              categories: post.categories.map(({ name }) => name),
+                              content: post.content,
+                              description: post.description,
+                              showTitleCard: post.showTitleCard,
+                              sticky: post.sticky,
+                              tags: post.tags.map(({ name }) => name),
+                              title: post.title
+                            },
+                            params: { id: post.id }
+                          }),
+                      '保存成功'
+                    )
+                    setPost(data)
+                    if (isCreate) router.replace(`/dashboard/posts/${data.id}`)
+                    setOldCode(post.content || '')
+                  }}
+                >
+                  <Save />
+                </IconButton>
+              </Tooltip>
+              <hr className="s-border-color-divider mx-2 h-4 rounded border" />
+              {!isCreate && (
+                <UploadFiles
+                  component={props => (
+                    <Tooltip title="上传图片">
+                      <IconButton {...props}>
+                        <AddPhotoAlternate />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                  path={`/posts/${post.id}/`}
+                />
+              )}
+              <Tooltip title={isAtTop ? '去底部' : '去顶部'}>
+                <IconButton
+                  disabled={zoomIn}
+                  onClick={() => {
+                    document.documentElement.scrollTo({ top: isAtTop ? Number.MAX_SAFE_INTEGER : 0 })
+                  }}
+                >
+                  <ArrowUpward
+                    className={cn({
+                      'rotate-180': isAtTop
+                    })}
+                  />
+                </IconButton>
+              </Tooltip>
+              <hr className="s-border-color-divider mx-2 h-4 rounded border" />
+            </>
+          )}
           onChange={value => {
             setPost(state => {
               state.content = value || null
             })
           }}
           {...markdownConfig}
-        >
-          {!isCreate && post.id != '-1' && (
-            <Tooltip title="查看">
-              <IconButton component={Link} href={`/posts/${post.id}`} target="_blank">
-                <OpenInNew />
-              </IconButton>
-            </Tooltip>
-          )}
-          <Tooltip title={isCreate ? '创建' : '更新'}>
-            <IconButton
-              onClick={async () => {
-                if (!post.title) {
-                  toast.error('表单验证失败')
-                  return
-                }
-                const data = await Toast(
-                  isCreate
-                    ? CustomRequest('POST api/dashboard/posts/[id]', {
-                        body: {
-                          authorId: session.data?.id || 1,
-                          categories: post.categories.map(({ name }) => name),
-                          content: post.content,
-                          description: post.description,
-                          showTitleCard: post.showTitleCard,
-                          sticky: post.sticky,
-                          tags: post.tags.map(({ name }) => name),
-                          title: post.title
-                        },
-                        params: { id: 'new' }
-                      })
-                    : CustomRequest('PUT api/dashboard/posts/[id]', {
-                        body: {
-                          categories: post.categories.map(({ name }) => name),
-                          content: post.content,
-                          description: post.description,
-                          showTitleCard: post.showTitleCard,
-                          sticky: post.sticky,
-                          tags: post.tags.map(({ name }) => name),
-                          title: post.title
-                        },
-                        params: { id: post.id }
-                      }),
-                  '保存成功'
-                )
-                setPost(data)
-                if (isCreate) router.replace(`/dashboard/posts/${data.id}`)
-                setOldCode(post.content || '')
-              }}
-            >
-              <Save />
-            </IconButton>
-          </Tooltip>
-          <hr className="s-border-color-divider mx-2 h-4 rounded border" />
-          {!isCreate && (
-            <UploadFiles
-              component={props => (
-                <Tooltip title="上传图片">
-                  <IconButton {...props}>
-                    <AddPhotoAlternate />
-                  </IconButton>
-                </Tooltip>
-              )}
-              path={`/posts/${post.id}/`}
-            />
-          )}
-          <Tooltip title={isAtTop ? '去底部' : '去顶部'}>
-            <IconButton
-              onClick={() => {
-                document.documentElement.scrollTo({ top: isAtTop ? Number.MAX_SAFE_INTEGER : 0 })
-              }}
-            >
-              <ArrowUpward
-                className={cn({
-                  'rotate-180': isAtTop
-                })}
-              />
-            </IconButton>
-          </Tooltip>
-          <hr className="s-border-color-divider mx-2 h-4 rounded border" />
-        </MonacoEditor>
+        ></MonacoEditor>
       </FormControl>
     </section>
   )

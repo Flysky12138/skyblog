@@ -13,7 +13,8 @@ dayjs.extend(updateLocale)
 
 /**
  * 毫秒转指定时间模板
- * @default format = 'mm:ss'
+ * @default
+ * format = 'mm:ss'
  * @example
  * formatMillisecond(114514) // 01:54
  */

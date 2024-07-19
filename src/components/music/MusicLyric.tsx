@@ -13,7 +13,7 @@ interface MusicLyricProps {
   value: GET['return']['lrc']
 }
 
-export default React.forwardRef<MusicLyricRef, MusicLyricProps>(function MusicLyric({ className, value: lyric }, ref) {
+const MusicLyric: React.ForwardRefRenderFunction<MusicLyricRef, MusicLyricProps> = ({ className, value: lyric }, ref) => {
   const [showLyric, setShowLyric] = React.useState('')
 
   const { setMessage } = React.useContext(Live2DContext)
@@ -64,4 +64,6 @@ export default React.forwardRef<MusicLyricRef, MusicLyricProps>(function MusicLy
       </motion.section>
     </AnimatePresence>
   )
-})
+}
+
+export default React.forwardRef(MusicLyric)

@@ -2,7 +2,7 @@ import { replaceTextWithObjectValues } from '@/app/dashboard/other/clash/_compon
 import prisma from '@/lib/prisma'
 import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
-import { ipAddress } from '@vercel/edge'
+import { ipAddress } from '@vercel/functions'
 import { NextRequest } from 'next/server'
 import { parseVariable } from '../dashboard/clash/lib'
 

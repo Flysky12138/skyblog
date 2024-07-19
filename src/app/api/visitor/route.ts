@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma'
 import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
-import { geolocation, ipAddress } from '@vercel/edge'
+import { geolocation, ipAddress } from '@vercel/functions'
 import { NextRequest } from 'next/server'
 
 export const runtime = 'edge'

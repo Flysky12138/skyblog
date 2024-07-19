@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth'
-import { geolocation, ipAddress } from '@vercel/edge'
 import { getAll } from '@vercel/edge-config'
+import { geolocation, ipAddress } from '@vercel/functions'
 import { NextRequest, NextResponse } from 'next/server'
 import { EDGE_CONFIG } from './lib/constants'
 import { CustomResponse } from './lib/server/response'

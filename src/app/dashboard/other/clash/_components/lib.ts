@@ -8,7 +8,8 @@ export const getVariableNames = (content: string) => {
 /**
  * 根据对象键值对，替换文本所有匹配到的 `#{key}` 为 `value`
  * @param replaceForNull 当值 `value` 判断为空时，是否替换
- * @default replaceForNull = true
+ * @default
+ * replaceForNull = true
  */
 export const replaceTextWithObjectValues = (target: string | undefined, variables: object, replaceForNull = true) => {
   return Object.entries(variables).reduce((content, [key, value]) => {
