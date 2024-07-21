@@ -1,5 +1,6 @@
 'use client'
 
+import { cn } from '@/lib/cn'
 import React from 'react'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
@@ -15,7 +16,10 @@ export default function Code({ children, ...props }: React.ComponentProps<'code'
   // code
   return (
     <code
-      className="cursor-pointer rounded bg-slate-200/50 px-1.5 py-1 font-medium before:content-none after:content-none dark:bg-slate-600/50"
+      className={cn([
+        'cursor-pointer select-all rounded bg-slate-200/50 px-1.5 py-1 font-medium before:content-none after:content-none dark:bg-slate-600/50',
+        'border border-transparent hover:border-sky-200 hover:dark:border-sky-700'
+      ])}
       onDoubleClick={event => {
         const code = (event.target as HTMLElement).textContent
         if (!code) return
