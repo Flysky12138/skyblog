@@ -1,3 +1,4 @@
 .next/
 public/
 pnpm-lock.yaml
+src/assets/
