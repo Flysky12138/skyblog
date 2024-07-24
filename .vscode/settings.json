@@ -3,6 +3,12 @@
   "files.associations": {
     "*.css": "tailwindcss"
   },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",
+    "source.fixAll.eslint": "always",
+    "source.organizeImports": "never"
+  },
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },

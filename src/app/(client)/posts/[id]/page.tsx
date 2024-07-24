@@ -1,6 +1,6 @@
 import Card from '@/components/layout/Card'
 import { MDXServer, MDXToc } from '@/components/mdx'
-import { SELECTOR } from '@/lib/constants'
+import { cn } from '@/lib/cn'
 import prisma from '@/lib/prisma'
 import { Typography } from '@mui/joy'
 import { Metadata } from 'next'
@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation'
 import PostEdit from './_components/PostEdit'
 import PostInfo from './_components/PostInfo'
 import PostIssues from './_components/PostIssues'
-import PostToc from './_components/PostToc'
+import PostTocWrapper from './_components/PostTocWrapper'
 
 const getPost = async (id: string) => {
   return await prisma.post.findUnique({
@@ -48,8 +48,18 @@ export default async function Page({ params }: PageProps) {
           <Typography className="font-title font-normal" component="h1" level="h2">
             {post.title}
           </Typography>
-          <Typography level="body-md">{post.description}</Typography>
-          <PostInfo id={post.id} />
+          {post.description && <Typography level="body-md">{post.description}</Typography>}
+          <PostInfo
+            defaultValue={{
+              categories: post.categories,
+              createdAt: post.createdAt,
+              links: post.links,
+              published: post.published,
+              updatedAt: post.updatedAt,
+              views: post.views
+            }}
+            id={post.id}
+          />
         </Card>
       )}
       {post.content ? (
@@ -59,10 +69,13 @@ export default async function Page({ params }: PageProps) {
             <MDXServer value={post.content} />
           </Card>
           <Card
-            className="s-hidden-scrollbar sticky top-[calc(theme(height.header)+theme(height.9))] hidden max-h-[calc(100dvh-theme(height.header)-2*theme(height.9))] w-52 shrink-0 space-y-1.5 self-start overflow-auto p-3 pr-1.5 empty:hidden lg:block"
-            id={SELECTOR.IDS.TOC}
+            className={cn([
+              'hidden empty:hidden lg:block',
+              's-hidden-scrollbar sticky w-52 shrink-0 space-y-1.5 self-start overflow-auto p-3 pr-1.5',
+              'top-[calc(theme(height.header)+theme(height.9))] max-h-[calc(100dvh-theme(height.header)-2*theme(height.9))]'
+            ])}
+            component={PostTocWrapper}
           >
-            <PostToc />
             <MDXToc value={post.content} />
           </Card>
         </section>

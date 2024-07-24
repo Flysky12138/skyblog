@@ -1,5 +1,6 @@
 'use client'
 
+import { GET } from '@/app/api/post/info/route'
 import { SESSIONSTORAGE } from '@/lib/constants'
 import { formatISOTime2 } from '@/lib/parser/time'
 import { CustomRequest } from '@/lib/server/request'
@@ -11,15 +12,13 @@ import { useSessionStorage, useTimeoutFn } from 'react-use'
 import useSWR from 'swr'
 
 interface PostInfoProps {
+  defaultValue: GET['return']
   id: string
 }
 
-export default function PostInfo({ id }: PostInfoProps) {
-  const {
-    data: post,
-    isLoading,
-    error
-  } = useSWR(`/api/post/info?id=${id}`, () => CustomRequest('GET api/post/info', { search: { id } }), {
+export default function PostInfo({ id, defaultValue }: PostInfoProps) {
+  const { data: post, isLoading } = useSWR(`/api/post/info?id=${id}`, () => CustomRequest('GET api/post/info', { search: { id } }), {
+    fallbackData: defaultValue,
     refreshInterval: 10 * 1000
   })
 
@@ -33,33 +32,27 @@ export default function PostInfo({ id }: PostInfoProps) {
     setSubmitted(true)
   }, 10 * 1000)
 
-  if (isLoading) {
+  if (!post) {
     return <span className="s-skeleton block h-[21px] w-60 rounded"></span>
   }
 
   return (
     <Typography className="break-all" level="body-sm">
-      {error || !post ? (
-        error.message
-      ) : (
+      这篇文章发布于 {formatISOTime2(post.createdAt)}
+      {post.categories.length > 0 ? (
         <>
-          这篇文章发布于 {formatISOTime2(post.createdAt)}
-          {post.categories.length > 0 ? (
-            <>
-              ，归类于&nbsp;
-              {post.categories.map((category, index) => (
-                <React.Fragment key={category.id}>
-                  <Link className="text-sky-500 hover:s-underline" href={`/categories/${category.name}/1`}>
-                    {category.name}
-                  </Link>
-                  {index < post.categories.length - 1 ? '、' : null}
-                </React.Fragment>
-              ))}
-            </>
-          ) : null}
-          。{post.published && `阅读 ${post.views} 次，0 条评论`}
+          ，归类于&nbsp;
+          {post.categories.map((category, index) => (
+            <React.Fragment key={category.id}>
+              <Link className="text-sky-500 hover:s-underline" href={`/categories/${category.name}/1`}>
+                {category.name}
+              </Link>
+              {index < post.categories.length - 1 ? '、' : null}
+            </React.Fragment>
+          ))}
         </>
-      )}
+      ) : null}
+      。{post.published && `阅读 ${isLoading ? '?' : post.views} 次，0 条评论`}
     </Typography>
   )
 }

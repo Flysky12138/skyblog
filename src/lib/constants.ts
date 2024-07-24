@@ -22,8 +22,7 @@ export const SELECTOR = {
   CLASSES: {},
   IDS: {
     ISSUES_MOBILE: 'issues-mobile',
-    ISSUES_PC: 'issues-pc',
-    TOC: 'toc'
+    ISSUES_PC: 'issues-pc'
   }
 } as const
 

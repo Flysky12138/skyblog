@@ -21,7 +21,7 @@
     "db:dev:studio": "prisma studio --schema prisma/sqlite",
     "db:prod:gen": "prisma generate --no-hints --schema prisma/psql",
     "db:prod:push": "dotenv -e .env.local -- prisma db push --schema prisma/psql",
-    "script:api": "tsx scripts/api.ts"
+    "script:api": "tsx scripts/generator-api-type.ts"
   },
   "lint-staged": {
     "*.{js,cjs,mjs,ts,tsx}": [
