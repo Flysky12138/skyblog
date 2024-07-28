@@ -10,16 +10,17 @@ const requests = new Map<string, {}>()
 
 for (const path of readdirSync(API_FOLDER_PATH, { recursive: true }) as string[]) {
   const apiFileFullPath = join(API_FOLDER_PATH, path)
-  if (path.endsWith(`${sep}route.ts`) && statSync(apiFileFullPath).isFile()) {
-    const api = posix.join(...['api'].concat(path.split(sep).slice(0, -1)))
-    apis.push(`'${api}'`)
 
-    const modules = await import(apiFileFullPath)
-    for (const mode of ['DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT'] satisfies Method[]) {
-      if (Reflect.has(modules, mode)) {
-        requests.set(`'${mode} ${api}'`, `import('@/app/api/${path}').${mode}`)
-      }
-    }
+  if (!statSync(apiFileFullPath).isFile()) continue
+  if (!path.endsWith(`${sep}route.ts`)) continue
+
+  const api = posix.join(...['api'].concat(path.split(sep).slice(0, -1)))
+  apis.push(`'${api}'`)
+
+  const modules = await import(apiFileFullPath)
+  for (const mode of ['DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT'] satisfies Method[]) {
+    if (!Reflect.has(modules, mode)) continue
+    requests.set(`'${mode} ${api}'`, `import('@/app/api/${path}').${mode}`)
   }
 }
 

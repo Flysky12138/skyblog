@@ -14,14 +14,15 @@
     "lint:type": "tsc --noEmit",
     "format": "prettier --write .",
     "prepare": "husky",
-    "predev": "npm run db:dev:gen && npm run script:api",
-    "prebuild": "npm run db:prod:gen && npm run script:api",
+    "predev": "npm run script:api:runtime nodejs && npm run db:dev:gen && npm run script:api:type",
+    "prebuild": "npm run script:api:runtime edge && npm run db:prod:gen && npm run script:api:type",
     "db:dev:gen": "prisma generate --no-hints --schema prisma/sqlite",
     "db:dev:push": "prisma db push --schema prisma/sqlite",
     "db:dev:studio": "prisma studio --schema prisma/sqlite",
     "db:prod:gen": "prisma generate --no-hints --schema prisma/psql",
     "db:prod:push": "dotenv -e .env.local -- prisma db push --schema prisma/psql",
-    "script:api": "tsx scripts/generator-api-type.ts"
+    "script:api:type": "tsx scripts/generator-api-type.ts",
+    "script:api:runtime": "tsx scripts/api-runtime.ts"
   },
   "lint-staged": {
     "*.{js,cjs,mjs,ts,tsx}": [
@@ -45,6 +46,7 @@
     "@mui/material": "^5.16.5",
     "@neondatabase/serverless": "^0.9.4",
     "@next/mdx": "^14.2.5",
+    "@octokit/rest": "^21.0.1",
     "@prisma/adapter-neon": "^5.17.0",
     "@prisma/client": "^5.17.0",
     "@rehype-pretty/transformers": "^0.13.2",

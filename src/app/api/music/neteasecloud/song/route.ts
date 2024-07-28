@@ -5,7 +5,7 @@ import { get } from '@vercel/edge-config'
 import { ipAddress } from '@vercel/functions'
 import { NextRequest } from 'next/server'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 
 export type GET = MethodRequestType<{
   return: {

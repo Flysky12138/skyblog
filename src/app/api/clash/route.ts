@@ -6,7 +6,7 @@ import { ipAddress } from '@vercel/functions'
 import { NextRequest } from 'next/server'
 import { parseVariable } from '../dashboard/clash/lib'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 
 const dbGet = async (id: string, data: Prisma.VisitorInfoCreateInput) => {
   const subscribeLastAt = new Date().toISOString()

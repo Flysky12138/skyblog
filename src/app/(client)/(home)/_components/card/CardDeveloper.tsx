@@ -3,22 +3,26 @@ import LeetCode from '@/components/svg-icon/LeetCode'
 import Spotify from '@/components/svg-icon/Spotify'
 import { Email, GitHub } from '@mui/icons-material'
 import { Avatar, Button, IconButton, Tooltip, Typography } from '@mui/joy'
+import { Octokit } from '@octokit/rest'
 import Image from 'next/image'
 
-export default function CardDeveloper() {
+export default async function CardDeveloper() {
+  const octokit = new Octokit()
+  const { data } = await octokit.users.getByUsername({ username: process.env.NEXT_PUBLIC_GITHUB_NAME })
+
   return (
     <Card className="flex flex-col items-center p-6">
       <Avatar className="transition-transform duration-500 hover:rotate-[360deg]" sx={{ '--Avatar-size': '7rem' }}>
-        <Image priority alt="Flysky12138" height={200} src="/cdn/avatars.githubusercontent.com/u/35610243?v=4" width={200} />
+        <Image priority alt={data.login} height={200} src={data.avatar_url.replace('https://', '/cdn/')} width={200} />
       </Avatar>
       <Typography className="mt-3 font-title font-normal" level="h3">
         Flysky
       </Typography>
       <Typography className="mt-1 font-title" level="body-sm">
-        用于记录分享笔记的网站
+        {process.env.NEXT_PUBLIC_DESCRIPTION}
       </Typography>
-      <Button fullWidth className="mt-4" component="a" href="https://github.com/Flysky12138" startDecorator={<GitHub />} target="_blank">
-        Flysky12138
+      <Button fullWidth className="mt-4" component="a" href={data.html_url} startDecorator={<GitHub />} target="_blank">
+        {data.login}
       </Button>
       <div className="mt-4 flex gap-x-4">
         <Tooltip title="LeetCode">

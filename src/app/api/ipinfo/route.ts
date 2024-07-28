@@ -3,7 +3,7 @@ import { CustomResponse } from '@/lib/server/response'
 import { geolocation, ipAddress } from '@vercel/functions'
 import { NextRequest } from 'next/server'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 
 export type GET = MethodRequestType<{
   return: Record<string, string>

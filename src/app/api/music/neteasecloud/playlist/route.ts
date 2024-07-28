@@ -3,7 +3,7 @@ import { CustomFetch } from '@/lib/server/fetch'
 import { CustomResponse } from '@/lib/server/response'
 import { get } from '@vercel/edge-config'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 
 export type GET = MethodRequestType<{
   return: Array<{
