@@ -3,10 +3,10 @@ import Card from '@/components/layout/Card'
 import ModalCore, { ModalCoreProps } from '@/components/modal/ModalCore'
 import MonacoEditor from '@/components/monaco-editor'
 import { yamlConfig } from '@/components/monaco-editor/language/yaml'
+import { getVariableNames } from '@/lib/parser/string'
 import { Button, Chip, FormControl, FormLabel, Input } from '@mui/joy'
 import React from 'react'
 import { useImmer } from 'use-immer'
-import { getVariableNames } from './lib'
 
 interface ModalTemplateProps extends Pick<ModalCoreProps, 'component'> {
   onSubmit: (payload: NonNullable<ModalTemplateProps['value']>) => Promise<void>

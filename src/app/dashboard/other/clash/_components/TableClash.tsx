@@ -2,8 +2,7 @@
 
 import ModalCore from '@/components/modal/ModalCore'
 import ModalDelete from '@/components/modal/ModalDelete'
-import TableTbodyEmpty from '@/components/table/TableTbodyEmpty'
-import TableTheadLoading from '@/components/table/TableTheadLoading'
+import TableStatus from '@/components/table/TableStatus'
 import TableWrapper from '@/components/table/TableWrapper'
 import { formatISOTime } from '@/lib/parser/time'
 import { CustomRequest } from '@/lib/server/request'
@@ -56,7 +55,6 @@ export default function TableClash() {
               />
             </th>
           </tr>
-          <TableTheadLoading colSpan={7} loading={isLoading} />
         </thead>
         <tbody>
           {clashs.map((clash, index) => (
@@ -150,7 +148,7 @@ export default function TableClash() {
               </td>
             </tr>
           ))}
-          <TableTbodyEmpty colSpan={7} enable={clashs.length == 0 && !isLoading} />
+          <TableStatus colSpan={7} isEmpty={clashs.length == 0} isLoading={isLoading} />
         </tbody>
       </Table>
     </TableWrapper>

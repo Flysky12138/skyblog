@@ -3,12 +3,12 @@ import { GET } from '@/app/api/dashboard/clash/template/route'
 import ModalCore, { ModalCoreProps } from '@/components/modal/ModalCore'
 import MonacoEditor from '@/components/monaco-editor'
 import { yamlConfig } from '@/components/monaco-editor/language/yaml'
+import { getVariableNames, replaceTextWithObjectValues } from '@/lib/parser/string'
 import { Button, FormControl, FormHelperText, FormLabel, Input, Option, Select } from '@mui/joy'
 import dayjs from 'dayjs'
 import React from 'react'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
-import { getVariableNames, replaceTextWithObjectValues } from './lib'
 
 interface ModalClashProps extends Pick<ModalCoreProps, 'component'> {
   onSubmit: (payload: NonNullable<ModalClashProps['value']>) => Promise<void>

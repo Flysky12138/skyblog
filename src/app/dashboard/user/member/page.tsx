@@ -1,7 +1,6 @@
 'use client'
 
-import TableTbodyEmpty from '@/components/table/TableTbodyEmpty'
-import TableTheadLoading from '@/components/table/TableTheadLoading'
+import TableStatus from '@/components/table/TableStatus'
 import TableWrapper from '@/components/table/TableWrapper'
 import { formatISOTime } from '@/lib/parser/time'
 import { CustomRequest } from '@/lib/server/request'
@@ -25,7 +24,6 @@ export default function Page() {
             <th className="w-44">更新时间</th>
             <th className="w-44">创建时间</th>
           </tr>
-          <TableTheadLoading colSpan={6} loading={isLoading} />
         </thead>
         <tbody>
           {members.map((member, index) => (
@@ -38,7 +36,7 @@ export default function Page() {
               <td>{formatISOTime(member.createdAt)}</td>
             </tr>
           ))}
-          <TableTbodyEmpty colSpan={6} enable={members.length == 0 && !isLoading} />
+          <TableStatus colSpan={6} isEmpty={members.length == 0} isLoading={isLoading} />
         </tbody>
       </Table>
     </TableWrapper>

@@ -1,4 +1,4 @@
-import { replaceTextWithObjectValues } from '@/app/dashboard/other/clash/_components/lib'
+import { replaceTextWithObjectValues } from '@/lib/parser/string'
 import prisma from '@/lib/prisma'
 import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'

@@ -1,8 +1,7 @@
 'use client'
 
 import ModalDelete from '@/components/modal/ModalDelete'
-import TableTbodyEmpty from '@/components/table/TableTbodyEmpty'
-import TableTheadLoading from '@/components/table/TableTheadLoading'
+import TableStatus from '@/components/table/TableStatus'
 import TableWrapper from '@/components/table/TableWrapper'
 import { formatISOTime } from '@/lib/parser/time'
 import { CustomRequest } from '@/lib/server/request'
@@ -49,7 +48,6 @@ export default function TableTemplate() {
               />
             </th>
           </tr>
-          <TableTheadLoading colSpan={6} loading={isLoading} />
         </thead>
         <tbody>
           {clashTemplates.map((clashTemplate, index) => (
@@ -101,7 +99,7 @@ export default function TableTemplate() {
               </td>
             </tr>
           ))}
-          <TableTbodyEmpty colSpan={6} enable={clashTemplates.length == 0 && !isLoading} />
+          <TableStatus colSpan={6} isEmpty={clashTemplates.length == 0} isLoading={isLoading} />
         </tbody>
       </Table>
     </TableWrapper>

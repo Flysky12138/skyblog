@@ -2,8 +2,7 @@
 
 import FormSelectClearable from '@/components/form/FormSelectClearable'
 import ModalDelete from '@/components/modal/ModalDelete'
-import TableTbodyEmpty from '@/components/table/TableTbodyEmpty'
-import TableTheadLoading from '@/components/table/TableTheadLoading'
+import TableStatus from '@/components/table/TableStatus'
 import TableWrapper from '@/components/table/TableWrapper'
 import { removeDuplicates } from '@/lib/parser/array'
 import { deleteAllGithubRepos } from '@/lib/server/github'
@@ -164,7 +163,6 @@ export default function Page() {
               <th className="w-16">公开</th>
               <th className="w-44"></th>
             </tr>
-            <TableTheadLoading colSpan={7} loading={isLoading} />
           </thead>
           <tbody>
             {postsFilter.map((post, index) => (
@@ -223,7 +221,7 @@ export default function Page() {
                 </td>
               </tr>
             ))}
-            <TableTbodyEmpty colSpan={7} enable={postsFilter.length == 0 && !isLoading} />
+            <TableStatus colSpan={7} isEmpty={postsFilter.length == 0} isLoading={isLoading} />
           </tbody>
           {/* <tfoot>
             <tr>
