@@ -3,6 +3,7 @@ import { CustomResponse } from '@/lib/server/response'
 import { NextRequest, NextResponse } from 'next/server'
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 // 由于 vercel 限制，大于 4M 就重定向
 export const GET = async (request: NextRequest, { params }: DynamicRoute<{ path?: string[] }>) => {

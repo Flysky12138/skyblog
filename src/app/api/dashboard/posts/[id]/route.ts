@@ -82,6 +82,7 @@ export const POST = async (request: NextRequest, { params }: DynamicRoute<{ id: 
 
     const data = await request.json()
     const res = await dbPost(data)
+    CacheClear.post()
 
     return CustomResponse.encrypt(res)
   } catch (error) {
