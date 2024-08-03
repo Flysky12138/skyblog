@@ -1,3 +1,4 @@
+import { PlaylistType } from '@/components/music'
 import { EDGE_CONFIG } from '@/lib/constants'
 import { CustomFetch } from '@/lib/server/fetch'
 import { CustomResponse } from '@/lib/server/response'
@@ -6,13 +7,7 @@ import { get } from '@vercel/edge-config'
 export const runtime = 'nodejs'
 
 export type GET = MethodRequestType<{
-  return: Array<{
-    ar: string[]
-    dt: number
-    id: number
-    name: string
-    picUrl: string
-  }>
+  return: PlaylistType[]
 }>
 
 export const GET = async () => {

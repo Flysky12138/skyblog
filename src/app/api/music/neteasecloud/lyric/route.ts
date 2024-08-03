@@ -1,3 +1,4 @@
+import { LyricModeType, LyricType } from '@/components/music'
 import { parseLyric } from '@/lib/parser/lyric'
 import { CustomFetch } from '@/lib/server/fetch'
 import { CustomResponse } from '@/lib/server/response'
@@ -6,7 +7,7 @@ import { NextRequest } from 'next/server'
 export const runtime = 'nodejs'
 
 export type GET = MethodRequestType<{
-  return: Partial<Record<'lrc' | 'klyric' | 'tlyric' | 'romalrc', Array<{ lyric: string; time: number }> | null>>
+  return: Partial<Record<LyricModeType, LyricType[] | null>>
   search: {
     id: number
   }

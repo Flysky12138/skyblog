@@ -4,26 +4,18 @@ type DynamicRoute<T extends Record<string, string | string[]>, D extends Record<
   searchParams: Partial<D>
 }
 
-type Merge<O> = { [K in keyof O]: O[K] }
-type NonEmpty = `${any}${any}`
-type ExtractNext<T extends string, L extends string = ''> = T extends `${L}/${infer S extends NonEmpty}/${any}`
-  ? [`${L}/${S}/`, S]
-  : T extends `${L}${infer S extends NonEmpty}/${any}`
-    ? [`${L}${S}/`, S]
-    : T extends `${L}/${infer S extends NonEmpty}`
-      ? [`${L}/${S}`, S]
-      : T extends `${L}${infer S extends NonEmpty}`
-        ? [`${L}${S}`, S]
-        : []
-/** 通过动态路由路径获取参数 */
-type ParamsByApi<T extends string, L extends string = '', O = {}, Ambiguity extends string = ''> = Ambiguity extends '⛔⛔'
-  ? never
-  : ExtractNext<T, L> extends [infer L extends string, infer S extends NonEmpty]
-    ? S extends `[${infer P extends NonEmpty}]`
-      ? P extends `[...${infer G extends NonEmpty}]`
-        ? ParamsByApi<T, L, Merge<O & { [K in G]?: string[] }>, `${Ambiguity}⛔`>
-        : P extends `...${infer G extends NonEmpty}`
-          ? ParamsByApi<T, L, Merge<O & { [K in G]: string[] }>, `${Ambiguity}⛔`>
-          : ParamsByApi<T, L, Merge<O & { [K in P]: string }>, Ambiguity>
-      : ParamsByApi<T, L, O, ''>
-    : O
+type _IsArray<T> = T extends `${string}...${string}` ? true : false
+type _Extract<T> = T extends `[...${infer F}]` | `...${infer F}` ? F : T
+/**
+ * 通过动态路由路径获取参数
+ * @see https://github.com/type-challenges/type-challenges/issues/33614
+ */
+type ParamsByApi<T extends string, D extends Record<string, string | string[]> = {}> = T extends `${infer A}/[...]${infer B}`
+  ? ParamsByApi<`${A}${B}`, D & { '...': string }>
+  : T extends `${string}]/[...${string}`
+    ? never
+    : T extends `${infer A}[[${infer F}]]${infer B}`
+      ? ParamsByApi<`${A}${B}`, D & (_Extract<F> extends '' ? {} : { [K in _Extract<F>]?: _IsArray<F> extends true ? string[] : string })>
+      : T extends `${infer A}[${infer F}]${infer B}`
+        ? ParamsByApi<`${A}${B}`, D & (_Extract<F> extends '' ? {} : { [K in _Extract<F>]: _IsArray<F> extends true ? string[] : string })>
+        : { [K in keyof D]: D[K] }

@@ -29,7 +29,18 @@ export default function Music() {
       )}
     >
       <ModalClose className="rounded-full bg-transparent" />
-      <MusicCard value={value} />
+      <MusicCard
+        playlist={value}
+        onLoad={({ id }) =>
+          Promise.all([
+            CustomRequest('GET api/music/neteasecloud/song', { search: { id } }),
+            CustomRequest('GET api/music/neteasecloud/lyric', { search: { id } })
+          ]).then(([song, lyrics]) => ({
+            lyrics,
+            url: song.url
+          }))
+        }
+      />
     </ModalCore>
   )
 }

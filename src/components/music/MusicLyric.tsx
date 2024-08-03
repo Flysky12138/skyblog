@@ -1,8 +1,8 @@
-import { GET } from '@/app/api/music/neteasecloud/lyric/route'
 import { cn } from '@/lib/cn'
 import { Live2DContext } from '@/provider/live2d'
 import { AnimatePresence, AnimationProps, motion } from 'framer-motion'
 import React from 'react'
+import { LyricType } from '.'
 
 export interface MusicLyricRef {
   setProgress: (second: number) => void
@@ -10,7 +10,7 @@ export interface MusicLyricRef {
 
 interface MusicLyricProps {
   className?: string
-  value: GET['return']['lrc']
+  value?: LyricType[] | null
 }
 
 const MusicLyric: React.ForwardRefRenderFunction<MusicLyricRef, MusicLyricProps> = ({ className, value: lyric }, ref) => {

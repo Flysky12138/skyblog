@@ -7,15 +7,15 @@ import { motion } from 'framer-motion'
 import React from 'react'
 import { useClickAway } from 'react-use'
 import { FixedSizeList } from 'react-window'
-import { Player } from '.'
+import { PlaylistType } from '.'
 
-interface MusicPlaylistProps {
-  activeIndex: number
-  onClick?: (index: number) => void
-  value: Player['list']
+interface MusicPlaylistProps<T> {
+  active: T
+  onClick?: (payload: T) => void
+  playlist: T[]
 }
 
-export default function MusicPlaylist({ value: playlist, activeIndex, onClick }: MusicPlaylistProps) {
+export default function MusicPlaylist<T extends PlaylistType>({ playlist, active, onClick }: MusicPlaylistProps<T>) {
   const [isOpen, setIsOpen] = React.useState(false)
 
   // 正在播放歌曲定位
@@ -31,6 +31,9 @@ export default function MusicPlaylist({ value: playlist, activeIndex, onClick }:
     },
     ['touchend', 'mousedown']
   )
+
+  /** 活跃项 */
+  const activeIndex = React.useMemo(() => playlist.indexOf(active), [active, playlist])
 
   return (
     <Dropdown
@@ -65,7 +68,7 @@ export default function MusicPlaylist({ value: playlist, activeIndex, onClick }:
                 }}
                 style={style}
                 onClick={() => {
-                  onClick?.(index)
+                  onClick?.(playlist[index])
                 }}
               >
                 <ListItemButton
