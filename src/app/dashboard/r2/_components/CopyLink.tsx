@@ -4,9 +4,7 @@ import Card from '@/components/layout/Card'
 import ModalCore, { ModalCoreRef } from '@/components/modal/ModalCore'
 import { cn } from '@/lib/cn'
 import { EXT } from '@/lib/constants'
-import { ImageFileInfoType } from '@/lib/file/info'
-import { githubFileDirectUrl } from '@/lib/server/github'
-import { CustomRequest } from '@/lib/server/request'
+import { R2 } from '@/lib/server/r2'
 import React from 'react'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
@@ -49,7 +47,7 @@ const CardCopy: React.FunctionComponent<{ loading: boolean; title: string; value
 
 const imageAlt = (path: string) => path.split('/').at(-2) || ''
 
-type FileType = (GithubRepoCommon | GithubRepoTree['tree'][number]) & Partial<ImageFileInfoType>
+type FileType = any
 export interface CopyLinkRef {
   asyncOpen: (payload: FileType[]) => void
   open: (payload: FileType[]) => Promise<void>
@@ -66,13 +64,13 @@ const CopyLink: React.ForwardRefRenderFunction<CopyLinkRef, {}> = (props, ref) =
     asyncOpen: async payload => {
       modalCoreRef.current?.openToggle()
       setLoading(true)
-      try {
-        const info = await CustomRequest('GET api/dashboard/image-info', {})
-        const infoMap = new Map(Object.entries(info.data))
-        setFiles(payload.map(v => Object.assign({}, v, infoMap.has(v.sha) ? infoMap.get(v.sha) : {})))
-      } catch (error) {
-        console.error(error)
-      }
+      // try {
+      //   const info = await CustomRequest('GET api/dashboard/image-info', {})
+      //   const infoMap = new Map(Object.entries(info.data))
+      //   setFiles(payload.map(v => Object.assign({}, v, infoMap.has(v.sha) ? infoMap.get(v.sha) : {})))
+      // } catch (error) {
+      //   console.error(error)
+      // }
       setLoading(false)
     },
     open: async payload => {
@@ -83,14 +81,14 @@ const CopyLink: React.ForwardRefRenderFunction<CopyLinkRef, {}> = (props, ref) =
 
   return (
     <ModalCore ref={modalCoreRef} className="w-full max-w-screen-md select-none gap-y-10 py-7" onClose={() => setFiles([])}>
-      <CardCopy loading={loading} title="url" values={files.map(file => process.env.NEXT_PUBLIC_WEBSITE_URL + githubFileDirectUrl(file.path))} />
-      <CardCopy loading={loading} title="markdown - img" values={imageFiles.map(file => `![${imageAlt(file.path)}](${githubFileDirectUrl(file.path)})`)} />
+      <CardCopy loading={loading} title="url" values={files.map(file => process.env.NEXT_PUBLIC_WEBSITE_URL + R2.get(file.path))} />
+      <CardCopy loading={loading} title="markdown - img" values={imageFiles.map(file => `![${imageAlt(file.path)}](${R2.get(file.path)})`)} />
       <CardCopy
         loading={loading}
         title="component - img"
         values={imageFiles.map(
           file =>
-            `::img{alt="${imageAlt(file.path)}" ${file.width && file.height ? `width="${file.width}" height="${file.height}"` : ''} src="${githubFileDirectUrl(file.path)}"}`
+            `::img{alt="${imageAlt(file.path)}" ${file.width && file.height ? `width="${file.width}" height="${file.height}"` : ''} src="${R2.get(file.path)}"}`
         )}
       />
       <CardCopy
@@ -108,7 +106,7 @@ const CopyLink: React.ForwardRefRenderFunction<CopyLinkRef, {}> = (props, ref) =
           ':::images',
           ...files.map(
             file =>
-              `::img{alt="${imageAlt(file.path)}" ${file.width && file.height ? `width="${file.width}" height="${file.height}"` : ''} src="${githubFileDirectUrl(file.path)}"}`
+              `::img{alt="${imageAlt(file.path)}" ${file.width && file.height ? `width="${file.width}" height="${file.height}"` : ''} src="${R2.get(file.path)}"}`
           ),
           ':::'
         ])}

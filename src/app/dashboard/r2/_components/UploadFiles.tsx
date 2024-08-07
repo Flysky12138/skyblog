@@ -1,8 +1,6 @@
 import ModalCore, { ModalCoreRef } from '@/components/modal/ModalCore'
 import { cn } from '@/lib/cn'
 import { formatFileSize } from '@/lib/parser/size'
-import { putGithubRepos } from '@/lib/server/github'
-import { Toast } from '@/lib/toast'
 import { FileOpenOutlined, FileUploadOutlined } from '@mui/icons-material'
 import { Button, Input, Table } from '@mui/joy'
 import React from 'react'
@@ -15,7 +13,7 @@ interface UploadFilesProps {
     onClick: React.MouseEventHandler<HTMLElement>
   }>
   isUploadDirectory?: boolean
-  onSubmit?: (payload: GithubRepoFileType) => Promise<void>
+  onSubmit?: (payload: any) => Promise<void>
   path: string
 }
 
@@ -25,7 +23,7 @@ export default function UploadFiles({ component: Component, isUploadDirectory, p
 
   const [fileList, setFileList] = useImmer<File[]>([])
   const [uploadFinishedFileList, setUploadFinishedFileList] = useImmer<File[]>([])
-  const [uploadFinishedReturnData, setUploadFinishedReturnData] = useImmer<GithubRepoFileType[]>([])
+  const [uploadFinishedReturnData, setUploadFinishedReturnData] = useImmer<any[]>([])
   const isUploadFinished = fileList.length <= uploadFinishedFileList.length
 
   const [basePath, setBasePath] = React.useState('')
@@ -101,20 +99,20 @@ export default function UploadFiles({ component: Component, isUploadDirectory, p
               startDecorator={<FileUploadOutlined />}
               onClick={async () => {
                 setIsUploading(true)
-                for (const file of fileList) {
-                  try {
-                    if (uploadFinishedFileList.includes(file)) continue
-                    const path = basePath.slice(1) + (file.webkitRelativePath || file.name)
-                    const data = await Toast(putGithubRepos(path, file), '上传成功', path)
-                    setUploadFinishedFileList(state => {
-                      state.push(file)
-                    })
-                    setUploadFinishedReturnData(state => {
-                      state.push(data)
-                    })
-                    await onSubmit?.(data)
-                  } catch (error) {}
-                }
+                // for (const file of fileList) {
+                //   try {
+                //     if (uploadFinishedFileList.includes(file)) continue
+                //     const path = basePath.slice(1) + (file.webkitRelativePath || file.name)
+                //     const data = await Toast(putGithubRepos(path, file), '上传成功', path)
+                //     setUploadFinishedFileList(state => {
+                //       state.push(file)
+                //     })
+                //     setUploadFinishedReturnData(state => {
+                //       state.push(data)
+                //     })
+                //     await onSubmit?.(data)
+                //   } catch (error) {}
+                // }
                 setIsUploading(false)
               }}
             >

@@ -1,7 +1,8 @@
 {
   "files.eol": "\n",
   "files.associations": {
-    "*.css": "tailwindcss"
+    "*.css": "tailwindcss",
+    "*.toml": "ini"
   },
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {

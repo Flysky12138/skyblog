@@ -58,7 +58,7 @@ const listOptions: ListOptionType[] = [
     label: '黑名单'
   },
   {
-    href: '/dashboard/github',
+    href: '/dashboard/r2',
     icon: <GitHub />,
     label: '仓库'
   },

@@ -2,7 +2,6 @@
 
 ## 数据存储
 
-- [Vercel KV](https://vercel.com/docs/storage/vercel-kv): 存储上传到 Github 的图片信息
 - [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres): 存储博客几乎所有的内容
 - [Vercel Blob](https://vercel.com/docs/storage/vercel-blob): 存储友链的网站封面图片
 - [Vercel Edge Config](https://vercel.com/docs/storage/edge-config): 存储一些配置文件，如：封禁、歌单信息、Live2D直链等
@@ -26,13 +25,12 @@ EDGE_ID=ecfg_7bhjqwklveuyz9ix4n2tr3mfa5gd8sp
 ## https://vercel.com/account/tokens
 TOKEN_VERCEL=Z6Wn8v7YkAf5Ml0DxJzI1gBp
 
-# github assets
-## https://github.com/settings/tokens
-## 用于对私有仓库的管理
-NEXT_PUBLIC_TOKEN_GITHUB_ACCESS=ghp_v9Lq4GjDn5Nh2Tg1Yz3Rb7Oc8Jw0Ee5Pf
-NEXT_PUBLIC_GITHUB_ACCESS_OWNER_REPO=flysky12138/repository-name
+# cloudflare r2
+## https://dash.cloudflare.com/e52dc36cf56603a6090e044725996f99/r2/overview
+NEXT_PUBLIC_R2_SECRET=8j1a9s2d0f5g4h7j6k8l3m4n5b0v
+NEXT_PUBLIC_R2_URL=https://r2-worker.flysky12138.workers.dev
 
-# 登陆
+# 登录
 ## https://github.com/settings/developers
 ## Authorization callback URL example: https://blog.flysky.xyz/api/auth/callback/github
 GITHUB_ID=p2j1w7l0i4e9t5k8u3y6c
@@ -44,30 +42,7 @@ NEXTAUTH_SECRET=8j1a9s2d0f5g4h7j6k8l3m4n5b0v
 AUTH_URL=
 
 # CDN
-## 用于对 GitHub 仓库中大于 4M 的资源代理
-## 我使用的 Cloudflare Workers 进行代理
-## $CDN_URL/https://example.com -> https://example.com
 CDN_URL=
-```
-
-## Cloudflare Workers
-
-```js
-export default {
-  async fetch(request) {
-    const url = new URL(request.url)
-    const { body, headers, ...response } = await fetch(url.href.replace(url.origin + '/', ''), request)
-    return new Response(body, {
-      ...response,
-      headers: Object.assign({}, headers, {
-        'Cache-Control': 'public, max-age=31536000, s-maxage=2592000, immutable',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Headers': '*'
-      })
-    })
-  }
-}
 ```
 
 ## 开发

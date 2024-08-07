@@ -1,6 +1,5 @@
 import { accordion } from './Accordion'
 import hr from './Divider'
-import GithubImages from './GithubImages'
 import images from './Images'
 import masonry from './Masonry'
 import mdx from './Mdx'
@@ -14,6 +13,5 @@ export const directive = {
   mdx,
   modal,
   tabs,
-  ...accordion,
-  'github-images': GithubImages
+  ...accordion
 }

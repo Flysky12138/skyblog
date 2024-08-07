@@ -100,12 +100,6 @@ export const markdownConfig: LanguagePropsType = {
               { key: 'defaultExpanded', value: 'true' },
               { key: 'disabled', value: 'true' }
             ])
-          case 'github-images':
-            return suggestProperty([
-              { key: 'minWidth', value: '${0:200}' },
-              { key: 'spacing', value: '${0:2}' },
-              { key: 'columns', value: '${0:4}' }
-            ])
         }
 
         // 代码片段提示
@@ -133,8 +127,7 @@ export const markdownConfig: LanguagePropsType = {
             key: 'accordion-group',
             value: [':::::accordion-group', '::::accordion', ':::accordion-summary', '$1', ':::', ':::accordion-details', '$2', ':::', '::::', ':::::']
           },
-          { detail: '手风琴', key: 'accordion', value: ['::::accordion', ':::accordion-summary', '$1', ':::', ':::accordion-details', '$2', ':::', '::::'] },
-          { detail: 'Github 文件夹图片展示', key: 'github-images', value: ['::github-images{path="${1:a/b}" groupDeep="${2:1}"}'] }
+          { detail: '手风琴', key: 'accordion', value: ['::::accordion', ':::accordion-summary', '$1', ':::', ':::accordion-details', '$2', ':::', '::::'] }
         ])
       }
     })

@@ -5,7 +5,6 @@ import ModalDelete from '@/components/modal/ModalDelete'
 import TableStatus from '@/components/table/TableStatus'
 import TableWrapper from '@/components/table/TableWrapper'
 import { removeDuplicates } from '@/lib/parser/array'
-import { deleteAllGithubRepos } from '@/lib/server/github'
 import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
 import { Search } from '@mui/icons-material'
@@ -203,7 +202,6 @@ export default function Page() {
                     )}
                     title={`删除 《 ${post.title} 》?`}
                     onSubmit={async () => {
-                      await deleteAllGithubRepos(`/posts/${post.id}/`, () => `delete files of post with id '${post.id}'`)
                       await Toast(CustomRequest('DELETE api/dashboard/posts/[id]', { params: { id: post.id } }), '删除成功')
                       setPosts(
                         produce(state => {
