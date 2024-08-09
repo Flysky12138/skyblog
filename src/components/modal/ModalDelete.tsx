@@ -6,12 +6,13 @@ import React from 'react'
 import ModalCore, { ModalCoreProps } from './ModalCore'
 
 interface ModalDeleteProps extends Pick<ModalCoreProps, 'component' | 'onClose'> {
+  description?: string
   onCancel?: () => void
   onSubmit: () => void
-  title: string
+  title?: string
 }
 
-export default function ModalDelete({ component: Component, title, onClose, onCancel, onSubmit }: ModalDeleteProps) {
+export default function ModalDelete({ component: Component, title, description, onClose, onCancel, onSubmit }: ModalDeleteProps) {
   const submitBtnRef = React.useRef<HTMLButtonElement>(null)
 
   return (
@@ -19,8 +20,13 @@ export default function ModalDelete({ component: Component, title, onClose, onCa
       {({ close }) => (
         <>
           <Typography level="h4" startDecorator={<WarningRounded color="error" />}>
-            {title}
+            {title || '删除？'}
           </Typography>
+          {description && (
+            <Typography className="ml-[1.7rem] max-w-screen-md break-all" level="body-sm">
+              {description}
+            </Typography>
+          )}
           <div className="mt-6 flex justify-end gap-x-4">
             <Button
               className="focus:s-outline"

@@ -45,12 +45,6 @@ AUTH_URL=
 CDN_URL=
 ```
 
-## 开发
-
-- 从 Vercel 拉取私有环境变量
-
-  `vercel env pull`
-
 ### 规范
 
 1. 优先使用 `tailwindcss`，只有在使用 `mui` & `joy` 组建时需要修改内部指定类或 CSS 变量时才使用 `sx` 调整样式

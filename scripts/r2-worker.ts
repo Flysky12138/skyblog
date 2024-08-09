@@ -10,10 +10,10 @@ interface Env {
 /** 统一响应函数 */
 class CustomResponse extends Response {
   constructor(body: BodyInit | null = null, init: ResponseInit = {}) {
-    init['headers'] = Object.assign(init.headers || {}, {
+    init.headers = Object.assign({}, init.headers, {
       'Access-Control-Allow-Headers': 'X-R2-SECRET, Content-Type',
       'Access-Control-Allow-Methods': 'GET, PUT, DELETE',
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': 'https://blog.flysky.xyz',
       Allow: 'GET, PUT, DELETE'
     })
     super(body, init)
@@ -22,54 +22,63 @@ class CustomResponse extends Response {
 
 export default {
   async fetch(request, { R2, AUTH_KEY_SECRET }) {
-    // 预请求
-    if (request.method == 'OPTIONS') return new CustomResponse()
+    try {
+      // 预请求
+      if (request.method == 'OPTIONS') return new CustomResponse()
 
-    const url = new URL(request.url)
-    const key = decodeURIComponent(url.pathname.slice(1))
+      const url = new URL(request.url)
+      const key = decodeURIComponent(url.pathname.slice(1))
 
-    // 文件直链
-    if (request.headers.get('X-R2-SECRET') != AUTH_KEY_SECRET) {
-      const res = await R2.get(key)
+      // 文件直链
+      if (request.headers.get('X-R2-SECRET') != AUTH_KEY_SECRET) {
+        const res = await R2.get(key)
 
-      if (!res) return new CustomResponse(`${key} Not Found`, { status: 404 })
+        if (!res) return new CustomResponse(`${key} Not Found`, { status: 404 })
 
-      const headers = new Headers()
-      res.writeHttpMetadata(headers)
-      headers.set('etag', res.etag)
+        const headers = new Headers()
+        res.writeHttpMetadata(headers)
+        headers.set('etag', res.etag)
 
-      return new CustomResponse(res.body, { headers })
-    }
-
-    // CRUD
-    let res: R2Object | R2Objects | null = null
-
-    switch (request.method) {
-      case 'GET':
-        res = await R2.list({
-          delimiter: '/',
-          include: ['customMetadata', 'httpMetadata'],
-          prefix: key || undefined
+        return new CustomResponse(res.body, {
+          headers: headers.values()
         })
-        break
-      case 'PUT':
-        const customMetadata = Object.fromEntries(url.searchParams.entries())
-        res = await R2.put(key, request.body, {
-          customMetadata,
-          md5: url.searchParams.get('md5') || ''
-        })
-        break
-      case 'DELETE':
-        await R2.delete(key)
-        break
-      default:
-        return new CustomResponse('Method Not Allowed', { status: 405 })
-    }
-
-    return new CustomResponse(JSON.stringify(res || {}), {
-      headers: {
-        'Content-Type': 'application/json'
       }
-    })
+
+      // CRUD
+      let res: R2Object | R2Objects | null = null
+
+      switch (request.method) {
+        case 'GET':
+          res = await R2.list({
+            delimiter: '/',
+            include: ['customMetadata', 'httpMetadata'],
+            prefix: key || undefined
+          })
+          break
+        case 'PUT':
+          const formData = await request.formData()
+          const { key: _key, blob, metadata, sha1 = '' } = Object.fromEntries(formData)
+          res = await R2.put(_key, blob, { sha1, customMetadata: JSON.parse(metadata) })
+          break
+        case 'DELETE':
+          await R2.delete(key)
+          break
+        default:
+          return new CustomResponse('Method Not Allowed', { status: 405 })
+      }
+
+      return new CustomResponse(JSON.stringify(res || {}), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    } catch (error) {
+      return new CustomResponse((error as Error).message, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        status: 500
+      })
+    }
   }
 } satisfies ExportedHandler<Env>

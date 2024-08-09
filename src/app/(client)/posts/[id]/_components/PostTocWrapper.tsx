@@ -1,6 +1,6 @@
 'use client'
 
-import { getElementDistanceFromTop } from '@/lib/dom/getElementDistanceFromTop'
+import { getElementDistanceFromTop } from '@/lib/dom/document'
 import { isBetween } from '@/lib/parser/number'
 import React from 'react'
 

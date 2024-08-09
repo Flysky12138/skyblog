@@ -1,4 +1,5 @@
 import { R2Object, R2Objects } from '@cloudflare/workers-types/2023-07-01'
+import { calculateBlobAlgorithm } from '../file/info'
 import { CustomFetch } from './fetch'
 
 export class R2 {
@@ -7,6 +8,7 @@ export class R2 {
     'X-R2-SECRET': process.env.NEXT_PUBLIC_R2_SECRET
   }
 
+  /** 获取直链 */
   static get(key: string) {
     return `${this.#url}/${key}`
   }
@@ -20,12 +22,19 @@ export class R2 {
     })
   }
 
-  /** 覆盖、新增 */
-  static async put(payload: { body: Blob; key: string; metadata?: Record<string, string> }) {
-    const url = new URL(payload.key, this.#url)
-    url.search = new URLSearchParams(payload.metadata).toString()
-    return await CustomFetch<R2Object>(url, {
-      body: payload.body,
+  /**
+   * 覆盖、新增
+   * @default
+   * metadata = {}
+   */
+  static async put({ blob, key, metadata = {} }: { blob: Blob; key: string; metadata?: Record<string, string> }) {
+    const formData = new FormData()
+    formData.set('blob', blob)
+    formData.set('key', key)
+    formData.set('metadata', JSON.stringify(metadata))
+    formData.set('sha1', await calculateBlobAlgorithm(blob))
+    return await CustomFetch<R2Object>(this.#url, {
+      body: formData,
       headers: this.#headers,
       method: 'PUT'
     })

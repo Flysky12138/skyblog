@@ -12,11 +12,14 @@ export default function Page() {
   const { loading } = useAsync(() => CustomRequest('GET api/dashboard/live2d', {}).then(res => setSrc(res.src || '')))
 
   return (
-    <Card className="grid grid-cols-1 gap-5 md:grid-cols-[auto_100px]" title="Live2D">
-      <Input disabled={loading} placeholder=".json or .zip" value={src} onChange={event => setSrc(event.target.value)} />
-      <Button disabled={loading} onClick={() => Toast(CustomRequest('PUT api/dashboard/live2d', { body: { src } }), '修改成功')}>
-        修改
-      </Button>
-    </Card>
+    <section>
+      <p className="s-subtitle mb-2 pl-3">Live2D</p>
+      <Card className="grid grid-cols-1 gap-5 p-5 md:grid-cols-[auto_100px]">
+        <Input disabled={loading} placeholder=".json or .zip" value={src} onChange={event => setSrc(event.target.value)} />
+        <Button disabled={loading} onClick={() => Toast(CustomRequest('PUT api/dashboard/live2d', { body: { src } }), '修改成功')}>
+          修改
+        </Button>
+      </Card>
+    </section>
   )
 }

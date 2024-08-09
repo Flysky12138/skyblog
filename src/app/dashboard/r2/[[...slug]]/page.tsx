@@ -1,6 +1,5 @@
 'use client'
 
-import Card from '@/components/layout/Card'
 import ModalDelete from '@/components/modal/ModalDelete'
 import TableStatus from '@/components/table/TableStatus'
 import TableWrapper from '@/components/table/TableWrapper'
@@ -8,7 +7,9 @@ import { cn } from '@/lib/cn'
 import { formatFileSize } from '@/lib/parser/size'
 import { formatISOTime } from '@/lib/parser/time'
 import { R2 } from '@/lib/server/r2'
+import { Toast } from '@/lib/toast'
 import { ImageViewerContext } from '@/provider/image-viewer'
+import { R2Object } from '@cloudflare/workers-types/2023-07-01'
 import {
   AudioFileOutlined,
   DataObjectOutlined,
@@ -25,7 +26,9 @@ import { produce } from 'immer'
 import { useParams, useRouter } from 'next/navigation'
 import React from 'react'
 import useSWR from 'swr'
-import { CopyLinkRef } from '../_components/CopyLink'
+import Breadcrumb from './_components/Breadcrumb'
+import ModalCopy, { ModalCopyRef } from './_components/ModalCopy'
+import UploadFiles from './_components/UploadFiles'
 
 /** 文件图标 */
 const FileIcon: React.FC<{ type: string }> = ({ type }) => {
@@ -44,30 +47,62 @@ export default function Page() {
 
   const { slug } = useParams<{ slug?: string[] }>()
   const path = slug?.length ? slug.join('/') : ''
+
   const { isLoading, data, mutate } = useSWR(`/r2/${path}`, () => R2.list(path + '/'))
 
   const { openViewer } = React.useContext(ImageViewerContext)
+  /** 文件点击 */
+  const handleFileRowClick = React.useCallback<(file: R2Object) => void>(
+    file => {
+      if (!data) return
+      if (file.httpMetadata?.contentType?.startsWith('image')) {
+        const images = data.objects.filter(it => it.httpMetadata?.contentType?.startsWith('image'))
+        openViewer({
+          images: images.map(image => ({ key: image.key, src: R2.get(image.key) })),
+          index: Math.max(
+            0,
+            images.findIndex(image => image.key == file.key)
+          )
+        })
+      }
+    },
+    [data, openViewer]
+  )
 
-  const copyLinkRef = React.useRef<CopyLinkRef>(null)
+  const copyLinkRef = React.useRef<ModalCopyRef>(null)
 
   return (
-    <Card>
+    <section>
+      <Breadcrumb />
       <TableWrapper>
         <Table>
           <thead>
             <tr>
-              <th className="w-8 text-center">#</th>
-              <th>名称</th>
-              <th className="w-32">大小</th>
-              <th className="w-44">时间</th>
-              <th className="w-36"></th>
+              <th className="w-8 text-center align-middle">#</th>
+              <th className="align-middle">名称</th>
+              <th className="w-32 align-middle">大小</th>
+              <th className="w-44 align-middle">时间</th>
+              <th className="w-36 text-end align-middle">
+                <UploadFiles
+                  component={props => (
+                    <Button size="sm" variant="plain" {...props}>
+                      上传
+                    </Button>
+                  )}
+                  path={`/${path}`}
+                  onFinished={mutate}
+                />
+              </th>
             </tr>
           </thead>
-          <tbody className={cn(['[&_tr]:cursor-pointer', 'hover:[&_tr]:bg-slate-100 hover:[&_tr]:dark:bg-[#292930]'])}>
+          <tbody className={cn(['[&_tr]:cursor-pointer', 'hover:[&_tr]:bg-slate-100 hover:[&_tr]:dark:bg-[#292930]', 'hover:[&_tr]:text-sky-500'])}>
+            {/* 返回上层 */}
             {slug?.length ? (
               <tr onClick={() => router.replace(`/dashboard/r2/${slug.slice(0, -1).join('/')}`)}>
-                <td></td>
-                <td className="select-none" colSpan={4}>
+                <td className="text-slate-500 dark:text-zinc-400">
+                  <Folder />
+                </td>
+                <td className="select-none tracking-widest" colSpan={4}>
                   ..
                 </td>
               </tr>
@@ -84,22 +119,7 @@ export default function Page() {
             ))}
             {/* 文件 */}
             {data?.objects.map((it, index) => (
-              <tr
-                key={it.key}
-                onClick={() => {
-                  // if (file.type == 'dir') router.replace(`${pathname}?path=${paths.concat(file.name).join('/')}`)
-                  // else if (EXT.IMAGE.some(ext => file.name.endsWith(ext))) {
-                  //   const images = data.filter(f => EXT.IMAGE.some(ext => f.name.endsWith(ext)))
-                  //   openViewer({
-                  //     images: images.map(image => ({ key: image.sha, src: githubFileDirectUrl(image.path) })),
-                  //     index: Math.max(
-                  //       0,
-                  //       images.findIndex(image => image.sha == file.sha)
-                  //     )
-                  //   })
-                  // }
-                }}
-              >
+              <tr key={it.key} onClick={() => handleFileRowClick(it)}>
                 <td className="text-slate-500 dark:text-zinc-400">
                   <FileIcon type={it.httpMetadata?.contentType || ''} />
                 </td>
@@ -108,10 +128,11 @@ export default function Page() {
                 <td>{formatISOTime(it.uploaded)}</td>
                 <td className="flex items-center justify-end">
                   <Button
+                    size="sm"
                     variant="plain"
                     onClick={event => {
-                      // event.stopPropagation()
-                      // copyLinkRef.current?.open([file])
+                      event.stopPropagation()
+                      copyLinkRef.current?.open([it])
                     }}
                   >
                     直链
@@ -122,9 +143,9 @@ export default function Page() {
                         删除
                       </Button>
                     )}
-                    title="删除？"
+                    description={it.key}
                     onSubmit={async () => {
-                      // await Toast(1, '删除成功')
+                      await Toast(R2.delete(it.key), '删除成功', it.key)
                       await mutate(
                         produce<typeof data>(state => {
                           state.objects.splice(index, 1)
@@ -140,8 +161,7 @@ export default function Page() {
           </tbody>
         </Table>
       </TableWrapper>
-      {/* 复制链接 */}
-      {/* <CopyLink ref={copyLinkRef} /> */}
-    </Card>
+      <ModalCopy ref={copyLinkRef} />
+    </section>
   )
 }

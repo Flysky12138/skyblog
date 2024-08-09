@@ -25,7 +25,8 @@
     "script:api:runtime": "tsx scripts/api-runtime.ts",
     "wrangler:deploy": "wrangler deploy",
     "wrangler:secret": "wrangler secret put AUTH_KEY_SECRET",
-    "wrangler:create-bucket": "wrangler r2 bucket create skyblog"
+    "wrangler:create-bucket": "wrangler r2 bucket create skyblog",
+    "vercel:env-pull": "vercel env pull"
   },
   "lint-staged": {
     "*.{js,cjs,mjs,ts,tsx}": [
@@ -87,7 +88,8 @@
     "sonner": "^1.5.0",
     "swr": "^2.2.5",
     "unist-util-visit": "^5.0.0",
-    "use-immer": "^0.10.0"
+    "use-immer": "^0.10.0",
+    "vercel": "^35.2.3"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240729.0",

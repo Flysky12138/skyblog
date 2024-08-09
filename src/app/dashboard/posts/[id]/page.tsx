@@ -17,7 +17,7 @@ import { useAsync, useWindowScroll, useWindowSize } from 'react-use'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
-import UploadFiles from '../../r2/_components/UploadFiles'
+import UploadFiles from '../../r2/[[...slug]]/_components/UploadFiles'
 import ModalChips from './_components/ModalChips'
 
 const defaultPost: NonNullable<GET['return']> = {

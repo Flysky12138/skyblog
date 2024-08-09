@@ -1,6 +1,6 @@
 'use client'
 
-import { traverseReactElement } from '@/lib/dom/traverseReactElement'
+import { recursiveTraversalReactElement } from '@/lib/dom/react'
 import { ImageViewerContext } from '@/provider/image-viewer'
 import { Chip } from '@mui/joy'
 import React from 'react'
@@ -14,7 +14,7 @@ interface ImagesProps {
 export default function Images({ children, className, defaultAlt }: ImagesProps) {
   const images: React.ReactElement[] = []
 
-  traverseReactElement(children, node => {
+  recursiveTraversalReactElement(children, node => {
     if (!React.isValidElement(node)) return
     if (node.props.src) images.push(node)
   })

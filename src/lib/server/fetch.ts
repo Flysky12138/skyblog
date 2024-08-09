@@ -46,9 +46,13 @@ const Core = async (promise: () => Promise<Response>) => {
 /**
  * 封装的基础请求方法
  */
-export const CustomFetch = async <T = any>(input: RequestInfo | URL, { body, headers = {}, ...init }: FetchOption = {}): Promise<T> => {
-  if (!headers['Content-Type']) headers['Content-Type'] = 'application/json'
-  if (headers['Content-Type'].includes('application/json')) body = JSON.stringify(body)
+export const CustomFetch = async <T = any>(input: RequestInfo | URL, { body, headers, ...init }: FetchOption = {}): Promise<T> => {
+  headers = Object.assign({}, headers) // 避免修改原对象
+
+  if (!(body instanceof FormData)) {
+    if (!headers['Content-Type']) headers['Content-Type'] = 'application/json'
+    if (headers['Content-Type'].includes('application/json')) body = JSON.stringify(body)
+  }
 
   if (typeof input == 'string') {
     input = input.replace(/(?<!:)\/{2,}/g, '/')
