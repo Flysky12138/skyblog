@@ -1,5 +1,5 @@
 model VisitorInfo {
-  id            Int      @id @default(autoincrement())
+  id            String   @id @default(uuid(7))
   createdAt     DateTime @default(now())
   ip            String
   city          String?

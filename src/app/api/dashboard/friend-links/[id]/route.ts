@@ -16,7 +16,7 @@ export type DELETE = MethodRequestType<{
   return: Prisma.PromiseReturnType<typeof dbDelete>
 }>
 
-const dbPut = async (id: number, data: PUT['body']) => {
+const dbPut = async (id: string, data: PUT['body']) => {
   return await prisma.friendLinks.update({
     data: {
       updatedAt: new Date().toISOString(),
@@ -31,7 +31,7 @@ export const PUT = async (request: NextRequest, { params }: DynamicRoute<{ id: s
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
     const data = await request.json()
-    const res = await dbPut(Number.parseInt(params.id), data)
+    const res = await dbPut(params.id, data)
 
     return CustomResponse.encrypt(res)
   } catch (error) {
@@ -39,7 +39,7 @@ export const PUT = async (request: NextRequest, { params }: DynamicRoute<{ id: s
   }
 }
 
-const dbPatch = async (id: number, data: Prisma.FriendLinksUpdateInput) => {
+const dbPatch = async (id: string, data: Prisma.FriendLinksUpdateInput) => {
   return await prisma.friendLinks.update({
     data: {
       updatedAt: new Date().toISOString(),
@@ -54,7 +54,7 @@ export const PATCH = async (request: NextRequest, { params }: DynamicRoute<{ id:
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
-    const friendLink = await prisma.friendLinks.findUnique({ where: { id: Number.parseInt(params.id) } })
+    const friendLink = await prisma.friendLinks.findUnique({ where: { id: params.id } })
     if (!friendLink) return CustomResponse.error('未找到资源', 404)
 
     browser = await puppeteer.connect({
@@ -68,12 +68,12 @@ export const PATCH = async (request: NextRequest, { params }: DynamicRoute<{ id:
 
     const oldCover = await prisma.friendLinks.findUnique({
       select: { cover: true },
-      where: { id: Number.parseInt(params.id) }
+      where: { id: params.id }
     })
     const { url: cover } = await put(`friend-links/${params.id}.webp`, blob, { access: 'public' })
     if (oldCover && oldCover.cover) del(oldCover.cover)
 
-    const res = await dbPatch(Number.parseInt(params.id), {
+    const res = await dbPatch(params.id, {
       cover
     })
 
@@ -85,7 +85,7 @@ export const PATCH = async (request: NextRequest, { params }: DynamicRoute<{ id:
   }
 }
 
-const dbDelete = async (id: number) => {
+const dbDelete = async (id: string) => {
   return await prisma.friendLinks.delete({
     where: { id }
   })
@@ -95,7 +95,7 @@ export const DELETE = async (request: NextRequest, { params }: DynamicRoute<{ id
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
-    const res = await dbDelete(Number.parseInt(params.id))
+    const res = await dbDelete(params.id)
 
     return CustomResponse.encrypt(res)
   } catch (error) {

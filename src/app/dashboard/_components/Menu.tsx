@@ -1,7 +1,7 @@
 import ListItemExpand, { ListItemExpandProps } from '@/components/list/ListItemExpand'
 import ListItemLink from '@/components/list/ListItemLink'
 import { cn } from '@/lib/cn'
-import { BlockOutlined, BubbleChart, GitHub, HomeOutlined, PermIdentityOutlined, SettingsOutlined, SourceOutlined } from '@mui/icons-material'
+import { BlockOutlined, BubbleChart, CloudOutlined, HomeOutlined, PermIdentityOutlined, SettingsOutlined, SourceOutlined } from '@mui/icons-material'
 import { List, ListItem, ListItemContent, ListItemDecorator } from '@mui/joy'
 import React from 'react'
 
@@ -59,7 +59,7 @@ const listOptions: ListOptionType[] = [
   },
   {
     href: '/dashboard/r2',
-    icon: <GitHub />,
+    icon: <CloudOutlined />,
     label: '仓库'
   },
   {

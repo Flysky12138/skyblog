@@ -35,12 +35,16 @@ export default {
 
         if (!res) return new CustomResponse(`${key} Not Found`, { status: 404 })
 
+        if (request.headers.get('If-None-Match') == res.etag) return new CustomResponse(null, { status: 304 })
+
         const headers = new Headers()
         res.writeHttpMetadata(headers)
-        headers.set('etag', res.etag)
 
         return new CustomResponse(res.body, {
-          headers: headers.values()
+          headers: {
+            ...headers.values(),
+            ETag: res.etag
+          }
         })
       }
 

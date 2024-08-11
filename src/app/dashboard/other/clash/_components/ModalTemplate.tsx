@@ -48,7 +48,7 @@ export default function ModalTemplate({ component: Component, value, onSubmit }:
           </FormControl>
           <FormControl>
             <FormLabel>动态字段</FormLabel>
-            <Card className="flex flex-wrap gap-2 rounded-lg p-2">
+            <Card className="box-content flex min-h-6 flex-wrap gap-2 rounded-lg p-2">
               {keys.map(key => (
                 <Chip key={key} className="rounded-md" color="primary">
                   {key}

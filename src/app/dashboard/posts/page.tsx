@@ -44,9 +44,9 @@ export default function Page() {
 
   // 过滤表单
   const [form, setForm] = useImmer<{
-    categoryId: null | number
-    published: null | boolean
-    tagId: null | number
+    categoryId: string | null
+    published: boolean | null
+    tagId: string | null
     title: string
   }>({ categoryId: null, published: null, tagId: null, title: '' })
 

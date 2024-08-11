@@ -14,13 +14,13 @@ export type PUT = MethodRequestType<{
   body: Pick<Prisma.ClashTemplateUpdateInput, 'name' | 'content'>
   return: Prisma.PromiseReturnType<typeof dbPut>
   search: {
-    id: number
+    id: string
   }
 }>
 export type DELETE = MethodRequestType<{
   return: Prisma.PromiseReturnType<typeof dbGet>
   search: {
-    id: number
+    id: string
   }
 }>
 
@@ -68,7 +68,7 @@ export const POST = async (request: NextRequest) => {
   }
 }
 
-const dbPut = async (id: number, data: PUT['body']) => {
+const dbPut = async (id: string, data: PUT['body']) => {
   return await prisma.clashTemplate.update({
     data,
     select,
@@ -82,7 +82,7 @@ export const PUT = async (request: NextRequest) => {
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
     const data = await request.json()
-    const res = await dbPut(Number.parseInt(id), data)
+    const res = await dbPut(id, data)
 
     return CustomResponse.encrypt(res)
   } catch (error) {
@@ -90,7 +90,7 @@ export const PUT = async (request: NextRequest) => {
   }
 }
 
-const dbDelete = async (id: number) => {
+const dbDelete = async (id: string) => {
   return await prisma.clashTemplate.delete({ select, where: { id } })
 }
 
@@ -99,7 +99,7 @@ export const DELETE = async (request: NextRequest) => {
     const id = request.nextUrl.searchParams.get('id')
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
-    const res = await dbDelete(Number.parseInt(id))
+    const res = await dbDelete(id)
 
     return CustomResponse.encrypt(res)
   } catch (error) {

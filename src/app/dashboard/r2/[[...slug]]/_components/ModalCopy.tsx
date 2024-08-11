@@ -63,12 +63,12 @@ const ModalCopy: React.ForwardRefRenderFunction<ModalCopyRef, {}> = (props, ref)
   return (
     <ModalCore ref={modalCoreRef} className="w-full max-w-screen-md select-none gap-y-6" onClose={() => setFiles([])}>
       <CardCopy title="url" values={files.map(file => R2.get(file.key))} />
-      <CardCopy title="markdown - img" values={imageFiles.map(file => `![${file.key}](${R2.get(file.key)})`)} />
+      <CardCopy title="markdown - img" values={imageFiles.map(file => `![${file.key.split('/').at(-1)}](${R2.get(file.key)})`)} />
       <CardCopy
         title="component - img"
         values={imageFiles.map(
           file =>
-            `::img{alt="${file.key}" ${file.customMetadata?.['width'] && file.customMetadata?.['height'] ? `width="${file.customMetadata['width']}" height="${file.customMetadata['height']}"` : ''} src="${R2.get(file.key)}"}`
+            `::img{alt="${file.key.split('/').at(-1)}" ${file.customMetadata?.['width'] && file.customMetadata?.['height'] ? `width="${file.customMetadata['width']}" height="${file.customMetadata['height']}"` : ''} src="${R2.get(file.key)}"}`
         )}
       />
       <CardCopy
@@ -85,7 +85,7 @@ const ModalCopy: React.ForwardRefRenderFunction<ModalCopyRef, {}> = (props, ref)
           ':::images',
           ...files.map(
             file =>
-              `::img{alt="${file.key}" ${file.customMetadata?.['width'] && file.customMetadata?.['height'] ? `width="${file.customMetadata['width']}" height="${file.customMetadata['height']}"` : ''} src="${R2.get(file.key)}"}`
+              `::img{alt="${file.key.split('/').at(-1)}" ${file.customMetadata?.['width'] && file.customMetadata?.['height'] ? `width="${file.customMetadata['width']}" height="${file.customMetadata['height']}"` : ''} src="${R2.get(file.key)}"}`
           ),
           ':::'
         ])}

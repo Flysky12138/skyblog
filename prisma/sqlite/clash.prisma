@@ -1,12 +1,12 @@
 model Clash {
-  id              String         @id @default(uuid())
+  id              String         @id @default(uuid(7))
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @default(now())
   name            String
   subtitle        String?
   content         String
   subscribeLastAt DateTime?
-  clashTemplateId Int?
+  clashTemplateId String?
   variables       String         @default("{}") // psql 使用 json 类型
   visitorInfos    VisitorInfo[]
   clashTemplates  ClashTemplate? @relation(fields: [clashTemplateId], references: [id])
@@ -16,7 +16,7 @@ model Clash {
 }
 
 model ClashTemplate {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid(7))
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String

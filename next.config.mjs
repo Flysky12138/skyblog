@@ -52,6 +52,10 @@ const images = {
       hostname: new URL(process.env.NEXT_PUBLIC_WEBSITE_URL).hostname,
       protocol: new URL(process.env.NEXT_PUBLIC_WEBSITE_URL).protocol.slice(0, -1)
     },
+    process.env.NEXT_PUBLIC_R2_URL && {
+      hostname: new URL(process.env.NEXT_PUBLIC_R2_URL).hostname,
+      protocol: new URL(process.env.NEXT_PUBLIC_R2_URL).protocol.slice(0, -1)
+    },
     process.env.CDN_URL && {
       hostname: new URL(process.env.CDN_URL).hostname,
       protocol: new URL(process.env.CDN_URL).protocol.slice(0, -1)

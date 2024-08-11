@@ -34,10 +34,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# prisma
-/prisma/migrations/
-/prisma/schema.prisma
-
 # types
 /api.d.ts
 

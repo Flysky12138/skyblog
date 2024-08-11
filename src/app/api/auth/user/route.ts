@@ -3,8 +3,6 @@ import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
-export const runtime = 'nodejs'
-
 export type POST = MethodRequestType<{
   body: Prisma.UserCreateInput
   return: Prisma.PromiseReturnType<typeof dbPost>

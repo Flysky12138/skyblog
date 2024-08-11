@@ -17,11 +17,12 @@ import { useAsync, useWindowScroll, useWindowSize } from 'react-use'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
+import { uuidv7 } from 'uuidv7'
 import UploadFiles from '../../r2/[[...slug]]/_components/UploadFiles'
 import ModalChips from './_components/ModalChips'
 
 const defaultPost: NonNullable<GET['return']> = {
-  authorId: 1,
+  authorId: '',
   categories: [],
   content: null,
   createdAt: new Date(),
@@ -109,7 +110,7 @@ export default function Page() {
           value={post.categories}
           onAdd={name => {
             setPost(state => {
-              state.categories.push({ name, id: Date.now() })
+              state.categories.push({ name, id: uuidv7() })
             })
           }}
           onDelete={names => {
@@ -137,7 +138,7 @@ export default function Page() {
           value={post.tags}
           onAdd={name => {
             setPost(state => {
-              state.tags.push({ name, id: Date.now() })
+              state.tags.push({ name, id: uuidv7() })
             })
           }}
           onDelete={names => {
@@ -205,7 +206,7 @@ export default function Page() {
                       isCreate
                         ? CustomRequest('POST api/dashboard/posts/[id]', {
                             body: {
-                              authorId: session.data?.id || 1,
+                              authorId: session.data?.id || uuidv7(),
                               categories: post.categories.map(({ name }) => name),
                               content: post.content,
                               description: post.description,

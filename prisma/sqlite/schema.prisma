@@ -5,5 +5,5 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./sqlite/dev.db"
+  url      = "file:./dev.db"
 }

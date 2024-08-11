@@ -1,12 +1,12 @@
 model Post {
-  id            String     @id @default(cuid())
+  id            String     @id @default(uuid(7))
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @default(now())
   title         String
   description   String?
   content       String?
   published     Boolean    @default(false)
-  authorId      Int
+  authorId      String
   views         Int        @default(0)
   links         Int        @default(0)
   sticky        Int        @default(0)
@@ -20,7 +20,7 @@ model Post {
 }
 
 model Category {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid(7))
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String   @unique
@@ -30,7 +30,7 @@ model Category {
 }
 
 model Tag {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid(7))
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String   @unique

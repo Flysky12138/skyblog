@@ -3,12 +3,13 @@ import dotenv from 'dotenv'
 
 dotenv.config({ path: '.env.local' })
 
-void (async () => {
-  await prisma.tag.deleteMany({
-    where: {
-      posts: {
-        none: {}
-      }
+const main = async () => {
+  const posts = await prisma.post.findMany({
+    select: {
+      id: true
     }
   })
-})()
+  console.log(posts)
+}
+
+main()

@@ -1,5 +1,5 @@
 interface Auth {
-  id: number
+  id: string
   role: 'USER' | 'ADMIN'
 }
 
