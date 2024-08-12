@@ -22,6 +22,13 @@ export type PUT = MethodRequestType<{
     id: string
   }
 }>
+export type PATCH = MethodRequestType<{
+  body: Pick<Prisma.ClashUncheckedCreateInput, 'enabled'>
+  return: Prisma.PromiseReturnType<typeof dbPatch>
+  search: {
+    id: string
+  }
+}>
 export type DELETE = MethodRequestType<{
   return: Prisma.PromiseReturnType<typeof dbDelete>
   search: {
@@ -94,6 +101,28 @@ export const PUT = async (request: NextRequest) => {
 
     const data = await request.json()
     const res = await dbPut(id, data)
+
+    return CustomResponse.encrypt(res)
+  } catch (error) {
+    return CustomResponse.error(error)
+  }
+}
+
+const dbPatch = async (id: string, data: PATCH['body']) => {
+  return await prisma.clash.update({
+    data,
+    include,
+    where: { id }
+  })
+}
+
+export const PATCH = async (request: NextRequest) => {
+  try {
+    const id = request.nextUrl.searchParams.get('id')
+    if (!id) return CustomResponse.error('{id} 值缺失', 422)
+
+    const data = await request.json()
+    const res = await dbPatch(id, data)
 
     return CustomResponse.encrypt(res)
   } catch (error) {

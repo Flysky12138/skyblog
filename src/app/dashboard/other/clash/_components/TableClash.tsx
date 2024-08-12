@@ -7,7 +7,7 @@ import TableWrapper from '@/components/table/TableWrapper'
 import { formatISOTime } from '@/lib/parser/time'
 import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
-import { Button, Chip, Table, Typography } from '@mui/joy'
+import { Button, Chip, Switch, Table, Typography } from '@mui/joy'
 import { produce } from 'immer'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
@@ -37,6 +37,7 @@ export default function TableClash() {
             <th className="w-16 align-middle">次数</th>
             <th className="w-44 align-middle">最近订阅时间</th>
             <th className="w-44 align-middle">更新时间</th>
+            <th className="w-16 align-middle">启用</th>
             <th className="w-44 text-end">
               <ModalClash
                 component={props => (
@@ -89,6 +90,26 @@ export default function TableClash() {
               </td>
               <td>{clash.subscribeLastAt ? formatISOTime(clash.subscribeLastAt) : null}</td>
               <td>{formatISOTime(clash.updatedAt)}</td>
+              <td>
+                <Switch
+                  checked={clash.enabled}
+                  color={clash.enabled ? 'success' : 'warning'}
+                  onChange={async () => {
+                    const data = await Toast(
+                      CustomRequest('PATCH api/dashboard/clash', {
+                        body: { enabled: !clash.enabled },
+                        search: { id: clash.id }
+                      }),
+                      '更新成功'
+                    )
+                    setClashs(
+                      produce(state => {
+                        state.splice(index, 1, data)
+                      })
+                    )
+                  }}
+                />
+              </td>
               <td className="text-end">
                 <ModalDelete
                   component={props => (
@@ -96,7 +117,6 @@ export default function TableClash() {
                       删除
                     </Button>
                   )}
-                  title="删除"
                   onSubmit={async () => {
                     await Toast(CustomRequest('DELETE api/dashboard/clash', { search: { id: clash.id } }), '删除成功')
                     setClashs(
@@ -148,7 +168,7 @@ export default function TableClash() {
               </td>
             </tr>
           ))}
-          <TableStatus colSpan={7} isEmpty={clashs.length == 0} isLoading={isLoading} />
+          <TableStatus colSpan={8} isEmpty={clashs.length == 0} isLoading={isLoading} />
         </tbody>
       </Table>
     </TableWrapper>

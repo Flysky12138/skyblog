@@ -8,6 +8,7 @@ model Clash {
   subscribeLastAt DateTime?
   clashTemplateId String?
   variables       Json           @default(dbgenerated("'{}'::json"))
+  enabled         Boolean        @default(true)
   visitorInfos    VisitorInfo[]
   clashTemplates  ClashTemplate? @relation(fields: [clashTemplateId], references: [id])
 

@@ -49,7 +49,7 @@ export const GET = async (request: NextRequest) => {
     }
 
     const res = await dbGet(id, { agent, ip })
-    if (!res) return CustomResponse.error('资源获取失败', 404)
+    if (!res.enabled) return CustomResponse.error('拒绝访问资源', 403)
 
     const yaml = res.clashTemplateId ? replaceTextWithObjectValues(res.clashTemplates?.content, res.variables) : res.content
 

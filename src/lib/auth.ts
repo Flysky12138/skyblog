@@ -1,6 +1,4 @@
-import { Account } from '@auth/core/types'
-import NextAuth from 'next-auth'
-import { JWT } from 'next-auth/jwt'
+import NextAuth, { Account } from 'next-auth'
 import GitHub from 'next-auth/providers/github'
 import { CustomRequest } from './server/request'
 
@@ -18,7 +16,7 @@ export const {
       return token
     },
     session: async ({ session, ...params }) => {
-      const { token } = params as { token: JWT }
+      const { token } = params
       session.id = token.id
       session.role = token.role
       return session
@@ -29,9 +27,9 @@ export const {
 
       const { id, role } = await CustomRequest('POST api/auth/user', {
         body: {
-          avatarUrl: avatar_url as string,
+          avatarUrl: avatar_url,
           email: email,
-          name: login as string
+          name: login
         }
       })
       account.id = id

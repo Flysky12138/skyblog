@@ -39,7 +39,6 @@ export default function CardBan({ description, label, value, onDelete, onSubmit 
                 <Delete />
               </IconButton>
             )}
-            title="确认删除？"
             onCancel={setSelect.reset}
             onSubmit={async () => {
               const payload = value.filter(v => !select.has(v))

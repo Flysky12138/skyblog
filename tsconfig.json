@@ -16,8 +16,7 @@
     "incremental": true,
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": ["./src/*"],
-      "@auth/core/*": ["./node_modules/.pnpm/@auth+core@0.21.0/node_modules/@auth/core/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "./next.config.mjs"],

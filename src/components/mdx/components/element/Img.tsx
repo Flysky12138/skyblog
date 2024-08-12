@@ -10,7 +10,7 @@ export default function Img({ alt, src, ...props }: React.ComponentProps<'img'>)
   return (
     <Image
       alt={alt || ''}
-      className="cursor-pointer"
+      className="mx-auto w-full max-w-screen-md cursor-pointer"
       src={src}
       onClick={() => {
         openViewer({

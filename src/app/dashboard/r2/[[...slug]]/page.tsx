@@ -147,7 +147,7 @@ export default function Page() {
                     onSubmit={async () => {
                       await Toast(R2.delete(it.key), '删除成功', it.key)
                       await mutate(
-                        produce<typeof data>(state => {
+                        produce(state => {
                           state.objects.splice(index, 1)
                         }),
                         { revalidate: false }

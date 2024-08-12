@@ -8,6 +8,7 @@ model Clash {
   subscribeLastAt DateTime?
   clashTemplateId String?
   variables       String         @default("{}") // psql 使用 json 类型
+  enabled         Boolean        @default(true)
   visitorInfos    VisitorInfo[]
   clashTemplates  ClashTemplate? @relation(fields: [clashTemplateId], references: [id])
 

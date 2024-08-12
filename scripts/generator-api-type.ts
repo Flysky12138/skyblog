@@ -1,20 +1,20 @@
-import { readdirSync, statSync, writeFileSync } from 'node:fs'
-import { basename, join, posix, sep } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import _fs from 'node:fs'
+import _path from 'node:path'
+import _url from 'node:url'
 
-const API_FOLDER_PATH = fileURLToPath(new URL(`../src/app/api`, import.meta.url))
-const OUTPUT_FILE_PATH = fileURLToPath(new URL('../api.d.ts', import.meta.url))
+const API_FOLDER_PATH = _url.fileURLToPath(new URL(`../src/app/api`, import.meta.url))
+const OUTPUT_FILE_PATH = _url.fileURLToPath(new URL('../api.d.ts', import.meta.url))
 
 const apis: string[] = []
 const requests = new Map<string, {}>()
 
-for (const path of readdirSync(API_FOLDER_PATH, { recursive: true }) as string[]) {
-  const apiFileFullPath = join(API_FOLDER_PATH, path)
+for (const path of _fs.readdirSync(API_FOLDER_PATH, { recursive: true }) as string[]) {
+  const apiFileFullPath = _path.join(API_FOLDER_PATH, path)
 
-  if (!statSync(apiFileFullPath).isFile()) continue
-  if (!path.endsWith(`${sep}route.ts`)) continue
+  if (!_fs.statSync(apiFileFullPath).isFile()) continue
+  if (!path.endsWith(`${_path.sep}route.ts`)) continue
 
-  const api = posix.join(...['api'].concat(path.split(sep).slice(0, -1)))
+  const api = _path.posix.join(...['api'].concat(path.split(_path.sep).slice(0, -1)))
   apis.push(`'${api}'`)
 
   const modules = await import(apiFileFullPath)
@@ -26,7 +26,7 @@ for (const path of readdirSync(API_FOLDER_PATH, { recursive: true }) as string[]
 
 const data = `/**
  * 根据 Nextjs 文件路由系统规则生成
- * @generator [${basename(import.meta.url)}](${import.meta.url})
+ * @generator [${_path.basename(import.meta.url)}](${import.meta.url})
  */
 enum API {
 ${apis.map(it => `  ${it}`).join(',\n')}
@@ -39,4 +39,4 @@ ${Array.from(requests)
 }
 `
 
-writeFileSync(OUTPUT_FILE_PATH, data, { encoding: 'utf-8' })
+_fs.writeFileSync(OUTPUT_FILE_PATH, data, { encoding: 'utf-8' })

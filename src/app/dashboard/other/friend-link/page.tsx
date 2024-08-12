@@ -70,7 +70,7 @@ export default function Page() {
                   </IconButton>
                 </Tooltip>
               )}
-              title={`删除《${friendlink.name}》？`}
+              description={friendlink.name}
               onSubmit={async () => {
                 CustomRequest('DELETE api/dashboard/friend-links/[id]', {
                   params: { id: String(friendlink.id) }

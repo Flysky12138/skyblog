@@ -20,11 +20,7 @@ type ListOptionType = XOR<
 >
 
 const listOptions: ListOptionType[] = [
-  {
-    href: '/dashboard',
-    icon: <HomeOutlined />,
-    label: '主页'
-  },
+  { href: '/dashboard', icon: <HomeOutlined />, label: '主页' },
   {
     children: [
       { href: '/dashboard/posts', label: '列表' },
@@ -52,21 +48,9 @@ const listOptions: ListOptionType[] = [
     icon: <BubbleChart />,
     label: '其他'
   },
-  {
-    href: '/dashboard/ban',
-    icon: <BlockOutlined />,
-    label: '黑名单'
-  },
-  {
-    href: '/dashboard/r2',
-    icon: <CloudOutlined />,
-    label: '仓库'
-  },
-  {
-    href: '/dashboard/setting',
-    icon: <SettingsOutlined />,
-    label: '设置'
-  }
+  { href: '/dashboard/ban', icon: <BlockOutlined />, label: '黑名单' },
+  { href: '/dashboard/r2', icon: <CloudOutlined />, label: '仓库' },
+  { href: '/dashboard/setting', icon: <SettingsOutlined />, label: '设置' }
 ]
 
 interface MenuProps {

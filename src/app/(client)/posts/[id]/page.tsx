@@ -19,7 +19,6 @@ const getPost = async (id: string) => {
 
 interface PageProps extends DynamicRoute<{ id: string }> {}
 
-export const dynamicParams = false
 export const generateStaticParams = async (): Promise<Array<PageProps['params']>> => {
   const posts = await prisma.post.findMany({ select: { id: true } })
   return posts.map(post => ({ id: post.id }))

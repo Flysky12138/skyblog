@@ -2,10 +2,6 @@ export const HEADER = {
   AES_GCM_IVJWK: 'X-Aes'
 } as const
 
-export const REDIS = {
-  IMAGES: 'images'
-} as const
-
 export const EDGE_CONFIG = {
   BAN_AGENTS: 'ban-agents',
   BAN_CITIES: 'ban-cities',
@@ -30,8 +26,4 @@ export const SESSIONSTORAGE = {
   ANALYTIC_SUBMITTED: 'analytic-submitted',
   MONACO_BEFOREMOUNT: (language: string) => `monaco-beforemount-${language}`,
   POST_VIEW_SUBMITTED: (id: string) => `post-view-submitted-${id}`
-} as const
-
-export const EXT = {
-  IMAGE: ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tif', '.tiff', '.avif', '.webp', '.exif', '.tga']
 } as const

@@ -1,15 +1,19 @@
+import 'next-auth/jwt'
+import { GitHubProfile } from 'next-auth/providers/github'
+
 interface Auth {
   id: string
   role: 'USER' | 'ADMIN'
 }
 
-declare module '@auth/core/jwt' {
+declare module 'next-auth/jwt' {
   interface JWT extends Partial<Auth> {}
 }
 
-declare module '@auth/core/types' {
+declare module 'next-auth' {
   interface Session extends Partial<Auth> {}
   interface Account extends Auth {}
+  interface Profile extends GitHubProfile {}
 }
 
 export {}

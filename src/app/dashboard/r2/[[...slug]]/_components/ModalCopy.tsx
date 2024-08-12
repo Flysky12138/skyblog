@@ -20,7 +20,7 @@ const CardCopy: React.FC<{ title: string; values: string[] }> = ({ title, values
 
   return (
     <section>
-      <p className="s-subtitle mb-2 pl-3">{title}</p>
+      <p className="s-subtitle mb-2">{title}</p>
       <Card
         className="cursor-pointer p-3"
         tabIndex={0}
@@ -51,7 +51,10 @@ const ModalCopy: React.ForwardRefRenderFunction<ModalCopyRef, {}> = (props, ref)
 
   const [files, setFiles] = React.useState<R2Object[]>([])
   /** 图片 */
-  const imageFiles = React.useMemo(() => files.filter(file => file.httpMetadata?.contentType?.startsWith('image')), [files])
+  const imageFiles = React.useMemo(
+    () => files.filter(file => file.httpMetadata?.contentType?.startsWith('image') || (file.customMetadata?.['width'] && file.customMetadata?.['height'])),
+    [files]
+  )
 
   React.useImperativeHandle(ref, () => ({
     open: async payload => {

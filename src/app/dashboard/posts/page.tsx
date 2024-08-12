@@ -200,7 +200,7 @@ export default function Page() {
                         删除
                       </Button>
                     )}
-                    title={`删除 《 ${post.title} 》?`}
+                    description={post.title}
                     onSubmit={async () => {
                       await Toast(CustomRequest('DELETE api/dashboard/posts/[id]', { params: { id: post.id } }), '删除成功')
                       setPosts(

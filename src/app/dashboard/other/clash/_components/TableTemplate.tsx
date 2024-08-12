@@ -11,12 +11,14 @@ import { produce } from 'immer'
 import useSWR from 'swr'
 import ModalTemplate from './ModalTemplate'
 
+export const SWR_KEY_CLASH_TEMPLATES = '/api/dashboard/clash/template'
+
 export default function TableTemplate() {
   const {
     data: clashTemplates,
     isLoading,
     mutate: setClashTemplates
-  } = useSWR('/api/dashboard/clash/template', () => CustomRequest('GET api/dashboard/clash/template', {}), {
+  } = useSWR(SWR_KEY_CLASH_TEMPLATES, () => CustomRequest('GET api/dashboard/clash/template', {}), {
     fallbackData: []
   })
 
@@ -64,7 +66,6 @@ export default function TableTemplate() {
                       删除
                     </Button>
                   )}
-                  title="删除"
                   onSubmit={async () => {
                     await Toast(CustomRequest('DELETE api/dashboard/clash/template', { search: { id: clashTemplate.id } }), '删除成功')
                     setClashTemplates(
