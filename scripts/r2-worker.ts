@@ -43,6 +43,7 @@ export default {
         return new CustomResponse(res.body, {
           headers: {
             ...headers.values(),
+            'Cache-Control': 'public, max-age=2592000, immutable', // 缓存一个月，过期后再重新验证
             ETag: res.etag
           }
         })
