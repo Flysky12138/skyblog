@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <nav className="s-border-color-divider fixed inset-y-0 left-0 flex w-52 flex-col border-r bg-white dark:bg-zinc-800">
-        <div className="flex justify-between rounded-none border-b border-inherit px-4 py-2">
+        <div className="flex h-header shrink-0 items-center justify-between rounded-none border-b border-inherit px-4">
           <Logo />
           <ToggleTheme
             slotsProps={{

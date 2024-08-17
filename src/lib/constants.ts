@@ -24,6 +24,5 @@ export const SELECTOR = {
 
 export const SESSIONSTORAGE = {
   ANALYTIC_SUBMITTED: 'analytic-submitted',
-  MONACO_BEFOREMOUNT: (language: string) => `monaco-beforemount-${language}`,
   POST_VIEW_SUBMITTED: (id: string) => `post-view-submitted-${id}`
 } as const

@@ -1,30 +1,25 @@
-import { SESSIONSTORAGE } from '@/lib/constants'
 import { Options } from 'prettier'
 import yamlPlugins from 'prettier/plugins/yaml'
 import prettier from 'prettier/standalone'
 import { LanguagePropsType } from '../index'
 
-const language = 'yaml'
+const LANGUAGE = 'yaml'
 
 export const yamlConfig: LanguagePropsType = {
-  language,
-  beforeMount: monaco => {
-    const key = SESSIONSTORAGE.MONACO_BEFOREMOUNT(language)
-    if (window.sessionStorage.getItem(key) == '1') return
-    window.sessionStorage.setItem(key, '1')
-
-    monaco.languages.registerDocumentFormattingEditProvider(language, {
+  language: LANGUAGE,
+  registerEvents: monaco => [
+    monaco.languages.registerDocumentFormattingEditProvider(LANGUAGE, {
       provideDocumentFormattingEdits: async model => {
         const text = await prettier.format(
           model.getValue(),
           Object.assign<Options, Options>(require('/.prettierrc.cjs'), {
             jsxSingleQuote: true,
-            parser: language,
+            parser: LANGUAGE,
             plugins: [yamlPlugins]
           })
         )
         return [{ text, range: model.getFullModelRange() }]
       }
     })
-  }
+  ]
 }

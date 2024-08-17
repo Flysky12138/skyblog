@@ -60,12 +60,13 @@ export default function ModalTemplate({ component: Component, value, onSubmit }:
             <FormLabel>内容</FormLabel>
             <MonacoEditor
               code={form.content}
-              height="50vh"
+              height="74dvh"
               oldCode={oldContent}
               options={{
                 lineNumbersMinChars: 3,
                 minimap: { enabled: false }
               }}
+              toolbarRender={({ Space }) => <Space />}
               onChange={payload => {
                 setForm(state => {
                   state.content = payload || ''

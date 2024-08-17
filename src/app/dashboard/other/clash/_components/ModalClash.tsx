@@ -119,31 +119,34 @@ export default function ModalClash({ component: Component, value, onSubmit }: Mo
             <FormLabel>内容</FormLabel>
             <MonacoEditor
               code={form.clashTemplateId ? mergeContent : form.content}
-              height="50vh"
+              height="74dvh"
               oldCode={form.clashTemplateId ? currentSelectClashTemplate?.content : oldContent}
               options={{
                 lineNumbersMinChars: 3,
                 minimap: { enabled: false },
                 readOnly: form.clashTemplateId != null
               }}
-              toolbarRender={() => (
-                <Select
-                  disabled={clashTemplates?.length == 0 || isLoading}
-                  size="sm"
-                  value={form.clashTemplateId}
-                  onChange={(_, id) =>
-                    setForm(state => {
-                      state.clashTemplateId = id
-                    })
-                  }
-                >
-                  <Option value={null}>自定义</Option>
-                  {clashTemplates?.map(({ id, name }) => (
-                    <Option key={id} value={id}>
-                      {name}
-                    </Option>
-                  ))}
-                </Select>
+              toolbarRender={({ Space }) => (
+                <>
+                  <Space />
+                  <Select
+                    disabled={clashTemplates?.length == 0 || isLoading}
+                    size="sm"
+                    value={form.clashTemplateId}
+                    onChange={(_, id) =>
+                      setForm(state => {
+                        state.clashTemplateId = id
+                      })
+                    }
+                  >
+                    <Option value={null}>自定义</Option>
+                    {clashTemplates?.map(({ id, name }) => (
+                      <Option key={id} value={id}>
+                        {name}
+                      </Option>
+                    ))}
+                  </Select>
+                </>
               )}
               onChange={payload => {
                 setForm(state => {

@@ -1,4 +1,3 @@
-import { SESSIONSTORAGE } from '@/lib/constants'
 import { Options } from 'prettier'
 import babelPlugins from 'prettier/plugins/babel'
 import estreePlugins from 'prettier/plugins/estree'
@@ -6,34 +5,30 @@ import markdownPlugins from 'prettier/plugins/markdown'
 import prettier from 'prettier/standalone'
 import { LanguagePropsType } from '../index'
 
-const language = 'markdown'
+const LANGUAGE = 'markdown'
 
 export const markdownConfig: LanguagePropsType = {
-  language,
-  beforeMount: monaco => {
-    const key = SESSIONSTORAGE.MONACO_BEFOREMOUNT(language)
-    if (window.sessionStorage.getItem(key) == '1') return
-    window.sessionStorage.setItem(key, '1')
-
+  language: LANGUAGE,
+  registerEvents: monaco => [
     // 格式化
-    monaco.languages.registerDocumentFormattingEditProvider(language, {
+    monaco.languages.registerDocumentFormattingEditProvider(LANGUAGE, {
       provideDocumentFormattingEdits: async model => {
         const source = model.getValue().replace(/^[^\S\n]+(?=:+)/gm, '') // 移除 : 符号前面的空格
         const text = await prettier.format(
           source,
           Object.assign<Options, Options>(require('/.prettierrc.cjs'), {
             jsxSingleQuote: true,
-            parser: language,
+            parser: LANGUAGE,
             plugins: [estreePlugins, babelPlugins, markdownPlugins],
             requirePragma: false
           })
         )
         return [{ text, range: model.getFullModelRange() }]
       }
-    })
+    }),
 
     // 输入提示
-    monaco.languages.registerCompletionItemProvider(language, {
+    monaco.languages.registerCompletionItemProvider(LANGUAGE, {
       provideCompletionItems: (model, position) => {
         const { endColumn, startColumn } = model.getWordUntilPosition(position)
         const range = { endColumn, startColumn, endLineNumber: position.lineNumber, startLineNumber: position.lineNumber }
@@ -55,16 +50,13 @@ export const markdownConfig: LanguagePropsType = {
             })
           }
         }
-
         const textUntilPosition = model.getValueInRange({
           endColumn: position.column,
           endLineNumber: position.lineNumber,
           startColumn: 1,
           startLineNumber: position.lineNumber
         })
-        const matchComponent = textUntilPosition.match(/:{1,}(\S+?)(?:\[.*\])?{/)?.[1] || ''
-
-        switch (matchComponent) {
+        switch (textUntilPosition.match(/:{1,}(\S+?)(?:\[.*\])?{/)?.[1] || '') {
           case 'tabs':
             return suggestProperty([
               { key: 'activeIndex', value: '${0:0}' },
@@ -115,7 +107,6 @@ export const markdownConfig: LanguagePropsType = {
             }))
           }
         }
-
         return suggestSnippet([
           { detail: '选项卡', key: 'tab', value: ['::::tabs', ':::tab{label="$1"}', '$2', ':::', ':::tab{label="$3"}', '$4', ':::', '::::'] },
           { detail: '分割线', key: 'hr', value: ['::hr[$1]'] },
@@ -131,5 +122,5 @@ export const markdownConfig: LanguagePropsType = {
         ])
       }
     })
-  }
+  ]
 }

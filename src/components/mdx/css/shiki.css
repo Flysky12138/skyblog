@@ -2,7 +2,7 @@ figure[data-rehype-pretty-code-figure] {
   @apply s-border-color-card overflow-hidden rounded-lg border;
   @apply selection:bg-[#c1def1] selection:text-[unset] dark:selection:bg-[#264f78];
   [data-rehype-pretty-code-title] {
-    @apply s-bg-title s-border-color-card m-0 border-b px-3 py-1 font-title text-black dark:text-white;
+    @apply s-bg-title s-border-color-card m-0 border-b px-3 py-1 font-title text-base text-black dark:text-white;
     & + pre {
       @apply rounded-t-none;
     }
