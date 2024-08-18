@@ -1,6 +1,7 @@
 'use client'
 
 import { GET } from '@/app/api/dashboard/posts/[id]/route'
+import UploadFiles from '@/app/dashboard/r2/[[...slug]]/_components/UploadFiles'
 import MonacoEditor from '@/components/monaco-editor'
 import { markdownConfig } from '@/components/monaco-editor/language/markdown'
 import { CustomRequest } from '@/lib/server/request'
@@ -14,8 +15,7 @@ import { useAsync } from 'react-use'
 import { toast } from 'sonner'
 import { useImmer } from 'use-immer'
 import { uuidv7 } from 'uuidv7'
-import UploadFiles from '../../r2/[[...slug]]/_components/UploadFiles'
-import ModelForm from './_components/ModelForm'
+import ModelDetail from './_components/ModelDetail'
 
 export type DefaultPostType = NonNullable<GET['return']>
 
@@ -68,6 +68,7 @@ export default function Page() {
             <Space />
             <Tooltip title={isCreate ? '创建' : '更新'}>
               <IconButton
+                disabled={isCreate && !post.content}
                 onClick={async () => {
                   if (!post.title) {
                     toast.error('表单验证失败')
@@ -117,7 +118,7 @@ export default function Page() {
               </IconButton>
             </Tooltip>
             <Divider />
-            <ModelForm
+            <ModelDetail
               component={props => (
                 <Tooltip title="文件信息">
                   <IconButton {...props}>
@@ -147,7 +148,7 @@ export default function Page() {
           })
         }}
         {...markdownConfig}
-      ></MonacoEditor>
+      />
     </>
   )
 }

@@ -112,7 +112,7 @@ export default function Pi() {
               ))}
             </Select>
             <ModalCore
-              className="p-0 [&_figure]:!max-h-none [&_pre+div]:hidden [&_pre]:pb-2.5"
+              className="s-bg-root p-0 [&_figure]:s-hidden-scrollbar [&_figure]:overflow-auto [&_pre]:bg-transparent"
               component={props => (
                 <Button variant="soft" {...props}>
                   源码

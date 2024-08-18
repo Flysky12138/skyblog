@@ -58,17 +58,17 @@ export default function MusicPlaylist<T extends PlaylistType>({ playlist, active
             open: { opacity: 1 }
           }}
         >
-          <FixedSizeList ref={playlistRef} height={400} itemCount={playlist.length} itemSize={32} overscanCount={5} width={250}>
-            {({ index, style }) => (
+          <FixedSizeList<T[]> ref={playlistRef} height={400} itemCount={playlist.length} itemData={playlist} itemSize={32} overscanCount={5} width={250}>
+            {({ index, style, data }) => (
               <ListItem
                 slotProps={{
                   root: {
-                    title: playlist[index].name
+                    title: data[index].name
                   }
                 }}
                 style={style}
                 onClick={() => {
-                  onClick?.(playlist[index])
+                  onClick?.(data[index])
                 }}
               >
                 <ListItemButton
@@ -77,7 +77,7 @@ export default function MusicPlaylist<T extends PlaylistType>({ playlist, active
                   })}
                   selected={activeIndex == index}
                 >
-                  {index + 1}. {playlist[index].name}
+                  {index + 1}. {data[index].name}
                 </ListItemButton>
               </ListItem>
             )}

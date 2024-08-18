@@ -30,7 +30,7 @@ const CardCopy: React.FC<{ title: string; values: string[] }> = ({ title, values
           handleCopy()
         }}
       >
-        <div className="s-hidden-scrollbar overflow-x-auto">
+        <div className="s-hidden-scrollbar overflow-x-auto" tabIndex={-1}>
           {values.map((it, index) => (
             <p key={index} className="w-fit whitespace-nowrap">
               {it}

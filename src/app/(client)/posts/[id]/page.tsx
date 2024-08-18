@@ -42,7 +42,7 @@ export default async function Page({ params }: PageProps) {
   return (
     <section className="space-y-5">
       {post.showTitleCard && (
-        <Card className="flex flex-col gap-y-2 p-5">
+        <Card className="relative flex flex-col gap-y-2 p-5">
           <PostEdit className="absolute right-5 top-5" id={post.id} />
           <Typography className="font-title font-normal" component="h1" level="h2">
             {post.title}

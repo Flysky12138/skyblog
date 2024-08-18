@@ -1,20 +1,19 @@
 import FormInputMultiple from '@/components/form/FormInputMultiple'
 import ModalCore, { ModalCoreProps } from '@/components/modal/ModalCore'
 import { CustomRequest } from '@/lib/server/request'
-import { Close } from '@mui/icons-material'
-import { Checkbox, FormControl, FormLabel, Input, Textarea } from '@mui/joy'
+import { FormControl, FormLabel, Input, Switch, Textarea } from '@mui/joy'
 import useSWR from 'swr'
 import { Updater } from 'use-immer'
 import { uuidv7 } from 'uuidv7'
 import { DefaultPostType } from '../page'
 import ModalChips from './ModalChips'
 
-interface ModelFormProps extends Pick<ModalCoreProps, 'component'> {
-  onChange: Updater<ModelFormProps['value']>
+interface ModelDetailProps extends Pick<ModalCoreProps, 'component'> {
+  onChange: Updater<ModelDetailProps['value']>
   value: DefaultPostType
 }
 
-export default function ModelForm({ component: Component, value: post, onChange: setPost }: ModelFormProps) {
+export default function ModelDetail({ component: Component, value: post, onChange: setPost }: ModelDetailProps) {
   const { data: categories } = useSWR('/api/dashboard/posts/categories', () => CustomRequest('GET api/dashboard/posts/categories', {}))
   const { data: tags } = useSWR('/api/dashboard/posts/tags', () => CustomRequest('GET api/dashboard/posts/tags', {}))
 
@@ -120,12 +119,10 @@ export default function ModelForm({ component: Component, value: post, onChange:
           </FormControl>
           <FormControl orientation="horizontal">
             <FormLabel>显示标题卡片</FormLabel>
-            <Checkbox
+            <Switch
               checked={post.showTitleCard}
-              className="items-center"
               color={post.showTitleCard ? 'success' : 'neutral'}
-              uncheckedIcon={<Close />}
-              variant="solid"
+              size="lg"
               onChange={event => {
                 setPost(state => {
                   state.showTitleCard = event.target.checked
