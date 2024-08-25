@@ -61,9 +61,11 @@ export default function useLive2D(
       Object.assign(
         {
           antialias: true,
+          autoDensity: true,
           autoStart: true,
           backgroundAlpha: 0,
           height: model.height + PADDING.y * 2,
+          resolution: window.devicePixelRatio,
           view: live2dRef.current,
           width: model.width + PADDING.x * 2
         } satisfies IApplicationOptions,
