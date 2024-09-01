@@ -1,6 +1,5 @@
 import Analytic from '@/components/Analytic'
 import Live2D from '@/components/canvas/live2d'
-// import Ribbon from '@/components/canvas/ribbon'
 import About from '@/components/layout/About'
 import Breakpoint from '@/components/layout/Breakpoint'
 import Container from '@/components/layout/Container'
@@ -20,7 +19,8 @@ import Link from 'next/link'
 import React from 'react'
 
 const Music = dynamic(() => import('./_components/Music'), { ssr: false })
-const Fish = dynamic(() => import('@/components/canvas/fish'), { ssr: false })
+// const Ribbon = dynamic(() => import('@/components/canvas/ribbon'), { ssr: false })
+// const Fish = dynamic(() => import('@/components/canvas/fish'), { ssr: false })
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -61,9 +61,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </nav>
       <footer className="mui-fixed fixed inset-x-0 bottom-0 z-footer flex h-footer items-center justify-center">
         <About />
-        <Breakpoint up="md">
+        {/* <Breakpoint up="md">
           <Fish />
-        </Breakpoint>
+        </Breakpoint> */}
       </footer>
       <aside>
         <Live2DBreakpoint>

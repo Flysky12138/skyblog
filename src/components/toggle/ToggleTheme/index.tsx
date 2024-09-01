@@ -20,7 +20,7 @@ export default function ToggleTheme({ slotsProps }: ToggleThemeProps) {
   if (!isClient) return <span className="s-skeleton h-8 w-8 rounded-md"></span>
 
   return (
-    <Tooltip title={isDark ? '白天' : '夜晚'} {...slotsProps?.tooltip}>
+    <Tooltip title={isDark ? '夜晚' : '白天'} {...slotsProps?.tooltip}>
       <IconButton
         onClick={event => {
           const { clientX: x, clientY: y } = event
@@ -42,7 +42,7 @@ export default function ToggleTheme({ slotsProps }: ToggleThemeProps) {
         }}
         {...slotsProps?.iconbutton}
       >
-        {isDark ? <LightMode /> : <DarkModeOutlined />}
+        {isDark ? <DarkModeOutlined /> : <LightMode />}
       </IconButton>
     </Tooltip>
   )

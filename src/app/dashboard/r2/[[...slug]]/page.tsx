@@ -48,7 +48,7 @@ export default function Page() {
   const { slug } = useParams<{ slug?: string[] }>()
   const path = slug?.length ? slug.join('/') : ''
 
-  const { isLoading, data, mutate } = useSWR(`/r2/${path}`, () => R2.list(path + '/'))
+  const { isLoading, data, mutate, error } = useSWR(`/r2/${path}`, () => R2.list(path + '/'))
 
   const { openViewer } = React.useContext(ImageViewerContext)
   /** 文件点击 */
@@ -157,7 +157,7 @@ export default function Page() {
                 </td>
               </tr>
             ))}
-            <TableStatus colSpan={5} isEmpty={data?.delimitedPrefixes.length == 0 && data.objects.length == 0} isLoading={isLoading} />
+            <TableStatus colSpan={5} isEmpty={data?.delimitedPrefixes.length == 0 && data.objects.length == 0} isError={error} isLoading={isLoading} />
           </tbody>
         </Table>
       </TableWrapper>

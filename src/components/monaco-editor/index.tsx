@@ -35,7 +35,7 @@ const OPTIONS: editor.IStandaloneEditorConstructionOptions = {
   minimap: { enabled: true },
   renderLineHighlight: 'all',
   roundedSelection: true,
-  scrollBeyondLastLine: false,
+  scrollBeyondLastLine: true,
   scrollbar: {
     alwaysConsumeMouseWheel: true // 默认值；滚动行为 preventDefault() and stopPropagation()
   },
