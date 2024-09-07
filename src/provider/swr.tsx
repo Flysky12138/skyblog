@@ -16,7 +16,7 @@ import { SWRConfig } from 'swr'
  *
  * @see https://github.com/vercel/swr
  */
-export const SWRProvider = ({ children }: { children: React.ReactNode }) => {
+export const SWRProvider = ({ children }: React.PropsWithChildren) => {
   return (
     <SWRConfig
       value={{

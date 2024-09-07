@@ -1,13 +1,10 @@
 'use client'
 
+import EnvMatchDisplay from '@/components/layout/EnvMatchDisplay'
 import createCache from '@emotion/cache'
 import { CacheProvider } from '@emotion/react'
-import {
-  getInitColorSchemeScript as getJoyInitColorSchemeScript,
-  THEME_ID as JOY_THEME_ID,
-  CssVarsProvider as JoyCssVarsProvider,
-  SupportedColorScheme
-} from '@mui/joy/styles'
+import JoyInitColorSchemeScript from '@mui/joy/InitColorSchemeScript'
+import { THEME_ID as JOY_THEME_ID, CssVarsProvider as JoyCssVarsProvider, SupportedColorScheme } from '@mui/joy/styles'
 import MaterialInitColorSchemeScript from '@mui/material/InitColorSchemeScript'
 import { Experimental_CssVarsProvider as MaterialCssVarsProvider } from '@mui/material/styles'
 import { useServerInsertedHTML } from 'next/navigation'
@@ -58,8 +55,10 @@ export const ThemeProvider = ({ children, ...props }: ThemeProviderPropsType) =>
     <CacheProvider value={cache}>
       <MaterialCssVarsProvider defaultMode={defaultMode} theme={mui} {...props}>
         <JoyCssVarsProvider defaultMode={defaultMode} theme={{ [JOY_THEME_ID]: joy }} {...props}>
-          {process.env.NODE_ENV != 'development' && <MaterialInitColorSchemeScript defaultMode={defaultMode} />}
-          {process.env.NODE_ENV != 'development' && getJoyInitColorSchemeScript({ defaultMode })}
+          <EnvMatchDisplay env="development" not={true}>
+            <MaterialInitColorSchemeScript defaultMode={defaultMode} />
+            <JoyInitColorSchemeScript defaultMode={defaultMode} />
+          </EnvMatchDisplay>
           {children}
         </JoyCssVarsProvider>
       </MaterialCssVarsProvider>

@@ -9,6 +9,7 @@ import PostEdit from './_components/PostEdit'
 import PostInfo from './_components/PostInfo'
 import PostIssues from './_components/PostIssues'
 import PostTocWrapper from './_components/PostTocWrapper'
+import Refresh from './_components/Refresh'
 
 const getPost = async (id: string) => {
   return await prisma.post.findUnique({
@@ -80,6 +81,7 @@ export default async function Page({ params }: PageProps) {
         </section>
       ) : null}
       <PostIssues />
+      <Refresh />
     </section>
   )
 }

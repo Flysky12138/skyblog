@@ -44,7 +44,7 @@ export const Live2DContext = React.createContext<Live2DContextProps>({
   setMessage: () => null
 })
 
-export const Live2DProvider = ({ children }: { children: React.ReactNode }) => {
+export const Live2DProvider = ({ children }: React.PropsWithChildren) => {
   const [enable, setEnable] = useLocalStorage('live2d', false)
   const [loading, setLoading] = React.useState(false)
 
@@ -105,7 +105,7 @@ export const Live2DProvider = ({ children }: { children: React.ReactNode }) => {
 /**
  * 开关
  */
-export const Live2DEnable = ({ children }: { children: React.ReactNode }) => {
+export const Live2DEnable = ({ children }: React.PropsWithChildren) => {
   const { enable } = React.useContext(Live2DContext)
   return <>{enable ? children : null}</>
 }
@@ -113,6 +113,6 @@ export const Live2DEnable = ({ children }: { children: React.ReactNode }) => {
 /**
  * 断点
  */
-export const Live2DBreakpoint = ({ children }: { children: React.ReactNode }) => {
+export const Live2DBreakpoint = ({ children }: React.PropsWithChildren) => {
   return <Breakpoint up="xl">{children}</Breakpoint>
 }

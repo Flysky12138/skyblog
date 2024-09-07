@@ -1,5 +1,6 @@
 'use client'
 
+import { REFRESH_MESSAGE } from '@/app/(client)/posts/[id]/_components/Refresh'
 import { GET } from '@/app/api/dashboard/posts/[id]/route'
 import UploadFiles from '@/app/dashboard/r2/[[...slug]]/_components/UploadFiles'
 import MonacoEditor from '@/components/monaco-editor'
@@ -54,11 +55,17 @@ export default function Page() {
     setOldCode(data.content || '')
   }, [id, setPost])
 
+  // 预览窗口
+  const openWindowRef = React.useRef<WindowProxy | null>(null)
+  const sendRefreshMessage = () => {
+    openWindowRef.current?.postMessage(REFRESH_MESSAGE, window.origin)
+  }
+
   return (
     <>
       <style>{`main{ padding: 0 !important }`}</style>
       <MonacoEditor
-        className="rounded-none border-none"
+        className="rounded-none border-none [&>div]:s-border-color-divider"
         code={post.content || ''}
         height="calc(100dvh - 50px)"
         loading="Loading..."
@@ -103,9 +110,13 @@ export default function Page() {
                         }),
                     '保存成功'
                   )
-                  setPost(data)
-                  if (isCreate) router.replace(`/dashboard/posts/${data.id}`)
-                  setOldCode(post.content || '')
+                  if (isCreate) {
+                    router.replace(`/dashboard/posts/${data.id}`)
+                  } else {
+                    setPost(data)
+                    setOldCode(post.content || '')
+                    sendRefreshMessage()
+                  }
                 }}
               >
                 <Save />
@@ -113,7 +124,12 @@ export default function Page() {
             </Tooltip>
             <Divider />
             <Tooltip title="查看">
-              <IconButton disabled={isCreate} onClick={() => window.open(`/posts/${post.id}`, '_blank')}>
+              <IconButton
+                disabled={isCreate}
+                onClick={() => {
+                  openWindowRef.current = window.open(`/posts/${post.id}`, '_blank')
+                }}
+              >
                 <OpenInNew />
               </IconButton>
             </Tooltip>

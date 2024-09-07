@@ -14,8 +14,11 @@ module.exports = {
   '.s-border-color-card': {
     '@apply border-slate-100 dark:border-zinc-700': {}
   },
+  '.s-border-color-default': {
+    borderColor: '#e5e7eb'
+  },
   '.s-border-color-divider': {
-    '@apply dark:border-slate-700': {}
+    '@apply s-border-color-default dark:border-slate-700': {}
   },
   '.s-hidden-scrollbar': {
     '&::-webkit-scrollbar': {

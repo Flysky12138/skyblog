@@ -30,7 +30,7 @@ const title = ZCOOL_KuaiLe({
   weight: '400'
 })
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: React.PropsWithChildren) {
   return (
     <html lang="zh-CN">
       <body className={title.variable} id="next">

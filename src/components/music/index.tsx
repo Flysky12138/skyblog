@@ -90,7 +90,6 @@ export default function Music<T extends PlaylistType>({ playlist, onLoad }: Musi
     }
     setPlayer(state => {
       state.song.loading = true
-      state.song.playing = true
       state.song.value = ans as Draft<T>
     })
   }

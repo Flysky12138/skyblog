@@ -7,7 +7,7 @@ import CardGuestInfo from './_components/card/CardGuestInfo'
 
 const CardReactUwU = dynamic(() => import('./_components/card/CardReactUwU'), { ssr: false })
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: React.PropsWithChildren) {
   return (
     <section className="flex flex-col gap-6 sm:flex-row">
       <div className="relative flex grow flex-col gap-y-6">

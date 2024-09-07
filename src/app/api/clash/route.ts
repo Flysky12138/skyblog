@@ -10,6 +10,7 @@ export const runtime = 'nodejs'
 
 const dbGet = async (id: string, data: Prisma.VisitorInfoCreateInput) => {
   const subscribeLastAt = new Date().toISOString()
+
   const clash = await prisma.clash.update({
     data: {
       subscribeLastAt,
@@ -24,7 +25,10 @@ const dbGet = async (id: string, data: Prisma.VisitorInfoCreateInput) => {
       clashTemplates: true,
       visitorInfos: true
     },
-    where: { id }
+    where: {
+      id,
+      enabled: true
+    }
   })
 
   return parseVariable(clash)
@@ -49,7 +53,6 @@ export const GET = async (request: NextRequest) => {
     }
 
     const res = await dbGet(id, { agent, ip })
-    if (!res.enabled) return CustomResponse.error('拒绝访问资源', 403)
 
     const yaml = res.clashTemplateId ? replaceTextWithObjectValues(res.clashTemplates?.content, res.variables) : res.content
 

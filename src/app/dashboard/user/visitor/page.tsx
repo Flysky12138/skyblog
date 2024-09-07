@@ -64,7 +64,7 @@ export default function Page() {
         </Table>
       </TableWrapper>
       {pageTotal > 1 ? (
-        <div className="mt-auto flex justify-center pt-4">
+        <div className="mt-auto flex justify-end pt-4">
           <Pagination className="inline-block" count={pageTotal} page={page} onChange={(_, p) => setPage(p)} />
         </div>
       ) : null}

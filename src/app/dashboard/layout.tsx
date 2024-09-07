@@ -7,7 +7,7 @@ export const metadata = {
   title: 'Dashboard'
 }
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: React.PropsWithChildren) {
   return (
     <>
       <nav className="s-border-color-divider fixed inset-y-0 left-0 flex w-52 flex-col border-r bg-white dark:bg-zinc-800">

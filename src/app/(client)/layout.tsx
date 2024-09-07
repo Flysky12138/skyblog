@@ -3,6 +3,7 @@ import Live2D from '@/components/canvas/live2d'
 import About from '@/components/layout/About'
 import Breakpoint from '@/components/layout/Breakpoint'
 import Container from '@/components/layout/Container'
+import EnvMatchDisplay from '@/components/layout/EnvMatchDisplay'
 import Header from '@/components/layout/Header'
 import Logo from '@/components/layout/Logo'
 import ScrollToTop from '@/components/scroll/ScrollToTop'
@@ -22,23 +23,21 @@ const Music = dynamic(() => import('./_components/Music'), { ssr: false })
 // const Ribbon = dynamic(() => import('@/components/canvas/ribbon'), { ssr: false })
 // const Fish = dynamic(() => import('@/components/canvas/fish'), { ssr: false })
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: React.PropsWithChildren) {
   return (
     <Live2DProvider>
       <Header>
         <Container className="flex h-full items-center gap-x-4" variant="header">
           <Logo />
           <span aria-hidden="true" className="grow"></span>
-          {process.env.NODE_ENV == 'development' && (
-            <>
-              <Tooltip title="后台">
-                <IconButton component={Link} href="/dashboard">
-                  <Dashboard />
-                </IconButton>
-              </Tooltip>
-              <hr className="s-border-color-divider mx-1 h-4 rounded border" />
-            </>
-          )}
+          <EnvMatchDisplay env="development">
+            <Tooltip title="后台">
+              <IconButton component={Link} href="/dashboard">
+                <Dashboard />
+              </IconButton>
+            </Tooltip>
+            <hr className="s-border-color-divider mx-1 h-4 rounded border" />
+          </EnvMatchDisplay>
           <div className="empty:hidden" id={SELECTOR.IDS.ISSUES_MOBILE}></div>
           <Music />
           <Live2DBreakpoint>
@@ -72,13 +71,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Live2DEnable>
         </Live2DBreakpoint>
       </aside>
-      {process.env.NODE_ENV != 'development' && (
-        <>
-          <Analytic />
-          <Analytics />
-          <SpeedInsights />
-        </>
-      )}
+      <EnvMatchDisplay env="development" not={true}>
+        <Analytic />
+        <Analytics />
+        <SpeedInsights />
+      </EnvMatchDisplay>
     </Live2DProvider>
   )
 }

@@ -126,24 +126,20 @@ const MonacoEditor: React.ForwardRefRenderFunction<MonacoEditorRef, MonacoEditor
         <div ref={cardToolbarRef} className="s-bg-title s-border-color-card flex h-header items-center gap-3 overflow-auto border-b px-3.5">
           <p className="s-subtitle select-none font-title text-xl">{props.language}</p>
           {toolbarRender?.({ Divider, Space, diffMode, mounted, zoomIn })}
-          {mounted && (
-            <>
-              <Tooltip title="格式调整">
-                <IconButton
-                  disabled={code == '' || diffMode}
-                  variant="outlined"
-                  onClick={() => editorRef.current?.getAction('editor.action.formatDocument')?.run()}
-                >
-                  <AutoAwesome />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="差异对比">
-                <IconButton disabled={code == oldCode} variant="outlined" onClick={diffModeToggle}>
-                  {diffMode ? <CodeOff /> : <Code />}
-                </IconButton>
-              </Tooltip>
-            </>
-          )}
+          <Tooltip title="格式调整">
+            <IconButton
+              disabled={!mounted || code == '' || diffMode}
+              variant="outlined"
+              onClick={() => editorRef.current?.getAction('editor.action.formatDocument')?.run()}
+            >
+              <AutoAwesome />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="差异对比">
+            <IconButton disabled={!mounted || code == oldCode} variant="outlined" onClick={diffModeToggle}>
+              {diffMode ? <CodeOff /> : <Code />}
+            </IconButton>
+          </Tooltip>
           <IconButton
             aria-label={zoomIn ? '还原尺寸' : '全屏'}
             variant="outlined"

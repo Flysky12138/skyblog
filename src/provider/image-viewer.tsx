@@ -22,7 +22,7 @@ export const ImageViewerContext = React.createContext<ImageViewerContextProps>({
  * 一款超精致的 React 图片预览组件
  * @see https://github.com/MinJieLiu/react-photo-view
  */
-export const ImageViewerProvider = ({ children }: { children: React.ReactNode }) => {
+export const ImageViewerProvider = ({ children }: React.PropsWithChildren) => {
   const [data, setData] = useImmer<Pick<IPhotoSliderProps, 'images' | 'overlayRender' | 'visible' | 'index'>>({
     images: [],
     index: 0,

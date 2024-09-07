@@ -48,7 +48,7 @@ interface PostListProps extends Pick<PaginationForServerProps, 'path'> {
   posts: Prisma.PromiseReturnType<typeof getPosts> | undefined
 }
 
-export default function PostList({ page, posts, path }: PostListProps) {
+export default function PostList({ posts, ...props }: PostListProps) {
   if (!posts || posts.data.length == 0) {
     return (
       <Typography className="text-center" level="body-md">
@@ -122,7 +122,7 @@ export default function PostList({ page, posts, path }: PostListProps) {
           )}
         </Card>
       ))}
-      <PaginationForServer className="mx-auto" count={Math.ceil(posts.pagination.total / posts.pagination.take)} page={page} path={path} />
+      <PaginationForServer className="mx-auto" count={Math.ceil(posts.pagination.total / posts.pagination.take)} {...props} />
     </>
   )
 }
