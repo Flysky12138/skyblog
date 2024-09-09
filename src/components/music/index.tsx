@@ -1,6 +1,7 @@
 import Loop from '@/components/svg-icon/Loop'
 import Random from '@/components/svg-icon/Random'
 import { cn } from '@/lib/cn'
+import { sleep } from '@/lib/sleep'
 import { KeyboardDoubleArrowRight, Pause, PlayArrow, Refresh, SkipNext, SkipPrevious } from '@mui/icons-material'
 import { IconButton } from '@mui/joy'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -45,6 +46,7 @@ interface Player<T extends PlaylistType> {
 }
 
 interface MusicProps<T extends PlaylistType> {
+  /** 获取歌曲信息 */
   onLoad: (payload: T) => Promise<{
     lyrics: Player<T>['lyric']['values']
     url: Player<T>['song']['url']
@@ -110,6 +112,7 @@ export default function Music<T extends PlaylistType>({ playlist, onLoad }: Musi
       })
     } catch (error) {
       toast.warning(error as string)
+      await sleep(3000)
       songsToggle('next')
     }
   }, [player.song.value])

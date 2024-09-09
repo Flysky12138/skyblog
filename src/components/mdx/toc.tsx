@@ -8,11 +8,9 @@ import { options } from './options.mjs'
 import { HEADING_ATTR, rehypeHeadingOrder } from './rehype/rehype-heading-order'
 import { remarkPickHeading } from './remark/remark-pick-heading'
 
-interface HeadingProps extends React.ComponentProps<'a'> {
-  component: React.ElementType
-}
+interface HeadingProps extends React.ComponentProps<'a'> {}
 
-const Heading: React.FunctionComponent<HeadingProps> = ({ component: Component, className, children, id, ...props }) => {
+const Heading: React.FC<HeadingProps> = ({ className, children, id, ...props }) => {
   const deep = Reflect.get(props, HEADING_ATTR).split('.').length - 1
 
   return (
@@ -27,11 +25,9 @@ const Heading: React.FunctionComponent<HeadingProps> = ({ component: Component, 
       )}
       data-active="false"
       href={`#${id}`}
-      style={
-        {
-          paddingLeft: `${0.5 + deep * 1}rem`
-        } satisfies React.CSSProperties
-      }
+      style={{
+        paddingLeft: `${0.5 + deep * 1}rem`
+      }}
       {...props}
     >
       {children}

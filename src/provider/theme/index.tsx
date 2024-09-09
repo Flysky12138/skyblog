@@ -4,15 +4,14 @@ import EnvMatchDisplay from '@/components/layout/EnvMatchDisplay'
 import createCache from '@emotion/cache'
 import { CacheProvider } from '@emotion/react'
 import JoyInitColorSchemeScript from '@mui/joy/InitColorSchemeScript'
-import { THEME_ID as JOY_THEME_ID, CssVarsProvider as JoyCssVarsProvider, SupportedColorScheme } from '@mui/joy/styles'
+import { THEME_ID as JOY_THEME_ID, CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles'
 import MaterialInitColorSchemeScript from '@mui/material/InitColorSchemeScript'
-import { Experimental_CssVarsProvider as MaterialCssVarsProvider } from '@mui/material/styles'
+import { ThemeProvider as MaterialThemeProvider } from '@mui/material/styles'
+import { ThemeProviderProps } from '@mui/material/styles/ThemeProvider'
 import { useServerInsertedHTML } from 'next/navigation'
 import React from 'react'
 import joy from './joy'
 import mui from './mui'
-
-type ThemeProviderPropsType = Omit<Parameters<typeof JoyCssVarsProvider>[0], 'defaultMode' | 'theme'>
 
 /**
  * - 在同一个项目中一起使用 Joy UI 和 Material UI
@@ -21,7 +20,7 @@ type ThemeProviderPropsType = Omit<Parameters<typeof JoyCssVarsProvider>[0], 'de
  * @see https://mui.com/joy-ui/integrations/next-js-app-router/
  * @see https://mui.com/joy-ui/integrations/material-ui/
  */
-export const ThemeProvider = ({ children, ...props }: ThemeProviderPropsType) => {
+export const ThemeProvider = ({ children, ...props }: Omit<ThemeProviderProps, 'theme'>) => {
   const [{ cache, flush }] = React.useState(() => {
     const cache = createCache({ key: 'theme' })
     cache.compat = true
@@ -49,19 +48,17 @@ export const ThemeProvider = ({ children, ...props }: ThemeProviderPropsType) =>
     return <style dangerouslySetInnerHTML={{ __html: styles }} key={cache.key} data-emotion={`${cache.key} ${names.join(' ')}`} />
   })
 
-  const defaultMode: SupportedColorScheme = 'dark'
-
   return (
     <CacheProvider value={cache}>
-      <MaterialCssVarsProvider defaultMode={defaultMode} theme={mui} {...props}>
-        <JoyCssVarsProvider defaultMode={defaultMode} theme={{ [JOY_THEME_ID]: joy }} {...props}>
+      <MaterialThemeProvider theme={mui} {...props}>
+        <JoyCssVarsProvider defaultMode="light" theme={{ [JOY_THEME_ID]: joy }} {...props}>
           <EnvMatchDisplay env="development" not={true}>
-            <MaterialInitColorSchemeScript defaultMode={defaultMode} />
-            <JoyInitColorSchemeScript defaultMode={defaultMode} />
+            <MaterialInitColorSchemeScript />
+            <JoyInitColorSchemeScript />
           </EnvMatchDisplay>
           {children}
         </JoyCssVarsProvider>
-      </MaterialCssVarsProvider>
+      </MaterialThemeProvider>
     </CacheProvider>
   )
 }

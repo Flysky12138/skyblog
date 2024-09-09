@@ -7,10 +7,10 @@ import React from 'react'
 export interface ModalCoreProps extends Omit<ModalProps, 'children' | 'open' | 'onClose'> {
   children?:
     | React.ReactNode
-    | React.FunctionComponent<{
+    | React.FC<{
         close: () => void
       }>
-  component?: React.FunctionComponent<{
+  component?: React.FC<{
     onClick: React.MouseEventHandler<HTMLElement>
     onKeyDown: React.KeyboardEventHandler<HTMLElement>
   }>

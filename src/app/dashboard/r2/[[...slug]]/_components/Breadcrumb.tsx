@@ -22,8 +22,8 @@ export default function Breadcrumb() {
         '--Breadcrumbs-gap': '2px'
       }}
     >
-      <Link replace className="text-sky-500" href="/dashboard/r2">
-        <Home className="mb-0.5 text-lg" />
+      <Link replace href="/dashboard/r2">
+        <Home className="mb-0.5 text-lg" color="primary" />
       </Link>
       {slug?.map((item, index) => (
         <React.Fragment key={item}>

@@ -1,4 +1,4 @@
-import ModalCore from '@/components/modal/ModalCore'
+import ModalCore, { ModalCoreProps } from '@/components/modal/ModalCore'
 import TableStatus from '@/components/table/TableStatus'
 import TableWrapper from '@/components/table/TableWrapper'
 import { cn } from '@/lib/cn'
@@ -10,15 +10,12 @@ import { Toast } from '@/lib/toast'
 import { R2Object } from '@cloudflare/workers-types/2023-07-01'
 import { FileOpenOutlined, FileUploadOutlined, FolderOpenOutlined } from '@mui/icons-material'
 import { Button, ButtonGroup, Input, Table } from '@mui/joy'
-import React, { useId } from 'react'
+import React from 'react'
 import { useBeforeUnload } from 'react-use'
 import { useImmer } from 'use-immer'
 import CopyLink, { ModalCopyRef } from './ModalCopy'
 
-interface UploadFilesProps {
-  component: React.FunctionComponent<{
-    onClick: React.MouseEventHandler<HTMLElement>
-  }>
+interface UploadFilesProps extends Pick<ModalCoreProps, 'component'> {
   onFinished?: () => void
   onSubmit?: (payload: R2Object) => void
   path: StartsWith<'/'>
@@ -40,10 +37,12 @@ export default function UploadFiles({ component: Component, path, onSubmit, onFi
     return true
   }, [basePath])
 
-  const fileId = useId()
-  const folderId = useId()
-
   const copyLinkRef = React.useRef<ModalCopyRef>(null)
+
+  const onChange: React.ChangeEventHandler<HTMLInputElement> = event => {
+    const target = event.target
+    setFileList(Array.from(target.files || []))
+  }
 
   return (
     <ModalCore
@@ -56,16 +55,6 @@ export default function UploadFiles({ component: Component, path, onSubmit, onFi
       }}
       onOpen={() => setBasePath(decodeURIComponent(path))}
     >
-      <div
-        className="hidden"
-        onChange={event => {
-          const target = event.target as HTMLInputElement
-          setFileList(Array.from(target.files || []))
-        }}
-      >
-        <input multiple id={fileId} type="file" />
-        <input multiple directory="true" id={folderId} type="file" webkitdirectory="true" />
-      </div>
       <div className="flex gap-x-5">
         <Input className="grow" disabled={isUploading} value={basePath} onChange={event => setBasePath(event.target.value.replace(/\/{2,}/g, '/') || '/')} />
         {uploadFinishedReturnData.length > 0 && (
@@ -83,11 +72,13 @@ export default function UploadFiles({ component: Component, path, onSubmit, onFi
               setUploadFinishedFileList([])
             }}
           >
-            <Button component="label" htmlFor={fileId} startDecorator={<FileOpenOutlined />}>
+            <Button component="label" startDecorator={<FileOpenOutlined />}>
               选择文件
+              <input hidden multiple type="file" onChange={onChange} />
             </Button>
-            <Button component="label" htmlFor={folderId} startDecorator={<FolderOpenOutlined />}>
+            <Button component="label" startDecorator={<FolderOpenOutlined />}>
               选择文件夹
+              <input hidden multiple directory="true" type="file" webkitdirectory="true" onChange={onChange} />
             </Button>
           </ButtonGroup>
         ) : (

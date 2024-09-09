@@ -5,7 +5,7 @@ interface OuterLinkProps extends LinkProps {
   children: React.ReactNode
 }
 
-const OuterLink: React.FunctionComponent<OuterLinkProps> = ({ children, ...props }) => {
+const OuterLink: React.FC<OuterLinkProps> = ({ children, ...props }) => {
   return (
     <Typography
       className="text-sky-500 decoration-wavy underline-offset-2 hover:underline"

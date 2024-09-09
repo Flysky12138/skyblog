@@ -1,8 +1,12 @@
-import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
+import { createTheme } from '@mui/material/styles'
 import breakpoints from './breakpoints'
 
-export default extendTheme({
+export default createTheme({
   breakpoints,
+  colorSchemes: {
+    dark: true,
+    light: true
+  },
   components: {
     MuiPagination: {
       defaultProps: {
@@ -24,6 +28,10 @@ export default extendTheme({
       }
     }
   },
+  cssVariables: {
+    colorSchemeSelector: 'html[data-joy-color-scheme="%s"]'
+  },
+  defaultColorScheme: 'light',
   spacing: (factor: number) => `${0.25 * factor}rem`, // same with tailwindcss
   typography: {
     fontFamily: 'inherit'

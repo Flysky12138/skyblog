@@ -33,11 +33,7 @@ const headers = async () => {
     ]
     ans.push({
       headers: [{ key: 'Content-Security-Policy', value: cspHeader.join('; ') }],
-      missing: [
-        { key: 'next-router-prefetch', type: 'header' },
-        { key: 'purpose', type: 'header', value: 'prefetch' }
-      ],
-      source: '/((?!api|_next/static|_next/image|favicon.ico).*)'
+      source: '/(.*)'
     })
   }
   return ans
