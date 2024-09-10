@@ -1,24 +1,25 @@
 'use client'
 
-import { REFRESH_MESSAGE } from '@/app/(client)/posts/[id]/_components/Refresh'
 import { GET } from '@/app/api/dashboard/posts/[id]/route'
 import UploadFiles from '@/app/dashboard/r2/[[...slug]]/_components/UploadFiles'
 import MonacoEditor from '@/components/monaco-editor'
 import { markdownConfig } from '@/components/monaco-editor/language/markdown'
 import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
-import { AddPhotoAlternate, OpenInNew, PostAdd, Save } from '@mui/icons-material'
+import { AddPhotoAlternate, PostAdd, RemoveRedEye, Save } from '@mui/icons-material'
 import { IconButton, Tooltip } from '@mui/joy'
 import { useSession } from 'next-auth/react'
 import { useParams, useRouter } from 'next/navigation'
 import React from 'react'
-import { useAsync } from 'react-use'
+import { useAsync, useDebounce, useEvent } from 'react-use'
 import { toast } from 'sonner'
 import { useImmer } from 'use-immer'
 import { uuidv7 } from 'uuidv7'
 import ModelDetail from './_components/ModelDetail'
 
 export type DefaultPostType = NonNullable<GET['return']>
+export interface MessageEventDataRefreshType extends MessageEventDataType<'post-refresh', DefaultPostType> {}
+export interface MessageEventDataMountedType extends MessageEventDataType<'post-preview-mounted'> {}
 
 const defaultPost: DefaultPostType = {
   authorId: '',
@@ -55,11 +56,49 @@ export default function Page() {
     setOldCode(data.content || '')
   }, [id, setPost])
 
-  // 预览窗口
-  const openWindowRef = React.useRef<WindowProxy | null>(null)
-  const sendRefreshMessage = () => {
-    openWindowRef.current?.postMessage(REFRESH_MESSAGE, window.origin)
+  /** 创建 */
+  const createPost = async () => {
+    return await CustomRequest('POST api/dashboard/posts/[id]', {
+      body: {
+        authorId: session.data?.id || uuidv7(),
+        categories: post.categories.map(({ name }) => name),
+        content: post.content,
+        description: post.description,
+        showTitleCard: post.showTitleCard,
+        sticky: post.sticky,
+        tags: post.tags.map(({ name }) => name),
+        title: post.title
+      },
+      params: { id }
+    })
   }
+
+  /** 更新 */
+  const updatePost = async () => {
+    return await CustomRequest('PUT api/dashboard/posts/[id]', {
+      body: {
+        categories: post.categories.map(({ name }) => name),
+        content: post.content,
+        description: post.description,
+        showTitleCard: post.showTitleCard,
+        sticky: post.sticky,
+        tags: post.tags.map(({ name }) => name),
+        title: post.title
+      },
+      params: { id }
+    })
+  }
+
+  // 预览窗口
+  const previewWindowRef = React.useRef<WindowProxy | null>(null)
+  const refreshPreviewWindow = () => {
+    previewWindowRef.current?.postMessage({ type: 'post-refresh', value: post } satisfies MessageEventDataRefreshType, window.origin)
+  }
+  useEvent('message', ({ data, origin }: MessageEvent<MessageEventDataMountedType>) => {
+    if (origin != window.origin || data.type != 'post-preview-mounted') return
+    refreshPreviewWindow()
+  })
+  useDebounce(refreshPreviewWindow, 1000, [post])
 
   return (
     <>
@@ -81,41 +120,12 @@ export default function Page() {
                     toast.error('表单验证失败')
                     return
                   }
-                  const data = await Toast(
-                    isCreate
-                      ? CustomRequest('POST api/dashboard/posts/[id]', {
-                          body: {
-                            authorId: session.data?.id || uuidv7(),
-                            categories: post.categories.map(({ name }) => name),
-                            content: post.content,
-                            description: post.description,
-                            showTitleCard: post.showTitleCard,
-                            sticky: post.sticky,
-                            tags: post.tags.map(({ name }) => name),
-                            title: post.title
-                          },
-                          params: { id: 'new' }
-                        })
-                      : CustomRequest('PUT api/dashboard/posts/[id]', {
-                          body: {
-                            categories: post.categories.map(({ name }) => name),
-                            content: post.content,
-                            description: post.description,
-                            showTitleCard: post.showTitleCard,
-                            sticky: post.sticky,
-                            tags: post.tags.map(({ name }) => name),
-                            title: post.title
-                          },
-                          params: { id: post.id }
-                        }),
-                    '保存成功'
-                  )
+                  const data = await Toast(isCreate ? createPost() : updatePost(), '保存成功')
                   if (isCreate) {
                     router.replace(`/dashboard/posts/${data.id}`)
                   } else {
                     setPost(data)
                     setOldCode(post.content || '')
-                    sendRefreshMessage()
                   }
                 }}
               >
@@ -123,14 +133,13 @@ export default function Page() {
               </IconButton>
             </Tooltip>
             <Divider />
-            <Tooltip title="查看">
+            <Tooltip title="预览">
               <IconButton
-                disabled={isCreate}
                 onClick={() => {
-                  openWindowRef.current = window.open(`/posts/${post.id}`, '_blank')
+                  previewWindowRef.current = window.open(`/posts/${id}/preview`, '_blank')
                 }}
               >
-                <OpenInNew />
+                <RemoveRedEye />
               </IconButton>
             </Tooltip>
             <Divider />

@@ -1,5 +1,6 @@
 import Card from '@/components/layout/Card'
-import { MDXServer, MDXToc } from '@/components/mdx'
+import { MDXServer } from '@/components/mdx/server'
+import { MDXToc } from '@/components/mdx/toc'
 import { cn } from '@/lib/cn'
 import prisma from '@/lib/prisma'
 import { Typography } from '@mui/joy'
@@ -9,7 +10,6 @@ import PostEdit from './_components/PostEdit'
 import PostInfo from './_components/PostInfo'
 import PostIssues from './_components/PostIssues'
 import PostTocWrapper from './_components/PostTocWrapper'
-import Refresh from './_components/Refresh'
 
 const getPost = async (id: string) => {
   return await prisma.post.findUnique({
@@ -62,7 +62,7 @@ export default async function Page({ params }: PageProps) {
           />
         </Card>
       )}
-      {post.content ? (
+      {post.content && (
         <section className="flex gap-x-4">
           <style>{`html { scroll-padding-top: 60px }`}</style>
           <Card className="max-w-none grow" component="article">
@@ -79,9 +79,8 @@ export default async function Page({ params }: PageProps) {
             <MDXToc value={post.content} />
           </Card>
         </section>
-      ) : null}
+      )}
       <PostIssues />
-      <Refresh />
     </section>
   )
 }

@@ -23,13 +23,13 @@ export default function PostInfo({ id, defaultValue }: PostInfoProps) {
   })
 
   const session = useSession()
-  const [submitted, setSubmitted] = useSessionStorage(SESSIONSTORAGE.POST_VIEW_SUBMITTED(id), false)
+  const [viewed, setViewed] = useSessionStorage(SESSIONSTORAGE.POST_VIEW_SUBMITTED(id), false)
   useTimeoutFn(async () => {
     if (!post?.published) return
     if (session.data?.role == 'ADMIN') return
-    if (submitted) return
+    if (viewed) return
     await CustomRequest('POST api/post/view', { search: { id } })
-    setSubmitted(true)
+    setViewed(true)
   }, 10 * 1000)
 
   if (!post) {

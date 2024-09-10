@@ -1,9 +1,10 @@
 import Logo from '@/components/layout/Logo'
 import ToggleTheme from '@/components/toggle/ToggleTheme'
+import { Metadata } from 'next'
 import Admin from './_components/Admin'
 import Menu from './_components/Menu'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Dashboard'
 }
 

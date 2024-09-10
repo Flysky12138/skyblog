@@ -25,22 +25,18 @@ export default function Page() {
   })
 
   // 获取所有分类和标签
-  const categories = React.useMemo(
-    () =>
-      removeDuplicates(
-        posts.flatMap(post => post.categories),
-        (pre, cur) => !pre.find(category => category.id == cur.id)
-      ),
-    [posts]
-  )
-  const tags = React.useMemo(
-    () =>
-      removeDuplicates(
-        posts.flatMap(post => post.tags),
-        (pre, cur) => !pre.find(tag => tag.id == cur.id)
-      ),
-    [posts]
-  )
+  const categories = React.useMemo(() => {
+    return removeDuplicates(
+      posts.flatMap(post => post.categories),
+      (pre, cur) => !pre.find(category => category.id == cur.id)
+    )
+  }, [posts])
+  const tags = React.useMemo(() => {
+    return removeDuplicates(
+      posts.flatMap(post => post.tags),
+      (pre, cur) => !pre.find(tag => tag.id == cur.id)
+    )
+  }, [posts])
 
   // 过滤表单
   const [form, setForm] = useImmer<{
@@ -211,7 +207,7 @@ export default function Page() {
                     }}
                   />
                   <Button color="warning" component="a" href={`/posts/${post.id}`} size="sm" target="_blank" variant="plain">
-                    {post.published ? '查看' : '预览'}
+                    查看
                   </Button>
                   <Button component={Link} href={`/dashboard/posts/${post.id}`} size="sm" variant="plain">
                     编辑
