@@ -10,8 +10,7 @@ import { Button, Table } from '@mui/joy'
 import { produce } from 'immer'
 import useSWR from 'swr'
 import ModalTemplate from './ModalTemplate'
-
-export const SWR_KEY_CLASH_TEMPLATES = '/api/dashboard/clash/template'
+import { SWR_KEY_CLASH_TEMPLATES } from './utils'
 
 export default function TableTemplate() {
   const {

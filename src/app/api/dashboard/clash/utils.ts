@@ -7,7 +7,7 @@ import { POST } from './route'
  */
 export const parseVariable = <T extends Pick<Clash, 'variables'> & Record<string, any>>(target: T) => {
   return convertKeyValues(target, {
-    variables: value => (typeof value == 'string' ? (JSON.parse(value) as object) : value) as object
+    variables: value => (typeof value == 'string' ? JSON.parse(value) : value) as object
   })
 }
 

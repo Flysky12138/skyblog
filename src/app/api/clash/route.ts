@@ -4,7 +4,7 @@ import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { ipAddress } from '@vercel/functions'
 import { NextRequest } from 'next/server'
-import { parseVariable } from '../dashboard/clash/lib'
+import { parseVariable } from '../dashboard/clash/utils'
 
 export const runtime = 'nodejs'
 

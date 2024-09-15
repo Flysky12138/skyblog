@@ -10,7 +10,7 @@ export class CustomResponse {
    * @default
    * status = 500
    */
-  static async error(message: any, status = 500) {
+  static async error(message: unknown, status = 500) {
     const headers = new Headers()
     headers.set('Content-Type', 'application/json')
 

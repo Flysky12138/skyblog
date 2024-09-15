@@ -1,63 +1,104 @@
-import ListItemExpand, { ListItemExpandProps } from '@/components/list/ListItemExpand'
-import ListItemLink from '@/components/list/ListItemLink'
+'use client'
+
 import { cn } from '@/lib/cn'
-import { BlockOutlined, BubbleChart, CloudOutlined, HomeOutlined, PermIdentityOutlined, SettingsOutlined, SourceOutlined } from '@mui/icons-material'
-import { List, ListItem, ListItemContent, ListItemDecorator } from '@mui/joy'
+import { KeyboardArrowRight } from '@mui/icons-material'
+import { Box, List, ListItem, ListItemButton, ListItemButtonProps, ListItemContent, ListItemDecorator } from '@mui/joy'
+import Link from 'next/link'
+import { usePathname, useSelectedLayoutSegment } from 'next/navigation'
 import React from 'react'
+import { useToggle } from 'react-use'
 
-type ListOptionType = XOR<
-  {
-    href: string
-    icon: React.ReactElement
-    label: string
-  },
-  {
-    children: {
-      href: string
-      label: string
-    }[]
-  } & Omit<ListItemExpandProps, 'children'>
->
+interface ListItemExpandProps {
+  children?: React.ReactNode
+  /**
+   * true - 默认打开；string - 活动路由段匹配时打开
+   * @default false
+   */
+  defaultExpanded?: boolean | string
+  icon: React.ReactElement
+  label: string
+}
 
-const listOptions: ListOptionType[] = [
-  { href: '/dashboard', icon: <HomeOutlined />, label: '主页' },
-  {
-    children: [
-      { href: '/dashboard/posts', label: '列表' },
-      { href: '/dashboard/posts/new', label: '新建' }
-    ],
-    defaultExpanded: true,
-    icon: <SourceOutlined />,
-    label: '文章'
-  },
-  {
-    children: [
-      { href: '/dashboard/user/member', label: '成员' },
-      { href: '/dashboard/user/visitor', label: '访客' }
-    ],
-    defaultExpanded: 'users',
-    icon: <PermIdentityOutlined />,
-    label: '用户'
-  },
-  {
-    children: [
-      { href: '/dashboard/other/clash', label: 'Clash 共享' },
-      { href: '/dashboard/other/friend-link', label: '友情链接' }
-    ],
-    defaultExpanded: 'others',
-    icon: <BubbleChart />,
-    label: '其他'
-  },
-  { href: '/dashboard/ban', icon: <BlockOutlined />, label: '黑名单' },
-  { href: '/dashboard/r2', icon: <CloudOutlined />, label: '仓库' },
-  { href: '/dashboard/setting', icon: <SettingsOutlined />, label: '设置' }
-]
+const ListItemExpand: React.FC<ListItemExpandProps> = ({ children, defaultExpanded = false, icon, label }) => {
+  const segment = useSelectedLayoutSegment()
+
+  const [open, openToggle] = useToggle(typeof defaultExpanded == 'boolean' ? defaultExpanded : segment == defaultExpanded)
+
+  const boxRef = React.useRef<HTMLElement>()
+  React.useEffect(() => {
+    const target = boxRef.current as HTMLElement
+    target.classList.toggle('invisible', !open)
+    target.style.height = `${open ? target.scrollHeight : 0}px`
+  }, [open])
+
+  return (
+    <>
+      <ListItemButton className="mt-0" onClick={openToggle}>
+        <ListItemDecorator>{icon}</ListItemDecorator>
+        <ListItemContent>{label}</ListItemContent>
+        <KeyboardArrowRight
+          className={cn('transition-transform', {
+            'rotate-90 text-sky-600 dark:text-sky-400': open
+          })}
+        />
+      </ListItemButton>
+      <Box
+        ref={boxRef}
+        aria-expanded={open}
+        className="invisible -mx-2 h-0 overflow-y-clip px-2 transition-[height,visibility]"
+        sx={{
+          '.MuiList-root': {
+            marginTop: 0,
+            paddingBottom: 1
+          },
+          '.MuiListItem-root': {
+            marginTop: 'var(--List-gap)'
+          }
+        }}
+      >
+        {children}
+      </Box>
+    </>
+  )
+}
+
+interface ListItemLinkProps extends Omit<ListItemButtonProps, 'selected'> {
+  href: string
+}
+
+const ListItemLink: React.FC<ListItemLinkProps> = ({ className, href, children, ...props }) => {
+  const pathname = usePathname()
+  const isSelected = pathname == href
+
+  return (
+    <ListItemButton
+      className={cn(
+        {
+          'before:absolute before:inset-y-1 before:-left-2 before:w-1 before:rounded-lg before:bg-current before:opacity-80': isSelected,
+          'text-sky-600 dark:text-sky-400': isSelected
+        },
+        className
+      )}
+      component={Link}
+      href={href}
+      scroll={false}
+      selected={isSelected}
+      {...props}
+    >
+      {children}
+    </ListItemButton>
+  )
+}
 
 interface MenuProps {
   className?: string
+  lists: XOR<
+    { href: string; icon: React.ReactElement; label: string },
+    { children: { href: string; label: string }[] } & Omit<ListItemExpandProps, 'children'>
+  >[]
 }
 
-export default function Menu({ className }: MenuProps) {
+export default function Menu({ className, lists }: MenuProps) {
   return (
     <List
       className={cn('select-none overflow-y-auto overflow-x-hidden first:[&>li]:mt-0', className)}
@@ -67,7 +108,7 @@ export default function Menu({ className }: MenuProps) {
         '--ListItem-radius': '8px'
       }}
     >
-      {listOptions.map((it, index) => (
+      {lists.map((it, index) => (
         <React.Fragment key={index}>
           {Reflect.has(it, 'href') ? (
             <ListItem>

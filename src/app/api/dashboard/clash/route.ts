@@ -2,7 +2,7 @@ import prisma from '@/lib/prisma'
 import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
-import { convertVariable, parseVariable } from './lib'
+import { convertVariable, parseVariable } from './utils'
 
 export type GET = MethodRequestType<{
   return: Prisma.PromiseReturnType<typeof dbGet>

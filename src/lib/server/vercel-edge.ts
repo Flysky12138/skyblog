@@ -1,7 +1,7 @@
 import { EDGE_CONFIG } from '../constants'
 import { CustomFetch } from './fetch'
 
-type EdgeRequestItemType = { key: string; operation: 'create' | 'update' | 'upsert' | 'delete'; value?: any }
+type EdgeRequestItemType = { key: string; operation: 'create' | 'update' | 'upsert' | 'delete'; value?: unknown }
 
 /**
  * @see https://vercel.com/docs/storage/edge-config/vercel-api
@@ -30,7 +30,7 @@ export const edgeFetch = async (items?: EdgeRequestItemType[]) => {
   }
 }
 
-export type EdgeGetResponseType<T = (typeof EDGE_CONFIG)[keyof typeof EDGE_CONFIG], V = any> = {
+export type EdgeGetResponseType<T = (typeof EDGE_CONFIG)[keyof typeof EDGE_CONFIG], V = unknown> = {
   [K in T as K extends string ? K : never]?: {
     createdAt: number
     edgeConfigId: string

@@ -29,7 +29,7 @@ export default createTheme({
     }
   },
   cssVariables: {
-    colorSchemeSelector: 'html[data-joy-color-scheme="%s"]'
+    colorSchemeSelector: 'class'
   },
   defaultColorScheme: 'light',
   spacing: (factor: number) => `${0.25 * factor}rem`, // same with tailwindcss

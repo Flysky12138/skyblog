@@ -9,7 +9,7 @@ import dayjs from 'dayjs'
 import React from 'react'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
-import { SWR_KEY_CLASH_TEMPLATES } from './TableTemplate'
+import { SWR_KEY_CLASH_TEMPLATES } from './utils'
 
 interface ModalClashProps extends Pick<ModalCoreProps, 'component'> {
   onSubmit: (payload: NonNullable<ModalClashProps['value']>) => Promise<void>
@@ -27,7 +27,7 @@ export default function ModalClash({ component: Component, value, onSubmit }: Mo
 
   const [oldContent, setOldContent] = React.useState('')
 
-  // 响应式模版内容，从缓存中快速获取。在 ./TableTemplate.tsx 中请求的。
+  // 响应式模版内容，从缓存中快速获取
   const { data: clashTemplates, isLoading } = useSWR<GET['return']>(SWR_KEY_CLASH_TEMPLATES)
 
   const currentSelectClashTemplate = React.useMemo(() => clashTemplates?.find(it => it.id == form.clashTemplateId), [form.clashTemplateId, clashTemplates])

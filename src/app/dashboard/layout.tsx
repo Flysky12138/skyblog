@@ -1,5 +1,6 @@
 import Logo from '@/components/layout/Logo'
 import ToggleTheme from '@/components/toggle/ToggleTheme'
+import { BlockOutlined, BubbleChart, CloudOutlined, HomeOutlined, PermIdentityOutlined, SettingsOutlined, SourceOutlined } from '@mui/icons-material'
 import { Metadata } from 'next'
 import Admin from './_components/Admin'
 import Menu from './_components/Menu'
@@ -21,7 +22,42 @@ export default function Layout({ children }: React.PropsWithChildren) {
             }}
           />
         </div>
-        <Menu className="px-4 py-3" />
+        <Menu
+          className="px-4 py-3"
+          lists={[
+            { href: '/dashboard', icon: <HomeOutlined />, label: '主页' },
+            {
+              children: [
+                { href: '/dashboard/posts', label: '列表' },
+                { href: '/dashboard/posts/new', label: '新建' }
+              ],
+              defaultExpanded: true,
+              icon: <SourceOutlined />,
+              label: '文章'
+            },
+            {
+              children: [
+                { href: '/dashboard/user/member', label: '成员' },
+                { href: '/dashboard/user/visitor', label: '访客' }
+              ],
+              defaultExpanded: 'users',
+              icon: <PermIdentityOutlined />,
+              label: '用户'
+            },
+            {
+              children: [
+                { href: '/dashboard/other/clash', label: 'Clash 共享' },
+                { href: '/dashboard/other/friend-link', label: '友情链接' }
+              ],
+              defaultExpanded: 'others',
+              icon: <BubbleChart />,
+              label: '其他'
+            },
+            { href: '/dashboard/ban', icon: <BlockOutlined />, label: '黑名单' },
+            { href: '/dashboard/r2', icon: <CloudOutlined />, label: '仓库' },
+            { href: '/dashboard/setting', icon: <SettingsOutlined />, label: '设置' }
+          ]}
+        />
         <div className="border-t border-inherit p-2 empty:hidden">
           <Admin />
         </div>

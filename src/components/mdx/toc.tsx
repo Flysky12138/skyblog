@@ -36,12 +36,12 @@ const Heading: React.FC<HeadingProps> = ({ className, children, id, ...props }) 
 }
 
 const heading = {
-  h1: (props: any) => <Heading component="h1" {...props} />,
-  h2: (props: any) => <Heading component="h2" {...props} />,
-  h3: (props: any) => <Heading component="h3" {...props} />,
-  h4: (props: any) => <Heading component="h4" {...props} />,
-  h5: (props: any) => <Heading component="h5" {...props} />,
-  h6: (props: any) => <Heading component="h6" {...props} />
+  h1: (props: object) => <Heading {...props} />,
+  h2: (props: object) => <Heading {...props} />,
+  h3: (props: object) => <Heading {...props} />,
+  h4: (props: object) => <Heading {...props} />,
+  h5: (props: object) => <Heading {...props} />,
+  h6: (props: object) => <Heading {...props} />
 }
 
 export interface MDXTocProps {

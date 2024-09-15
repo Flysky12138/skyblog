@@ -44,7 +44,7 @@ export default {
 
         if (request.headers.get('If-None-Match') == res.etag) return new CustomResponse(request, null, { status: 304 })
 
-        const headers = new Headers() as HeadersType
+        const headers = new Headers() as unknown as HeadersType
         res.writeHttpMetadata(headers)
 
         return new CustomResponse(request, res.body, {

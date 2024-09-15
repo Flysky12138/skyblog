@@ -18,7 +18,7 @@ export type PUT = MethodRequestType<{
 
 export const GET = async (request: NextRequest) => {
   try {
-    const data = await getAll<Partial<Record<(typeof EDGE_CONFIG)[keyof typeof EDGE_CONFIG], any>>>()
+    const data = await getAll<Partial<Record<(typeof EDGE_CONFIG)[keyof typeof EDGE_CONFIG], string[]>>>()
 
     const res: GET['return'] = {
       'ban-agents': data['ban-agents'],

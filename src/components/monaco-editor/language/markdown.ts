@@ -94,20 +94,20 @@ export const markdownConfig: LanguagePropsType = {
             ])
         }
 
-        // 代码片段提示
-        const suggestSnippet = (payload: Array<{ detail: string; key: string; value: string[] }>) => {
+        // 组建提示
+        const suggestField = (payload: Array<{ detail: string; key: string; value: string[] }>) => {
           return {
             suggestions: payload.map(({ key, value, detail }) => ({
               detail,
               range,
               insertText: value.join('\n'),
               insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-              kind: monaco.languages.CompletionItemKind.Snippet,
+              kind: monaco.languages.CompletionItemKind.Field,
               label: key
             }))
           }
         }
-        return suggestSnippet([
+        return suggestField([
           { detail: '选项卡', key: 'tab', value: ['::::tabs', ':::tab{label="$1"}', '$2', ':::', ':::tab{label="$3"}', '$4', ':::', '::::'] },
           { detail: '分割线', key: 'hr', value: ['::hr[$1]'] },
           { detail: 'MDX 页面', key: 'mdx', value: ['::mdx{path=$0}'] },
