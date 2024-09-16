@@ -52,7 +52,7 @@ export const ThemeProvider = ({ children, ...props }: Omit<ThemeProviderProps, '
     <CacheProvider value={cache}>
       <MaterialThemeProvider theme={mui} {...props}>
         <JoyCssVarsProvider defaultMode="light" theme={{ [JOY_THEME_ID]: joy }} {...props}>
-          <EnvMatchDisplay env="development" not={true}>
+          <EnvMatchDisplay env="development" reverse={true}>
             <MaterialInitColorSchemeScript />
             <JoyInitColorSchemeScript />
           </EnvMatchDisplay>

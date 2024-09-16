@@ -1,0 +1,11 @@
+model VisitorLog {
+  id        String   @id @default(uuid(7))
+  createdAt DateTime @default(now())
+  ip        String
+  geo       String   @default("{}") // psql 使用 json 类型
+  agent     String   @default("{}") // psql 使用 json 类型
+  referer   String?
+  clashs    Clash[]
+
+  @@map("visitor_logs")
+}

@@ -1,0 +1,11 @@
+model VisitorLog {
+  id        String   @id @default(uuid(7))
+  createdAt DateTime @default(now())
+  ip        String
+  geo       Json     @default(dbgenerated("'{}'::json"))
+  agent     Json     @default(dbgenerated("'{}'::json"))
+  referer   String?
+  clashs    Clash[]
+
+  @@map("visitor_logs")
+}

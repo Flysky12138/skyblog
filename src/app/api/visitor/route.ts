@@ -2,12 +2,13 @@ import prisma from '@/lib/prisma'
 import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { geolocation, ipAddress } from '@vercel/functions'
-import { NextRequest } from 'next/server'
+import { NextRequest, userAgent } from 'next/server'
+import { convertVisitorLogSaveData } from '../dashboard/users/visitor/utils'
 
 export const runtime = 'nodejs'
 
-const dbPost = async (data: Prisma.VisitorInfoCreateInput) => {
-  return await prisma.visitorInfo.create({ data })
+const dbPost = async (data: Prisma.VisitorLogCreateInput) => {
+  return await prisma.visitorLog.create({ data })
 }
 
 export const POST = async (request: NextRequest) => {
@@ -15,18 +16,17 @@ export const POST = async (request: NextRequest) => {
     const ip = process.env.NODE_ENV == 'development' ? '0.0.0.0' : ipAddress(request)
     if (!ip) return CustomResponse.error('未知访问', 400)
 
-    const { city = null, country = null, countryRegion = null, latitude = null, longitude = null } = geolocation(request)
+    const agent = userAgent(request)
+    const geo = geolocation(request)
 
-    await dbPost({
-      city,
-      country,
-      countryRegion,
-      ip,
-      latitude,
-      longitude,
-      agent: request.headers.get('user-agent'),
-      referer: request.headers.get('referer')
-    })
+    await dbPost(
+      convertVisitorLogSaveData({
+        agent,
+        geo,
+        ip,
+        referer: request.headers.get('referer')
+      })
+    )
 
     return new Response()
   } catch (error) {

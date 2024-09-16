@@ -44,7 +44,7 @@ export default function Page() {
               <th className="w-36 border-l">Ip</th>
               <th className="w-60">Address</th>
               <th className="w-44">Lon/Lat</th>
-              <th className="w-80">Agent</th>
+              <th className="w-80">Ua</th>
               <th className="w-80">Referer</th>
               <th className="w-44">创建时间</th>
             </tr>
@@ -54,10 +54,10 @@ export default function Page() {
               <tr key={visitor.id}>
                 <td className="s-bg-content sticky left-0 z-20 border-r">{index + 1}</td>
                 <td className="border-l">{visitor.ip}</td>
-                <td className="break-all">{decodeURIComponent([visitor.country, visitor.countryRegion, visitor.city].filter(v => v).join('/'))}</td>
-                <td>{[visitor.longitude, visitor.latitude].filter(v => v).join('/')}</td>
-                <Tooltip sx={{ maxWidth: 320 }} title={visitor.agent}>
-                  <td className="truncate break-all">{visitor.agent}</td>
+                <td className="break-all">{decodeURIComponent([visitor.geo.country, visitor.geo.countryRegion, visitor.geo.city].filter(v => v).join('/'))}</td>
+                <td>{[visitor.geo.longitude, visitor.geo.latitude].filter(v => v).join('/')}</td>
+                <Tooltip sx={{ maxWidth: 320 }} title={visitor.agent.ua}>
+                  <td className="truncate break-all">{visitor.agent.ua}</td>
                 </Tooltip>
                 <Tooltip sx={{ maxWidth: 320 }} title={visitor.referer}>
                   <td className="truncate break-all">{visitor.referer}</td>

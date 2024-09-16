@@ -1,17 +1,17 @@
 import { auth } from '@/lib/auth'
 import { getAll } from '@vercel/edge-config'
 import { geolocation, ipAddress } from '@vercel/functions'
-import { NextRequest, NextResponse } from 'next/server'
+import { MiddlewareConfig, NextMiddleware, NextRequest, NextResponse } from 'next/server'
 import { EDGE_CONFIG } from './lib/constants'
 import { CustomResponse } from './lib/server/response'
 
-export const config = {
+export const config: MiddlewareConfig = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)']
 }
 
 const matchUrls = (request: NextRequest, urls: StartsWith<'/'>[]) => urls.some(url => request.nextUrl.pathname.startsWith(url))
 
-export const middleware = async (request: NextRequest) => {
+export const middleware: NextMiddleware = async (request, event) => {
   if (process.env.NODE_ENV == 'development') return
 
   const session = await auth()

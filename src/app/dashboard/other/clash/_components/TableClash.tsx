@@ -82,7 +82,7 @@ export default function TableClash() {
                         </Chip>
                       </div>
                       <Typography className="break-all" level="body-sm">
-                        {visitorInfo.agent}
+                        {visitorInfo.agent.ua}
                       </Typography>
                     </div>
                   ))}

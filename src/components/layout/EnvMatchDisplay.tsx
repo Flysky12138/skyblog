@@ -4,12 +4,13 @@ interface EnvMatchDisplayProps {
   children: React.ReactNode
   env: typeof process.env.NODE_ENV
   /**
+   * 反向匹配
    * @default false
    */
-  not?: boolean
+  reverse?: boolean
 }
 
-export default function EnvMatchDisplay({ children, env, not = false }: EnvMatchDisplayProps) {
-  if ((process.env.NODE_ENV == env) == !not) return children
+export default function EnvMatchDisplay({ children, env, reverse = false }: EnvMatchDisplayProps) {
+  if ((process.env.NODE_ENV == env) == !reverse) return children
   return null
 }

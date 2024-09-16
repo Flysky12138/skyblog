@@ -3,12 +3,13 @@ import prisma from '@/lib/prisma'
 import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { ipAddress } from '@vercel/functions'
-import { NextRequest } from 'next/server'
-import { parseVariable } from '../dashboard/clash/utils'
+import { NextRequest, userAgent } from 'next/server'
+import { convertClashGetData } from '../dashboard/clash/utils'
+import { convertVisitorLogSaveData } from '../dashboard/users/visitor/utils'
 
 export const runtime = 'nodejs'
 
-const dbGet = async (id: string, data: Prisma.VisitorInfoCreateInput) => {
+const dbGet = async (id: string, data: Prisma.VisitorLogCreateInput) => {
   const subscribeLastAt = new Date().toISOString()
 
   const clash = await prisma.clash.update({
@@ -31,7 +32,7 @@ const dbGet = async (id: string, data: Prisma.VisitorInfoCreateInput) => {
     }
   })
 
-  return parseVariable(clash)
+  return convertClashGetData(clash)
 }
 
 export const GET = async (request: NextRequest) => {
@@ -42,8 +43,7 @@ export const GET = async (request: NextRequest) => {
     const ip = process.env.NODE_ENV == 'development' ? '0.0.0.0' : ipAddress(request)
     if (!ip) return CustomResponse.error('未知访问', 400)
 
-    const agent = request.headers.get('user-agent')
-    if (!agent?.toLowerCase().includes('clash')) {
+    if (!request.headers.get('user-agent')?.toLowerCase().includes('clash')) {
       return new Response(`<p align="center" style="margin-top:30dvh">禁止从非客户端获取资源</p>`, {
         headers: {
           'Content-Type': 'text/html; charset=utf-8'
@@ -52,7 +52,15 @@ export const GET = async (request: NextRequest) => {
       })
     }
 
-    const res = await dbGet(id, { agent, ip })
+    const agent = userAgent(request)
+
+    const res = await dbGet(
+      id,
+      convertVisitorLogSaveData({
+        agent,
+        ip
+      })
+    )
 
     const yaml = res.clashTemplateId ? replaceTextWithObjectValues(res.clashTemplates?.content, res.variables) : res.content
 

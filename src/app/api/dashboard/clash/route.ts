@@ -2,7 +2,8 @@ import prisma from '@/lib/prisma'
 import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
-import { convertVariable, parseVariable } from './utils'
+import { convertVisitorLogGetData } from '../users/visitor/utils'
+import { convertClashGetData, convertClashSaveData } from './utils'
 
 export type GET = MethodRequestType<{
   return: Prisma.PromiseReturnType<typeof dbGet>
@@ -49,7 +50,12 @@ const dbGet = async () => {
     include,
     orderBy: { createdAt: 'desc' }
   })
-  return data.map(parseVariable)
+  return data.map(({ visitorInfos, ...it }) =>
+    convertClashGetData({
+      ...it,
+      visitorInfos: visitorInfos.map(convertVisitorLogGetData)
+    })
+  )
 }
 
 export const GET = async () => {
@@ -62,10 +68,10 @@ export const GET = async () => {
 }
 
 const dbPost = async (data: POST['body']) => {
-  return parseVariable(
+  return convertClashGetData(
     await prisma.clash.create({
       include,
-      data: convertVariable(data)
+      data: convertClashSaveData(data)
     })
   )
 }
@@ -82,11 +88,11 @@ export const POST = async (request: NextRequest) => {
 }
 
 const dbPut = async (id: string, data: PUT['body']) => {
-  return parseVariable(
+  return convertClashGetData(
     await prisma.clash.update({
       include,
       data: {
-        ...convertVariable(data),
+        ...convertClashSaveData(data),
         updatedAt: new Date().toISOString()
       },
       where: { id }
@@ -131,7 +137,7 @@ export const PATCH = async (request: NextRequest) => {
 }
 
 const dbDelete = async (id: string) => {
-  return parseVariable(await prisma.clash.delete({ include, where: { id } }))
+  return convertClashGetData(await prisma.clash.delete({ include, where: { id } }))
 }
 
 export const DELETE = async (request: NextRequest) => {

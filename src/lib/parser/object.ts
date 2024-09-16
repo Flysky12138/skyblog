@@ -11,7 +11,11 @@ export const convertKeyValues = <
   convert: D
 ) => {
   for (const key of Object.keys(convert)) {
-    Reflect.set(target, key, convert[key]!(target[key]))
+    if (Reflect.has(target, key)) {
+      Reflect.set(target, key, convert[key]?.(target[key]))
+    }
   }
-  return target as Omit<T, keyof D> & Record<keyof D, ReturnType<NonNullable<D[keyof D]>>>
+  return target as Omit<T, keyof D> & {
+    [K in keyof D]: D[K] extends (value: any) => infer R ? R : never
+  }
 }

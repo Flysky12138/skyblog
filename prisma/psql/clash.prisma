@@ -9,7 +9,7 @@ model Clash {
   clashTemplateId String?
   variables       Json           @default(dbgenerated("'{}'::json"))
   enabled         Boolean        @default(true)
-  visitorInfos    VisitorInfo[]
+  visitorInfos    VisitorLog[]
   clashTemplates  ClashTemplate? @relation(fields: [clashTemplateId], references: [id])
 
   @@unique([name, subtitle])

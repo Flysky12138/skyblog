@@ -2,6 +2,7 @@ import prisma from '@/lib/prisma'
 import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
+import { convertVisitorLogGetData } from './utils'
 
 export type GET = MethodRequestType<{
   return: Prisma.PromiseReturnType<typeof dbGet>
@@ -15,18 +16,18 @@ const dbGet = async (page: number, take: number) => {
   const skip = (page - 1) * take
 
   const [data, total] = await prisma.$transaction([
-    prisma.visitorInfo.findMany({
+    prisma.visitorLog.findMany({
       skip,
       take,
       orderBy: {
         createdAt: 'desc'
       }
     }),
-    prisma.visitorInfo.count()
+    prisma.visitorLog.count()
   ])
 
   return {
-    data,
+    data: data.map(convertVisitorLogGetData),
     pagination: { skip, take, total }
   }
 }

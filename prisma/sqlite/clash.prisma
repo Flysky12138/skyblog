@@ -9,7 +9,7 @@ model Clash {
   clashTemplateId String?
   variables       String         @default("{}") // psql 使用 json 类型
   enabled         Boolean        @default(true)
-  visitorInfos    VisitorInfo[]
+  visitorInfos    VisitorLog[]
   clashTemplates  ClashTemplate? @relation(fields: [clashTemplateId], references: [id])
 
   @@unique([name, subtitle])

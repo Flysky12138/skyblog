@@ -13,8 +13,6 @@ import { SELECTOR } from '@/lib/constants'
 import { Live2DBreakpoint, Live2DEnable, Live2DProvider } from '@/provider/live2d'
 import { Dashboard } from '@mui/icons-material'
 import { IconButton, Tooltip } from '@mui/joy'
-import { Analytics } from '@vercel/analytics/next'
-import { SpeedInsights } from '@vercel/speed-insights/next'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import React from 'react'
@@ -71,10 +69,8 @@ export default function Layout({ children }: React.PropsWithChildren) {
           </Live2DEnable>
         </Live2DBreakpoint>
       </aside>
-      <EnvMatchDisplay env="development" not={true}>
+      <EnvMatchDisplay env="development" reverse={true}>
         <Analytic />
-        <Analytics />
-        <SpeedInsights />
       </EnvMatchDisplay>
     </Live2DProvider>
   )
