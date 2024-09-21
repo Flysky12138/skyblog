@@ -29,16 +29,18 @@
   article {
     @apply overflow-hidden p-5 font-body first:[&>*]:mt-2 last:[&>*]:mb-2;
     @apply prose prose-sm prose-sky dark:prose-invert md:prose-base;
-    @apply prose-td:whitespace-nowrap;
-    @apply prose-table:block prose-table:overflow-auto;
+
     @apply prose-a:no-underline hover:prose-a:underline;
     @apply prose-strong:font-bold;
     @apply prose-blockquote:rounded-sm;
     @apply prose-img:s-bg-sheet prose-img:rounded-lg;
     @apply prose-p:my-2;
     @apply prose-ul:[&_ul]:list-[circle];
-    @apply prose-td:px-4 first:prose-td:pl-0 last:prose-td:pr-0;
-    @apply prose-th:px-4 first:prose-th:pl-0 last:prose-th:pr-0;
+
+    @apply prose-table:block prose-table:overflow-auto;
+    @apply only:prose-tr:s-bg-sheet even:prose-tr:s-bg-sheet;
+    @apply dark:prose-th:s-border-color-card prose-th:border prose-th:px-4 prose-th:py-2;
+    @apply dark:prose-td:s-border-color-card prose-td:whitespace-nowrap prose-td:border prose-td:px-4;
   }
   pre,
   code {

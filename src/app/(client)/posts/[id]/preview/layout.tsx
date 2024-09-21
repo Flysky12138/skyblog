@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 }
 
 export default function Layout({ children }: React.PropsWithChildren) {
-  return <section>{children}</section>
+  return children
 }

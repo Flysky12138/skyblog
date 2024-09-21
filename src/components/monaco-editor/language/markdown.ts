@@ -3,6 +3,7 @@ import babelPlugins from 'prettier/plugins/babel'
 import estreePlugins from 'prettier/plugins/estree'
 import markdownPlugins from 'prettier/plugins/markdown'
 import prettier from 'prettier/standalone'
+import { grammars } from 'tm-grammars'
 import { LanguagePropsType } from '../index'
 
 const LANGUAGE = 'markdown'
@@ -33,28 +34,73 @@ export const markdownConfig: LanguagePropsType = {
         const { endColumn, startColumn } = model.getWordUntilPosition(position)
         const range = { endColumn, startColumn, endLineNumber: position.lineNumber, startLineNumber: position.lineNumber }
 
-        // 属性提示
-        const suggestProperty = (payload: Array<{ key: string } & XOR<{ value: string }, { values: string[] }>>) => {
-          return {
-            suggestions: payload.map(({ key, value, values }) => {
-              let insertText = key
-              if (value != undefined) insertText += `="${value || '$0'}"`
-              else if (values && values.length > 0) insertText += `="\${1|${values.join(',')}|}"`
-              return {
-                insertText,
-                range,
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                kind: monaco.languages.CompletionItemKind.Property,
-                label: key
-              }
-            })
-          }
-        }
         const textUntilPosition = model.getValueInRange({
           endColumn: position.column,
           endLineNumber: position.lineNumber,
           startColumn: 1,
           startLineNumber: position.lineNumber
+        })
+
+        /**
+         * 行内元素代码块的支持语言提示
+         * @example
+         * `const num = 1{:javascript}`
+         * ```javascript
+         */
+        if (/{:/.test(textUntilPosition) || /^`{3}/.test(textUntilPosition)) {
+          return {
+            suggestions: grammars.map(({ name, displayName }) => ({
+              range,
+              detail: displayName,
+              insertText: `\${0:${name}}`,
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              kind: monaco.languages.CompletionItemKind.Enum,
+              label: name
+            }))
+          }
+        }
+
+        // 自定义组建提示
+        const suggestField = (payload: Array<{ detail: string; key: string; value: string[] }>) => ({
+          suggestions: payload.map(({ key, value, detail }) => ({
+            detail,
+            range,
+            insertText: value.join('\n'),
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            kind: monaco.languages.CompletionItemKind.Field,
+            label: key
+          }))
+        })
+        if (/^\s*$/.test(textUntilPosition)) {
+          return suggestField([
+            { detail: '选项卡', key: 'tab', value: ['::::tabs', ':::tab{label="$1"}', '$2', ':::', ':::tab{label="$3"}', '$4', ':::', '::::'] },
+            { detail: '分割线', key: 'hr', value: ['::hr[$1]'] },
+            { detail: 'MDX 页面', key: 'mdx', value: ['::mdx{path=$0}'] },
+            { detail: '瀑布流布局', key: 'masonry', value: ['::::masonry', '$1', '::::'] },
+            { detail: '图片预览', key: 'images', value: [':::images', '$1', ':::'] },
+            {
+              detail: '手风琴',
+              key: 'accordion-group',
+              value: [':::::accordion-group', '::::accordion', ':::accordion-summary', '$1', ':::', ':::accordion-details', '$2', ':::', '::::', ':::::']
+            },
+            { detail: '手风琴', key: 'accordion', value: ['::::accordion', ':::accordion-summary', '$1', ':::', ':::accordion-details', '$2', ':::', '::::'] }
+          ])
+        }
+
+        // 自定义组建属性提示
+        const suggestProperty = (payload: Array<{ key: string } & XOR<{ value: string }, { values: string[] }>>) => ({
+          suggestions: payload.map(({ key, value, values }) => {
+            let insertText = key
+            if (value != undefined) insertText += `="${value || '$0'}"`
+            else if (values && values.length > 0) insertText += `="\${1|${values.join(',')}|}"`
+            return {
+              insertText,
+              range,
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              kind: monaco.languages.CompletionItemKind.Property,
+              label: key
+            }
+          })
         })
         switch (textUntilPosition.match(/:{1,}(\S+?)(?:\[.*\])?{/)?.[1] || '') {
           case 'tabs':
@@ -93,33 +139,6 @@ export const markdownConfig: LanguagePropsType = {
               { key: 'disabled', value: 'true' }
             ])
         }
-
-        // 组建提示
-        const suggestField = (payload: Array<{ detail: string; key: string; value: string[] }>) => {
-          return {
-            suggestions: payload.map(({ key, value, detail }) => ({
-              detail,
-              range,
-              insertText: value.join('\n'),
-              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-              kind: monaco.languages.CompletionItemKind.Field,
-              label: key
-            }))
-          }
-        }
-        return suggestField([
-          { detail: '选项卡', key: 'tab', value: ['::::tabs', ':::tab{label="$1"}', '$2', ':::', ':::tab{label="$3"}', '$4', ':::', '::::'] },
-          { detail: '分割线', key: 'hr', value: ['::hr[$1]'] },
-          { detail: 'MDX 页面', key: 'mdx', value: ['::mdx{path=$0}'] },
-          { detail: '瀑布流布局', key: 'masonry', value: ['::::masonry', '$1', '::::'] },
-          { detail: '图片预览', key: 'images', value: [':::images', '$1', ':::'] },
-          {
-            detail: '手风琴',
-            key: 'accordion-group',
-            value: [':::::accordion-group', '::::accordion', ':::accordion-summary', '$1', ':::', ':::accordion-details', '$2', ':::', '::::', ':::::']
-          },
-          { detail: '手风琴', key: 'accordion', value: ['::::accordion', ':::accordion-summary', '$1', ':::', ':::accordion-details', '$2', ':::', '::::'] }
-        ])
       }
     })
   ]

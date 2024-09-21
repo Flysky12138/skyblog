@@ -27,5 +27,5 @@ export const MDXClient = ({ value }: MDXClientProps) => {
 
   if (!source) return null
 
-  return <MDXRemote {...source} components={components} lazy={true} />
+  return <MDXRemote {...source} components={components} />
 }
