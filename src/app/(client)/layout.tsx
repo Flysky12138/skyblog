@@ -13,11 +13,10 @@ import { SELECTOR } from '@/lib/constants'
 import { Live2DBreakpoint, Live2DEnable, Live2DProvider } from '@/provider/live2d'
 import { Dashboard } from '@mui/icons-material'
 import { IconButton, Tooltip } from '@mui/joy'
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import React from 'react'
 
-const Music = dynamic(() => import('./_components/Music'), { ssr: false })
+// const Music = dynamic(() => import('./_components/Music'), { ssr: false })
 // const Ribbon = dynamic(() => import('@/components/canvas/ribbon'), { ssr: false })
 // const Fish = dynamic(() => import('@/components/canvas/fish'), { ssr: false })
 
@@ -37,7 +36,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
             <hr className="s-border-color-divider mx-1 h-4 rounded border" />
           </EnvMatchDisplay>
           <div className="empty:hidden" id={SELECTOR.IDS.ISSUES_MOBILE}></div>
-          <Music />
+          {/* <Music /> */}
           <Live2DBreakpoint>
             <ToggleLive2D />
           </Live2DBreakpoint>

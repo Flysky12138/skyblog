@@ -4,9 +4,11 @@ import dotenv from 'dotenv'
 dotenv.config({ path: '.env.local' })
 
 const main = async () => {
-  const posts = await prisma.post.findMany({
-    select: {
-      id: true
+  const posts = await prisma.visitorLog.deleteMany({
+    where: {
+      ip: {
+        startsWith: '104'
+      }
     }
   })
   console.log(posts)

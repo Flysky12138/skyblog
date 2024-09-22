@@ -10,11 +10,12 @@ export default function Analytic() {
   const [submitted, setSubmitted] = useSessionStorage(SESSIONSTORAGE.ANALYTIC_SUBMITTED, false)
 
   useAsync(async () => {
+    if (session.status != 'authenticated') return
     if (session.data?.role == 'ADMIN') return
     if (submitted) return
     await CustomRequest('POST api/visitor', {})
     setSubmitted(true)
-  })
+  }, [session])
 
   return null
 }
