@@ -3,7 +3,6 @@ import { getAll } from '@vercel/edge-config'
 import { geolocation, ipAddress } from '@vercel/functions'
 import { MiddlewareConfig, NextMiddleware, NextRequest, NextResponse } from 'next/server'
 import { EDGE_CONFIG } from './lib/constants'
-import { CustomResponse } from './lib/server/response'
 
 export const config: MiddlewareConfig = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)']
@@ -41,12 +40,6 @@ export const middleware: NextMiddleware = async (request, event) => {
     ) {
       return NextResponse.rewrite(url)
     }
-  }
-
-  // 网易云音乐 API 拦截
-  if (matchUrls(request, ['/api/music/neteasecloud', '/api/dashboard/music/neteasecloud'])) {
-    if (process.env.API_NETEASECLOUDMUSIC) return
-    return CustomResponse.error('缺少环境变量 {API_NETEASECLOUDMUSIC}', 500)
   }
 
   // 权限管理

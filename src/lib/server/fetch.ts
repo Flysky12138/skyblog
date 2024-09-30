@@ -46,7 +46,7 @@ const Core = async (promise: () => Promise<Response>) => {
 /**
  * 封装的基础请求方法
  */
-export const CustomFetch = async <T = any>(input: RequestInfo | URL, { body, headers, ...init }: FetchOption = {}): Promise<T> => {
+export const CustomFetch = async <T = any>(input: RequestInfo | URL, { body, headers, ...init }: FetchOptions = {}): Promise<T> => {
   headers = Object.assign({}, headers) // 避免修改原对象
 
   if (!(body instanceof FormData)) {

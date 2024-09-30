@@ -6,10 +6,10 @@ import { NextRequest } from 'next/server'
 
 export type EdgeBanKeysType = (typeof EDGE_CONFIG)[keyof PickStartsWith<typeof EDGE_CONFIG, 'BAN'>]
 
-export type GET = MethodRequestType<{
+export type GET = MethodRouteType<{
   return: Partial<Record<EdgeBanKeysType, string[]>>
 }>
-export type PUT = MethodRequestType<{
+export type PUT = MethodRouteType<{
   body: {
     key: EdgeBanKeysType
     value: string[]

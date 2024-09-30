@@ -16,7 +16,6 @@ import { IconButton, Tooltip } from '@mui/joy'
 import Link from 'next/link'
 import React from 'react'
 
-// const Music = dynamic(() => import('./_components/Music'), { ssr: false })
 // const Ribbon = dynamic(() => import('@/components/canvas/ribbon'), { ssr: false })
 // const Fish = dynamic(() => import('@/components/canvas/fish'), { ssr: false })
 
@@ -36,7 +35,6 @@ export default function Layout({ children }: React.PropsWithChildren) {
             <hr className="s-border-color-divider mx-1 h-4 rounded border" />
           </EnvMatchDisplay>
           <div className="empty:hidden" id={SELECTOR.IDS.ISSUES_MOBILE}></div>
-          {/* <Music /> */}
           <Live2DBreakpoint>
             <ToggleLive2D />
           </Live2DBreakpoint>

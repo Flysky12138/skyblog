@@ -14,9 +14,6 @@
 # https://ipinfo.io/
 TOKEN_IPINFO=7f4c6f9e0a32d8c
 
-# netease cloud music
-API_NETEASECLOUDMUSIC=https://netease-cloud-music-api-flysky.vercel.app
-
 # https://cloud.browserless.io/
 TOKEN_BROWSERLESS=3d0f06ec-ff26-4b05-8937-80fb1269f60d
 
@@ -49,9 +46,9 @@ CDN_URL=
 
 1. 优先使用 `tailwindcss`，只有在使用 `mui` & `joy` 组建时需要修改内部指定类或 CSS 变量时才使用 `sx` 调整样式
 2. 为了减少客户端包的大小并充分利用服务器，请尽可能将状态 `'use client'` 移动到组件树的较低位置 [参考 ↗](https://nextjs.org/docs/getting-started/react-essentials#moving-client-components-to-the-leaves)
-3. `/src/app/**/_components` 是对应路由用的非通用组建。为了和文件路由区分，文件夹名用大驼峰
+3. `/src/app/**/_components` 是对应路由用的非通用组建
 4. 组件根标签是 `div` 等无意义标签，换成 `section`；`React.Fragment` 除外
-5. 接口类型导出 `export type POST = MethodRequestType<{}>`
+5. 接口类型导出 `export type POST = MethodRouteType<{}>`
 6. 对数据库的 CRUD 方法提取到外层，并命名为 `db<Get|Post...>`，以便使用 `Prisma.PromiseReturnType<typeof dbGet>` 获取返回类型
 7. 类型命名以 `Type` 结尾，接口不以 `Type` 结尾
 

@@ -1,6 +1,5 @@
 namespace NodeJS {
   interface ProcessEnv {
-    API_NETEASECLOUDMUSIC: StartsWith<Protocol>
     CDN_URL: string | undefined
     EDGE_ID: string
     GITHUB_ID: string

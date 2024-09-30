@@ -4,12 +4,12 @@ import { edgeFetch } from '@/lib/server/vercel-edge'
 import { get } from '@vercel/edge-config'
 import { NextRequest } from 'next/server'
 
-export type GET = MethodRequestType<{
+export type GET = MethodRouteType<{
   return: {
     src?: string
   }
 }>
-export type PUT = MethodRequestType<{
+export type PUT = MethodRouteType<{
   body: {
     src: string
   }

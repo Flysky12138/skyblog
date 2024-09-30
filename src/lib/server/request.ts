@@ -19,7 +19,7 @@ const generatePath = (path: string, params: object) => {
 /**
  * 用于请求基于 Nextjs 文件路由定义的接口
  */
-export const CustomRequest = async <T extends keyof ApiMap>(input: T, options: CustomRequestOption<T>): Promise<ApiMap[T]['return']> => {
+export const CustomRequest = async <T extends keyof ApiMap>(input: T, options: CustomRequestOptions<T>): Promise<ApiMap[T]['return']> => {
   const [method, api] = input.split(' ') as [Method, keyof typeof API]
   const { body, search = {}, params = {} } = options || {}
 

@@ -5,7 +5,7 @@ import { include } from './prisma.config'
 
 export const dynamic = 'force-dynamic'
 
-export type GET = MethodRequestType<{
+export type GET = MethodRouteType<{
   return: Prisma.PromiseReturnType<typeof dbGet>
 }>
 

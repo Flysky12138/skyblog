@@ -2,42 +2,36 @@ import prisma from '@/lib/prisma'
 import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
+import { PaginationArgs } from 'prisma-paginate'
 import { convertVisitorLogGetData } from './utils'
 
-export type GET = MethodRequestType<{
+export type GET = MethodRouteType<{
   return: Prisma.PromiseReturnType<typeof dbGet>
-  search: {
-    page: number
-    take: number
-  }
+  search: PaginationArgs
 }>
 
-const dbGet = async (page: number, take: number) => {
-  const skip = (page - 1) * take
-
-  const [data, total] = await prisma.$transaction([
-    prisma.visitorLog.findMany({
-      skip,
-      take,
+const dbGet = async (payload: GET['search']) => {
+  const { result, totalPages, ...data } = await prisma.visitorLog.paginate(
+    {
       orderBy: {
         createdAt: 'desc'
       }
-    }),
-    prisma.visitorLog.count()
-  ])
-
+    },
+    payload
+  )
   return {
-    data: data.map(convertVisitorLogGetData),
-    pagination: { skip, take, total }
+    ...data,
+    totalPages,
+    result: result.map(convertVisitorLogGetData)
   }
 }
 
 export const GET = async (request: NextRequest) => {
   try {
     const page = Number.parseInt(request.nextUrl.searchParams.get('page') || '1')
-    const take = Number.parseInt(request.nextUrl.searchParams.get('take') || '50')
+    const limit = Number.parseInt(request.nextUrl.searchParams.get('limit') || '50')
 
-    const res = await dbGet(page, take)
+    const res = await dbGet({ limit, page })
     return CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)

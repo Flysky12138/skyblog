@@ -3,7 +3,7 @@ import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
-export type POST = MethodRequestType<{
+export type POST = MethodRouteType<{
   body: Prisma.UserCreateInput
   return: Prisma.PromiseReturnType<typeof dbPost>
 }>

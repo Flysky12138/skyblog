@@ -18,15 +18,13 @@ export default function Page() {
       CustomRequest('GET api/dashboard/users/visitor', {
         search: {
           page,
-          take: 50
+          limit: 50
         }
       }),
     {
       refreshInterval: 10 * 1000
     }
   )
-
-  const pageTotal = visitors ? Math.ceil(visitors.pagination.total / visitors.pagination.take) : 1
 
   return (
     <>
@@ -50,7 +48,7 @@ export default function Page() {
             </tr>
           </thead>
           <tbody>
-            {visitors?.data.map((visitor, index) => (
+            {visitors?.result.map((visitor, index) => (
               <tr key={visitor.id}>
                 <td className="s-bg-content sticky left-0 z-20 border-r">{index + 1}</td>
                 <td className="border-l">{visitor.ip}</td>
@@ -61,13 +59,13 @@ export default function Page() {
                 <td>{formatISOTime(visitor.createdAt)}</td>
               </tr>
             ))}
-            <TableStatus colSpan={7} isEmpty={visitors?.data.length == 0} isLoading={isLoading} />
+            <TableStatus colSpan={7} isEmpty={visitors?.result.length == 0} isLoading={isLoading} />
           </tbody>
         </Table>
       </TableWrapper>
-      {pageTotal > 1 ? (
+      {visitors?.totalPages && visitors.totalPages > 1 ? (
         <div className="mt-auto flex justify-end pt-4">
-          <Pagination className="inline-block" count={pageTotal} page={page} onChange={(_, p) => setPage(p)} />
+          <Pagination className="inline-block" count={visitors.totalPages} page={page} onChange={(_, p) => setPage(p)} />
         </div>
       ) : null}
     </>

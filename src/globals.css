@@ -38,8 +38,8 @@
     @apply prose-ul:[&_ul]:list-[circle];
 
     @apply prose-table:block prose-table:overflow-auto;
-    @apply only:prose-tr:s-bg-sheet even:prose-tr:s-bg-sheet;
-    @apply dark:prose-th:s-border-color-card prose-th:border prose-th:px-4 prose-th:py-2;
+    @apply even:prose-tr:s-bg-sheet;
+    @apply dark:prose-th:s-border-color-card prose-th:border prose-th:border-b-2 prose-th:px-4 prose-th:py-2;
     @apply dark:prose-td:s-border-color-card prose-td:whitespace-nowrap prose-td:border prose-td:px-4;
   }
   pre,

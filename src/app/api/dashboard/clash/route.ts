@@ -5,16 +5,16 @@ import { NextRequest } from 'next/server'
 import { convertVisitorLogGetData } from '../users/visitor/utils'
 import { convertClashGetData, convertClashSaveData } from './utils'
 
-export type GET = MethodRequestType<{
+export type GET = MethodRouteType<{
   return: Prisma.PromiseReturnType<typeof dbGet>
 }>
-export type POST = MethodRequestType<{
+export type POST = MethodRouteType<{
   body: Omit<Prisma.ClashUncheckedCreateInput, 'variables'> & {
     variables: object
   }
   return: Prisma.PromiseReturnType<typeof dbPost>
 }>
-export type PUT = MethodRequestType<{
+export type PUT = MethodRouteType<{
   body: Pick<Prisma.ClashUncheckedCreateInput, 'name' | 'subtitle' | 'content' | 'clashTemplateId'> & {
     variables: object
   }
@@ -23,14 +23,14 @@ export type PUT = MethodRequestType<{
     id: string
   }
 }>
-export type PATCH = MethodRequestType<{
+export type PATCH = MethodRouteType<{
   body: Pick<Prisma.ClashUncheckedCreateInput, 'enabled'>
   return: Prisma.PromiseReturnType<typeof dbPatch>
   search: {
     id: string
   }
 }>
-export type DELETE = MethodRequestType<{
+export type DELETE = MethodRouteType<{
   return: Prisma.PromiseReturnType<typeof dbDelete>
   search: {
     id: string

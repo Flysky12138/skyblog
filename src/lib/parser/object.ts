@@ -1,5 +1,5 @@
 /**
- * 对对象的某些键值进行处理
+ * 对对象的某些键值进行处理，修改源对象
  */
 export const convertKeyValues = <
   T extends Record<string, any>,

@@ -5,14 +5,14 @@ import { del, put } from '@vercel/blob'
 import { NextRequest } from 'next/server'
 import puppeteer, { Browser } from 'puppeteer-core'
 
-export type PUT = MethodRequestType<{
+export type PUT = MethodRouteType<{
   body: Prisma.FriendLinksCreateInput
   return: Prisma.PromiseReturnType<typeof dbPut>
 }>
-export type PATCH = MethodRequestType<{
+export type PATCH = MethodRouteType<{
   return: Prisma.PromiseReturnType<typeof dbPatch>
 }>
-export type DELETE = MethodRequestType<{
+export type DELETE = MethodRouteType<{
   return: Prisma.PromiseReturnType<typeof dbDelete>
 }>
 

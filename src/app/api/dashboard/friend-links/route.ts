@@ -3,10 +3,10 @@ import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
-export type GET = MethodRequestType<{
+export type GET = MethodRouteType<{
   return: Prisma.PromiseReturnType<typeof dbGet>
 }>
-export type POST = MethodRequestType<{
+export type POST = MethodRouteType<{
   body: Prisma.FriendLinksCreateInput
   return: Prisma.PromiseReturnType<typeof dbPost>
 }>

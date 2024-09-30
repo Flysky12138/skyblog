@@ -5,7 +5,7 @@ import { NextRequest } from 'next/server'
 
 export const runtime = 'nodejs'
 
-export type POST = MethodRequestType<{
+export type POST = MethodRouteType<{
   return: Prisma.PromiseReturnType<typeof dbPost>
   search: {
     id: string

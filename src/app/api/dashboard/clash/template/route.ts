@@ -3,21 +3,21 @@ import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
-export type GET = MethodRequestType<{
+export type GET = MethodRouteType<{
   return: Prisma.PromiseReturnType<typeof dbGet>
 }>
-export type POST = MethodRequestType<{
+export type POST = MethodRouteType<{
   body: Prisma.ClashTemplateCreateInput
   return: Prisma.PromiseReturnType<typeof dbPost>
 }>
-export type PUT = MethodRequestType<{
+export type PUT = MethodRouteType<{
   body: Pick<Prisma.ClashTemplateUpdateInput, 'name' | 'content'>
   return: Prisma.PromiseReturnType<typeof dbPut>
   search: {
     id: string
   }
 }>
-export type DELETE = MethodRequestType<{
+export type DELETE = MethodRouteType<{
   return: Prisma.PromiseReturnType<typeof dbGet>
   search: {
     id: string

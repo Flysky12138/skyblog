@@ -13,15 +13,8 @@ export const POST_WHERE_INPUT: Prisma.PostWhereInput = {
 }
 
 export const getPosts = async (page: number, where: Prisma.PostWhereInput = {}) => {
-  const take = Number.parseInt(process.env.NEXT_PUBLIC_PAGE_POSTCARD_COUNT)
-  const skip = (page - 1) * take
-  where = Object.assign({}, POST_WHERE_INPUT, where)
-
-  const [data, total] = await prisma.$transaction([
-    prisma.post.findMany({
-      skip,
-      take,
-      where,
+  const data = await prisma.post.paginate(
+    {
       orderBy: [{ sticky: 'desc' }, { updatedAt: 'desc' }],
       select: {
         categories: true,
@@ -32,14 +25,17 @@ export const getPosts = async (page: number, where: Prisma.PostWhereInput = {}) 
         tags: true,
         title: true,
         updatedAt: true
-      }
-    }),
-    prisma.post.count({ where })
-  ])
-
+      },
+      where: Object.assign({}, POST_WHERE_INPUT, where)
+    },
+    {
+      page,
+      limit: Number.parseInt(process.env.NEXT_PUBLIC_PAGE_POSTCARD_COUNT)
+    }
+  )
   return {
-    data,
-    pagination: { skip, take, total }
+    ...data,
+    totalPages: data.totalPages
   }
 }
 
@@ -49,7 +45,7 @@ interface PostListProps extends Pick<PaginationForServerProps, 'path'> {
 }
 
 export default function PostList({ posts, ...props }: PostListProps) {
-  if (!posts || posts.data.length == 0) {
+  if (!posts || posts.count == 0) {
     return (
       <Typography className="text-center" level="body-md">
         空空如也
@@ -59,7 +55,7 @@ export default function PostList({ posts, ...props }: PostListProps) {
 
   return (
     <>
-      {posts.data.map(post => (
+      {posts.result.map(post => (
         <Card key={post.id} className="space-y-4 break-all p-5">
           <Typography
             className="inline-block font-title font-normal hover:text-sky-500 focus-visible:text-sky-500"
@@ -122,7 +118,7 @@ export default function PostList({ posts, ...props }: PostListProps) {
           )}
         </Card>
       ))}
-      <PaginationForServer className="mx-auto" count={Math.ceil(posts.pagination.total / posts.pagination.take)} {...props} />
+      <PaginationForServer className="mx-auto" count={Math.ceil(posts.count / posts.limit)} {...props} />
     </>
   )
 }

@@ -5,25 +5,25 @@ import { Category, Post, Prisma, Tag } from '@prisma/client'
 import { NextRequest } from 'next/server'
 import { include } from '../prisma.config'
 
-export type GET = MethodRequestType<{
+export type GET = MethodRouteType<{
   return: Prisma.PromiseReturnType<typeof dbGet>
 }>
-export type POST = MethodRequestType<{
+export type POST = MethodRouteType<{
   body: Pick<Post, 'title' | 'description' | 'content' | 'authorId' | 'sticky' | 'showTitleCard'> & {
     categories: Category['name'][]
     tags: Tag['name'][]
   }
   return: Prisma.PromiseReturnType<typeof dbPost>
 }>
-export type PUT = MethodRequestType<{
+export type PUT = MethodRouteType<{
   body: Omit<POST['body'], 'authorId'>
   return: Prisma.PromiseReturnType<typeof dbPut>
 }>
-export type PATCH = MethodRequestType<{
+export type PATCH = MethodRouteType<{
   body: Pick<Post, 'published'>
   return: Prisma.PromiseReturnType<typeof dbPatch>
 }>
-export type DELETE = MethodRequestType<{
+export type DELETE = MethodRouteType<{
   return: Prisma.PromiseReturnType<typeof dbDelete>
 }>
 

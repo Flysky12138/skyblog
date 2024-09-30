@@ -5,7 +5,7 @@ import { NextRequest } from 'next/server'
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-export type GET = MethodRequestType<{
+export type GET = MethodRouteType<{
   return: {
     from: string
     hitokoto: string
