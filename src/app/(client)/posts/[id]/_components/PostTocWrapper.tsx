@@ -1,8 +1,10 @@
 'use client'
 
-import { getElementDistanceFromTop } from '@/lib/dom/document'
+import { SELECTOR } from '@/lib/constants'
 import { isBetween } from '@/lib/parser/number'
+import { debounce } from '@mui/material'
 import React from 'react'
+import { useEvent } from 'react-use'
 
 interface PostTocWrapperProps {
   children: React.ReactNode
@@ -10,40 +12,39 @@ interface PostTocWrapperProps {
 }
 
 export default function PostTocWrapper({ children, ...props }: PostTocWrapperProps) {
-  // 获取所有标题距页面顶部距离
-  const headingY = React.useRef<number[]>([])
-  React.useEffect(() => {
-    const article = document.querySelector('article')
-    if (!article) return
-    headingY.current = Array.from(article.querySelectorAll<HTMLHeadingElement>('h1,h2,h3,h4,h5,h6')).map(getElementDistanceFromTop)
-  }, [])
-
   const [activeIndex, setActiveIndex] = React.useState(0)
 
-  // 滚动时判断活跃标题的索引
-  const offsetY = 100
-  React.useEffect(() => {
-    const callback: EventListener = event => {
-      const target = event.target as HTMLElement
-      const scrollTop = target.querySelector('html')?.scrollTop || 0
-      const index = Math.max(
-        0,
-        headingY.current.findLastIndex(_y => _y < scrollTop + offsetY)
-      )
-      setActiveIndex(index)
-    }
-    window.addEventListener('scroll', callback)
-    return () => {
-      window.removeEventListener('scroll', callback)
-    }
-  }, [])
+  useEvent(
+    'scroll',
+    debounce(() => {
+      const article = document.getElementById(SELECTOR.IDS.POST_CONTAINER)
+      if (!article) return
+      const rects = Array.from(article.querySelectorAll<HTMLHeadingElement>('h1,h2,h3,h4,h5,h6'), it => it.getBoundingClientRect())
+      const [min, max] = [0, 200]
+      for (let i = 0; i < rects.length; i++) {
+        if (
+          // 第一个标题大于最大范围
+          (i == 0 && rects[i].top > max) ||
+          // 范围内
+          isBetween(rects[i].top, min, max) ||
+          // 指定的范围在两标题之间
+          (i + 1 < rects.length && rects[i].top < min && rects[i + 1].top > max) ||
+          // 最后一个标题小于最小范围
+          (i + 1 == rects.length && rects[i].top < min)
+        ) {
+          setActiveIndex(i)
+          break
+        }
+      }
+    }, 200)
+  )
 
   // 设置活跃标题样式
   const tocContainerRef = React.useRef<HTMLElement>(null)
   React.useEffect(() => {
-    if (!tocContainerRef.current) return
     const container = tocContainerRef.current
-    Array.from(container.children).forEach((el, i) => {
+    if (!container) return
+    Array.from(container.querySelectorAll('a[href^="#"]')).forEach((el, i) => {
       el.setAttribute('data-active', String(activeIndex == i))
       if (activeIndex != i) return
       const { offsetHeight: parentHeight, scrollTop } = container

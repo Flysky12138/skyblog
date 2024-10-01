@@ -136,7 +136,7 @@ export default function Pi() {
           </div>
         )}
       </FormControl>
-      <span ref={fontRef} aria-hidden="true" className="invisible h-0 self-start font-code">
+      <span ref={fontRef} aria-hidden="true" className="invisible absolute h-0 self-start font-code">
         3
       </span>
       {result ? (
@@ -173,7 +173,7 @@ export default function Pi() {
           </div>
         )
       ) : null}
-      <div className="space-y-4 [&>*]:m-0">
+      <div>
         {form.mode == 'arctan' && <Arctan />}
         {form.mode == 'chudnovsky' && <Chudnovsky />}
         {form.mode == 'chudnovsky-bs' && <ChudnovskyBs />}
