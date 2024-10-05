@@ -14,7 +14,7 @@ export const GET = async (request: NextRequest) => {
   if (!ip) return CustomResponse.error('未知访问', 400)
 
   try {
-    if (!process.env.TOKEN_IPINFO) throw ''
+    if (!process.env.TOKEN_IPINFO) throw new Error()
     const data = await CustomFetch(`https://ipinfo.io/${ip}?token=${process.env.TOKEN_IPINFO}`, {
       next: {
         revalidate: 2592000

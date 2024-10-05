@@ -1,9 +1,10 @@
 import Analytic from '@/components/Analytic'
 import Live2D from '@/components/canvas/live2d'
+import DisplayMatchAuth from '@/components/display/DisplayMatchAuth'
+import DisplayMatchEnv from '@/components/display/DisplayMatchEnv'
 import About from '@/components/layout/About'
 import Breakpoint from '@/components/layout/Breakpoint'
 import Container from '@/components/layout/Container'
-import EnvMatchDisplay from '@/components/layout/EnvMatchDisplay'
 import Header from '@/components/layout/Header'
 import Logo from '@/components/layout/Logo'
 import ScrollToTop from '@/components/scroll/ScrollToTop'
@@ -26,14 +27,14 @@ export default function Layout({ children }: React.PropsWithChildren) {
         <Container className="flex h-full items-center gap-x-4" variant="header">
           <Logo />
           <span aria-hidden="true" className="grow"></span>
-          <EnvMatchDisplay env="development">
+          <DisplayMatchAuth role="ADMIN">
             <Tooltip title="后台">
               <IconButton component={Link} href="/dashboard">
                 <Dashboard />
               </IconButton>
             </Tooltip>
             <hr className="s-border-color-divider mx-1 h-4 rounded border" />
-          </EnvMatchDisplay>
+          </DisplayMatchAuth>
           <div className="empty:hidden" id={SELECTOR.IDS.ISSUES_MOBILE}></div>
           <Live2DBreakpoint>
             <ToggleLive2D />
@@ -66,9 +67,9 @@ export default function Layout({ children }: React.PropsWithChildren) {
           </Live2DEnable>
         </Live2DBreakpoint>
       </aside>
-      <EnvMatchDisplay env="development" reverse={true}>
+      <DisplayMatchEnv env="development" reverse={true}>
         <Analytic />
-      </EnvMatchDisplay>
+      </DisplayMatchEnv>
     </Live2DProvider>
   )
 }

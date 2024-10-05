@@ -1,14 +1,13 @@
 'use client'
 
-import 'katex/dist/katex.min.css'
+import LoaderThree from '@/assets/lottie/loader-three.json'
+import Lottie from '@lottielab/lottie-player/react'
 import { MDXRemote } from 'next-mdx-remote'
-import { MDXRemoteProps, MDXRemoteSerializeResult } from 'next-mdx-remote/rsc'
+import { MDXRemoteProps } from 'next-mdx-remote/rsc'
 import { serialize } from 'next-mdx-remote/serialize'
-import React from 'react'
 import { useAsync } from 'react-use'
 import { components } from './components'
-import './css/katex.css'
-import './css/shiki.css'
+import './css'
 import { options } from './options.mjs'
 
 interface MDXClientProps {
@@ -16,16 +15,17 @@ interface MDXClientProps {
 }
 
 export const MDXClient = ({ value }: MDXClientProps) => {
-  const [source, setSource] = React.useState<MDXRemoteSerializeResult>()
-
-  useAsync(async () => {
-    const data = await serialize(value, options)
-    React.startTransition(() => {
-      setSource(data)
-    })
+  const {
+    value: source,
+    loading,
+    error
+  } = useAsync(async () => {
+    return await serialize(value, options)
   }, [value])
 
-  if (!source) return null
+  if (loading) return <Lottie className="h-32" lottie={LoaderThree} />
+  if (error) return <div className="flex h-20 items-center justify-center text-xl">{error.message}</div>
+  if (!source) return <div className="flex h-20 items-center justify-center text-xl">无内容</div>
 
   return <MDXRemote {...source} components={components} />
 }

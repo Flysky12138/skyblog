@@ -8,7 +8,7 @@ figure[data-rehype-pretty-code-figure] {
     }
   }
   pre {
-    @apply s-bg-sheet px-0 py-2.5;
+    @apply s-bg-sheet max-h-[500px] px-0 py-2.5;
   }
 }
 
@@ -25,12 +25,6 @@ code[data-line-numbers] {
     counter-increment: line;
     content: counter(line);
     @apply mr-6 inline-block w-4 text-right text-slate-500;
-  }
-  &[data-line-numbers-max-digits='2'] > [data-line]::before {
-    @apply w-8;
-  }
-  &[data-line-numbers-max-digits='3'] > [data-line]::before {
-    @apply w-3;
   }
 }
 

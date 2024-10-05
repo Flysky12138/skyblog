@@ -1,13 +1,15 @@
+import DisplayMatchAuth from '@/components/display/DisplayMatchAuth'
 import Card from '@/components/layout/Card'
 import { MDXServer } from '@/components/mdx/server'
 import { MDXToc } from '@/components/mdx/toc'
 import { cn } from '@/lib/cn'
 import { SELECTOR } from '@/lib/constants'
 import prisma from '@/lib/prisma'
-import { Typography } from '@mui/joy'
+import { Edit } from '@mui/icons-material'
+import { IconButton, Tooltip, Typography } from '@mui/joy'
 import { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import PostEdit from './_components/PostEdit'
 import PostInfo from './_components/PostInfo'
 import PostIssues from './_components/PostIssues'
 import PostTocWrapper from './_components/PostTocWrapper'
@@ -45,7 +47,13 @@ export default async function Page({ params }: PageProps) {
     <section className="space-y-5">
       {post.showTitleCard && (
         <Card className="relative flex flex-col gap-y-2 p-5">
-          <PostEdit className="absolute right-5 top-5" id={post.id} />
+          <DisplayMatchAuth role="ADMIN">
+            <Tooltip title="编辑">
+              <IconButton className="absolute right-5 top-5" component={Link} href={`/dashboard/posts/${post.id}`} target="_blank" variant="plain">
+                <Edit />
+              </IconButton>
+            </Tooltip>
+          </DisplayMatchAuth>
           <Typography className="font-title font-normal" component="h1" level="h2">
             {post.title}
           </Typography>

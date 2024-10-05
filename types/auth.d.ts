@@ -1,7 +1,7 @@
 import 'next-auth/jwt'
 import { GitHubProfile } from 'next-auth/providers/github'
 
-interface Auth {
+export interface Auth {
   id: string
   role: 'USER' | 'ADMIN'
 }
@@ -15,5 +15,3 @@ declare module 'next-auth' {
   interface Account extends Auth {}
   interface Profile extends GitHubProfile {}
 }
-
-export {}

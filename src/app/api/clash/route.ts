@@ -66,7 +66,7 @@ export const GET = async (request: NextRequest) => {
 
     return new Response(yaml, {
       headers: {
-        'Content-Disposition': `attachment; filename="${res.name}.yaml"`,
+        'Content-Disposition': `attachment; filename=${res.name}.yaml`,
         'Content-Type': 'text/plain'
         // 'Profile-Update-Interval': '12' // 自动更新间隔，以小时为单位
       }

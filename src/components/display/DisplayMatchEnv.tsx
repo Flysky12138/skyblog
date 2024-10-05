@@ -1,6 +1,6 @@
 import React from 'react'
 
-interface EnvMatchDisplayProps {
+interface DisplayMatchEnvProps {
   children: React.ReactNode
   env: typeof process.env.NODE_ENV
   /**
@@ -10,7 +10,7 @@ interface EnvMatchDisplayProps {
   reverse?: boolean
 }
 
-export default function EnvMatchDisplay({ children, env, reverse = false }: EnvMatchDisplayProps) {
+export default function DisplayMatchEnv({ children, env, reverse = false }: DisplayMatchEnvProps) {
   if ((process.env.NODE_ENV == env) == !reverse) return children
   return null
 }

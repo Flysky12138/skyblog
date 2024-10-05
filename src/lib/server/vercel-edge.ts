@@ -22,7 +22,7 @@ export const edgeFetch = async (items?: EdgeRequestItemType[]) => {
           })
     })
 
-    if ('error' in data) throw data.error
+    if ('error' in data) throw new Error(data.error)
 
     return data
   } catch (error) {

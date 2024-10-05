@@ -1,6 +1,6 @@
 'use client'
 
-import EnvMatchDisplay from '@/components/layout/EnvMatchDisplay'
+import DisplayMatchEnv from '@/components/display/DisplayMatchEnv'
 import createCache from '@emotion/cache'
 import { CacheProvider } from '@emotion/react'
 import JoyInitColorSchemeScript from '@mui/joy/InitColorSchemeScript'
@@ -52,10 +52,10 @@ export const ThemeProvider = ({ children, ...props }: Omit<ThemeProviderProps, '
     <CacheProvider value={cache}>
       <MaterialThemeProvider theme={mui} {...props}>
         <JoyCssVarsProvider defaultMode="light" theme={{ [JOY_THEME_ID]: joy }} {...props}>
-          <EnvMatchDisplay env="development" reverse={true}>
+          <DisplayMatchEnv env="development" reverse={true}>
             <MaterialInitColorSchemeScript />
             <JoyInitColorSchemeScript />
-          </EnvMatchDisplay>
+          </DisplayMatchEnv>
           {children}
         </JoyCssVarsProvider>
       </MaterialThemeProvider>

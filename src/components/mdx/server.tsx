@@ -1,10 +1,8 @@
 'use server'
 
-import 'katex/dist/katex.min.css'
 import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc'
 import { components } from './components'
-import './css/katex.css'
-import './css/shiki.css'
+import './css'
 import { options } from './options.mjs'
 
 interface MDXServerProps {
