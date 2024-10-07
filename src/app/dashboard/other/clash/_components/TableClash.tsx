@@ -131,7 +131,7 @@ export default function TableClash() {
                   size="sm"
                   variant="plain"
                   onClick={() => {
-                    copy(new URL(`/api/clash?subscribe=${clash.id}`, window.location.href).href)
+                    copy(new URL(`/api/clash/${clash.id}`, window.origin).href)
                     toast.success('复制成功')
                   }}
                 >

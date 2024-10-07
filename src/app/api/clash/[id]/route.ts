@@ -4,8 +4,8 @@ import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { ipAddress } from '@vercel/functions'
 import { NextRequest, userAgent } from 'next/server'
-import { convertClashGetData } from '../dashboard/clash/utils'
-import { convertVisitorLogSaveData } from '../dashboard/users/visitor/utils'
+import { convertClashGetData } from '../../dashboard/clash/utils'
+import { convertVisitorLogSaveData } from '../../dashboard/users/visitor/utils'
 
 export const runtime = 'nodejs'
 
@@ -35,10 +35,9 @@ const dbGet = async (id: string, data: Prisma.VisitorLogCreateInput) => {
   return convertClashGetData(clash)
 }
 
-export const GET = async (request: NextRequest) => {
+export const GET = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
-    const id = request.nextUrl.searchParams.get('subscribe')
-    if (!id) return CustomResponse.error('{subscribe} 值缺失', 422)
+    if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
     const ip = process.env.NODE_ENV == 'development' ? '0.0.0.0' : ipAddress(request)
     if (!ip) return CustomResponse.error('未知访问', 400)
@@ -55,7 +54,7 @@ export const GET = async (request: NextRequest) => {
     const agent = userAgent(request)
 
     const res = await dbGet(
-      id,
+      params.id,
       convertVisitorLogSaveData({
         agent,
         ip
