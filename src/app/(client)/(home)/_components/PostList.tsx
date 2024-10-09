@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma'
 import { CalendarMonth, Category, Loyalty, Publish } from '@mui/icons-material'
 import { Typography } from '@mui/joy'
 import { Prisma } from '@prisma/client'
+import { toMerged } from 'es-toolkit'
 import Link from 'next/link'
 import React from 'react'
 import PostUpdateAt from './PostUpdateAt'
@@ -26,7 +27,7 @@ export const getPosts = async (page: number, where: Prisma.PostWhereInput = {}) 
         title: true,
         updatedAt: true
       },
-      where: Object.assign({}, POST_WHERE_INPUT, where)
+      where: toMerged(POST_WHERE_INPUT, where)
     },
     {
       page,

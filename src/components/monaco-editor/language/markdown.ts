@@ -1,3 +1,4 @@
+import { toMerged } from 'es-toolkit'
 import { Options } from 'prettier'
 import babelPlugins from 'prettier/plugins/babel'
 import estreePlugins from 'prettier/plugins/estree'
@@ -17,7 +18,7 @@ export const markdownConfig: LanguagePropsType = {
         const source = model.getValue().replace(/^[^\S\n]+(?=:+)/gm, '') // 移除 : 符号前面的空格
         const text = await prettier.format(
           source,
-          Object.assign<Options, Options>(require('/.prettierrc.cjs'), {
+          toMerged<Options, Options>(require('/.prettierrc.cjs'), {
             jsxSingleQuote: true,
             parser: LANGUAGE,
             plugins: [estreePlugins, babelPlugins, markdownPlugins],

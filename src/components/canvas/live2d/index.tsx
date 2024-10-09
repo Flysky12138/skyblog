@@ -2,8 +2,8 @@
 
 import useLive2D from '@/hooks/useLive2D'
 import { cn } from '@/lib/cn'
-import { sleep } from '@/lib/sleep'
 import { Live2DContext } from '@/provider/live2d'
+import { delay } from 'es-toolkit'
 import { AnimatePresence, motion } from 'framer-motion'
 import React from 'react'
 import './live2d.css'
@@ -19,7 +19,7 @@ export default function Live2D() {
         setLoading(false)
       },
       onLoad: async () => {
-        await sleep(500) // 让电脑缓缓再显示，防止卡顿掉帧
+        await delay(500) // 让电脑缓缓再显示，防止卡顿掉帧
         containerRef.current?.classList.remove('-translate-x-full', 'opacity-0')
         setLoading(false)
         setEnable(true)

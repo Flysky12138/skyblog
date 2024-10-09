@@ -5,9 +5,10 @@ import { cn } from '@/lib/cn'
 import { DiffEditor, DiffEditorProps, Editor, EditorProps, loader, Monaco, OnMount } from '@monaco-editor/react'
 import { AutoAwesome, Code, CodeOff, ZoomInMap, ZoomOutMap } from '@mui/icons-material'
 import { IconButton, Tooltip } from '@mui/joy'
+import { toMerged } from 'es-toolkit'
 import { editor, IDisposable } from 'monaco-editor'
 import React from 'react'
-import { useToggle } from 'react-use'
+import { useMeasure, useToggle } from 'react-use'
 import Card from '../layout/Card'
 import './index.css'
 
@@ -32,7 +33,6 @@ const OPTIONS: editor.IStandaloneEditorConstructionOptions = {
   fontSize: 14,
   lineDecorationsWidth: 15,
   lineNumbersMinChars: 4,
-  minimap: { enabled: true },
   renderLineHighlight: 'all',
   roundedSelection: true,
   scrollBeyondLastLine: true,
@@ -102,11 +102,20 @@ const MonacoEditor: React.ForwardRefRenderFunction<MonacoEditorRef, MonacoEditor
     return () => iDisposable.current.forEach(it => it.dispose())
   }, [diffMode])
 
-  const cardRef = React.useRef<HTMLDivElement>()
   const editorRef = React.useRef<MonacoEditorRef['editor']>()
   React.useImperativeHandle(ref, () => ({
     editor: editorRef.current
   }))
+
+  // 监听容器尺寸
+  const [cardRef, cardRect] = useMeasure<HTMLDivElement>()
+  React.useEffect(() => {
+    editorRef.current?.updateOptions({
+      minimap: {
+        enabled: cardRect.width > 768
+      }
+    })
+  }, [cardRect.width])
 
   return (
     <>
@@ -145,7 +154,7 @@ const MonacoEditor: React.ForwardRefRenderFunction<MonacoEditorRef, MonacoEditor
             variant="outlined"
             onClick={() => {
               if (!zoomIn) {
-                cardHeight.current = cardRef.current?.offsetHeight || 0
+                cardHeight.current = cardRect.height || 0
               }
               zoomInToggle()
             }}
@@ -154,7 +163,7 @@ const MonacoEditor: React.ForwardRefRenderFunction<MonacoEditorRef, MonacoEditor
           </IconButton>
         </div>
         {diffMode ? (
-          <DiffEditor height={height} modified={code} options={Object.assign({}, OPTIONS, options)} original={oldCode} theme={theme} {...props} />
+          <DiffEditor height={height} modified={code} options={toMerged(OPTIONS, options)} original={oldCode} theme={theme} {...props} />
         ) : (
           <Editor
             beforeMount={monaco => {
@@ -162,7 +171,7 @@ const MonacoEditor: React.ForwardRefRenderFunction<MonacoEditorRef, MonacoEditor
               beforeMount?.(monaco)
             }}
             height={height}
-            options={Object.assign({}, OPTIONS, { lineDecorationsWidth: 0 }, options)}
+            options={toMerged(toMerged(OPTIONS, { lineDecorationsWidth: 0 }), options)}
             theme={theme}
             value={code}
             onChange={onChange}

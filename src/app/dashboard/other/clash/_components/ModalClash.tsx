@@ -119,11 +119,10 @@ export default function ModalClash({ component: Component, value, onSubmit }: Mo
             <FormLabel>内容</FormLabel>
             <MonacoEditor
               code={form.clashTemplateId ? mergeContent : form.content}
-              height="74dvh"
+              height="calc(100vh - 200px)"
               oldCode={form.clashTemplateId ? currentSelectClashTemplate?.content : oldContent}
               options={{
                 lineNumbersMinChars: 3,
-                minimap: { enabled: false },
                 readOnly: form.clashTemplateId != null
               }}
               toolbarRender={({ Space }) => (

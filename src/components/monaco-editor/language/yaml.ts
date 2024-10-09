@@ -1,3 +1,4 @@
+import { toMerged } from 'es-toolkit'
 import { Options } from 'prettier'
 import yamlPlugins from 'prettier/plugins/yaml'
 import prettier from 'prettier/standalone'
@@ -12,7 +13,7 @@ export const yamlConfig: LanguagePropsType = {
       provideDocumentFormattingEdits: async model => {
         const text = await prettier.format(
           model.getValue(),
-          Object.assign<Options, Options>(require('/.prettierrc.cjs'), {
+          toMerged<Options, Options>(require('/.prettierrc.cjs'), {
             jsxSingleQuote: true,
             parser: LANGUAGE,
             plugins: [yamlPlugins]
