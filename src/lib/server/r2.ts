@@ -27,7 +27,7 @@ export class R2 {
    * @default
    * metadata = {}
    */
-  static async put({ blob, key, metadata = {} }: { blob: Blob; key: string; metadata?: Record<string, string> }) {
+  static async put({ blob, key, metadata = {} }: { blob: Blob; key: string; metadata?: Record<string, string | number> }) {
     const formData = new FormData()
     formData.set('blob', blob)
     formData.set('key', key)

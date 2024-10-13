@@ -1,4 +1,4 @@
-/** 选择以 `T` 开头的字符串 */
+/** 以 `T` 开头的字符串 */
 type StartsWith<T extends string> = `${T}${string}`
 /** 选择对象以 `T` 开头的键 */
 type PickStartsWith<T, D extends string> = {

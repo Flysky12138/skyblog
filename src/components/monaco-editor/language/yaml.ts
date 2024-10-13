@@ -4,18 +4,16 @@ import yamlPlugins from 'prettier/plugins/yaml'
 import prettier from 'prettier/standalone'
 import { LanguagePropsType } from '../index'
 
-const LANGUAGE = 'yaml'
-
 export const yamlConfig: LanguagePropsType = {
-  language: LANGUAGE,
+  language: 'yaml',
   registerEvents: monaco => [
-    monaco.languages.registerDocumentFormattingEditProvider(LANGUAGE, {
+    monaco.languages.registerDocumentFormattingEditProvider(yamlConfig.language, {
       provideDocumentFormattingEdits: async model => {
         const text = await prettier.format(
           model.getValue(),
           toMerged<Options, Options>(require('/.prettierrc.cjs'), {
             jsxSingleQuote: true,
-            parser: LANGUAGE,
+            parser: yamlConfig.language,
             plugins: [yamlPlugins]
           })
         )

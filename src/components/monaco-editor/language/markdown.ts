@@ -7,20 +7,18 @@ import prettier from 'prettier/standalone'
 import { grammars } from 'tm-grammars'
 import { LanguagePropsType } from '../index'
 
-const LANGUAGE = 'markdown'
-
 export const markdownConfig: LanguagePropsType = {
-  language: LANGUAGE,
+  language: 'markdown',
   registerEvents: monaco => [
     // 格式化
-    monaco.languages.registerDocumentFormattingEditProvider(LANGUAGE, {
+    monaco.languages.registerDocumentFormattingEditProvider(markdownConfig.language, {
       provideDocumentFormattingEdits: async model => {
         const source = model.getValue().replace(/^[^\S\n]+(?=:+)/gm, '') // 移除 : 符号前面的空格
         const text = await prettier.format(
           source,
           toMerged<Options, Options>(require('/.prettierrc.cjs'), {
             jsxSingleQuote: true,
-            parser: LANGUAGE,
+            parser: markdownConfig.language,
             plugins: [estreePlugins, babelPlugins, markdownPlugins],
             requirePragma: false
           })
@@ -30,7 +28,7 @@ export const markdownConfig: LanguagePropsType = {
     }),
 
     // 输入提示
-    monaco.languages.registerCompletionItemProvider(LANGUAGE, {
+    monaco.languages.registerCompletionItemProvider(markdownConfig.language, {
       provideCompletionItems: (model, position) => {
         const { endColumn, startColumn } = model.getWordUntilPosition(position)
         const range = { endColumn, startColumn, endLineNumber: position.lineNumber, startLineNumber: position.lineNumber }
@@ -42,18 +40,15 @@ export const markdownConfig: LanguagePropsType = {
           startLineNumber: position.lineNumber
         })
 
-        /**
-         * 行内元素代码块的支持语言提示
-         * @example
-         * `const num = 1{:javascript}`
-         * ```javascript
-         */
-        if (/{:/.test(textUntilPosition) || /^`{3}/.test(textUntilPosition)) {
+        // 行内元素和代码块的语言提示
+        const isInlineCode = /{:/.test(textUntilPosition)
+        const isBlockCode = /^`{3}/.test(textUntilPosition)
+        if (isInlineCode || isBlockCode) {
           return {
             suggestions: grammars.map(({ name, displayName }) => ({
               range,
               detail: displayName,
-              insertText: `\${0:${name}}`,
+              insertText: name,
               insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
               kind: monaco.languages.CompletionItemKind.Enum,
               label: name

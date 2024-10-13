@@ -9,7 +9,7 @@ import dayjs from 'dayjs'
 import React from 'react'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
-import { SWR_KEY_CLASH_TEMPLATES } from './utils'
+import { SWR_KEY_CLASH_TEMPLATES } from './TableTemplate'
 
 interface ModalClashProps extends Pick<ModalCoreProps, 'component'> {
   onSubmit: (payload: NonNullable<ModalClashProps['value']>) => Promise<void>

@@ -10,10 +10,12 @@ export interface ModalCoreProps extends Omit<ModalProps, 'children' | 'open' | '
     | React.FC<{
         close: () => void
       }>
-  component?: React.FC<{
-    onClick: React.MouseEventHandler<HTMLElement>
-    onKeyDown: React.KeyboardEventHandler<HTMLElement>
-  }>
+  component?: React.FC<
+    {
+      onClick: React.MouseEventHandler<HTMLElement>
+      onKeyDown: React.KeyboardEventHandler<HTMLElement>
+    } & Pick<React.HTMLAttributes<HTMLElement>, 'role'>
+  >
   disableBackdropClickClose?: boolean
   disabled?: boolean
   layout?: ModalDialogProps['layout']
@@ -55,6 +57,7 @@ const ModalCore: React.ForwardRefRenderFunction<ModalCoreRef | undefined, ModalC
     <>
       {Component && (
         <Component
+          role="button"
           onClick={event => {
             event.stopPropagation()
             handleOpenToggle(true)

@@ -19,7 +19,7 @@ export default function ModelDetail({ component: Component, value: post, onChang
 
   return (
     <ModalCore component={Component}>
-      <section className="grid grid-cols-2 gap-x-6 gap-y-4">
+      <section className="grid max-w-screen-md grid-cols-2 gap-x-6 gap-y-4">
         <FormControl required className="col-span-2">
           <FormLabel>标题</FormLabel>
           <Input

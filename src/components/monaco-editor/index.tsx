@@ -17,7 +17,7 @@ const Divider: React.FC<{ className?: string }> = ({ className }) => <hr classNa
 
 loader.config({
   paths: {
-    vs: '/cdn/cdn.jsdelivr.net/npm/monaco-editor@0.50.0/min/vs'
+    vs: '/cdn/cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs'
   },
   'vs/nls': {
     availableLanguages: {
@@ -38,8 +38,7 @@ const OPTIONS: editor.IStandaloneEditorConstructionOptions = {
   scrollBeyondLastLine: true,
   scrollbar: {
     alwaysConsumeMouseWheel: true // 默认值；滚动行为 preventDefault() and stopPropagation()
-  },
-  suggest: {}
+  }
 }
 
 export interface MonacoEditorRef {

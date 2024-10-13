@@ -1,7 +1,8 @@
 import prisma from '@/lib/prisma'
+import { R2 } from '@/lib/server/r2'
 import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
-import { del, put } from '@vercel/blob'
+import { getImageSize } from 'next/dist/server/image-optimizer'
 import { NextRequest } from 'next/server'
 import puppeteer, { Browser } from 'puppeteer-core'
 
@@ -64,21 +65,21 @@ export const PATCH = async (request: NextRequest, { params }: DynamicRoute<{ id:
     })
     const page = await browser.newPage()
     await page.goto(friendLink.url)
-    const blob = await page.screenshot({ type: 'webp' })
+    const buffer = await page.screenshot({ type: 'webp' })
 
-    const oldCover = await prisma.friendLinks.findUnique({
-      select: { cover: true },
-      where: { id: params.id }
-    })
-    const { url: cover } = await put(`friend-links/${params.id}.webp`, blob, { access: 'public' })
-    if (oldCover && oldCover.cover) del(oldCover.cover)
+    const blob = new Blob([buffer], { type: 'application/octet-stream' })
+    const key = `friend-links/${params.id}.webp`
+    const metadata = await getImageSize(buffer, 'webp')
 
-    const res = await dbPatch(params.id, {
-      cover
-    })
+    // 保存封面
+    await R2.put({ blob, key, metadata })
+
+    // 保存封面直链
+    const res = await dbPatch(params.id, { cover: R2.get(key) })
 
     return CustomResponse.encrypt(res)
   } catch (error) {
+    console.log(error)
     return CustomResponse.error(error)
   } finally {
     browser?.close()
@@ -94,6 +95,9 @@ const dbDelete = async (id: string) => {
 export const DELETE = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
+
+    // 删除封面
+    await R2.delete(`friend-links/${params.id}.webp`)
 
     const res = await dbDelete(params.id)
 

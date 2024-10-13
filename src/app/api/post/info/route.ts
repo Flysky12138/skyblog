@@ -31,6 +31,7 @@ export const GET = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
+
     const res = await dbGet(id)
     return CustomResponse.encrypt(res)
   } catch (error) {
