@@ -11,16 +11,14 @@ interface FetchOptions extends Omit<RequestInit, 'method' | 'headers' | 'body'> 
   method?: Method
 }
 
-interface MethodRoute {
-  body?: unknown
-  return?: unknown
-  search?: unknown
-}
-/** 请求参数以及响应的类型 */
-type MethodRouteType<T extends MethodRoute> = T
+/** 文件路由请求参数、内容以及响应的类型 */
+type MethodRouteType<
+  T extends {
+    body?: unknown
+    return?: unknown
+    search?: unknown
+  }
+> = T
 
 /** `CustomRequest` 请求配置 */
-type CustomRequestOptions<T extends keyof ApiMap> = Omit<ApiMap[T], 'return'> &
-  RemoveNever<{
-    params: EmptyObject2Never<ParamsByApi<T>>
-  }>
+type CustomRequestOptions<T extends keyof ApiMap> = Omit<ApiMap[T], 'return'> & RemoveEmptyObjectKeys<{ params: ParamsByApi<T> }>

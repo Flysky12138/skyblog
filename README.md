@@ -2,9 +2,9 @@
 
 ## 数据存储
 
-- [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres): 存储博客几乎所有的内容
-- [Vercel Blob](https://vercel.com/docs/storage/vercel-blob): 存储友链的网站封面图片
-- [Vercel Edge Config](https://vercel.com/docs/storage/edge-config): 存储一些配置文件，如：封禁、歌单信息、Live2D直链等
+- [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres): 存储博客几乎所有的文本内容
+- [Vercel Edge Config](https://vercel.com/docs/storage/edge-config): 存储一些配置文件，如：封禁、Live2D直链等
+- [Cloudflare R2](https://www.cloudflare.com/zh-cn/developer-platform/r2/): 存储文件
 
 ## 环境变量
 

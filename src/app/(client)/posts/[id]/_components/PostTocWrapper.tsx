@@ -12,7 +12,21 @@ interface PostTocWrapperProps {
 }
 
 export default function PostTocWrapper({ children, ...props }: PostTocWrapperProps) {
-  const [activeIndex, setActiveIndex] = React.useState(0)
+  // 设置活跃标题样式
+  const tocContainerRef = React.useRef<HTMLElement>(null)
+  const setActiveTocStyle = (activeIndex: number) => {
+    const container = tocContainerRef.current
+    if (!container) return
+    Array.from(container.querySelectorAll('a[href^="#"]')).forEach((el, i) => {
+      el.setAttribute('data-active', String(activeIndex == i))
+      if (activeIndex != i) return
+      const { offsetHeight: parentHeight, scrollTop } = container
+      const { offsetTop, offsetHeight } = el as HTMLElement
+      if (!isBetween(offsetTop - scrollTop, offsetHeight + 20, parentHeight - offsetHeight - 20)) {
+        container.scroll({ behavior: 'smooth', top: offsetTop - parentHeight * 0.5 })
+      }
+    })
+  }
 
   useEvent(
     'scroll',
@@ -32,28 +46,12 @@ export default function PostTocWrapper({ children, ...props }: PostTocWrapperPro
           // 最后一个标题小于最小范围
           (i + 1 == rects.length && rects[i].top < min)
         ) {
-          setActiveIndex(i)
+          setActiveTocStyle(i)
           break
         }
       }
     }, 200)
   )
-
-  // 设置活跃标题样式
-  const tocContainerRef = React.useRef<HTMLElement>(null)
-  React.useEffect(() => {
-    const container = tocContainerRef.current
-    if (!container) return
-    Array.from(container.querySelectorAll('a[href^="#"]')).forEach((el, i) => {
-      el.setAttribute('data-active', String(activeIndex == i))
-      if (activeIndex != i) return
-      const { offsetHeight: parentHeight, scrollTop } = container
-      const { offsetTop, offsetHeight } = el as HTMLElement
-      if (!isBetween(offsetTop - scrollTop, offsetHeight + 20, parentHeight - offsetHeight - 20)) {
-        container.scroll({ behavior: 'smooth', top: offsetTop - parentHeight * 0.5 })
-      }
-    })
-  }, [activeIndex])
 
   return (
     <section ref={tocContainerRef} {...props}>

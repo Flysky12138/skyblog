@@ -8,7 +8,7 @@ figure[data-rehype-pretty-code-figure] {
     }
   }
   pre {
-    @apply s-bg-sheet max-h-[500px] px-0 py-2.5;
+    @apply s-bg-sheet px-0 py-2.5;
   }
 }
 
