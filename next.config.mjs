@@ -86,9 +86,6 @@ const nextConfig = {
   images,
   redirects,
   rewrites,
-  experimental: {
-    serverComponentsExternalPackages: ['puppeteer-core']
-  },
   pageExtensions: ['mdx', 'ts', 'tsx'],
   reactStrictMode: true
 }

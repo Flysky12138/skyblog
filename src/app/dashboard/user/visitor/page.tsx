@@ -1,26 +1,24 @@
 'use client'
 
+import PaginationTable from '@/components/pagination/PaginationTable'
 import TableStatus from '@/components/table/TableStatus'
 import TableWrapper from '@/components/table/TableWrapper'
 import { formatISOTime } from '@/lib/parser/time'
 import { CustomRequest } from '@/lib/server/request'
 import { Table } from '@mui/joy'
-import { Pagination } from '@mui/material'
-import React from 'react'
+import { PaginationArgs } from 'prisma-paginate'
 import useSWR from 'swr'
+import { useImmer } from 'use-immer'
 
 export default function Page() {
-  const [page, setPage] = React.useState(1)
+  const [search, setSearch] = useImmer<PaginationArgs>({
+    limit: 30,
+    page: 1
+  })
 
   const { isLoading, data: visitors } = useSWR(
-    `api/dashboard/users/visitor?page=${page}`,
-    () =>
-      CustomRequest('GET api/dashboard/users/visitor', {
-        search: {
-          page,
-          limit: 50
-        }
-      }),
+    `/api/dashboard/users/visitor?limit=${search.limit}&page=${search.page}`,
+    () => CustomRequest('GET api/dashboard/users/visitor', { search }),
     {
       refreshInterval: 10 * 1000
     }
@@ -28,13 +26,7 @@ export default function Page() {
 
   return (
     <>
-      <TableWrapper
-        slotProps={{
-          sheet: {
-            className: 'max-h-[calc(100dvh-theme(height.28)-2px)]'
-          }
-        }}
-      >
+      <TableWrapper>
         <Table stickyFooter stickyHeader>
           <thead>
             <tr>
@@ -64,8 +56,8 @@ export default function Page() {
         </Table>
       </TableWrapper>
       {visitors?.totalPages && visitors.totalPages > 1 ? (
-        <div className="mt-auto flex justify-end pt-4">
-          <Pagination className="inline-block" count={visitors.totalPages} page={page} onChange={(_, p) => setPage(p)} />
+        <div className="flex justify-end pt-4">
+          <PaginationTable count={visitors.totalPages} {...search} onChange={setSearch} />
         </div>
       ) : null}
     </>

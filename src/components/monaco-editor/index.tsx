@@ -114,7 +114,7 @@ const MonacoEditor: React.ForwardRefRenderFunction<MonacoEditorRef, MonacoEditor
         enabled: cardRect.width > 768
       }
     })
-  }, [cardRect.width])
+  }, [cardRect.width, mounted])
 
   return (
     <>
