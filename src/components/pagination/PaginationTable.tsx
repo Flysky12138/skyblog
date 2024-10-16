@@ -24,10 +24,12 @@ export default function PaginationTable({ className, limit = OPTIONS[0], onChang
       <Select
         defaultValue={limit}
         sx={{
-          '--Select-minHeight': '32px'
+          '--Select-minHeight': '32px',
+          '--joy-palette-background-surface': 'transparent',
+          '--variant-outlinedHoverBg': 'var(--mui-palette-action-hover)'
         }}
         onChange={(_, value) => {
-          onChange({ limit: value || limit, page: props.page || 1 })
+          onChange({ limit: value || limit, page: 1 })
         }}
       >
         {OPTIONS.map(option => (
