@@ -1,6 +1,6 @@
 'use client'
 
-import { SELECTOR } from '@/lib/constants'
+import { ATTRIBUTE } from '@/lib/constants'
 import { isBetween } from '@/lib/parser/number'
 import { debounce } from '@mui/material'
 import React from 'react'
@@ -31,7 +31,7 @@ export default function PostTocWrapper({ children, ...props }: PostTocWrapperPro
   useEvent(
     'scroll',
     debounce(() => {
-      const article = document.getElementById(SELECTOR.IDS.POST_CONTAINER)
+      const article = document.getElementById(ATTRIBUTE.ID.POST_CONTAINER)
       if (!article) return
       const rects = Array.from(article.querySelectorAll<HTMLHeadingElement>('h1,h2,h3,h4,h5,h6'), it => it.getBoundingClientRect())
       const [min, max] = [0, 200]

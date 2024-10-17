@@ -17,7 +17,8 @@ export default function Code({ children, ...props }: React.ComponentProps<'code'
   return (
     <code
       className={cn([
-        'cursor-pointer select-all rounded bg-slate-200/50 px-1.5 py-1 font-medium before:content-none after:content-none dark:bg-slate-600/50',
+        'cursor-pointer select-all rounded bg-slate-200/50 px-1.5 py-1 dark:bg-slate-600/50',
+        'before:content-none after:content-none',
         'border border-transparent transition-colors hover:border-sky-200 hover:dark:border-sky-700'
       ])}
       onDoubleClick={event => {

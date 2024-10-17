@@ -63,9 +63,19 @@ export const ImageViewerProvider = ({ children }: React.PropsWithChildren) => {
           />
         }
         maskClassName="!bg-white/50 dark:!bg-black/50 backdrop-blur"
-        maskClosable={false}
         photoWrapClassName="select-none"
-        pullClosable={false}
+        speed={type => {
+          switch (type) {
+            case 0:
+              return 400
+            case 1:
+              return 100
+            case 2:
+              return 100
+            case 3:
+              return 400
+          }
+        }}
         toolbarRender={({ onRotate, onScale, scale, rotate, index, images }) => (
           <Box
             className="flex items-center"

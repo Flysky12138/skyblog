@@ -10,7 +10,7 @@ import Logo from '@/components/layout/Logo'
 import ScrollToTop from '@/components/scroll/ScrollToTop'
 import ToggleLive2D from '@/components/toggle/ToggleLive2D'
 import ToggleTheme from '@/components/toggle/ToggleTheme'
-import { SELECTOR } from '@/lib/constants'
+import { ATTRIBUTE } from '@/lib/constants'
 import { Live2DBreakpoint, Live2DEnable, Live2DProvider } from '@/provider/live2d'
 import { Dashboard } from '@mui/icons-material'
 import { IconButton, Tooltip } from '@mui/joy'
@@ -35,7 +35,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
             </Tooltip>
             <hr className="s-border-color-divider mx-1 h-4 rounded border" />
           </DisplayMatchAuth>
-          <div className="empty:hidden" id={SELECTOR.IDS.ISSUES_MOBILE}></div>
+          <div className="empty:hidden" id={ATTRIBUTE.ID.ISSUES_MOBILE}></div>
           <Live2DBreakpoint>
             <ToggleLive2D />
           </Live2DBreakpoint>
@@ -48,7 +48,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
       </main>
       <nav className="mui-fixed fixed inset-x-0 bottom-[calc(theme(height.footer)+theme(spacing.12))] z-nav">
         <Container className="flex h-0 flex-col items-end justify-end gap-y-3" variant="header">
-          <div id={SELECTOR.IDS.ISSUES_PC}></div>
+          <div id={ATTRIBUTE.ID.ISSUES_PC}></div>
           <Breakpoint up="md">
             <ScrollToTop />
           </Breakpoint>

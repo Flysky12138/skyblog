@@ -14,9 +14,8 @@ export const EDGE_CONFIG = {
   NETEASECLOUD_PLAYLIST_ID: 'neteasecloud-playlist-id'
 } as const
 
-export const SELECTOR = {
-  CLASSES: {},
-  IDS: {
+export const ATTRIBUTE = {
+  ID: {
     ISSUES_MOBILE: 'issues-mobile',
     ISSUES_PC: 'issues-pc',
     POST_CONTAINER: 'post-container'
@@ -26,4 +25,8 @@ export const SELECTOR = {
 export const SESSIONSTORAGE = {
   ANALYTIC_SUBMITTED: 'analytic-submitted',
   POST_VIEW_SUBMITTED: (id: string) => `post-view-submitted-${id}`
+} as const
+
+export const SWR_KEY = {
+  CLASH_TEMPLATES: '/api/dashboard/clash/template'
 } as const

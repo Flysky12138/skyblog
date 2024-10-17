@@ -3,16 +3,15 @@
 import { cn } from '@/lib/cn'
 import { Option, Select } from '@mui/joy'
 import { Pagination, PaginationProps } from '@mui/material'
+import { PaginationArgs } from 'prisma-paginate'
 
-const OPTIONS = [10, 30, 50, 100]
+export interface PaginationSearch extends MakeRequired<Pick<PaginationArgs, 'limit' | 'page'>> {}
 
-interface PaginationTableProps extends Omit<PaginationProps, 'onChange'> {
-  className?: string
-  limit?: number
-  onChange: (pagination: { limit: number; page: number }) => void
+interface PaginationTableProps extends Omit<PaginationProps, 'onChange' | 'page'>, PaginationSearch {
+  onChange: (pagination: PaginationSearch) => void
 }
 
-export default function PaginationTable({ className, limit = OPTIONS[0], onChange, ...props }: PaginationTableProps) {
+export default function PaginationTable({ className, limit, onChange, ...props }: PaginationTableProps) {
   return (
     <section className={cn('flex items-center gap-x-5', className)}>
       <Pagination
@@ -32,9 +31,9 @@ export default function PaginationTable({ className, limit = OPTIONS[0], onChang
           onChange({ limit: value || limit, page: 1 })
         }}
       >
-        {OPTIONS.map(option => (
-          <Option key={option} value={option}>
-            {option}
+        {[10, 20, 30, 50, 100].map(limit => (
+          <Option key={limit} value={limit}>
+            {limit}
           </Option>
         ))}
       </Select>

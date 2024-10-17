@@ -3,13 +3,13 @@ import { GET } from '@/app/api/dashboard/clash/template/route'
 import ModalCore, { ModalCoreProps } from '@/components/modal/ModalCore'
 import MonacoEditor from '@/components/monaco-editor'
 import { yamlConfig } from '@/components/monaco-editor/language/yaml'
+import { SWR_KEY } from '@/lib/constants'
 import { getVariableNames, replaceTextWithObjectValues } from '@/lib/parser/string'
 import { Button, FormControl, FormHelperText, FormLabel, Input, Option, Select } from '@mui/joy'
 import dayjs from 'dayjs'
 import React from 'react'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
-import { SWR_KEY_CLASH_TEMPLATES } from './TableTemplate'
 
 interface ModalClashProps extends Pick<ModalCoreProps, 'component'> {
   onSubmit: (payload: NonNullable<ModalClashProps['value']>) => Promise<void>
@@ -28,7 +28,7 @@ export default function ModalClash({ component: Component, value, onSubmit }: Mo
   const [oldContent, setOldContent] = React.useState('')
 
   // 响应式模版内容，从缓存中快速获取
-  const { data: clashTemplates, isLoading } = useSWR<GET['return']>(SWR_KEY_CLASH_TEMPLATES)
+  const { data: clashTemplates, isLoading } = useSWR<GET['return']>(SWR_KEY.CLASH_TEMPLATES)
 
   const currentSelectClashTemplate = React.useMemo(() => clashTemplates?.find(it => it.id == form.clashTemplateId), [form.clashTemplateId, clashTemplates])
 

@@ -3,7 +3,7 @@ import Card from '@/components/layout/Card'
 import { MDXServer } from '@/components/mdx/server'
 import { MDXToc } from '@/components/mdx/toc'
 import { cn } from '@/lib/cn'
-import { SELECTOR } from '@/lib/constants'
+import { ATTRIBUTE } from '@/lib/constants'
 import prisma from '@/lib/prisma'
 import { Edit } from '@mui/icons-material'
 import { IconButton, Tooltip, Typography } from '@mui/joy'
@@ -74,7 +74,7 @@ export default async function Page({ params }: PageProps) {
       {post.content && (
         <section className="flex gap-x-4">
           <style>{`html { scroll-padding-top: 60px }`}</style>
-          <Card className="max-w-none grow" component="article" id={SELECTOR.IDS.POST_CONTAINER}>
+          <Card className="max-w-none grow" component="article" id={ATTRIBUTE.ID.POST_CONTAINER}>
             <MDXServer value={post.content} />
           </Card>
           <Card

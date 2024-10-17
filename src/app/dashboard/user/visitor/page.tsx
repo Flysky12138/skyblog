@@ -1,23 +1,19 @@
 'use client'
 
 import ModalDelete from '@/components/modal/ModalDelete'
-import PaginationTable from '@/components/pagination/PaginationTable'
+import PaginationTable, { PaginationSearch } from '@/components/pagination/PaginationTable'
 import TableStatus from '@/components/table/TableStatus'
 import TableWrapper from '@/components/table/TableWrapper'
 import { formatISOTime } from '@/lib/parser/time'
 import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
 import { Button, Checkbox, Table } from '@mui/joy'
-import { PaginationArgs } from 'prisma-paginate'
 import { useSet } from 'react-use'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
 
 export default function Page() {
-  const [search, setSearch] = useImmer<PaginationArgs>({
-    limit: 30,
-    page: 1
-  })
+  const [search, setSearch] = useImmer<PaginationSearch>({ limit: 20, page: 1 })
 
   const {
     isLoading,

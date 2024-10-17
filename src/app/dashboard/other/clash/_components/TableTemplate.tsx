@@ -3,6 +3,7 @@
 import ModalDelete from '@/components/modal/ModalDelete'
 import TableStatus from '@/components/table/TableStatus'
 import TableWrapper from '@/components/table/TableWrapper'
+import { SWR_KEY } from '@/lib/constants'
 import { formatISOTime } from '@/lib/parser/time'
 import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
@@ -11,15 +12,12 @@ import { produce } from 'immer'
 import useSWR from 'swr'
 import ModalTemplate from './ModalTemplate'
 
-/** `useSWR` 缓存 key */
-export const SWR_KEY_CLASH_TEMPLATES = '/api/dashboard/clash/template'
-
 export default function TableTemplate() {
   const {
     data: clashTemplates,
     isLoading,
     mutate: setClashTemplates
-  } = useSWR(SWR_KEY_CLASH_TEMPLATES, () => CustomRequest('GET api/dashboard/clash/template', {}), {
+  } = useSWR(SWR_KEY.CLASH_TEMPLATES, () => CustomRequest('GET api/dashboard/clash/template', {}), {
     fallbackData: []
   })
 

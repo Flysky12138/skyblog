@@ -1,3 +1,5 @@
+'use client'
+
 import TableClash from './_components/TableClash'
 import TableTemplate from './_components/TableTemplate'
 

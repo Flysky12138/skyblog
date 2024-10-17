@@ -4,7 +4,7 @@ import Breakpoint from '@/components/layout/Breakpoint'
 import Card from '@/components/layout/Card'
 import Portal from '@/components/layout/Portal'
 import ModalCore from '@/components/modal/ModalCore'
-import { SELECTOR } from '@/lib/constants'
+import { ATTRIBUTE } from '@/lib/constants'
 import { ForumRounded } from '@mui/icons-material'
 import { Button, IconButton, ModalClose, Textarea, Tooltip } from '@mui/joy'
 import { useSession } from 'next-auth/react'
@@ -60,7 +60,7 @@ export default function PostIssues() {
   return (
     <>
       <Breakpoint down="lg">
-        <Portal selector={`#${SELECTOR.IDS.ISSUES_MOBILE}`}>
+        <Portal selector={`#${ATTRIBUTE.ID.ISSUES_MOBILE}`}>
           <ModalCore
             keepMounted
             className="overflow-hidden p-0"
@@ -79,7 +79,7 @@ export default function PostIssues() {
         </Portal>
       </Breakpoint>
       <Breakpoint up="lg">
-        <Portal selector={`#${SELECTOR.IDS.ISSUES_PC}`}>
+        <Portal selector={`#${ATTRIBUTE.ID.ISSUES_PC}`}>
           <ModalCore
             keepMounted
             className="h-full w-full max-w-screen-md overflow-hidden p-0"
