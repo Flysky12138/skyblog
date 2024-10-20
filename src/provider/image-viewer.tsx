@@ -49,7 +49,7 @@ export const ImageViewerProvider = ({ children }: React.PropsWithChildren) => {
         {children}
       </ImageViewerContext.Provider>
       <PhotoSlider
-        brokenElement={<BrokenImage color="error" fontSize="large" />}
+        brokenElement={<BrokenImage className="text-8xl" color="error" />}
         className="[&_svg]:transition-transform hover:[&_svg]:scale-125"
         images={data.images}
         loadingElement={

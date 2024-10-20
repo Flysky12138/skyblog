@@ -2,6 +2,7 @@
 
 import useIsClient from '@/hooks/useIsClient'
 import useTheme from '@/hooks/useTheme'
+import { VIEW_TRANSITION_NAME } from '@/lib/constants'
 import { DarkModeOutlined, LightMode } from '@mui/icons-material'
 import { IconButton, IconButtonProps, Tooltip, TooltipProps } from '@mui/joy'
 import './view-transition.css'
@@ -14,7 +15,7 @@ interface ToggleThemeProps {
 }
 
 export default function ToggleTheme({ slotsProps }: ToggleThemeProps) {
-  const { isDark, setTheme } = useTheme()
+  const { isDark, toggleTheme } = useTheme()
 
   const isClient = useIsClient()
   if (!isClient) return <span className="s-skeleton h-8 w-8 rounded-md"></span>
@@ -22,22 +23,27 @@ export default function ToggleTheme({ slotsProps }: ToggleThemeProps) {
   return (
     <Tooltip title={isDark ? '夜晚' : '白天'} {...slotsProps?.tooltip}>
       <IconButton
-        onClick={event => {
-          const { clientX: x, clientY: y } = event
-          const endRadius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))
+        onClick={async event => {
           try {
-            // @ts-ignore
-            const transition = document.startViewTransition(() => setTheme(isDark ? 'light' : 'dark'))
-            transition.ready.then(() => {
-              const clipPath = [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`]
-              document.documentElement.animate(
-                { clipPath: isDark ? clipPath : clipPath.reverse() },
-                { duration: 500, easing: 'ease-in', pseudoElement: isDark ? '::view-transition-new(root)' : '::view-transition-old(root)' }
-              )
-            })
+            const { clientX: x, clientY: y } = event
+            const endRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y))
+            const clipPath = [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`]
+            document.documentElement.style.viewTransitionName = VIEW_TRANSITION_NAME.THEME
+            const transition = document.startViewTransition(toggleTheme)
+            await transition.ready
+            document.documentElement.animate(
+              {
+                clipPath: isDark ? clipPath : clipPath.reverse()
+              },
+              {
+                duration: 500,
+                easing: 'ease-in',
+                pseudoElement: isDark ? `::view-transition-new(${VIEW_TRANSITION_NAME.THEME})` : `::view-transition-old(${VIEW_TRANSITION_NAME.THEME})`
+              }
+            )
           } catch (error) {
             console.error(error)
-            setTheme(isDark ? 'light' : 'dark')
+            toggleTheme()
           }
         }}
         {...slotsProps?.iconbutton}

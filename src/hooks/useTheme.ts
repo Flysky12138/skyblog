@@ -10,9 +10,11 @@ export default function useTheme() {
     setJoyMode(theme)
     setMaterialMode(theme)
   }
+  const toggleTheme = () => setTheme(isDark ? 'light' : 'dark')
 
   return {
     isDark,
-    setTheme
+    setTheme,
+    toggleTheme
   }
 }

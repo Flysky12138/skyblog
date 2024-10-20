@@ -45,7 +45,11 @@ const ListItemExpand: React.FC<ListItemExpandProps> = ({ children, defaultExpand
       <Box
         ref={boxRef}
         aria-expanded={open}
-        className="invisible -mx-2 h-0 overflow-y-clip px-2 transition-[height,visibility]"
+        className={cn(
+          'invisible relative -mx-2 h-0 overflow-y-clip px-2 transition-[height,visibility]',
+          'before:absolute before:bottom-0 before:left-[calc(theme(height.4)+1px)] before:top-1.5 before:z-10',
+          'before:s-border-color-divider before:border before:border-dashed'
+        )}
         sx={{
           '.MuiList-root': {
             marginTop: 0,
@@ -62,7 +66,12 @@ const ListItemExpand: React.FC<ListItemExpandProps> = ({ children, defaultExpand
   )
 }
 
-interface ListItemLinkProps extends Omit<ListItemButtonProps, 'selected'> {
+interface ListItemLinkProps extends Omit<ListItemButtonProps, 'selected' | 'children'> {
+  children:
+    | React.ReactNode
+    | React.FC<{
+        isSelected: boolean
+      }>
   href: string
 }
 
@@ -85,7 +94,7 @@ const ListItemLink: React.FC<ListItemLinkProps> = ({ className, href, children, 
       selected={isSelected}
       {...props}
     >
-      {children}
+      {typeof children == 'function' ? children({ isSelected }) : children}
     </ListItemButton>
   )
 }
@@ -110,9 +119,9 @@ export default function Menu({ className, lists }: MenuProps) {
     >
       {lists.map((it, index) => (
         <React.Fragment key={index}>
-          {Reflect.has(it, 'href') ? (
+          {it.href ? (
             <ListItem>
-              <ListItemLink href={it.href!}>
+              <ListItemLink href={it.href}>
                 <ListItemDecorator>{it.icon}</ListItemDecorator>
                 <ListItemContent>{it.label}</ListItemContent>
               </ListItemLink>
@@ -124,8 +133,16 @@ export default function Menu({ className, lists }: MenuProps) {
                   {it.children?.map(({ href, label }, index) => (
                     <ListItem key={index}>
                       <ListItemLink href={href}>
-                        <ListItemDecorator></ListItemDecorator>
-                        <ListItemContent>{label}</ListItemContent>
+                        {({ isSelected }) => (
+                          <>
+                            <ListItemDecorator
+                              className={cn('relative h-full', {
+                                'before:absolute before:inset-y-1 before:left-2 before:z-10 before:border before:border-dashed before:border-white': isSelected
+                              })}
+                            ></ListItemDecorator>
+                            <ListItemContent>{label}</ListItemContent>
+                          </>
+                        )}
                       </ListItemLink>
                     </ListItem>
                   ))}

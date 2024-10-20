@@ -23,7 +23,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
           />
         </div>
         <Menu
-          className="px-4 py-3"
+          className="py-3 pl-4 pr-2"
           lists={[
             { href: '/dashboard', icon: <HomeOutlined />, label: '主页' },
             {

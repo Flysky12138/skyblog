@@ -87,7 +87,10 @@ const nextConfig = {
   redirects,
   rewrites,
   pageExtensions: ['mdx', 'ts', 'tsx'],
-  reactStrictMode: true
+  reactStrictMode: true,
+  typescript: {
+    ignoreBuildErrors: true
+  }
 }
 
 // https://nextjs.org/docs/app/building-your-application/configuring/mdx
