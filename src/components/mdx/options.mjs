@@ -27,8 +27,8 @@ const rehypePrettyCodeOptions = {
   ]
 }
 
-/** @type {import("next-mdx-remote/rsc").MDXRemoteProps['options']} */
-export const options = {
+/** @type {import("next-mdx-remote/dist/types").SerializeOptions} */
+export const serializeOptions = {
   mdxOptions: {
     rehypePlugins: [[rehypeKatex, rehypeKatexOptions], [rehypePrettyCode, rehypePrettyCodeOptions], rehypeSlug],
     remarkPlugins: [remarkGfm, remarkMath, remarkDirective, remarkDirectiveRehype]

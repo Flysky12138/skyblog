@@ -5,17 +5,6 @@ import { NextRequest } from 'next/server'
 import { PaginationArgs } from 'prisma-paginate'
 import { convertVisitorLogGetData } from './utils'
 
-export type GET = MethodRouteType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
-  search: PaginationArgs
-}>
-export type DELETE = MethodRouteType<{
-  body: {
-    ids: VisitorLog['id'][]
-  }
-  return: Prisma.PromiseReturnType<typeof dbDelete>
-}>
-
 const dbGet = async (payload: GET['search']) => {
   const { result, totalPages, ...data } = await prisma.visitorLog.paginate(
     {
@@ -31,6 +20,11 @@ const dbGet = async (payload: GET['search']) => {
     result: result.map(convertVisitorLogGetData)
   }
 }
+
+export type GET = MethodRouteType<{
+  return: Prisma.PromiseReturnType<typeof dbGet>
+  search: PaginationArgs
+}>
 
 export const GET = async (request: NextRequest) => {
   try {
@@ -53,6 +47,13 @@ const dbDelete = async (payload: DELETE['body']) => {
     }
   })
 }
+
+export type DELETE = MethodRouteType<{
+  body: {
+    ids: VisitorLog['id'][]
+  }
+  return: Prisma.PromiseReturnType<typeof dbDelete>
+}>
 
 export const DELETE = async (request: NextRequest) => {
   try {

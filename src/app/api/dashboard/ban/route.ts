@@ -9,12 +9,6 @@ export type EdgeBanKeysType = (typeof EDGE_CONFIG)[keyof PickStartsWith<typeof E
 export type GET = MethodRouteType<{
   return: Partial<Record<EdgeBanKeysType, string[]>>
 }>
-export type PUT = MethodRouteType<{
-  body: {
-    key: EdgeBanKeysType
-    value: string[]
-  }
-}>
 
 export const GET = async (request: NextRequest) => {
   try {
@@ -34,6 +28,13 @@ export const GET = async (request: NextRequest) => {
     return CustomResponse.error(error)
   }
 }
+
+export type PUT = MethodRouteType<{
+  body: {
+    key: EdgeBanKeysType
+    value: string[]
+  }
+}>
 
 export const PUT = async (request: NextRequest) => {
   try {

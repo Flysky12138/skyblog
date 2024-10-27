@@ -4,13 +4,13 @@ import { Prisma } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
 
-export type GET = MethodRouteType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
-}>
-
 const dbGet = async () => {
   return await prisma.tag.findMany({})
 }
+
+export type GET = MethodRouteType<{
+  return: Prisma.PromiseReturnType<typeof dbGet>
+}>
 
 export const GET = async () => {
   try {

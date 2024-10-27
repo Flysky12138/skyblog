@@ -5,13 +5,6 @@ import { NextRequest } from 'next/server'
 
 export const runtime = 'nodejs'
 
-export type POST = MethodRouteType<{
-  return: Prisma.PromiseReturnType<typeof dbPost>
-  search: {
-    id: string
-  }
-}>
-
 const dbPost = async (id: string) => {
   return await prisma.post.update({
     data: {
@@ -25,6 +18,13 @@ const dbPost = async (id: string) => {
     }
   })
 }
+
+export type POST = MethodRouteType<{
+  return: Prisma.PromiseReturnType<typeof dbPost>
+  search: {
+    id: string
+  }
+}>
 
 export const POST = async (request: NextRequest) => {
   try {

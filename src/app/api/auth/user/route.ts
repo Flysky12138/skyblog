@@ -3,11 +3,6 @@ import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
-export type POST = MethodRouteType<{
-  body: Prisma.UserCreateInput
-  return: Prisma.PromiseReturnType<typeof dbPost>
-}>
-
 const dbPost = async (data: POST['body']) => {
   const count = await prisma.user.count()
   if (count == 0) data.role = 'ADMIN'
@@ -18,6 +13,11 @@ const dbPost = async (data: POST['body']) => {
     where: { email: data.email }
   })
 }
+
+export type POST = MethodRouteType<{
+  body: Prisma.UserCreateInput
+  return: Prisma.PromiseReturnType<typeof dbPost>
+}>
 
 export const POST = async (request: NextRequest) => {
   try {

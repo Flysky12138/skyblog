@@ -3,27 +3,6 @@ import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
-export type GET = MethodRouteType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
-}>
-export type POST = MethodRouteType<{
-  body: Prisma.ClashTemplateCreateInput
-  return: Prisma.PromiseReturnType<typeof dbPost>
-}>
-export type PUT = MethodRouteType<{
-  body: Pick<Prisma.ClashTemplateUpdateInput, 'name' | 'content'>
-  return: Prisma.PromiseReturnType<typeof dbPut>
-  search: {
-    id: string
-  }
-}>
-export type DELETE = MethodRouteType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
-  search: {
-    id: string
-  }
-}>
-
 const select = Prisma.validator<Prisma.ClashTemplateSelect>()({
   _count: {
     select: {
@@ -44,6 +23,10 @@ const dbGet = async () => {
   })
 }
 
+export type GET = MethodRouteType<{
+  return: Prisma.PromiseReturnType<typeof dbGet>
+}>
+
 export const GET = async () => {
   try {
     const res = await dbGet()
@@ -56,6 +39,11 @@ export const GET = async () => {
 const dbPost = async (data: POST['body']) => {
   return await prisma.clashTemplate.create({ data, select })
 }
+
+export type POST = MethodRouteType<{
+  body: Prisma.ClashTemplateCreateInput
+  return: Prisma.PromiseReturnType<typeof dbPost>
+}>
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -76,6 +64,14 @@ const dbPut = async (id: string, data: PUT['body']) => {
   })
 }
 
+export type PUT = MethodRouteType<{
+  body: Pick<Prisma.ClashTemplateUpdateInput, 'name' | 'content'>
+  return: Prisma.PromiseReturnType<typeof dbPut>
+  search: {
+    id: string
+  }
+}>
+
 export const PUT = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
@@ -93,6 +89,13 @@ export const PUT = async (request: NextRequest) => {
 const dbDelete = async (id: string) => {
   return await prisma.clashTemplate.delete({ select, where: { id } })
 }
+
+export type DELETE = MethodRouteType<{
+  return: Prisma.PromiseReturnType<typeof dbGet>
+  search: {
+    id: string
+  }
+}>
 
 export const DELETE = async (request: NextRequest) => {
   try {

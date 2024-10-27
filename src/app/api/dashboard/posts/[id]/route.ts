@@ -5,34 +5,16 @@ import { Category, Post, Prisma, Tag } from '@prisma/client'
 import { NextRequest } from 'next/server'
 import { include } from '../prisma.config'
 
-export type GET = MethodRouteType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
-}>
-export type POST = MethodRouteType<{
-  body: Pick<Post, 'title' | 'description' | 'content' | 'authorId' | 'sticky' | 'showTitleCard'> & {
-    categories: Category['name'][]
-    tags: Tag['name'][]
-  }
-  return: Prisma.PromiseReturnType<typeof dbPost>
-}>
-export type PUT = MethodRouteType<{
-  body: Omit<POST['body'], 'authorId'>
-  return: Prisma.PromiseReturnType<typeof dbPut>
-}>
-export type PATCH = MethodRouteType<{
-  body: Pick<Post, 'published'>
-  return: Prisma.PromiseReturnType<typeof dbPatch>
-}>
-export type DELETE = MethodRouteType<{
-  return: Prisma.PromiseReturnType<typeof dbDelete>
-}>
-
 const dbGet = async (id: string) => {
   return await prisma.post.findUnique({
     include,
     where: { id }
   })
 }
+
+export type GET = MethodRouteType<{
+  return: Prisma.PromiseReturnType<typeof dbGet>
+}>
 
 export const GET = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
@@ -75,6 +57,14 @@ const dbPost = async (data: POST['body']) => {
     }
   })
 }
+
+export type POST = MethodRouteType<{
+  body: Pick<Post, 'title' | 'description' | 'content' | 'authorId' | 'sticky' | 'showTitleCard'> & {
+    categories: Category['name'][]
+    tags: Tag['name'][]
+  }
+  return: Prisma.PromiseReturnType<typeof dbPost>
+}>
 
 export const POST = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
@@ -125,6 +115,11 @@ const dbPut = async (id: string, data: PUT['body']) => {
   })
 }
 
+export type PUT = MethodRouteType<{
+  body: Omit<POST['body'], 'authorId'>
+  return: Prisma.PromiseReturnType<typeof dbPut>
+}>
+
 export const PUT = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
@@ -147,6 +142,11 @@ const dbPatch = async (id: string, data: PATCH['body']) => {
   })
 }
 
+export type PATCH = MethodRouteType<{
+  body: Pick<Post, 'published'>
+  return: Prisma.PromiseReturnType<typeof dbPatch>
+}>
+
 export const PATCH = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
@@ -166,6 +166,10 @@ const dbDelete = async (id: string) => {
     where: { id }
   })
 }
+
+export type DELETE = MethodRouteType<{
+  return: Prisma.PromiseReturnType<typeof dbDelete>
+}>
 
 export const DELETE = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {

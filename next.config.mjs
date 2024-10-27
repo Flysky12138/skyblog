@@ -1,9 +1,9 @@
 import createMDX from '@next/mdx'
-import { options } from './src/components/mdx/options.mjs'
+import { serializeOptions } from './src/components/mdx/options.mjs'
 
 /** @type {import('next').NextConfig['headers']} */
 const headers = async () => {
-  const ans = [
+  const result = [
     {
       headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, s-maxage=2592000, immutable' }],
       source: '/live2d/:path*'
@@ -21,8 +21,8 @@ const headers = async () => {
       `connect-src 'self' blob: data: ${cspSrc}`,
       "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",
-      `img-src 'self' blob: data: *.music.126.net ${cspSrc}`,
-      "media-src 'self' *.music.126.net",
+      `img-src 'self' blob: data: ${cspSrc}`,
+      "media-src 'self'",
       "font-src 'self'",
       "object-src 'none'",
       "base-uri 'self'",
@@ -31,12 +31,12 @@ const headers = async () => {
       'block-all-mixed-content',
       'upgrade-insecure-requests'
     ]
-    ans.push({
+    result.push({
       headers: [{ key: 'Content-Security-Policy', value: cspHeader.join('; ') }],
       source: '/(.*)'
     })
   }
-  return ans
+  return result
 }
 
 /** @type {import('next').NextConfig['images']} */
@@ -95,7 +95,7 @@ const nextConfig = {
 
 // https://nextjs.org/docs/app/building-your-application/configuring/mdx
 const withMDX = createMDX({
-  options: options.mdxOptions
+  options: serializeOptions.mdxOptions
 })
 
 export default withMDX(nextConfig)

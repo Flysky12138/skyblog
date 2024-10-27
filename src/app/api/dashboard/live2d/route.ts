@@ -9,11 +9,6 @@ export type GET = MethodRouteType<{
     src?: string
   }
 }>
-export type PUT = MethodRouteType<{
-  body: {
-    src: string
-  }
-}>
 
 export const GET = async (request: NextRequest) => {
   try {
@@ -23,6 +18,12 @@ export const GET = async (request: NextRequest) => {
     return CustomResponse.error(error)
   }
 }
+
+export type PUT = MethodRouteType<{
+  body: {
+    src: string
+  }
+}>
 
 export const PUT = async (request: NextRequest) => {
   try {

@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import Link from 'next/link'
 import rehypeSlug from 'rehype-slug'
-import { options } from './options.mjs'
+import { serializeOptions } from './options.mjs'
 import { HEADING_ATTR, rehypeHeadingOrder } from './rehype/rehype-heading-order'
 import { remarkPickHeading } from './remark/remark-pick-heading'
 
@@ -55,7 +55,7 @@ export const MDXToc = async ({ value }: MDXTocProps) => {
       options={{
         mdxOptions: {
           rehypePlugins: [rehypeSlug, rehypeHeadingOrder],
-          remarkPlugins: (options?.mdxOptions?.remarkPlugins || []).concat(remarkPickHeading)
+          remarkPlugins: (serializeOptions.mdxOptions?.remarkPlugins || []).concat(remarkPickHeading)
         }
       }}
       source={value}

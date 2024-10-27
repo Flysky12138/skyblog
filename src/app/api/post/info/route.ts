@@ -6,13 +6,6 @@ import { NextRequest } from 'next/server'
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-export type GET = MethodRouteType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
-  search: {
-    id: string
-  }
-}>
-
 const dbGet = async (id: string) => {
   return await prisma.post.findUnique({
     select: {
@@ -26,6 +19,13 @@ const dbGet = async (id: string) => {
     where: { id }
   })
 }
+
+export type GET = MethodRouteType<{
+  return: Prisma.PromiseReturnType<typeof dbGet>
+  search: {
+    id: string
+  }
+}>
 
 export const GET = async (request: NextRequest) => {
   try {

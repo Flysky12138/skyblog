@@ -5,38 +5,6 @@ import { NextRequest } from 'next/server'
 import { convertVisitorLogGetData } from '../users/visitor/utils'
 import { convertClashGetData, convertClashSaveData } from './utils'
 
-export type GET = MethodRouteType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
-}>
-export type POST = MethodRouteType<{
-  body: Omit<Prisma.ClashUncheckedCreateInput, 'variables'> & {
-    variables: object
-  }
-  return: Prisma.PromiseReturnType<typeof dbPost>
-}>
-export type PUT = MethodRouteType<{
-  body: Pick<Prisma.ClashUncheckedCreateInput, 'name' | 'subtitle' | 'content' | 'clashTemplateId'> & {
-    variables: object
-  }
-  return: Prisma.PromiseReturnType<typeof dbPut>
-  search: {
-    id: string
-  }
-}>
-export type PATCH = MethodRouteType<{
-  body: Pick<Prisma.ClashUncheckedCreateInput, 'enabled'>
-  return: Prisma.PromiseReturnType<typeof dbPatch>
-  search: {
-    id: string
-  }
-}>
-export type DELETE = MethodRouteType<{
-  return: Prisma.PromiseReturnType<typeof dbDelete>
-  search: {
-    id: string
-  }
-}>
-
 const include = Prisma.validator<Prisma.ClashInclude>()({
   visitorInfos: {
     orderBy: {
@@ -58,6 +26,10 @@ const dbGet = async () => {
   )
 }
 
+export type GET = MethodRouteType<{
+  return: Prisma.PromiseReturnType<typeof dbGet>
+}>
+
 export const GET = async () => {
   try {
     const res = await dbGet()
@@ -75,6 +47,13 @@ const dbPost = async (data: POST['body']) => {
     })
   )
 }
+
+export type POST = MethodRouteType<{
+  body: Omit<Prisma.ClashUncheckedCreateInput, 'variables'> & {
+    variables: object
+  }
+  return: Prisma.PromiseReturnType<typeof dbPost>
+}>
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -100,6 +79,16 @@ const dbPut = async (id: string, data: PUT['body']) => {
   )
 }
 
+export type PUT = MethodRouteType<{
+  body: Pick<Prisma.ClashUncheckedCreateInput, 'name' | 'subtitle' | 'content' | 'clashTemplateId'> & {
+    variables: object
+  }
+  return: Prisma.PromiseReturnType<typeof dbPut>
+  search: {
+    id: string
+  }
+}>
+
 export const PUT = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
@@ -122,6 +111,14 @@ const dbPatch = async (id: string, data: PATCH['body']) => {
   })
 }
 
+export type PATCH = MethodRouteType<{
+  body: Pick<Prisma.ClashUncheckedCreateInput, 'enabled'>
+  return: Prisma.PromiseReturnType<typeof dbPatch>
+  search: {
+    id: string
+  }
+}>
+
 export const PATCH = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
@@ -139,6 +136,13 @@ export const PATCH = async (request: NextRequest) => {
 const dbDelete = async (id: string) => {
   return convertClashGetData(await prisma.clash.delete({ include, where: { id } }))
 }
+
+export type DELETE = MethodRouteType<{
+  return: Prisma.PromiseReturnType<typeof dbDelete>
+  search: {
+    id: string
+  }
+}>
 
 export const DELETE = async (request: NextRequest) => {
   try {

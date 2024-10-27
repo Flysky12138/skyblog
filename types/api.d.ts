@@ -11,14 +11,10 @@ interface FetchOptions extends Omit<RequestInit, 'method' | 'headers' | 'body'> 
   method?: Method
 }
 
-/** 文件路由请求参数、内容以及响应的类型 */
-type MethodRouteType<
-  T extends {
-    body?: unknown
-    return?: unknown
-    search?: unknown
-  }
-> = T
-
 /** `CustomRequest` 请求配置 */
-type CustomRequestOptions<T extends keyof ApiMap> = Omit<ApiMap[T], 'return'> & RemoveEmptyObjectKeys<{ params: ParamsByApi<T> }>
+type CustomRequestOptions<T extends keyof ApiMap> = Omit<ApiMap[T], 'return'> & RemoveEmptyObjectKeys<{ params: RouteParams<T> }>
+
+/** 接口返回的错误类型 */
+interface ResponseError {
+  message: string
+}

@@ -6,17 +6,6 @@ import { getImageSize } from 'next/dist/server/image-optimizer'
 import { NextRequest } from 'next/server'
 import puppeteer, { Browser } from 'puppeteer-core'
 
-export type PUT = MethodRouteType<{
-  body: Prisma.FriendLinksCreateInput
-  return: Prisma.PromiseReturnType<typeof dbPut>
-}>
-export type PATCH = MethodRouteType<{
-  return: Prisma.PromiseReturnType<typeof dbPatch>
-}>
-export type DELETE = MethodRouteType<{
-  return: Prisma.PromiseReturnType<typeof dbDelete>
-}>
-
 const dbPut = async (id: string, data: PUT['body']) => {
   return await prisma.friendLinks.update({
     data: {
@@ -26,6 +15,11 @@ const dbPut = async (id: string, data: PUT['body']) => {
     where: { id }
   })
 }
+
+export type PUT = MethodRouteType<{
+  body: Prisma.FriendLinksCreateInput
+  return: Prisma.PromiseReturnType<typeof dbPut>
+}>
 
 export const PUT = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {
@@ -49,6 +43,10 @@ const dbPatch = async (id: string, data: Prisma.FriendLinksUpdateInput) => {
     where: { id }
   })
 }
+
+export type PATCH = MethodRouteType<{
+  return: Prisma.PromiseReturnType<typeof dbPatch>
+}>
 
 export const PATCH = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   let browser: Browser | null = null
@@ -91,6 +89,10 @@ const dbDelete = async (id: string) => {
     where: { id }
   })
 }
+
+export type DELETE = MethodRouteType<{
+  return: Prisma.PromiseReturnType<typeof dbDelete>
+}>
 
 export const DELETE = async (request: NextRequest, { params }: DynamicRoute<{ id: string }>) => {
   try {

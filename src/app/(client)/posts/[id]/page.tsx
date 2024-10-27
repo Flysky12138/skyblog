@@ -11,7 +11,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import PostInfo from './_components/PostInfo'
-import PostIssues from './_components/PostIssues'
+// import PostIssues from './_components/PostIssues'
 import PostTocWrapper from './_components/PostTocWrapper'
 
 const getPost = async (id: string) => {
@@ -89,7 +89,7 @@ export default async function Page({ params }: PageProps) {
           </Card>
         </section>
       )}
-      <PostIssues />
+      {/* <PostIssues /> */}
     </section>
   )
 }

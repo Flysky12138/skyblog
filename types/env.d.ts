@@ -1,6 +1,6 @@
 namespace NodeJS {
   interface ProcessEnv {
-    CDN_URL: string | undefined
+    CDN_URL?: string
     EDGE_ID: string
     GITHUB_ID: string
     GITHUB_SECRET: string
@@ -13,7 +13,7 @@ namespace NodeJS {
     NEXT_PUBLIC_TITLE: string
     NEXT_PUBLIC_WEBSITE_URL: StartsWith<Protocol>
     TOKEN_BROWSERLESS: string
-    TOKEN_IPINFO: string | undefined
+    TOKEN_IPINFO?: string
     TOKEN_VERCEL: string
   }
 }

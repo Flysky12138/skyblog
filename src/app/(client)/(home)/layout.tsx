@@ -5,7 +5,7 @@ import CardDeveloper from './_components/card/CardDeveloper'
 import CardFriendLink from './_components/card/CardFriendLink'
 import CardGuestInfo from './_components/card/CardGuestInfo'
 
-const CardReactUwU = dynamic(() => import('./_components/card/CardReactUwU'), { ssr: false })
+const CardReactUwU = dynamic(() => import('./_components/card/CardReactUwU'))
 
 export default function Layout({ children }: React.PropsWithChildren) {
   return (

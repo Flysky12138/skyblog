@@ -27,7 +27,7 @@ export default function About() {
       <Typography level="body-sm">©2020 - {new Date().getFullYear()} By Flysky</Typography>
       <div className="flex gap-x-1">
         <Typography level="body-sm">框架</Typography>
-        <OuterLink href="https://nextjs.org/">Next</OuterLink>
+        <OuterLink href="https://nextjs.org/">Next.js</OuterLink>
         <Typography level="body-sm">|</Typography>
         <Typography level="body-sm">主题</Typography>
         <OuterLink href="https://mui.com/joy-ui/getting-started/overview/">Joy UI</OuterLink>

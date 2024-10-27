@@ -3,7 +3,7 @@ import { Refresh } from '@mui/icons-material'
 import { IconButton } from '@mui/joy'
 import Card from './layout/Card'
 
-interface CustomErrorProps extends ErrorBoundary {
+interface CustomErrorProps extends ErrorRouteProps {
   className?: string
 }
 

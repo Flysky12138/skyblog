@@ -8,7 +8,7 @@ import { serialize } from 'next-mdx-remote/serialize'
 import { useAsync } from 'react-use'
 import { components } from './components'
 import './css'
-import { options } from './options.mjs'
+import { serializeOptions } from './options.mjs'
 
 interface MDXClientProps {
   value: MDXRemoteProps['source']
@@ -20,7 +20,7 @@ export const MDXClient = ({ value }: MDXClientProps) => {
     loading,
     error
   } = useAsync(async () => {
-    return await serialize(value, options)
+    return await serialize(value, serializeOptions)
   }, [value])
 
   if (loading) return <Lottie className="h-32" lottie={LoaderThree} />

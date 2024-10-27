@@ -3,7 +3,7 @@ import prisma from '@/lib/prisma'
 import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { ipAddress } from '@vercel/functions'
-import { NextRequest, userAgent } from 'next/server'
+import { NextRequest, NextResponse, userAgent } from 'next/server'
 import { convertClashGetData } from '../../dashboard/clash/utils'
 import { convertVisitorLogSaveData } from '../../dashboard/users/visitor/utils'
 
@@ -43,12 +43,7 @@ export const GET = async (request: NextRequest, { params }: DynamicRoute<{ id: s
     if (!ip) return CustomResponse.error('未知访问', 400)
 
     if (!request.headers.get('user-agent')?.toLowerCase().includes('clash')) {
-      return new Response(`<p align="center" style="margin-top:30dvh">禁止从非客户端获取资源</p>`, {
-        headers: {
-          'Content-Type': 'text/html; charset=utf-8'
-        },
-        status: 451
-      })
+      return NextResponse.redirect(new URL('/', request.url))
     }
 
     const agent = userAgent(request)
