@@ -28,7 +28,7 @@ class CustomResponse extends Response {
 
 export default {
   // @ts-ignore
-  async fetch(request, { R2, AUTH_KEY_SECRET }) {
+  fetch: async (request, { R2, AUTH_KEY_SECRET }) => {
     try {
       // 预请求
       if (request.method == 'OPTIONS') return new CustomResponse(request)

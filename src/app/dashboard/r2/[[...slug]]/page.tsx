@@ -145,7 +145,7 @@ export default function Page() {
                     )}
                     description={it.key}
                     onSubmit={async () => {
-                      await Toast(R2.delete(it.key), '删除成功', it.key)
+                      await Toast(R2.delete(it.key), { description: it.key, success: '删除成功' })
                       await mutate(
                         produce(state => {
                           state.objects.splice(index, 1)

@@ -46,7 +46,9 @@ export default function TableClash() {
                   </Button>
                 )}
                 onSubmit={async body => {
-                  const data = await Toast(CustomRequest('POST api/dashboard/clash', { body }), '添加成功')
+                  const data = await Toast(CustomRequest('POST api/dashboard/clash', { body }), {
+                    success: '添加成功'
+                  })
                   setClashs(
                     produce(state => {
                       state.unshift(data)
@@ -100,7 +102,9 @@ export default function TableClash() {
                         body: { enabled: !clash.enabled },
                         search: { id: clash.id }
                       }),
-                      '更新成功'
+                      {
+                        success: '更新成功'
+                      }
                     )
                     setClashs(
                       produce(state => {
@@ -118,7 +122,9 @@ export default function TableClash() {
                     </Button>
                   )}
                   onSubmit={async () => {
-                    await Toast(CustomRequest('DELETE api/dashboard/clash', { search: { id: clash.id } }), '删除成功')
+                    await Toast(CustomRequest('DELETE api/dashboard/clash', { search: { id: clash.id } }), {
+                      success: '删除成功'
+                    })
                     setClashs(
                       produce(state => {
                         state.splice(index, 1)
@@ -156,7 +162,9 @@ export default function TableClash() {
                         },
                         search: { id: clash.id }
                       }),
-                      '修改成功'
+                      {
+                        success: '修改成功'
+                      }
                     )
                     setClashs(
                       produce(state => {

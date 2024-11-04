@@ -39,7 +39,9 @@ export default function TableTemplate() {
                   </Button>
                 )}
                 onSubmit={async body => {
-                  const data = await Toast(CustomRequest('POST api/dashboard/clash/template', { body }), '添加成功')
+                  const data = await Toast(CustomRequest('POST api/dashboard/clash/template', { body }), {
+                    success: '添加成功'
+                  })
                   setClashTemplates(
                     produce(state => {
                       state.unshift(data)
@@ -66,7 +68,9 @@ export default function TableTemplate() {
                     </Button>
                   )}
                   onSubmit={async () => {
-                    await Toast(CustomRequest('DELETE api/dashboard/clash/template', { search: { id: clashTemplate.id } }), '删除成功')
+                    await Toast(CustomRequest('DELETE api/dashboard/clash/template', { search: { id: clashTemplate.id } }), {
+                      success: '删除成功'
+                    })
                     setClashTemplates(
                       produce(state => {
                         state.splice(index, 1)
@@ -87,7 +91,9 @@ export default function TableTemplate() {
                         body: { content, name },
                         search: { id: clashTemplate.id }
                       }),
-                      '修改成功'
+                      {
+                        success: '修改成功'
+                      }
                     )
                     setClashTemplates(
                       produce(state => {

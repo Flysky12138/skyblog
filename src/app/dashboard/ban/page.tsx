@@ -13,7 +13,9 @@ export default function Page() {
 
   const editEdgeBanConfigItem = React.useCallback(
     async (type: 'PUT' | 'DELETE', key: EdgeBanKeysType, value: string[]) => {
-      await Toast(CustomRequest('PUT api/dashboard/ban', { body: { key, value } }), type == 'PUT' ? '添加成功' : '删除成功')
+      await Toast(CustomRequest('PUT api/dashboard/ban', { body: { key, value } }), {
+        success: type == 'PUT' ? '添加成功' : '删除成功'
+      })
       mutate(
         produce(state => {
           state[key] = value

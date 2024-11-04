@@ -120,7 +120,9 @@ export default function Page() {
                     toast.error('表单验证失败')
                     return
                   }
-                  const data = await Toast(isCreate ? createPost() : updatePost(), '保存成功')
+                  const data = await Toast(isCreate ? createPost() : updatePost(), {
+                    success: '保存成功'
+                  })
                   if (isCreate) {
                     router.replace(`/dashboard/posts/${data.id}`)
                   } else {

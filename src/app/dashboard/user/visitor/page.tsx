@@ -90,7 +90,9 @@ export default function Page() {
                     ids: Array.from(checked.values())
                   }
                 }),
-                '删除成功'
+                {
+                  success: '删除成功'
+                }
               )
               setChecked.clear()
               await mutate()

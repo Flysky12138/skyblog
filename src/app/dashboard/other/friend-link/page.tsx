@@ -44,7 +44,9 @@ export default function Page() {
                     body,
                     params: { id: String(friendlink.id) }
                   }),
-                  '更新成功'
+                  {
+                    success: '更新成功'
+                  }
                 )
                 setFriendlinks(
                   produce(state => {
@@ -61,7 +63,9 @@ export default function Page() {
                     CustomRequest('PATCH api/dashboard/friend-links/[id]', {
                       params: { id: String(friendlink.id) }
                     }),
-                    '获取封面成功'
+                    {
+                      success: '获取封面成功'
+                    }
                   )
                   setFriendlinks(
                     produce(state => {
@@ -103,7 +107,9 @@ export default function Page() {
           </Card>
         )}
         onSubmit={async body => {
-          const data = await Toast(CustomRequest('POST api/dashboard/friend-links', { body }), '保存成功')
+          const data = await Toast(CustomRequest('POST api/dashboard/friend-links', { body }), {
+            success: '保存成功'
+          })
           setFriendlinks(
             produce(state => {
               state.push(data)

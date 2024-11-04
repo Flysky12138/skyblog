@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   generator: 'Next.js',
   title: {
     default: process.env.NEXT_PUBLIC_TITLE,
-    template: `%s | ${process.env.NEXT_PUBLIC_TITLE}`
+    template: `%s · ${process.env.NEXT_PUBLIC_TITLE}`
   }
 }
 

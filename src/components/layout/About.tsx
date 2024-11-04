@@ -32,7 +32,6 @@ export default function About() {
         <Typography level="body-sm">主题</Typography>
         <OuterLink href="https://mui.com/joy-ui/getting-started/overview/">Joy UI</OuterLink>
       </div>
-      <OuterLink href="https://beian.miit.gov.cn">蜀 ICP 备 2023031507 号</OuterLink>
       <Typography level="body-xs">Built by vercel on {new Date().toUTCString()}</Typography>
     </section>
   )

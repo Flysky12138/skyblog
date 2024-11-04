@@ -97,7 +97,10 @@ export default function UploadFiles({ component: Component, path, onSubmit, onFi
                   if (file.type.startsWith('image')) {
                     Object.assign(metadata, await getImageSize(file))
                   }
-                  const data = await Toast(R2.put({ metadata, blob: file, key: basePath.slice(1) + path }), '上传成功', path)
+                  const data = await Toast(R2.put({ metadata, blob: file, key: basePath.slice(1) + path }), {
+                    description: path,
+                    success: '上传成功'
+                  })
                   setUploadFinishedFileList(state => {
                     state.push(file)
                   })

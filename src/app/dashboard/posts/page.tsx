@@ -179,7 +179,9 @@ export default function Page() {
                           body: { published: !post.published },
                           params: { id: post.id }
                         }),
-                        '更新成功'
+                        {
+                          success: '更新成功'
+                        }
                       )
                       setPosts(
                         produce(state => {
@@ -198,7 +200,9 @@ export default function Page() {
                     )}
                     description={post.title}
                     onSubmit={async () => {
-                      await Toast(CustomRequest('DELETE api/dashboard/posts/[id]', { params: { id: post.id } }), '删除成功')
+                      await Toast(CustomRequest('DELETE api/dashboard/posts/[id]', { params: { id: post.id } }), {
+                        success: '删除成功'
+                      })
                       setPosts(
                         produce(state => {
                           state.splice(index, 1)
