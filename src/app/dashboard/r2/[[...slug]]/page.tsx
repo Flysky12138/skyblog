@@ -9,7 +9,6 @@ import { formatISOTime } from '@/lib/parser/time'
 import { R2 } from '@/lib/server/r2'
 import { Toast } from '@/lib/toast'
 import { ImageViewerContext } from '@/provider/image-viewer'
-import { R2Object } from '@cloudflare/workers-types/2023-07-01'
 import {
   AudioFileOutlined,
   DataObjectOutlined,
@@ -31,7 +30,7 @@ import ModalCopy, { ModalCopyRef } from './_components/ModalCopy'
 import UploadFiles from './_components/UploadFiles'
 
 /** 文件图标 */
-const FileIcon: React.FC<{ type: string }> = ({ type }) => {
+const FileIcon: React.FC<{ type?: string }> = ({ type = '' }) => {
   if (type.startsWith('image')) return <ImageOutlined />
   if (type.startsWith('audio')) return <AudioFileOutlined />
   if (type.startsWith('video')) return <VideoCameraBackOutlined />
@@ -48,15 +47,15 @@ export default function Page() {
   const { slug } = useParams<{ slug?: string[] }>()
   const path = slug?.length ? slug.join('/') : ''
 
-  const { isLoading, data, mutate, error } = useSWR(`/r2/${path}`, () => R2.list(path + '/'))
+  const { isLoading, data, mutate, error } = useSWR(`/r2/${path}`, () => R2.list(path ? `${path}/` : ''))
 
   const { openViewer } = React.useContext(ImageViewerContext)
   /** 文件点击 */
-  const handleFileRowClick = React.useCallback<(file: R2Object) => void>(
+  const handleFileRowClick = React.useCallback<(file: UnwrapPromise<ReturnType<typeof R2.list>>['files'][number]) => void>(
     file => {
       if (!data) return
-      if (file.httpMetadata?.contentType?.startsWith('image')) {
-        const images = data.objects.filter(it => it.httpMetadata?.contentType?.startsWith('image'))
+      if (file.contentType?.startsWith('image')) {
+        const images = data.files.filter(it => it.contentType?.startsWith('image'))
         openViewer({
           images: images.map(image => ({ key: image.key, src: R2.get(image.key) })),
           index: Math.max(
@@ -90,7 +89,7 @@ export default function Page() {
                     </Button>
                   )}
                   path={`/${path}`}
-                  onFinished={mutate}
+                  // onFinished={mutate}
                 />
               </th>
             </tr>
@@ -108,7 +107,7 @@ export default function Page() {
               </tr>
             ) : null}
             {/* 文件夹 */}
-            {data?.delimitedPrefixes.map(it => (
+            {data?.folders.map(it => (
               <tr key={it} onClick={() => router.replace(`/dashboard/r2/${it}`)}>
                 <td className="text-slate-500 dark:text-zinc-400">
                   <Folder />
@@ -118,14 +117,14 @@ export default function Page() {
               </tr>
             ))}
             {/* 文件 */}
-            {data?.objects.map((it, index) => (
+            {data?.files.map((it, index) => (
               <tr key={it.key} onClick={() => handleFileRowClick(it)}>
                 <td className="text-slate-500 dark:text-zinc-400">
-                  <FileIcon type={it.httpMetadata?.contentType || ''} />
+                  <FileIcon type={it.contentType} />
                 </td>
                 <td className="truncate">{it.key.split('/').at(-1)}</td>
                 <td>{formatFileSize(it.size)}</td>
-                <td>{formatISOTime(it.uploaded)}</td>
+                <td>{formatISOTime(it.lastModified)}</td>
                 <td className="flex items-center justify-end">
                   <Button
                     size="sm"
@@ -145,10 +144,10 @@ export default function Page() {
                     )}
                     description={it.key}
                     onSubmit={async () => {
-                      await Toast(R2.delete(it.key), { description: it.key, success: '删除成功' })
+                      await Toast(R2.delete([it.key]), { description: it.key, success: '删除成功' })
                       await mutate(
                         produce(state => {
-                          state.objects.splice(index, 1)
+                          state.files.splice(index, 1)
                         }),
                         { revalidate: false }
                       )
@@ -157,7 +156,7 @@ export default function Page() {
                 </td>
               </tr>
             ))}
-            <TableStatus colSpan={5} isEmpty={data?.delimitedPrefixes.length == 0 && data.objects.length == 0} isError={error} isLoading={isLoading} />
+            <TableStatus colSpan={5} isEmpty={data?.folders.length == 0 && data.files.length == 0} isError={error} isLoading={isLoading} />
           </tbody>
         </Table>
       </TableWrapper>

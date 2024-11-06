@@ -8,8 +8,11 @@ namespace NodeJS {
     NEXT_PUBLIC_DESCRIPTION: string
     NEXT_PUBLIC_GITHUB_NAME: string
     NEXT_PUBLIC_PAGE_POSTCARD_COUNT: string
-    NEXT_PUBLIC_R2_SECRET: string
+    NEXT_PUBLIC_R2_BUCKET_NAME: string
     NEXT_PUBLIC_R2_URL: StartsWith<Protocol>
+    NEXT_PUBLIC_S3_ACCESS_ID: string
+    NEXT_PUBLIC_S3_ACCESS_KEY: string
+    NEXT_PUBLIC_S3_API: StartsWith<Protocol>
     NEXT_PUBLIC_TITLE: string
     NEXT_PUBLIC_WEBSITE_URL: StartsWith<Protocol>
     TOKEN_BROWSERLESS: string

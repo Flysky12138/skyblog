@@ -17,17 +17,3 @@ export const getImageSize = async (blob: Blob) => {
     }
   })
 }
-
-/**
- * 计算 hash
- * @default
- * algorithm = 'SHA-1'
- */
-export const calculateBlobAlgorithm = async (blob: Blob, algorithm: `SHA-${1 | 256 | 384 | 512}` = 'SHA-1') => {
-  const buffer = await blob.arrayBuffer()
-  const data = new Uint8Array(buffer)
-  const md5 = await crypto.subtle.digest(algorithm, data)
-  return Array.from(new Uint8Array(md5))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('')
-}

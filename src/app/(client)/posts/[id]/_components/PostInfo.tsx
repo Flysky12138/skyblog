@@ -19,7 +19,7 @@ interface PostInfoProps {
 export default function PostInfo({ id, defaultValue }: PostInfoProps) {
   const { data: post, isLoading } = useSWR(`/api/post/info?id=${id}`, () => CustomRequest('GET api/post/info', { search: { id } }), {
     fallbackData: defaultValue,
-    refreshInterval: 10 * 1000
+    refreshInterval: 20 * 1000
   })
 
   const session = useSession()

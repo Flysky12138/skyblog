@@ -1,3 +1,4 @@
+import { convertObjectValues } from '@/lib/parser/object'
 import prisma from '@/lib/prisma'
 import { R2 } from '@/lib/server/r2'
 import { CustomResponse } from '@/lib/server/response'
@@ -65,15 +66,23 @@ export const PATCH = async (request: NextRequest, { params }: DynamicRoute<{ id:
     await page.goto(friendLink.url)
     const buffer = await page.screenshot({ type: 'webp' })
 
-    const blob = new Blob([buffer], { type: 'application/octet-stream' })
-    const key = `friend-links/${params.id}.webp`
-    const metadata = await getImageSize(buffer, 'webp')
+    const Body = new Blob([buffer], { type: 'application/octet-stream' })
+    const Key = `friend-links/${params.id}.webp/`
+    const imageSize = await getImageSize(buffer, 'webp')
 
     // 保存封面
-    await R2.put({ blob, key, metadata })
+    await R2.put({
+      Body,
+      Key,
+      ContentType: 'image/webp',
+      Metadata: convertObjectValues(imageSize, {
+        height: it => String(it),
+        width: it => String(it)
+      })
+    })
 
     // 保存封面直链
-    const res = await dbPatch(params.id, { cover: R2.get(key) })
+    const res = await dbPatch(params.id, { cover: R2.get(Key) })
 
     return CustomResponse.encrypt(res)
   } catch (error) {
@@ -99,7 +108,7 @@ export const DELETE = async (request: NextRequest, { params }: DynamicRoute<{ id
     if (!params.id) return CustomResponse.error('{id} 值缺失', 422)
 
     // 删除封面
-    await R2.delete(`friend-links/${params.id}.webp`)
+    await R2.delete([`friend-links/${params.id}.webp`])
 
     const res = await dbDelete(params.id)
 

@@ -8,7 +8,7 @@
 
 ## 环境变量
 
-以下是不适合公开的环境变量
+以下是不适合公开的环境变量，示例为随机生成格式相同的字符串
 
 ```ini
 # https://ipinfo.io/
@@ -23,9 +23,12 @@ EDGE_ID=ecfg_7bhjqwklveuyz9ix4n2tr3mfa5gd8sp
 TOKEN_VERCEL=Z6Wn8v7YkAf5Ml0DxJzI1gBp
 
 # cloudflare r2
-## https://dash.cloudflare.com/e52dc36cf56603a6090e044725996f99/r2/overview
-NEXT_PUBLIC_R2_SECRET=8j1a9s2d0f5g4h7j6k8l3m4n5b0v
-NEXT_PUBLIC_R2_URL=https://r2-worker.flysky12138.workers.dev
+## https://dash.cloudflare.com/?to=/:account/r2/api-tokens
+NEXT_PUBLIC_R2_BUCKET_NAME=skyblog
+NEXT_PUBLIC_R2_URL=https://r2.flysky.xyz
+NEXT_PUBLIC_S3_API=https://1e7c6cead9e4b1aa143fb3c5aef8cead.r2.cloudflarestorage.com
+NEXT_PUBLIC_S3_ACCESS_ID=e44e40ebab57c6e45fc8daffc43b8aac
+NEXT_PUBLIC_S3_ACCESS_KEY=05e34ea2c231c6baa4d84591bb65df7eb7c2a7989c2d3d6e8638135c526aa65a
 
 # 登录
 ## https://github.com/settings/developers
@@ -50,7 +53,6 @@ CDN_URL=
 4. 组件根标签是 `div` 等无意义标签，换成 `section`；`React.Fragment` 除外
 5. 接口类型导出 `export type POST = MethodRouteType<{}>`
 6. 对数据库的 CRUD 方法提取到外层，并命名为 `db<Get|Post...>`，以便使用 `Prisma.PromiseReturnType<typeof dbGet>` 获取返回类型
-7. 类型命名以 `Type` 结尾，接口不以 `Type` 结尾
 
 ### 坑
 

@@ -3,11 +3,11 @@ import TableStatus from '@/components/table/TableStatus'
 import TableWrapper from '@/components/table/TableWrapper'
 import { cn } from '@/lib/cn'
 import { getImageSize } from '@/lib/file/info'
+import { convertObjectValues } from '@/lib/parser/object'
 import { formatFileSize } from '@/lib/parser/size'
 import { promisePool } from '@/lib/promise'
 import { R2 } from '@/lib/server/r2'
 import { Toast } from '@/lib/toast'
-import { R2Object } from '@cloudflare/workers-types/2023-07-01'
 import { FileOpenOutlined, FileUploadOutlined, FolderOpenOutlined } from '@mui/icons-material'
 import { Button, ButtonGroup, Input, Table } from '@mui/joy'
 import React from 'react'
@@ -17,16 +17,17 @@ import CopyLink, { ModalCopyRef } from './ModalCopy'
 
 interface UploadFilesProps extends Pick<ModalCoreProps, 'component'> {
   onFinished?: () => void
-  onSubmit?: (payload: R2Object) => void
+  onSubmit?: (payload: UnwrapPromise<ReturnType<typeof R2.put>>) => void
   path: StartsWith<'/'>
 }
 
 export default function UploadFiles({ component: Component, path, onSubmit, onFinished }: UploadFilesProps) {
   const [fileList, setFileList] = useImmer<File[]>([])
   const [uploadFinishedFileList, setUploadFinishedFileList] = useImmer<File[]>([])
-  const [uploadFinishedReturnData, setUploadFinishedReturnData] = useImmer<R2Object[]>([])
+  const [uploadFinishedReturnData, setUploadFinishedReturnData] = useImmer<UnwrapPromise<ReturnType<typeof R2.put>>[]>([])
 
   const isUploadFinished = fileList.length <= uploadFinishedFileList.length
+
   const [isUploading, setIsUploading] = React.useState(false)
   useBeforeUnload(isUploading, '正在上传中，不要关闭窗口')
 
@@ -40,8 +41,41 @@ export default function UploadFiles({ component: Component, path, onSubmit, onFi
   const copyLinkRef = React.useRef<ModalCopyRef>(null)
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = event => {
-    const target = event.target
-    setFileList(Array.from(target.files || []))
+    setFileList(Array.from(event.target.files || []))
+  }
+
+  const upload = async () => {
+    setIsUploading(true)
+    await promisePool(
+      fileList.map(file => async () => {
+        if (uploadFinishedFileList.includes(file)) return
+        const path = file.webkitRelativePath || file.name
+        const Metadata = {}
+        if (file.type.startsWith('image')) {
+          const imageSize = await getImageSize(file)
+          Object.assign(
+            Metadata,
+            convertObjectValues(imageSize, {
+              height: it => String(it),
+              width: it => String(it)
+            })
+          )
+        }
+        const data = await Toast(R2.put({ Metadata, Body: file, ContentType: file.type, Key: basePath.slice(1) + path }), {
+          description: path,
+          success: '上传成功'
+        })
+        setUploadFinishedFileList(state => {
+          state.push(file)
+        })
+        setUploadFinishedReturnData(state => {
+          state.push(data)
+        })
+        onSubmit?.(data)
+      })
+    )
+    onFinished?.()
+    setIsUploading(false)
   }
 
   return (
@@ -82,38 +116,7 @@ export default function UploadFiles({ component: Component, path, onSubmit, onFi
             </Button>
           </ButtonGroup>
         ) : (
-          <Button
-            color="success"
-            disabled={!checkBasePathValidity || isUploading}
-            size="sm"
-            startDecorator={<FileUploadOutlined />}
-            onClick={async () => {
-              setIsUploading(true)
-              await promisePool(
-                fileList.map(file => async () => {
-                  if (uploadFinishedFileList.includes(file)) return
-                  const path = file.webkitRelativePath || file.name
-                  const metadata = {}
-                  if (file.type.startsWith('image')) {
-                    Object.assign(metadata, await getImageSize(file))
-                  }
-                  const data = await Toast(R2.put({ metadata, blob: file, key: basePath.slice(1) + path }), {
-                    description: path,
-                    success: '上传成功'
-                  })
-                  setUploadFinishedFileList(state => {
-                    state.push(file)
-                  })
-                  setUploadFinishedReturnData(state => {
-                    state.push(data)
-                  })
-                  onSubmit?.(data)
-                })
-              )
-              onFinished?.()
-              setIsUploading(false)
-            }}
-          >
+          <Button color="success" disabled={!checkBasePathValidity || isUploading} size="sm" startDecorator={<FileUploadOutlined />} onClick={upload}>
             上传（{fileList.length - uploadFinishedFileList.length}）
           </Button>
         )}

@@ -15,7 +15,11 @@ const headers = async () => {
      *
      * https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
      */
-    const cspSrc = [process.env.NEXT_PUBLIC_R2_URL, process.env.CDN_URL].join(' ')
+    const cspSrc = [
+      process.env.NEXT_PUBLIC_R2_URL,
+      process.env.NEXT_PUBLIC_S3_API.replace('//', `//${process.env.NEXT_PUBLIC_R2_BUCKET_NAME}.`),
+      process.env.CDN_URL
+    ].join(' ')
     const cspHeader = [
       "default-src 'self'",
       `connect-src 'self' blob: data: ${cspSrc}`,

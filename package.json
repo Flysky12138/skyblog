@@ -24,9 +24,6 @@
     "prisma:prod:migrate-status": "dotenv -e .env.local -- prisma migrate status --schema prisma/psql",
     "script:api:type": "tsx scripts/generator-api-type.ts",
     "script:api:runtime": "tsx scripts/api-runtime.ts",
-    "wrangler:deploy": "wrangler deploy",
-    "wrangler:secret": "wrangler secret put AUTH_KEY_SECRET",
-    "wrangler:create-bucket": "wrangler r2 bucket create skyblog",
     "vercel:env:pull": "vercel env pull"
   },
   "lint-staged": {
@@ -37,6 +34,7 @@
     "*.{md,css,json,yaml}": "prettier --write"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.685.0",
     "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
@@ -48,11 +46,11 @@
     "@mui/joy": "5.0.0-beta.48",
     "@mui/lab": "6.0.0-beta.14",
     "@mui/material": "^6.1.6",
-    "@neondatabase/serverless": "^0.10.1",
-    "@next/mdx": "^14.2.16",
+    "@neondatabase/serverless": "^0.10.2",
+    "@next/mdx": "^14.2.17",
     "@octokit/rest": "^21.0.2",
-    "@prisma/adapter-neon": "^5.21.1",
-    "@prisma/client": "^5.21.1",
+    "@prisma/adapter-neon": "^5.22.0",
+    "@prisma/client": "^5.22.0",
     "@rehype-pretty/transformers": "^0.13.2",
     "@vercel/edge-config": "^1.4.0",
     "@vercel/functions": "^1.5.0",
@@ -64,7 +62,7 @@
     "immer": "^10.1.1",
     "jszip": "^3.10.1",
     "monaco-editor": "0.52.0",
-    "next": "^14.2.16",
+    "next": "^14.2.17",
     "next-auth": "5.0.0-beta.20",
     "next-mdx-remote": "^5.0.0",
     "nextjs-toploader": "^3.7.15",
@@ -86,13 +84,12 @@
     "shiki": "^1.22.2",
     "sonner": "^1.7.0",
     "swr": "^2.2.5",
-    "tm-grammars": "^1.18.10",
+    "tm-grammars": "^1.19.0",
     "unist-util-visit": "^5.0.0",
     "use-immer": "^0.10.0",
     "uuidv7": "^1.0.2"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20241011.0",
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
     "@tailwindcss/typography": "^0.5.15",
@@ -107,7 +104,7 @@
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
     "eslint": "^8.57.1",
-    "eslint-config-next": "^14.2.16",
+    "eslint-config-next": "^14.2.17",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-sort-keys-plus": "^1.4.0",
@@ -121,14 +118,13 @@
     "prettier": "^3.3.3",
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-tailwindcss": "^0.6.8",
-    "prisma": "^5.21.1",
+    "prisma": "^5.22.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss": "^3.4.14",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
     "typescript-eslint": "^7.18.0",
-    "vercel": "^37.14.0",
-    "wrangler": "3.80.4"
+    "vercel": "^37.14.0"
   },
   "commitlint": {
     "extends": [

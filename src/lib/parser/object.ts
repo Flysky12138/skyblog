@@ -1,7 +1,7 @@
 /**
  * 对对象的某些键值进行处理，修改源对象
  */
-export const convertKeyValues = <
+export const convertObjectValues = <
   T extends Record<string, any>,
   D extends {
     [K in keyof T]?: (value: T[K]) => unknown

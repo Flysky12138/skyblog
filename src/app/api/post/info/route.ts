@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
 export const runtime = 'nodejs'
-export const dynamic = 'force-dynamic'
+export const revalidate = 10
 
 const dbGet = async (id: string) => {
   return await prisma.post.findUnique({

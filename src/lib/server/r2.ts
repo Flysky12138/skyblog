@@ -1,25 +1,48 @@
-import { R2Object, R2Objects } from '@cloudflare/workers-types/2023-07-01'
-import { calculateBlobAlgorithm } from '../file/info'
-import { CustomFetch } from './fetch'
+import { DeleteObjectsCommand, HeadObjectCommand, ListObjectsV2Command, PutObjectCommand, PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3'
+
+const S3 = new S3Client({
+  credentials: {
+    accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_ID,
+    secretAccessKey: process.env.NEXT_PUBLIC_S3_ACCESS_KEY
+  },
+  endpoint: process.env.NEXT_PUBLIC_S3_API,
+  region: 'auto'
+})
+
+const Bucket = process.env.NEXT_PUBLIC_R2_BUCKET_NAME
+
+type MetadataType = {
+  height?: string
+  width?: string
+}
 
 export class R2 {
-  static #url = process.env.NEXT_PUBLIC_R2_URL
-  static #headers = {
-    'X-R2-SECRET': process.env.NEXT_PUBLIC_R2_SECRET
-  }
-
   /** 获取直链 */
   static get(key: string) {
-    return `${this.#url}/${key}`
+    return `${process.env.NEXT_PUBLIC_R2_URL}/${key}`
   }
 
   /** 获取目录结构 */
-  static async list(key: string) {
-    const url = new URL(key, this.#url)
-    return await CustomFetch<R2Objects>(url, {
-      headers: this.#headers,
-      method: 'GET'
-    })
+  static async list<T>(Prefix: T extends `/${string}` ? never : T extends `${string}/` | '' ? T : never) {
+    const { CommonPrefixes, Contents } = await S3.send(new ListObjectsV2Command({ Bucket, Prefix, Delimiter: '/' }))
+    const data = {
+      files: Contents
+        ? await Promise.all(
+            Contents.filter(it => it.Key).map(async file => {
+              const head = await S3.send(new HeadObjectCommand({ Bucket, Key: file.Key }))
+              return {
+                contentType: head.ContentType,
+                key: file.Key!,
+                lastModified: file.LastModified || head.LastModified!,
+                metadata: (head.Metadata || {}) as MetadataType,
+                size: file.Size || head.ContentLength || 0
+              }
+            })
+          )
+        : [],
+      folders: CommonPrefixes?.map(it => it.Prefix!) || []
+    }
+    return data
   }
 
   /**
@@ -27,25 +50,36 @@ export class R2 {
    * @default
    * metadata = {}
    */
-  static async put({ blob, key, metadata = {} }: { blob: Blob; key: string; metadata?: Record<string, string | number> }) {
-    const formData = new FormData()
-    formData.set('blob', blob)
-    formData.set('key', key)
-    formData.set('metadata', JSON.stringify(metadata))
-    formData.set('sha1', await calculateBlobAlgorithm(blob))
-    return await CustomFetch<R2Object>(this.#url, {
-      body: formData,
-      headers: this.#headers,
-      method: 'PUT'
-    })
+  static async put({
+    Key,
+    Body,
+    ContentType,
+    Metadata = {}
+  }: {
+    Body: NonNullable<PutObjectCommandInput['Body']>
+    ContentType: NonNullable<PutObjectCommandInput['ContentType']>
+    Key: string
+    Metadata: MetadataType
+  }) {
+    await S3.send(new PutObjectCommand({ Body, Bucket, ContentType, Key, Metadata }))
+    return {
+      contentType: ContentType,
+      key: Key,
+      lastModified: new Date(),
+      metadata: Metadata,
+      size: 0
+    } satisfies UnwrapPromise<ReturnType<typeof this.list>>['files'][number]
   }
 
   /** 删除 */
-  static async delete(key: string) {
-    const url = new URL(key, this.#url)
-    return await CustomFetch<void>(url, {
-      headers: this.#headers,
-      method: 'DELETE'
-    })
+  static async delete(Keys: string[]) {
+    return await S3.send(
+      new DeleteObjectsCommand({
+        Bucket,
+        Delete: {
+          Objects: Keys.map(Key => ({ Key }))
+        }
+      })
+    )
   }
 }
