@@ -6,7 +6,7 @@ import TableWrapper from '@/components/table/TableWrapper'
 import { cn } from '@/lib/cn'
 import { formatFileSize } from '@/lib/parser/size'
 import { formatISOTime } from '@/lib/parser/time'
-import { R2 } from '@/lib/server/r2'
+import { R2, R2FileInfoType } from '@/lib/server/r2'
 import { Toast } from '@/lib/toast'
 import { ImageViewerContext } from '@/provider/image-viewer'
 import {
@@ -47,11 +47,11 @@ export default function Page() {
   const { slug } = useParams<{ slug?: string[] }>()
   const path = slug?.length ? slug.join('/') : ''
 
-  const { isLoading, data, mutate, error } = useSWR(`/r2/${path}`, () => R2.list(path ? `${path}/` : ''))
+  const { isLoading, data, mutate, error } = useSWR(`/r2/${path}`, () => R2.list(path ? `${decodeURIComponent(path)}/` : ''))
 
   const { openViewer } = React.useContext(ImageViewerContext)
   /** 文件点击 */
-  const handleFileRowClick = React.useCallback<(file: UnwrapPromise<ReturnType<typeof R2.list>>['files'][number]) => void>(
+  const handleFileRowClick = React.useCallback<(file: R2FileInfoType) => void>(
     file => {
       if (!data) return
       if (file.contentType?.startsWith('image')) {
@@ -89,7 +89,7 @@ export default function Page() {
                     </Button>
                   )}
                   path={`/${path}`}
-                  // onFinished={mutate}
+                  onFinished={mutate}
                 />
               </th>
             </tr>

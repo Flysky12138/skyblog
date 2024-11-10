@@ -27,7 +27,7 @@ module.exports = {
         title: 'var(--font-title)'
       },
       height: {
-        footer: '180px',
+        footer: '150px',
         header: '50px'
       },
       zIndex: {

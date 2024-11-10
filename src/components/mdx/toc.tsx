@@ -19,7 +19,7 @@ const Heading: React.FC<HeadingProps> = ({ className, children, id, ...props }) 
       className={cn(
         'group s-subtitle relative block rounded-md py-0.5 pr-2',
         'data-[active=true]:bg-slate-200 data-[active=true]:!text-sky-500 data-[active=true]:dark:bg-slate-700',
-        'data-[active=true]:before:absolute data-[active=true]:before:inset-y-0.5 data-[active=true]:before:-left-2 data-[active=true]:before:w-1 data-[active=true]:before:rounded data-[active=true]:before:bg-cyan-500/70',
+        'data-[active=true]:before:absolute data-[active=true]:before:inset-y-1 data-[active=true]:before:-left-2 data-[active=true]:before:w-1 data-[active=true]:before:rounded data-[active=true]:before:bg-cyan-500/70',
         'hover:bg-slate-200/50 hover:dark:bg-slate-700/50',
         className
       )}

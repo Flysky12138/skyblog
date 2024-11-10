@@ -6,7 +6,7 @@ import { getImageSize } from '@/lib/file/info'
 import { convertObjectValues } from '@/lib/parser/object'
 import { formatFileSize } from '@/lib/parser/size'
 import { promisePool } from '@/lib/promise'
-import { R2 } from '@/lib/server/r2'
+import { R2, R2FileInfoType } from '@/lib/server/r2'
 import { Toast } from '@/lib/toast'
 import { FileOpenOutlined, FileUploadOutlined, FolderOpenOutlined } from '@mui/icons-material'
 import { Button, ButtonGroup, Input, Table } from '@mui/joy'
@@ -17,16 +17,18 @@ import CopyLink, { ModalCopyRef } from './ModalCopy'
 
 interface UploadFilesProps extends Pick<ModalCoreProps, 'component'> {
   onFinished?: () => void
-  onSubmit?: (payload: UnwrapPromise<ReturnType<typeof R2.put>>) => void
+  onSubmit?: (payload: R2FileInfoType) => void
   path: StartsWith<'/'>
 }
 
 export default function UploadFiles({ component: Component, path, onSubmit, onFinished }: UploadFilesProps) {
-  const [fileList, setFileList] = useImmer<File[]>([])
-  const [uploadFinishedFileList, setUploadFinishedFileList] = useImmer<File[]>([])
-  const [uploadFinishedReturnData, setUploadFinishedReturnData] = useImmer<UnwrapPromise<ReturnType<typeof R2.put>>[]>([])
+  const [upload, setUpload] = useImmer<{
+    finishedFileList: File[]
+    finishedReturnData: R2FileInfoType[]
+    waitFileList: File[]
+  }>({ finishedFileList: [], finishedReturnData: [], waitFileList: [] })
 
-  const isUploadFinished = fileList.length <= uploadFinishedFileList.length
+  const isUploadFinished = upload.waitFileList.length <= upload.finishedFileList.length
 
   const [isUploading, setIsUploading] = React.useState(false)
   useBeforeUnload(isUploading, '正在上传中，不要关闭窗口')
@@ -41,35 +43,30 @@ export default function UploadFiles({ component: Component, path, onSubmit, onFi
   const copyLinkRef = React.useRef<ModalCopyRef>(null)
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = event => {
-    setFileList(Array.from(event.target.files || []))
+    setUpload(state => {
+      state.waitFileList = Array.from(event.target.files || [])
+    })
   }
 
-  const upload = async () => {
+  const uploadHandler = async () => {
     setIsUploading(true)
     await promisePool(
-      fileList.map(file => async () => {
-        if (uploadFinishedFileList.includes(file)) return
+      upload.waitFileList.map(file => async () => {
+        if (upload.finishedFileList.includes(file)) return
         const path = file.webkitRelativePath || file.name
         const Metadata = {}
         if (file.type.startsWith('image')) {
           const imageSize = await getImageSize(file)
-          Object.assign(
-            Metadata,
-            convertObjectValues(imageSize, {
-              height: it => String(it),
-              width: it => String(it)
-            })
-          )
+          Object.assign(Metadata, convertObjectValues(imageSize, { height: String, width: String }))
         }
         const data = await Toast(R2.put({ Metadata, Body: file, ContentType: file.type, Key: basePath.slice(1) + path }), {
           description: path,
+          error: e => e.message,
           success: '上传成功'
         })
-        setUploadFinishedFileList(state => {
-          state.push(file)
-        })
-        setUploadFinishedReturnData(state => {
-          state.push(data)
+        setUpload(state => {
+          state.finishedFileList.push(file)
+          state.finishedReturnData.push(data)
         })
         onSubmit?.(data)
       })
@@ -83,16 +80,18 @@ export default function UploadFiles({ component: Component, path, onSubmit, onFi
       component={Component}
       onClose={() => {
         if (!isUploadFinished) return
-        setFileList([])
-        setUploadFinishedFileList([])
-        setUploadFinishedReturnData([])
+        setUpload(state => {
+          state.waitFileList = []
+          state.finishedFileList = []
+          state.finishedReturnData = []
+        })
       }}
       onOpen={() => setBasePath(decodeURIComponent(path))}
     >
       <div className="flex gap-x-5">
         <Input className="grow" disabled={isUploading} value={basePath} onChange={event => setBasePath(event.target.value.replace(/\/{2,}/g, '/') || '/')} />
-        {uploadFinishedReturnData.length > 0 && (
-          <Button variant="soft" onClick={() => copyLinkRef.current?.open(uploadFinishedReturnData)}>
+        {upload.finishedReturnData.length > 0 && (
+          <Button variant="soft" onClick={() => copyLinkRef.current?.open(upload.finishedReturnData)}>
             已上传
           </Button>
         )}
@@ -102,8 +101,10 @@ export default function UploadFiles({ component: Component, path, onSubmit, onFi
             size="sm"
             variant="solid"
             onClick={() => {
-              setFileList([])
-              setUploadFinishedFileList([])
+              setUpload(state => {
+                state.waitFileList = []
+                state.finishedFileList = []
+              })
             }}
           >
             <Button component="label" startDecorator={<FileOpenOutlined />}>
@@ -116,8 +117,8 @@ export default function UploadFiles({ component: Component, path, onSubmit, onFi
             </Button>
           </ButtonGroup>
         ) : (
-          <Button color="success" disabled={!checkBasePathValidity || isUploading} size="sm" startDecorator={<FileUploadOutlined />} onClick={upload}>
-            上传（{fileList.length - uploadFinishedFileList.length}）
+          <Button color="success" disabled={!checkBasePathValidity || isUploading} size="sm" startDecorator={<FileUploadOutlined />} onClick={uploadHandler}>
+            上传（{upload.waitFileList.length - upload.finishedFileList.length}）
           </Button>
         )}
       </div>
@@ -131,11 +132,11 @@ export default function UploadFiles({ component: Component, path, onSubmit, onFi
             </tr>
           </thead>
           <tbody>
-            {fileList.map((file, index) => (
+            {upload.waitFileList.map((file, index) => (
               <tr
                 key={file.webkitRelativePath || file.name}
                 className={cn({
-                  hidden: uploadFinishedFileList.includes(file)
+                  hidden: upload.finishedFileList.includes(file)
                 })}
               >
                 <td>
@@ -151,8 +152,8 @@ export default function UploadFiles({ component: Component, path, onSubmit, onFi
                     size="sm"
                     variant="plain"
                     onClick={() => {
-                      setFileList(state => {
-                        state.splice(index, 1)
+                      setUpload(state => {
+                        state.waitFileList.splice(index, 1)
                       })
                     }}
                   >
@@ -161,7 +162,7 @@ export default function UploadFiles({ component: Component, path, onSubmit, onFi
                 </td>
               </tr>
             ))}
-            <TableStatus colSpan={3} isEmpty={fileList.length == 0 || isUploadFinished} isLoading={false} />
+            <TableStatus colSpan={3} isEmpty={upload.waitFileList.length == 0 || isUploadFinished} isLoading={false} />
           </tbody>
         </Table>
       </TableWrapper>

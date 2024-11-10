@@ -1,5 +1,13 @@
 import { DeleteObjectsCommand, HeadObjectCommand, ListObjectsV2Command, PutObjectCommand, PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3'
 
+export type R2MetadataType = {
+  height?: string
+  width?: string
+}
+
+export type R2FileInfoType = UnwrapPromise<ReturnType<typeof R2.info>>
+
+const Bucket = process.env.NEXT_PUBLIC_R2_BUCKET_NAME
 const S3 = new S3Client({
   credentials: {
     accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_ID,
@@ -8,13 +16,6 @@ const S3 = new S3Client({
   endpoint: process.env.NEXT_PUBLIC_S3_API,
   region: 'auto'
 })
-
-const Bucket = process.env.NEXT_PUBLIC_R2_BUCKET_NAME
-
-type MetadataType = {
-  height?: string
-  width?: string
-}
 
 export class R2 {
   /** 获取直链 */
@@ -26,23 +27,22 @@ export class R2 {
   static async list<T>(Prefix: T extends `/${string}` ? never : T extends `${string}/` | '' ? T : never) {
     const { CommonPrefixes, Contents } = await S3.send(new ListObjectsV2Command({ Bucket, Prefix, Delimiter: '/' }))
     const data = {
-      files: Contents
-        ? await Promise.all(
-            Contents.filter(it => it.Key).map(async file => {
-              const head = await S3.send(new HeadObjectCommand({ Bucket, Key: file.Key }))
-              return {
-                contentType: head.ContentType,
-                key: file.Key!,
-                lastModified: file.LastModified || head.LastModified!,
-                metadata: (head.Metadata || {}) as MetadataType,
-                size: file.Size || head.ContentLength || 0
-              }
-            })
-          )
-        : [],
+      files: Contents ? await Promise.all(Contents.filter(it => it.Key).map(async file => this.info(file.Key!))) : [],
       folders: CommonPrefixes?.map(it => it.Prefix!) || []
     }
     return data
+  }
+
+  /** 获取文件信息 */
+  static async info(Key: string) {
+    const head = await S3.send(new HeadObjectCommand({ Bucket, Key }))
+    return {
+      contentType: head.ContentType,
+      key: Key,
+      lastModified: head.LastModified!,
+      metadata: (head.Metadata || {}) as R2MetadataType,
+      size: head.ContentLength || 0
+    }
   }
 
   /**
@@ -57,9 +57,9 @@ export class R2 {
     Metadata = {}
   }: {
     Body: NonNullable<PutObjectCommandInput['Body']>
-    ContentType: NonNullable<PutObjectCommandInput['ContentType']>
+    ContentType: string
     Key: string
-    Metadata: MetadataType
+    Metadata: R2MetadataType
   }) {
     await S3.send(new PutObjectCommand({ Body, Bucket, ContentType, Key, Metadata }))
     return {
@@ -68,7 +68,7 @@ export class R2 {
       lastModified: new Date(),
       metadata: Metadata,
       size: 0
-    } satisfies UnwrapPromise<ReturnType<typeof this.list>>['files'][number]
+    } satisfies R2FileInfoType
   }
 
   /** 删除 */

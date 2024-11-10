@@ -33,7 +33,7 @@ export const SESSIONSTORAGE = {
 
 /** `useSwr` key */
 export const SWR_KEY = {
-  CLASH_TEMPLATES: '/api/dashboard/clash/template'
+  CLASH_TEMPLATES: '01930ee7-da43-7eac-b940-98f1627d2f3f'
 } as const
 
 /** css `view-transition-name` */

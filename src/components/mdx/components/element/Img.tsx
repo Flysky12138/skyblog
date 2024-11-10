@@ -11,7 +11,8 @@ export default function Img({ alt, src, ...props }: React.ComponentProps<'img'>)
     <figure className="text-center">
       <Image
         alt={alt || ''}
-        className="inline-block w-full max-w-screen-md cursor-pointer transition-shadow hover:ring"
+        className="inline-block w-full max-w-screen-md transition-shadow hover:ring"
+        role="button"
         src={src}
         onClick={() => {
           openViewer({

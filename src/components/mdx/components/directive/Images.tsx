@@ -24,7 +24,8 @@ export default function Images({ children, className, defaultAlt }: ImagesProps)
   return (
     <section className={className}>
       <div
-        className="relative cursor-pointer overflow-clip rounded-lg [&_img]:m-0 [&_img]:transition-transform [&_img]:hover:scale-110"
+        className="relative overflow-clip rounded-lg [&_img]:m-0 [&_img]:transition-transform [&_img]:hover:scale-110"
+        role="button"
         onClick={() => {
           openViewer({
             images: images.map(({ props }, key) => ({ key, src: props.src })),

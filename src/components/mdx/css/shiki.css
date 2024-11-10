@@ -3,12 +3,18 @@ figure[data-rehype-pretty-code-figure] {
   @apply selection:bg-[#c1def1] selection:text-[unset] dark:selection:bg-[#264f78];
   [data-rehype-pretty-code-title] {
     @apply s-bg-title s-border-color-divider m-0 border-b px-3 py-1 font-title text-base text-black shadow-sm dark:text-white;
-    & + pre {
-      @apply rounded-t-none;
-    }
+  }
+  [data-rehype-pretty-code-caption] {
+    @apply m-0 px-3 py-1 text-xs;
   }
   pre {
-    @apply s-bg-sheet px-0 py-2.5;
+    @apply s-bg-sheet relative rounded-none p-0;
+    &:has(+ [data-rehype-pretty-code-caption]) {
+      @apply s-border-color-divider border-b;
+    }
+  }
+  code {
+    @apply overflow-x-auto py-2.5;
   }
 }
 
@@ -33,11 +39,4 @@ pre [data-line] {
     @apply border-slate-300 dark:border-slate-600;
     @apply bg-slate-300/30 dark:bg-slate-600/30;
   }
-}
-
-/* 代码名 */
-pre[data-language] {
-  @apply relative after:absolute after:right-3 after:top-1;
-  @apply after:hidden after:content-[attr(data-language)] after:hover:block;
-  @apply after:text-black/50 dark:after:text-white/50;
 }

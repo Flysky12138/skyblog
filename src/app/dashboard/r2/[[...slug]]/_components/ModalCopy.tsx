@@ -2,7 +2,8 @@
 
 import Card from '@/components/layout/Card'
 import ModalCore, { ModalCoreRef } from '@/components/modal/ModalCore'
-import { R2 } from '@/lib/server/r2'
+import { R2, R2FileInfoType } from '@/lib/server/r2'
+import { groupBy } from 'es-toolkit'
 import React from 'react'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
@@ -21,7 +22,8 @@ const CardCopy: React.FC<{ title: string; values: string[] }> = ({ title, values
     <section>
       <p className="s-subtitle mb-2">{title}</p>
       <Card
-        className="cursor-pointer p-3"
+        className="p-3"
+        role="button"
         tabIndex={0}
         onClick={handleCopy}
         onKeyDown={event => {
@@ -41,18 +43,17 @@ const CardCopy: React.FC<{ title: string; values: string[] }> = ({ title, values
   )
 }
 
-const imageAttributes = (file: UnwrapPromise<ReturnType<typeof R2.list>>['files'][number]) =>
+const imageAttributes = (file: R2FileInfoType) =>
   file.metadata.width && file.metadata.height ? `width="${file.metadata.width}" height="${file.metadata.height}"` : ''
 
 export interface ModalCopyRef {
-  open: (payload: UnwrapPromise<ReturnType<typeof R2.list>>['files']) => void
+  open: (payload: R2FileInfoType[]) => void
 }
 
 const ModalCopy: React.ForwardRefRenderFunction<ModalCopyRef, {}> = (props, ref) => {
   const modalCoreRef = React.useRef<ModalCoreRef>()
 
-  const [files, setFiles] = React.useState<UnwrapPromise<ReturnType<typeof R2.list>>['files']>([])
-  /** 图片 */
+  const [files, setFiles] = React.useState<R2FileInfoType[]>([])
   const imageFiles = React.useMemo(() => files.filter(file => file.contentType?.startsWith('image') || (file.metadata.width && file.metadata.height)), [files])
 
   React.useImperativeHandle(ref, () => ({
@@ -72,15 +73,7 @@ const ModalCopy: React.ForwardRefRenderFunction<ModalCopyRef, {}> = (props, ref)
       />
       <CardCopy
         title="component - images"
-        values={Array.from(
-          imageFiles
-            .reduce<Map<string, UnwrapPromise<ReturnType<typeof R2.list>>['files']>>((pre, cur) => {
-              const parentPath = cur.key.slice(0, cur.key.lastIndexOf('/'))!
-              pre.set(parentPath, (pre.get(parentPath) || []).concat(cur))
-              return pre
-            }, new Map())
-            .values()
-        ).flatMap(files => [
+        values={Object.values(groupBy(imageFiles, file => file.key.slice(0, file.key.lastIndexOf('/')))).flatMap(files => [
           ':::images',
           ...files.map(file => `::img{alt="${file.key.split('/').at(-1)}" ${imageAttributes(file)} src="${R2.get(file.key)}"}`),
           ':::'

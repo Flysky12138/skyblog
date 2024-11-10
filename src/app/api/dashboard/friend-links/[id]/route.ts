@@ -75,10 +75,7 @@ export const PATCH = async (request: NextRequest, { params }: DynamicRoute<{ id:
       Body,
       Key,
       ContentType: 'image/webp',
-      Metadata: convertObjectValues(imageSize, {
-        height: it => String(it),
-        width: it => String(it)
-      })
+      Metadata: convertObjectValues(imageSize, { height: String, width: String })
     })
 
     // 保存封面直链

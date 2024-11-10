@@ -102,7 +102,7 @@ export default function Page() {
       ))}
       <ModalForm
         component={props => (
-          <Card className="flex aspect-video cursor-pointer items-center justify-center" tabIndex={0} {...props}>
+          <Card className="flex aspect-video items-center justify-center" tabIndex={0} {...props}>
             <Add fontSize="large" />
           </Card>
         )}

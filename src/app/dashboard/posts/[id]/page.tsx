@@ -6,7 +6,7 @@ import MonacoEditor from '@/components/monaco-editor'
 import { markdownConfig } from '@/components/monaco-editor/language/markdown'
 import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
-import { AddPhotoAlternate, PostAdd, RemoveRedEye, Save } from '@mui/icons-material'
+import { AddPhotoAlternate, OpenInNew, PostAdd, Save } from '@mui/icons-material'
 import { IconButton, Tooltip } from '@mui/joy'
 import { useSession } from 'next-auth/react'
 import { useParams, useRouter } from 'next/navigation'
@@ -141,7 +141,7 @@ export default function Page() {
                   previewWindowRef.current = window.open(`/posts/${id}/preview`, '_blank')
                 }}
               >
-                <RemoveRedEye />
+                <OpenInNew />
               </IconButton>
             </Tooltip>
             <Divider />
