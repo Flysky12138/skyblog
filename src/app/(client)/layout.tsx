@@ -1,7 +1,5 @@
-import Analytic from '@/components/Analytic'
 import Live2D from '@/components/canvas/live2d'
 import DisplayMatchAuth from '@/components/display/DisplayMatchAuth'
-import DisplayMatchEnv from '@/components/display/DisplayMatchEnv'
 import About from '@/components/layout/About'
 import Breakpoint from '@/components/layout/Breakpoint'
 import Container from '@/components/layout/Container'
@@ -67,9 +65,6 @@ export default function Layout({ children }: React.PropsWithChildren) {
           </Live2DEnable>
         </Live2DBreakpoint>
       </aside>
-      <DisplayMatchEnv env="development" reverse={true}>
-        <Analytic />
-      </DisplayMatchEnv>
     </Live2DProvider>
   )
 }

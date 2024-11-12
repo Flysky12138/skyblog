@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma'
 import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
-import { geolocation, ipAddress } from '@vercel/functions'
+import { Geo } from '@vercel/functions'
 import { NextRequest, userAgent } from 'next/server'
 import { convertVisitorLogSaveData } from '../dashboard/users/visitor/utils'
 
@@ -11,22 +11,20 @@ const dbPost = async (data: Prisma.VisitorLogCreateInput) => {
   return await prisma.visitorLog.create({ data })
 }
 
+export type POST = MethodRouteType<{
+  body: {
+    agent: ReturnType<typeof userAgent>
+    geo: Geo
+    ip: string
+    referer: string | null
+  }
+}>
+
 export const POST = async (request: NextRequest) => {
   try {
-    const ip = process.env.NODE_ENV == 'development' ? '0.0.0.0' : ipAddress(request)
-    if (!ip) return CustomResponse.error('未知访问', 400)
+    const data: POST['body'] = await request.json()
 
-    const agent = userAgent(request)
-    const geo = geolocation(request)
-
-    await dbPost(
-      convertVisitorLogSaveData({
-        agent,
-        geo,
-        ip,
-        referer: request.headers.get('referer')
-      })
-    )
+    await dbPost(convertVisitorLogSaveData(data))
 
     return new Response()
   } catch (error) {

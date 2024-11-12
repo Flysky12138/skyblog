@@ -3,6 +3,11 @@ export const HEADER = {
   AES_GCM_IVJWK: 'X-Aes'
 } as const
 
+/** cookie */
+export const COOKIE = {
+  VISITED: 'visited'
+} as const
+
 /** edge 对象 key */
 export const EDGE_CONFIG = {
   BAN_AGENTS: 'ban-agents',
@@ -11,9 +16,7 @@ export const EDGE_CONFIG = {
   BAN_COUNTRY_REGIONS: 'ban-country-regions',
   BAN_IPS: 'ban-ips',
   BAN_REFERERS: 'ban-referers',
-  LIVE2D_SRC: 'live2d-src',
-  NETEASECLOUD_COOKIE: 'neteasecloud-cookie',
-  NETEASECLOUD_PLAYLIST_ID: 'neteasecloud-playlist-id'
+  LIVE2D_SRC: 'live2d-src'
 } as const
 
 /** 元素 attribute */
@@ -27,7 +30,6 @@ export const ATTRIBUTE = {
 
 /** `window.sessionStorage` key */
 export const SESSIONSTORAGE = {
-  ANALYTIC_SUBMITTED: 'analytic-submitted',
   POST_VIEW_SUBMITTED: (id: string) => `post-view-submitted-${id}`
 } as const
 

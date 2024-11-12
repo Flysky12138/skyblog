@@ -30,7 +30,7 @@ export default function PostInfo({ id, defaultValue }: PostInfoProps) {
     if (viewed) return
     await CustomRequest('POST api/post/view', { search: { id } })
     setViewed(true)
-  }, 10 * 1000)
+  }, 5 * 1000)
 
   if (!post) {
     return <span className="s-skeleton block h-[21px] w-60 rounded"></span>
