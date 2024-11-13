@@ -55,13 +55,8 @@ export const middleware: NextMiddleware = async (request, event) => {
   const response = NextResponse.next()
 
   // 记录访客信息
-  if (
-    session?.role != 'ADMIN' &&
-    !request.headers.has('x-vercel-forwarded-for') &&
-    request.nextUrl.pathname != '/api/visitor' &&
-    request.cookies.get(COOKIE.VISITED)?.value != 'true'
-  ) {
-    response.cookies.set(COOKIE.VISITED, 'true', {
+  if (session?.role != 'ADMIN' && request.nextUrl.pathname != '/api/visitor' && request.cookies.get(COOKIE.VISITED)?.value != '1') {
+    response.cookies.set(COOKIE.VISITED, '1', {
       httpOnly: true,
       sameSite: 'strict',
       secure: true

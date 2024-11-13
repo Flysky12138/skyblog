@@ -2,8 +2,10 @@
 
 import { GET } from '@/app/api/dashboard/posts/[id]/route'
 import UploadFiles from '@/app/dashboard/r2/[[...slug]]/_components/UploadFiles'
+import { MDXClient } from '@/components/mdx/client'
 import MonacoEditor from '@/components/monaco-editor'
 import { markdownConfig } from '@/components/monaco-editor/language/markdown'
+import { cn } from '@/lib/cn'
 import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
 import { AddPhotoAlternate, OpenInNew, PostAdd, Save } from '@mui/icons-material'
@@ -89,7 +91,17 @@ export default function Page() {
     })
   }
 
-  // 预览窗口
+  // 左侧窗口预览
+  const [width, setWidth] = React.useState(0)
+  React.useEffect(() => {
+    setWidth(window.innerWidth)
+  }, [])
+  useEvent('resize', () => {
+    setWidth(window.innerWidth)
+  })
+  const showLeftPreview = width > 1536
+
+  // 新标签窗口预览
   const previewWindowRef = React.useRef<WindowProxy | null>(null)
   const refreshPreviewWindow = () => {
     previewWindowRef.current?.postMessage({ type: 'post-refresh', value: post } satisfies MessageEventDataRefreshType, window.origin)
@@ -101,10 +113,19 @@ export default function Page() {
   useDebounce(refreshPreviewWindow, 1000, [post])
 
   return (
-    <>
+    <section
+      className={cn('h-screen', {
+        'grid grid-cols-[1fr_1024px]': showLeftPreview
+      })}
+    >
       <style>{`main{ padding: 0 !important }`}</style>
+      {showLeftPreview && (
+        <article className="s-border-color-divider max-w-none overflow-y-scroll border-r">
+          <MDXClient value={post.content || ''} />
+        </article>
+      )}
       <MonacoEditor
-        className="rounded-none border-none [&>div]:s-border-color-divider"
+        className="h-full rounded-none border-none shadow-none [&>div]:s-border-color-divider"
         code={post.content || ''}
         height="calc(100dvh - 50px)"
         loading="Loading..."
@@ -176,6 +197,6 @@ export default function Page() {
         }}
         {...markdownConfig}
       />
-    </>
+    </section>
   )
 }
