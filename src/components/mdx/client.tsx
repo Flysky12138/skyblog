@@ -17,9 +17,10 @@ interface MDXClientProps {
 export const MDXClient = ({ value }: MDXClientProps) => {
   const { value: source, loading, error } = useAsync(() => serialize(value, serializeOptions), [value])
 
-  if (loading) return <Lottie className="h-32" lottie={LoaderThree} />
+  if (!source) {
+    return loading ? <Lottie className="h-32" lottie={LoaderThree} /> : <div className="flex h-20 items-center justify-center text-xl">无内容</div>
+  }
   if (error) return <div className="flex h-20 items-center justify-center text-xl">{error.message}</div>
-  if (!source) return <div className="flex h-20 items-center justify-center text-xl">无内容</div>
 
   return <MDXRemote {...source} components={components} />
 }

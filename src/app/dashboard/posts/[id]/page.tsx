@@ -5,7 +5,6 @@ import UploadFiles from '@/app/dashboard/r2/[[...slug]]/_components/UploadFiles'
 import { MDXClient } from '@/components/mdx/client'
 import MonacoEditor from '@/components/monaco-editor'
 import { markdownConfig } from '@/components/monaco-editor/language/markdown'
-import { cn } from '@/lib/cn'
 import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
 import { AddPhotoAlternate, OpenInNew, PostAdd, Save } from '@mui/icons-material'
@@ -13,7 +12,7 @@ import { IconButton, Tooltip } from '@mui/joy'
 import { useSession } from 'next-auth/react'
 import { useParams, useRouter } from 'next/navigation'
 import React from 'react'
-import { useAsync, useDebounce, useEvent } from 'react-use'
+import { useAsync, useDebounce, useEvent, useWindowSize } from 'react-use'
 import { toast } from 'sonner'
 import { useImmer } from 'use-immer'
 import { uuidv7 } from 'uuidv7'
@@ -92,18 +91,14 @@ export default function Page() {
   }
 
   // 左侧窗口预览
-  const [width, setWidth] = React.useState(0)
-  React.useEffect(() => {
-    setWidth(window.innerWidth)
-  }, [])
-  useEvent('resize', () => {
-    setWidth(window.innerWidth)
-  })
+  const { width } = useWindowSize(0)
   const showLeftPreview = width > 1536
+  const [deferredContent, setDeferredContent] = React.useState(post.content)
 
   // 新标签窗口预览
   const previewWindowRef = React.useRef<WindowProxy | null>(null)
   const refreshPreviewWindow = () => {
+    setDeferredContent(post.content)
     previewWindowRef.current?.postMessage({ type: 'post-refresh', value: post } satisfies MessageEventDataRefreshType, window.origin)
   }
   useEvent('message', ({ data, origin }: MessageEvent<MessageEventDataMountedType>) => {
@@ -113,19 +108,15 @@ export default function Page() {
   useDebounce(refreshPreviewWindow, 1000, [post])
 
   return (
-    <section
-      className={cn('h-screen', {
-        'grid grid-cols-[1fr_1024px]': showLeftPreview
-      })}
-    >
+    <section className="flex h-screen">
       <style>{`main{ padding: 0 !important }`}</style>
       {showLeftPreview && (
-        <article className="s-border-color-divider max-w-none overflow-y-scroll border-r">
-          <MDXClient value={post.content || ''} />
+        <article className="s-border-color-divider w-[calc(100%-1024px)] max-w-none overflow-y-scroll border-r">
+          <MDXClient value={deferredContent || ''} />
         </article>
       )}
       <MonacoEditor
-        className="h-full rounded-none border-none shadow-none [&>div]:s-border-color-divider"
+        className="h-full grow rounded-none border-none shadow-none [&>div]:s-border-color-divider"
         code={post.content || ''}
         height="calc(100dvh - 50px)"
         loading="Loading..."
