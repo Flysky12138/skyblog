@@ -1,5 +1,5 @@
+import DrawerCore, { DrawerCoreProps } from '@/components/drawer/DrawerCore'
 import FormInputMultiple from '@/components/form/FormInputMultiple'
-import ModalCore, { ModalCoreProps } from '@/components/modal/ModalCore'
 import { CustomRequest } from '@/lib/server/request'
 import { FormControl, FormLabel, Input, Switch, Textarea } from '@mui/joy'
 import useSWR from 'swr'
@@ -8,7 +8,7 @@ import { uuidv7 } from 'uuidv7'
 import { DefaultPostType } from '../page'
 import ModalChips from './ModalChips'
 
-interface ModelDetailProps extends Pick<ModalCoreProps, 'component'> {
+interface ModelDetailProps extends Pick<DrawerCoreProps, 'component'> {
   onChange: Updater<ModelDetailProps['value']>
   value: DefaultPostType
 }
@@ -18,9 +18,9 @@ export default function ModelDetail({ component: Component, value: post, onChang
   const { data: tags } = useSWR('/api/dashboard/posts/tags', () => CustomRequest('GET api/dashboard/posts/tags', {}))
 
   return (
-    <ModalCore component={Component}>
-      <section className="grid max-w-screen-md grid-cols-2 gap-x-6 gap-y-4">
-        <FormControl required className="col-span-2">
+    <DrawerCore component={Component}>
+      <div className="flex flex-col gap-y-5">
+        <FormControl required>
           <FormLabel>标题</FormLabel>
           <Input
             value={post.title}
@@ -32,11 +32,10 @@ export default function ModelDetail({ component: Component, value: post, onChang
             }}
           />
         </FormControl>
-        <FormControl className="col-span-2">
+        <FormControl>
           <FormLabel>描述</FormLabel>
           <Textarea
-            className="min-h-[64px]"
-            minRows={2}
+            minRows={3}
             value={post.description || ''}
             variant="outlined"
             onChange={event => {
@@ -46,7 +45,7 @@ export default function ModelDetail({ component: Component, value: post, onChang
             }}
           />
         </FormControl>
-        <FormControl className="col-span-2 md:col-span-1">
+        <FormControl>
           <FormLabel>分类</FormLabel>
           <FormInputMultiple
             endDecorator={
@@ -74,7 +73,7 @@ export default function ModelDetail({ component: Component, value: post, onChang
             }}
           />
         </FormControl>
-        <FormControl className="col-span-2 md:col-span-1">
+        <FormControl>
           <FormLabel>标签</FormLabel>
           <FormInputMultiple
             endDecorator={
@@ -102,36 +101,35 @@ export default function ModelDetail({ component: Component, value: post, onChang
             }}
           />
         </FormControl>
-        <div className="col-span-2 my-1 flex gap-x-10">
-          <FormControl className="w-32" orientation="horizontal">
-            <FormLabel className="shrink-0">置顶</FormLabel>
-            <Input
-              type="number"
-              value={post.sticky}
-              variant="outlined"
-              onChange={event => {
-                setPost(state => {
-                  state.sticky = Math.max(0, Number.parseInt(event.target.value || '0'))
-                })
-              }}
-              onFocus={event => event.target.select()}
-            />
-          </FormControl>
-          <FormControl orientation="horizontal">
-            <FormLabel>显示标题卡片</FormLabel>
-            <Switch
-              checked={post.showTitleCard}
-              color={post.showTitleCard ? 'success' : 'neutral'}
-              size="lg"
-              onChange={event => {
-                setPost(state => {
-                  state.showTitleCard = event.target.checked
-                })
-              }}
-            />
-          </FormControl>
-        </div>
-      </section>
-    </ModalCore>
+        <FormControl className="w-32">
+          <FormLabel className="shrink-0">置顶</FormLabel>
+          <Input
+            type="number"
+            value={post.sticky}
+            variant="outlined"
+            onChange={event => {
+              setPost(state => {
+                state.sticky = Math.max(0, Number.parseInt(event.target.value || '0'))
+              })
+            }}
+            onFocus={event => event.target.select()}
+          />
+        </FormControl>
+        <FormControl className="grow-0" orientation="horizontal">
+          <FormLabel>显示标题卡片</FormLabel>
+          <Switch
+            checked={post.showTitleCard}
+            className="ml-1"
+            color={post.showTitleCard ? 'success' : 'neutral'}
+            size="lg"
+            onChange={event => {
+              setPost(state => {
+                state.showTitleCard = event.target.checked
+              })
+            }}
+          />
+        </FormControl>
+      </div>
+    </DrawerCore>
   )
 }

@@ -64,16 +64,15 @@ export const PATCH = async (request: NextRequest, { params }: DynamicRoute<{ id:
     })
     const page = await browser.newPage()
     await page.goto(friendLink.url)
-    const buffer = await page.screenshot({ type: 'webp' })
+    const uint8Array = await page.screenshot({ type: 'webp' })
 
-    const Body = new Blob([buffer], { type: 'application/octet-stream' })
     const Key = `friend-links/${params.id}.webp/`
-    const imageSize = await getImageSize(buffer, 'webp')
+    const imageSize = await getImageSize(Buffer.from(uint8Array), 'webp')
 
     // 保存封面
     await R2.put({
-      Body,
       Key,
+      Body: uint8Array,
       ContentType: 'image/webp',
       Metadata: convertObjectValues(imageSize, { height: String, width: String })
     })

@@ -10,11 +10,11 @@ const DIR_OUTPUT = url.fileURLToPath(new URL('../../src/assets/font', import.met
 
 for (const _path of fs.readdirSync(BASE_URL, { recursive: true }) as string[]) {
   if (!EXTS.includes(path.extname(_path).slice(1) as (typeof EXTS)[number])) continue
-  const destFold = path.join(DIR_OUTPUT, path.basename(_path).split('.')[0])
-  fs.rmSync(destFold, { force: true, recursive: true })
+  const outDir = path.join(DIR_OUTPUT, path.basename(_path).split('.')[0])
+  fs.rmSync(outDir, { force: true, recursive: true })
   fontSplit({
-    destFold,
-    FontPath: path.join(BASE_URL, _path),
+    outDir,
+    input: path.join(BASE_URL, _path),
     reporter: false,
     targetType: 'woff2',
     testHTML: false

@@ -34,7 +34,7 @@
     "*.{md,css,json,yaml}": "prettier --write"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.691.0",
+    "@aws-sdk/client-s3": "^3.693.0",
     "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
@@ -57,7 +57,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "es-toolkit": "^1.27.0",
-    "framer-motion": "9.0.2",
+    "framer-motion": "11.11.17",
     "immer": "^10.1.1",
     "jszip": "^3.10.1",
     "monaco-editor": "0.52.0",
@@ -66,7 +66,7 @@
     "next-mdx-remote": "^5.0.0",
     "nextjs-toploader": "^3.7.15",
     "prisma-paginate": "^5.2.1",
-    "puppeteer-core": "22.11.1",
+    "puppeteer-core": "23.8.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-photo-view": "^1.2.6",
@@ -80,10 +80,10 @@
     "remark-gfm": "^4.0.0",
     "remark-math": "^6.0.0",
     "server-only": "^0.0.1",
-    "shiki": "^1.22.2",
+    "shiki": "^1.23.0",
     "sonner": "^1.7.0",
     "swr": "^2.2.5",
-    "tm-grammars": "^1.19.2",
+    "tm-grammars": "^1.19.3",
     "unist-util-visit": "^5.0.0",
     "use-immer": "^0.10.0",
     "uuidv7": "^1.0.2"
@@ -99,7 +99,7 @@
     "@types/react-dom": "^18.3.1",
     "@types/react-window": "^1.8.8",
     "autoprefixer": "^10.4.20",
-    "cn-font-split": "^5.2.2",
+    "cn-font-split": "^6.0.0",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
     "eslint": "^8.57.1",
@@ -119,11 +119,11 @@
     "prettier-plugin-tailwindcss": "^0.6.8",
     "prisma": "^5.22.0",
     "tailwind-merge": "^2.5.4",
-    "tailwindcss": "^3.4.14",
+    "tailwindcss": "^3.4.15",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
     "typescript-eslint": "^7.18.0",
-    "vercel": "^39.0.0"
+    "vercel": "^39.0.2"
   },
   "commitlint": {
     "extends": [

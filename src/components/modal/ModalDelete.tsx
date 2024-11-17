@@ -1,14 +1,14 @@
 'use client'
 
 import { WarningRounded } from '@mui/icons-material'
-import { Button, Typography } from '@mui/joy'
+import { Button, DialogActions, Typography } from '@mui/joy'
 import React from 'react'
 import ModalCore, { ModalCoreProps } from './ModalCore'
 
 interface ModalDeleteProps extends Pick<ModalCoreProps, 'component' | 'onClose'> {
   description?: string
   onCancel?: () => void
-  onSubmit: () => void
+  onSubmit?: () => void
   title?: string
 }
 
@@ -23,11 +23,22 @@ export default function ModalDelete({ component: Component, title, description, 
             {title || '确认删除？'}
           </Typography>
           {description && (
-            <Typography className="ml-[1.7rem] max-w-screen-md break-all" level="body-sm">
+            <Typography className="ml-[1.72rem] max-w-screen-md break-all" level="body-sm">
               {description}
             </Typography>
           )}
-          <div className="mt-6 flex justify-end gap-x-4">
+          <DialogActions>
+            <Button
+              ref={submitBtnRef}
+              className="focus:s-outline"
+              color="danger"
+              onClick={() => {
+                onSubmit?.()
+                close()
+              }}
+            >
+              确认
+            </Button>
             <Button
               className="focus:s-outline"
               color="neutral"
@@ -39,18 +50,7 @@ export default function ModalDelete({ component: Component, title, description, 
             >
               取消
             </Button>
-            <Button
-              ref={submitBtnRef}
-              className="focus:s-outline"
-              color="danger"
-              onClick={() => {
-                onSubmit()
-                close()
-              }}
-            >
-              确认
-            </Button>
-          </div>
+          </DialogActions>
         </>
       )}
     </ModalCore>
