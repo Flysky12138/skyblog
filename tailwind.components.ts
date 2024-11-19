@@ -1,4 +1,6 @@
-module.exports = {
+import { CSSRuleObject } from 'tailwindcss/types/config'
+
+export default {
   '.s-bg-content': {
     '@apply bg-white dark:bg-[#202026]': {}
   },
@@ -55,4 +57,4 @@ module.exports = {
   '.s-underline': {
     '@apply underline decoration-2 underline-offset-2': {}
   }
-}
+} satisfies CSSRuleObject

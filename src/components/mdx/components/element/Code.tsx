@@ -19,13 +19,13 @@ export default function Code({ children, className, ...props }: React.ComponentP
       <code
         ref={codeRef}
         className={cn(
-          'group data-[unexpanded=true]:h-[calc(18*1.25rem)] data-[unexpanded=true]:overflow-hidden',
+          'group data-[expanded=false]:h-[calc(18*1.25rem)] data-[expanded=false]:overflow-hidden',
           {
-            'data-[unexpanded=false]:pb-8': overflow
+            'data-[expanded=true]:pb-8': overflow
           },
           className
         )}
-        data-unexpanded={overflow}
+        data-expanded={!overflow}
         {...props}
       >
         {children}
@@ -43,11 +43,11 @@ export default function Code({ children, className, ...props }: React.ComponentP
               onClick={() => {
                 const target = codeRef.current
                 if (!target) return
-                const unexpanded = target.dataset['unexpanded']
-                target.dataset['unexpanded'] = unexpanded == 'true' ? 'false' : 'true'
+                const expanded = target.dataset['expanded']
+                target.dataset['expanded'] = expanded == 'true' ? 'false' : 'true'
               }}
             >
-              <ExpandMoreRounded className="group-data-[unexpanded=false]:rotate-180" color="primary" fontSize="medium" />
+              <ExpandMoreRounded className="group-data-[expanded=true]:rotate-180" color="primary" fontSize="medium" />
             </div>
           </div>
         )}

@@ -1,4 +1,3 @@
-// import { transformerCopyButton } from '@rehype-pretty/transformers'
 import rehypeKatex from 'rehype-katex'
 import rehypePrettyCode from 'rehype-pretty-code'
 import rehypeSlug from 'rehype-slug'
@@ -19,12 +18,7 @@ const rehypePrettyCodeOptions = {
   theme: {
     dark: 'dark-plus',
     light: 'light-plus'
-  },
-  transformers: [
-    // transformerCopyButton({
-    //   visibility: 'always'
-    // })
-  ]
+  }
 }
 
 /** @type {import("next-mdx-remote/dist/types").SerializeOptions} */

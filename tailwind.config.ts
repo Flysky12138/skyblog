@@ -1,13 +1,14 @@
-const plugin = require('tailwindcss/plugin')
-const components = require('./tailwind.components')
+import typography from '@tailwindcss/typography'
+import { Config } from 'tailwindcss'
+import plugin from 'tailwindcss/plugin'
+import components from './tailwind.components'
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: ['./src/**/*.{ts,tsx,mdx}'],
   darkMode: ['class', 'html[data-joy-color-scheme="dark"]'],
   important: '#next',
   plugins: [
-    require('@tailwindcss/typography'),
+    typography,
     plugin(({ addComponents }) => {
       addComponents(components, {
         respectImportant: true
@@ -31,11 +32,11 @@ module.exports = {
         header: '50px'
       },
       zIndex: {
-        footer: 10,
-        header: 1000,
-        main: 100,
-        nav: 500
+        footer: '10',
+        header: '1000',
+        main: '100',
+        nav: '500'
       }
     }
   }
-}
+} satisfies Config

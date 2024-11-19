@@ -63,7 +63,7 @@ const chudnovsky_bs = (digits: number) => {
 self.onmessage = ({ data }) => {
   try {
     let ans = 314n
-    let time = performance.now()
+    const time = performance.now()
     switch (data.mode) {
       case 'chudnovsky':
         ans = chudnovsky(data.size)
@@ -72,9 +72,10 @@ self.onmessage = ({ data }) => {
         ans = chudnovsky_bs(data.size)
         break
     }
-    time = Math.round((performance.now() - time) * 1e3) / 1e3
-    const pi = ans.toString().slice(0, data.size)
-    self.postMessage({ pi, time })
+    self.postMessage({
+      pi: String(ans).slice(0, -1).replace('3', '3.'),
+      time: performance.now() - time
+    })
   } catch (error) {
     self.postMessage({ error })
   }

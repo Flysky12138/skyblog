@@ -51,7 +51,7 @@ export default function Pi() {
   const piStr = React.useMemo(() => {
     if (!result?.pi) return []
     const ans = []
-    const pi = result.pi.replace('3', '3.')
+    const pi = result.pi
     const interval = Math.floor((width - scrollbarWidth) / fontWidth - 3)
     for (let i = 0; i < pi.length; i += interval) {
       ans.push(pi.slice(i, i + interval))

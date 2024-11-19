@@ -26,7 +26,7 @@ export default function Pre({ children, className, tabIndex, ...props }: React.C
   return (
     <pre ref={preRef} className={cn('group', className)} {...props}>
       {children}
-      <div className="absolute right-2 top-2 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100">
+      <div className="absolute right-2 top-2">
         <AnimatePresence>
           {copied ? (
             <Done animate="visible" color="success" component={motion.svg} exit="invisible" fontSize="medium" initial="invisible" variants={variants} />

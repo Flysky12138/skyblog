@@ -23,7 +23,7 @@ export default function ModalDelete({ component: Component, title, description, 
             {title || '确认删除？'}
           </Typography>
           {description && (
-            <Typography className="ml-[1.72rem] max-w-screen-md break-all" level="body-sm">
+            <Typography className="ml-[27.5px] max-w-screen-md break-all" level="body-sm">
               {description}
             </Typography>
           )}

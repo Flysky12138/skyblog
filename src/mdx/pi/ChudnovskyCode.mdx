@@ -1,5 +1,5 @@
-```ts
-const pell_sqrt_10005 = (digits: number): [bigint, bigint] => {
+```javascript
+const pell_sqrt_10005 = digits => {
   const D = 10005n
   const Y_MIN = 10n ** BigInt(digits / 2 + 5)
   let [x1, y1] = [1n, 0n]
@@ -15,7 +15,7 @@ const pell_sqrt_10005 = (digits: number): [bigint, bigint] => {
 const C = 640320n
 const C3_OVER_24 = C ** 3n / 24n
 
-const chudnovsky = (digits: number) => {
+const chudnovsky = digits => {
   const PI_PRECISION = 10n ** BigInt(digits + 20)
   let [k, a_k, a_sum, b_sum] = [1n, PI_PRECISION, PI_PRECISION, 0n]
   while (true) {
@@ -29,6 +29,6 @@ const chudnovsky = (digits: number) => {
   const total = 13591409n * a_sum + 545140134n * b_sum
   const [x, y] = pell_sqrt_10005(digits)
   const pi = (426880n * x * PI_PRECISION ** 2n) / (total * y)
-  return pi
+  return String(pi).slice(0, -1).replace('3', '3.')
 }
 ```
