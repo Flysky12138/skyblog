@@ -21,7 +21,7 @@ type ModeType = 'arctan' | 'chudnovsky' | 'chudnovsky-bs'
 const OPTIONS: Record<ModeType, number[]> = {
   arctan: [],
   chudnovsky: [1e4, 1e5, 1e6],
-  'chudnovsky-bs': [1e4, 1e5, 1e6, 5e6, 1e7, 3e7, 5e7]
+  'chudnovsky-bs': [1e4, 1e5, 1e6, 5e6, 1e7, 3e7, 5e7, 7e7, 1e8]
 }
 
 export default function Pi() {

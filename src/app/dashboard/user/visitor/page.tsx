@@ -1,5 +1,7 @@
 'use client'
 
+import { MDXClient } from '@/components/mdx/client'
+import ModalCore from '@/components/modal/ModalCore'
 import ModalDelete from '@/components/modal/ModalDelete'
 import PaginationTable, { PaginationSearch } from '@/components/pagination/PaginationTable'
 import TableStatus from '@/components/table/TableStatus'
@@ -7,7 +9,8 @@ import TableWrapper from '@/components/table/TableWrapper'
 import { formatISOTime } from '@/lib/parser/time'
 import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
-import { Button, Checkbox, Table } from '@mui/joy'
+import { MoreHoriz } from '@mui/icons-material'
+import { Button, Checkbox, IconButton, Table } from '@mui/joy'
 import { useSet } from 'react-use'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
@@ -16,10 +19,11 @@ export default function Page() {
   const [search, setSearch] = useImmer<PaginationSearch>({ limit: 20, page: 1 })
 
   const {
-    isLoading,
     data: visitors,
-    mutate
+    mutate,
+    isLoading
   } = useSWR(`/api/dashboard/users/visitor?limit=${search.limit}&page=${search.page}`, () => CustomRequest('GET api/dashboard/users/visitor', { search }), {
+    keepPreviousData: true,
     refreshInterval: 10 * 1000
   })
 
@@ -48,8 +52,8 @@ export default function Page() {
               <th className="w-60">Address</th>
               <th className="w-44">Lon/Lat</th>
               <th className="w-44">Device</th>
-              <th className="w-80">Referer</th>
               <th className="w-44">创建时间</th>
+              <th className="w-12 text-end">详情</th>
             </tr>
           </thead>
           <tbody>
@@ -66,9 +70,22 @@ export default function Page() {
                 <td className="border-l">{visitor.ip}</td>
                 <td className="truncate">{decodeURIComponent([visitor.geo.country, visitor.geo.countryRegion, visitor.geo.city].filter(v => v).join('/'))}</td>
                 <td>{[visitor.geo.longitude, visitor.geo.latitude].filter(v => v).join('/')}</td>
-                <td>{visitor.agent.device.model}</td>
-                <td className="truncate">{visitor.referer}</td>
+                <td>{visitor.agent.device.vendor}</td>
                 <td>{formatISOTime(visitor.createdAt)}</td>
+                <td className="text-end">
+                  <ModalCore
+                    className="p-0"
+                    component={props => (
+                      <IconButton size="sm" variant="plain" {...props}>
+                        <MoreHoriz />
+                      </IconButton>
+                    )}
+                  >
+                    <div className="max-w-screen-md">
+                      <MDXClient value={'```json expand\n' + JSON.stringify(visitor, null, ' '.repeat(2)) + '\n```'} />
+                    </div>
+                  </ModalCore>
+                </td>
               </tr>
             ))}
             <TableStatus colSpan={7} isEmpty={visitors?.result.length == 0} isLoading={isLoading} />

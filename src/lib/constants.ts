@@ -10,12 +10,6 @@ export const COOKIE = {
 
 /** edge 对象 key */
 export const EDGE_CONFIG = {
-  BAN_AGENTS: 'ban-agents',
-  BAN_CITIES: 'ban-cities',
-  BAN_COUNTRIES: 'ban-countries',
-  BAN_COUNTRY_REGIONS: 'ban-country-regions',
-  BAN_IPS: 'ban-ips',
-  BAN_REFERERS: 'ban-referers',
   LIVE2D_SRC: 'live2d-src'
 } as const
 

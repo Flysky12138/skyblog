@@ -5,6 +5,7 @@ import remarkDirective from 'remark-directive'
 import remarkDirectiveRehype from 'remark-directive-rehype'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
+import { rehypeCode } from './rehype/rehype-code.mjs'
 
 /** @type {import("rehype-katex").Options} */
 const rehypeKatexOptions = {
@@ -24,7 +25,7 @@ const rehypePrettyCodeOptions = {
 /** @type {import("next-mdx-remote/dist/types").SerializeOptions} */
 export const serializeOptions = {
   mdxOptions: {
-    rehypePlugins: [[rehypeKatex, rehypeKatexOptions], [rehypePrettyCode, rehypePrettyCodeOptions], rehypeSlug],
+    rehypePlugins: [[rehypeKatex, rehypeKatexOptions], [rehypePrettyCode, rehypePrettyCodeOptions], rehypeSlug, rehypeCode],
     remarkPlugins: [remarkGfm, remarkMath, remarkDirective, remarkDirectiveRehype]
   }
 }

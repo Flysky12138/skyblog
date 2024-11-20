@@ -1,4 +1,4 @@
-```javascript
+```javascript expand
 const pell_sqrt_10005 = digits => {
   const D = 10005n
   const Y_MIN = 10n ** BigInt(digits / 2 + 5)
@@ -29,6 +29,6 @@ const chudnovsky = digits => {
   const total = 13591409n * a_sum + 545140134n * b_sum
   const [x, y] = pell_sqrt_10005(digits)
   const pi = (426880n * x * PI_PRECISION ** 2n) / (total * y)
-  return String(pi).slice(0, -1).replace('3', '3.')
+  return String(pi).slice(0, digits).replace('3', '3.')
 }
 ```

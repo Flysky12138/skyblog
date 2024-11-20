@@ -1,6 +1,6 @@
 import Logo from '@/components/layout/Logo'
 import ToggleTheme from '@/components/toggle/ToggleTheme'
-import { BlockOutlined, BubbleChart, CloudOutlined, HomeOutlined, PermIdentityOutlined, SettingsOutlined, SourceOutlined } from '@mui/icons-material'
+import { BubbleChart, CloudOutlined, HomeOutlined, PermIdentityOutlined, SettingsOutlined, SourceOutlined } from '@mui/icons-material'
 import { Metadata } from 'next'
 import Admin from './_components/Admin'
 import Menu from './_components/Menu'
@@ -53,7 +53,6 @@ export default function Layout({ children }: React.PropsWithChildren) {
               icon: <BubbleChart />,
               label: '其他'
             },
-            { href: '/dashboard/ban', icon: <BlockOutlined />, label: '黑名单' },
             { href: '/dashboard/r2', icon: <CloudOutlined />, label: '仓库' },
             { href: '/dashboard/setting', icon: <SettingsOutlined />, label: '设置' }
           ]}

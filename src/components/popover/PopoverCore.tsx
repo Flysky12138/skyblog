@@ -1,10 +1,9 @@
 'use client'
 
-import { Drawer, DrawerProps, Sheet } from '@mui/joy'
-import { toMerged } from 'es-toolkit'
+import { Popover, PopoverProps } from '@mui/material'
 import React from 'react'
 
-export interface DrawerCoreProps extends Omit<DrawerProps, 'children' | 'open' | 'onClose'> {
+export interface PopoverCoreProps extends Omit<PopoverProps, 'children' | 'open' | 'onClose'> {
   children?:
     | React.ReactNode
     | React.FC<{
@@ -21,12 +20,12 @@ export interface DrawerCoreProps extends Omit<DrawerProps, 'children' | 'open' |
   onOpen?: () => void
 }
 
-export interface DrawerCoreRef {
+export interface PopoverCoreRef {
   openToggle: (payload?: boolean) => void
 }
 
-const DrawerCore: React.ForwardRefRenderFunction<DrawerCoreRef | undefined, DrawerCoreProps> = (
-  { children, component: Component, disabled, onClose, onOpen, className, slotProps = {}, ...props },
+const PopoverCore: React.ForwardRefRenderFunction<PopoverCoreRef | undefined, PopoverCoreProps> = (
+  { children, component: Component, disabled, onClose, onOpen, ...props },
   ref
 ) => {
   const [isOpen, setIsOpen] = React.useState(false)
@@ -47,44 +46,42 @@ const DrawerCore: React.ForwardRefRenderFunction<DrawerCoreRef | undefined, Draw
     openToggle: payload => handleOpenToggle(payload ?? !isOpen)
   }))
 
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
+
   return (
     <>
       <Component
         role="button"
         onClick={event => {
           event.stopPropagation()
+          setAnchorEl(event.currentTarget)
           handleOpenToggle(true)
         }}
         onKeyDown={event => {
           if (event.code != 'Enter') return
           event.stopPropagation()
+          setAnchorEl(event.currentTarget)
           handleOpenToggle(true)
         }}
       />
-      <Drawer
-        anchor="right"
+      <Popover
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          horizontal: 'left',
+          vertical: 'center'
+        }}
         open={isOpen}
-        slotProps={toMerged(
-          {
-            content: {
-              sx: {
-                bgcolor: 'transparent',
-                boxShadow: 'none',
-                p: 3
-              }
-            }
-          },
-          slotProps
-        )}
+        transformOrigin={{
+          horizontal: 'right',
+          vertical: 'top'
+        }}
         onClose={handleClose}
         {...props}
       >
-        <Sheet className="s-hidden-scrollbar h-full overflow-y-auto rounded-lg p-5">
-          {typeof children == 'function' ? children({ close: handleClose }) : children}
-        </Sheet>
-      </Drawer>
+        {typeof children == 'function' ? children({ close: handleClose }) : children}
+      </Popover>
     </>
   )
 }
 
-export default React.forwardRef(DrawerCore)
+export default React.forwardRef(PopoverCore)

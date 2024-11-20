@@ -1,8 +1,10 @@
 'use client'
 
+import { DATA_BLOCK, DATA_EXPAND_LINE } from '@/components/mdx/rehype/rehype-code'
 import { cn } from '@/lib/cn'
 import { ExpandMoreRounded } from '@mui/icons-material'
-import React, { useRef } from 'react'
+import { Box } from '@mui/joy'
+import React from 'react'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
 
@@ -10,22 +12,28 @@ export default function Code({ children, className, ...props }: React.ComponentP
   const [_, copy] = useCopyToClipboard()
 
   // pre > code
-  const codeRef = useRef<HTMLElement>(null)
-  if (Reflect.has(props, 'data-theme') && Reflect.has(props, 'style')) {
-    const lineNumber = (React.Children.count(children) + 1) / 2
-    const overflow = lineNumber >= 18
+  const codeRef = React.useRef<HTMLElement>(null)
+  if (Reflect.get(props, DATA_BLOCK) == 'true') {
+    const codeLine = (React.Children.count(children) + 1) / 2
+    const expandLine = Number.parseInt(Reflect.get(props, DATA_EXPAND_LINE))
+    const overflow = codeLine > (expandLine || Infinity)
 
     return (
-      <code
+      <Box
+        // @ts-ignore
         ref={codeRef}
         className={cn(
-          'group data-[expanded=false]:h-[calc(18*1.25rem)] data-[expanded=false]:overflow-hidden',
+          'group data-[expanded=false]:h-[--unexpanded-h] data-[expanded=false]:overflow-hidden',
           {
             'data-[expanded=true]:pb-8': overflow
           },
           className
         )}
+        component="code"
         data-expanded={!overflow}
+        sx={{
+          '--unexpanded-h': `${expandLine * 1.25}rem`
+        }}
         {...props}
       >
         {children}
@@ -51,7 +59,7 @@ export default function Code({ children, className, ...props }: React.ComponentP
             </div>
           </div>
         )}
-      </code>
+      </Box>
     )
   }
 
