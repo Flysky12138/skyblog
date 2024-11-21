@@ -9,7 +9,7 @@ interface HeadingProps extends React.ComponentProps<'h1'> {
 
 const Heading: React.FC<HeadingProps> = ({ component: Component, className, children, ...props }) => {
   return (
-    <Component className={cn('group block [&_code]:py-0', className)} {...props}>
+    <Component className={cn('group relative block [&_code]:py-0', className)} {...props}>
       {children}
       <Link replace className="absolute ml-1 hidden -translate-y-0.5 group-hover:inline-block" href={`#${props.id}`}>
         <Numbers className="text-[length:inherit]" />

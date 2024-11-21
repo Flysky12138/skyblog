@@ -40,7 +40,7 @@ export const middleware: NextMiddleware = async (request, event) => {
     session?.role != 'ADMIN' &&
     request.nextUrl.pathname != '/api/visitor' &&
     !request.cookies.has(COOKIE.VISITED) &&
-    !visitor.agent.ua.startsWith('vercel')
+    !visitor.agent.ua.toLowerCase().includes('vercel')
   ) {
     response.cookies.set(COOKIE.VISITED, Date.now().toString(), {
       httpOnly: true,
