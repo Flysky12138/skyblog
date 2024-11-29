@@ -11,10 +11,10 @@
 以下是不适合公开的环境变量，示例为随机生成格式相同的字符串
 
 ```ini
-# https://ipinfo.io/
+# https://ipinfo.io
 TOKEN_IPINFO=7f4c6f9e0a32d8c
 
-# https://cloud.browserless.io/
+# https://cloud.browserless.io
 TOKEN_BROWSERLESS=3d0f06ec-ff26-4b05-8937-80fb1269f60d
 
 # edge config edit
@@ -38,11 +38,6 @@ GITHUB_SECRET=5c8e2b4f7a3d9b1e6c0g2a5h9j1k4l6m7n0o
 ## 库用来加密令牌和电子邮件验证哈希的随机字符串
 ## 访问 https://generate-secret.vercel.app/32 可获取一个随机值
 NEXTAUTH_SECRET=8j1a9s2d0f5g4h7j6k8l3m4n5b0v
-## 使用自己的 CDN 一定要在 vercel 控制面板里添加 CDN 域名。未知原因，添加在 .env 里无效
-AUTH_URL=
-
-# CDN
-CDN_URL=
 ```
 
 ### 规范

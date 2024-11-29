@@ -32,7 +32,7 @@
 
     @apply prose-a:no-underline hover:prose-a:underline;
     @apply prose-strong:font-bold;
-    @apply prose-blockquote:rounded-sm;
+    @apply prose-blockquote:rounded prose-blockquote:shadow;
     @apply prose-img:s-bg-sheet prose-img:rounded-lg;
     @apply prose-p:my-2;
     @apply prose-ul:[&_ul]:list-[circle];

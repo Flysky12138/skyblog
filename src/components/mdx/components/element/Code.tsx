@@ -5,12 +5,8 @@ import { cn } from '@/lib/cn'
 import { ExpandMoreRounded } from '@mui/icons-material'
 import { Box } from '@mui/joy'
 import React from 'react'
-import { useCopyToClipboard } from 'react-use'
-import { toast } from 'sonner'
 
 export default function Code({ children, className, ...props }: React.ComponentProps<'code'>) {
-  const [_, copy] = useCopyToClipboard()
-
   // pre > code
   const codeRef = React.useRef<HTMLElement>(null)
   if (Reflect.get(props, DATA_BLOCK) == 'true') {
@@ -65,24 +61,7 @@ export default function Code({ children, className, ...props }: React.ComponentP
 
   // code
   return (
-    <code
-      className={cn(
-        [
-          'cursor-copy select-none rounded bg-slate-200/50 px-1.5 py-1 dark:bg-slate-600/50',
-          'before:content-none after:content-none',
-          'border border-transparent transition-colors hover:border-sky-200 hover:dark:border-sky-700'
-        ],
-        className
-      )}
-      onClick={event => {
-        const target = event.target as HTMLElement
-        const code = target.textContent
-        if (!code) return
-        copy(code)
-        toast.success('复制成功')
-      }}
-      {...props}
-    >
+    <code className={cn(['rounded bg-slate-200/50 px-1.5 py-1 dark:bg-slate-600/50', 'before:content-none after:content-none'], className)} {...props}>
       {children}
     </code>
   )

@@ -8,7 +8,7 @@ import { PaginationArgs } from 'prisma-paginate'
 export interface PaginationSearch extends MakeRequired<Pick<PaginationArgs, 'limit' | 'page'>> {}
 
 interface PaginationTableProps extends Omit<PaginationProps, 'onChange' | 'page'>, PaginationSearch {
-  onChange: (pagination: PaginationSearch) => void
+  onChange?: (pagination: PaginationSearch) => void
 }
 
 export default function PaginationTable({ className, limit, onChange, ...props }: PaginationTableProps) {
@@ -16,7 +16,7 @@ export default function PaginationTable({ className, limit, onChange, ...props }
     <section className={cn('flex items-center gap-x-5', className)}>
       <Pagination
         onChange={(_, page) => {
-          onChange({ limit, page })
+          onChange?.({ limit, page })
         }}
         {...props}
       />
@@ -28,7 +28,7 @@ export default function PaginationTable({ className, limit, onChange, ...props }
           '--variant-outlinedHoverBg': 'var(--mui-palette-action-hover)'
         }}
         onChange={(_, value) => {
-          onChange({ limit: value || limit, page: 1 })
+          onChange?.({ limit: value || limit, page: 1 })
         }}
       >
         {[10, 20, 30, 50, 100].map(limit => (
