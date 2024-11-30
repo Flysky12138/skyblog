@@ -8,6 +8,63 @@ import { usePathname, useSelectedLayoutSegment } from 'next/navigation'
 import React from 'react'
 import { useToggle } from 'react-use'
 
+interface MenuProps {
+  className?: string
+  lists: XOR<
+    { href: string; icon: React.ReactElement; label: string },
+    { children: { href: string; label: string }[] } & Omit<ListItemExpandProps, 'children'>
+  >[]
+}
+
+export default function Menu({ className, lists }: MenuProps) {
+  return (
+    <List
+      className={cn('select-none overflow-y-auto overflow-x-hidden first:[&>li]:mt-0', className)}
+      size="sm"
+      sx={{
+        '--List-gap': '10px',
+        '--ListItem-radius': '8px'
+      }}
+    >
+      {lists.map((it, index) => (
+        <React.Fragment key={index}>
+          {it.href ? (
+            <ListItem>
+              <ListItemLink href={it.href}>
+                <ListItemDecorator>{it.icon}</ListItemDecorator>
+                <ListItemContent>{it.label}</ListItemContent>
+              </ListItemLink>
+            </ListItem>
+          ) : (
+            <ListItem nested>
+              <ListItemExpand defaultExpanded={it.defaultExpanded} icon={it.icon} label={it.label}>
+                <List>
+                  {it.children?.map(({ href, label }, index) => (
+                    <ListItem key={index}>
+                      <ListItemLink href={href}>
+                        {({ isSelected }) => (
+                          <>
+                            <ListItemDecorator
+                              className={cn('relative h-full', {
+                                'before:absolute before:inset-y-1 before:left-2 before:z-10 before:border before:border-dashed before:border-white': isSelected
+                              })}
+                            />
+                            <ListItemContent>{label}</ListItemContent>
+                          </>
+                        )}
+                      </ListItemLink>
+                    </ListItem>
+                  ))}
+                </List>
+              </ListItemExpand>
+            </ListItem>
+          )}
+        </React.Fragment>
+      ))}
+    </List>
+  )
+}
+
 interface ListItemExpandProps {
   children?: React.ReactNode
   /**
@@ -96,62 +153,5 @@ const ListItemLink: React.FC<ListItemLinkProps> = ({ className, href, children, 
     >
       {typeof children == 'function' ? children({ isSelected }) : children}
     </ListItemButton>
-  )
-}
-
-interface MenuProps {
-  className?: string
-  lists: XOR<
-    { href: string; icon: React.ReactElement; label: string },
-    { children: { href: string; label: string }[] } & Omit<ListItemExpandProps, 'children'>
-  >[]
-}
-
-export default function Menu({ className, lists }: MenuProps) {
-  return (
-    <List
-      className={cn('select-none overflow-y-auto overflow-x-hidden first:[&>li]:mt-0', className)}
-      size="sm"
-      sx={{
-        '--List-gap': '10px',
-        '--ListItem-radius': '8px'
-      }}
-    >
-      {lists.map((it, index) => (
-        <React.Fragment key={index}>
-          {it.href ? (
-            <ListItem>
-              <ListItemLink href={it.href}>
-                <ListItemDecorator>{it.icon}</ListItemDecorator>
-                <ListItemContent>{it.label}</ListItemContent>
-              </ListItemLink>
-            </ListItem>
-          ) : (
-            <ListItem nested>
-              <ListItemExpand defaultExpanded={it.defaultExpanded} icon={it.icon} label={it.label}>
-                <List>
-                  {it.children?.map(({ href, label }, index) => (
-                    <ListItem key={index}>
-                      <ListItemLink href={href}>
-                        {({ isSelected }) => (
-                          <>
-                            <ListItemDecorator
-                              className={cn('relative h-full', {
-                                'before:absolute before:inset-y-1 before:left-2 before:z-10 before:border before:border-dashed before:border-white': isSelected
-                              })}
-                            ></ListItemDecorator>
-                            <ListItemContent>{label}</ListItemContent>
-                          </>
-                        )}
-                      </ListItemLink>
-                    </ListItem>
-                  ))}
-                </List>
-              </ListItemExpand>
-            </ListItem>
-          )}
-        </React.Fragment>
-      ))}
-    </List>
   )
 }

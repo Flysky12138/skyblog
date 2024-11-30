@@ -61,7 +61,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
           <Admin />
         </div>
       </nav>
-      <main className="ml-52 min-h-screen p-8">{children}</main>
+      <main className="relative ml-52 min-h-screen p-8">{children}</main>
     </>
   )
 }

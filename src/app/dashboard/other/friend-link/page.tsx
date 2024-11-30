@@ -39,15 +39,9 @@ export default function Page() {
               )}
               value={friendlink}
               onSubmit={async body => {
-                const data = await Toast(
-                  CustomRequest('PUT api/dashboard/friend-links/[id]', {
-                    body,
-                    params: { id: String(friendlink.id) }
-                  }),
-                  {
-                    success: '更新成功'
-                  }
-                )
+                const data = await Toast(CustomRequest('PUT api/dashboard/friend-links/[id]', { body, params: { id: String(friendlink.id) } }), {
+                  success: '更新成功'
+                })
                 setFriendlinks(
                   produce(state => {
                     state.splice(index, 1, data)
@@ -59,14 +53,9 @@ export default function Page() {
               <IconButton
                 color="warning"
                 onClick={async () => {
-                  const data = await Toast(
-                    CustomRequest('PATCH api/dashboard/friend-links/[id]', {
-                      params: { id: String(friendlink.id) }
-                    }),
-                    {
-                      success: '获取封面成功'
-                    }
-                  )
+                  const data = await Toast(CustomRequest('PATCH api/dashboard/friend-links/[id]', { params: { id: String(friendlink.id) } }), {
+                    success: '获取封面成功'
+                  })
                   setFriendlinks(
                     produce(state => {
                       state.splice(index, 1, data)
@@ -87,9 +76,7 @@ export default function Page() {
               )}
               description={friendlink.name}
               onSubmit={async () => {
-                CustomRequest('DELETE api/dashboard/friend-links/[id]', {
-                  params: { id: String(friendlink.id) }
-                })
+                await CustomRequest('DELETE api/dashboard/friend-links/[id]', { params: { id: String(friendlink.id) } })
                 setFriendlinks(
                   produce(state => {
                     state.splice(index, 1)

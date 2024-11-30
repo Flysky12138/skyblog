@@ -27,7 +27,7 @@ export const SESSIONSTORAGE = {
   POST_VIEW_SUBMITTED: (id: string) => `post-view-submitted-${id}`
 } as const
 
-/** `useSwr` key */
+/** `useSwr` cahce key，页面间共享数据时使用 */
 export const SWR_KEY = {
   CLASH_TEMPLATES: '01930ee7-da43-7eac-b940-98f1627d2f3f'
 } as const

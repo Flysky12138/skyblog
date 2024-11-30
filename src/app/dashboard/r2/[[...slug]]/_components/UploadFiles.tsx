@@ -1,6 +1,6 @@
 import ModalCore, { ModalCoreProps } from '@/components/modal/ModalCore'
+import Table from '@/components/table/Table'
 import TableStatus from '@/components/table/TableStatus'
-import TableWrapper from '@/components/table/TableWrapper'
 import { cn } from '@/lib/cn'
 import { getImageSize } from '@/lib/file/info'
 import { convertObjectValues } from '@/lib/parser/object'
@@ -9,7 +9,7 @@ import { promisePool } from '@/lib/promise'
 import { R2, R2FileInfoType } from '@/lib/server/r2'
 import { Toast } from '@/lib/toast'
 import { FileOpenOutlined, FileUploadOutlined, FolderOpenOutlined } from '@mui/icons-material'
-import { Button, ButtonGroup, Input, Table } from '@mui/joy'
+import { Button, ButtonGroup, Input } from '@mui/joy'
 import React from 'react'
 import { useBeforeUnload } from 'react-use'
 import { useImmer } from 'use-immer'
@@ -122,50 +122,48 @@ export default function UploadFiles({ component: Component, path, onSubmit, onFi
           </Button>
         )}
       </div>
-      <TableWrapper className="mt-3 max-w-screen-md">
-        <Table>
-          <thead>
-            <tr>
-              <th>路径</th>
-              <th className="w-32">大小</th>
-              <th className="w-20 pr-5 text-end">操作</th>
+      <Table className="mt-3 max-w-screen-md">
+        <thead>
+          <tr>
+            <th>路径</th>
+            <th className="w-32">大小</th>
+            <th className="w-20 pr-5 text-end">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {upload.waitFileList.map((file, index) => (
+            <tr
+              key={file.webkitRelativePath || file.name}
+              className={cn({
+                hidden: upload.finishedFileList.includes(file)
+              })}
+            >
+              <td>
+                <span className="block truncate" title={file.webkitRelativePath || file.name}>
+                  {file.webkitRelativePath || file.name}
+                </span>
+              </td>
+              <td>{formatFileSize(file.size)}</td>
+              <td className="text-end">
+                <Button
+                  color="danger"
+                  disabled={isUploading}
+                  size="sm"
+                  variant="plain"
+                  onClick={() => {
+                    setUpload(state => {
+                      state.waitFileList.splice(index, 1)
+                    })
+                  }}
+                >
+                  删除
+                </Button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {upload.waitFileList.map((file, index) => (
-              <tr
-                key={file.webkitRelativePath || file.name}
-                className={cn({
-                  hidden: upload.finishedFileList.includes(file)
-                })}
-              >
-                <td>
-                  <span className="block truncate" title={file.webkitRelativePath || file.name}>
-                    {file.webkitRelativePath || file.name}
-                  </span>
-                </td>
-                <td>{formatFileSize(file.size)}</td>
-                <td className="text-end">
-                  <Button
-                    color="danger"
-                    disabled={isUploading}
-                    size="sm"
-                    variant="plain"
-                    onClick={() => {
-                      setUpload(state => {
-                        state.waitFileList.splice(index, 1)
-                      })
-                    }}
-                  >
-                    删除
-                  </Button>
-                </td>
-              </tr>
-            ))}
-            <TableStatus colSpan={3} isEmpty={upload.waitFileList.length == 0 || isUploadFinished} isLoading={false} />
-          </tbody>
-        </Table>
-      </TableWrapper>
+          ))}
+          <TableStatus colSpan={3} isEmpty={upload.waitFileList.length == 0 || isUploadFinished} isLoading={false} />
+        </tbody>
+      </Table>
       <CopyLink ref={copyLinkRef} />
     </ModalCore>
   )

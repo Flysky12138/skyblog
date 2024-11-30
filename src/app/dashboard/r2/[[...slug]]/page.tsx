@@ -1,8 +1,8 @@
 'use client'
 
 import ModalDelete from '@/components/modal/ModalDelete'
+import Table from '@/components/table/Table'
 import TableStatus from '@/components/table/TableStatus'
-import TableWrapper from '@/components/table/TableWrapper'
 import { cn } from '@/lib/cn'
 import { formatFileSize } from '@/lib/parser/size'
 import { formatISOTime } from '@/lib/parser/time'
@@ -20,7 +20,7 @@ import {
   TextSnippetOutlined,
   VideoCameraBackOutlined
 } from '@mui/icons-material'
-import { Button, Table } from '@mui/joy'
+import { Button } from '@mui/joy'
 import { produce } from 'immer'
 import { useParams, useRouter } from 'next/navigation'
 import React from 'react'
@@ -73,93 +73,91 @@ export default function Page() {
   return (
     <section>
       <Breadcrumb />
-      <TableWrapper>
-        <Table>
-          <thead>
-            <tr>
-              <th className="w-8 text-center align-middle">#</th>
-              <th className="align-middle">名称</th>
-              <th className="w-32 align-middle">大小</th>
-              <th className="w-44 align-middle">时间</th>
-              <th className="w-36 text-end align-middle">
-                <UploadFiles
+      <Table>
+        <thead>
+          <tr>
+            <th className="w-8 text-center align-middle">#</th>
+            <th className="align-middle">名称</th>
+            <th className="w-32 align-middle">大小</th>
+            <th className="w-44 align-middle">时间</th>
+            <th className="w-36 text-end align-middle">
+              <UploadFiles
+                component={props => (
+                  <Button size="sm" variant="plain" {...props}>
+                    上传
+                  </Button>
+                )}
+                path={`/${path}`}
+                onFinished={mutate}
+              />
+            </th>
+          </tr>
+        </thead>
+        <tbody className={cn(['[&_tr]:cursor-pointer', 'hover:[&_tr]:bg-slate-100 hover:[&_tr]:dark:bg-[#292930]', 'hover:[&_tr]:text-sky-500'])}>
+          {/* 返回上层 */}
+          {slug?.length ? (
+            <tr onClick={() => router.replace(`/dashboard/r2/${slug.slice(0, -1).join('/')}`)}>
+              <td className="text-slate-500 dark:text-zinc-400">
+                <Folder />
+              </td>
+              <td className="select-none tracking-widest" colSpan={4}>
+                ..
+              </td>
+            </tr>
+          ) : null}
+          {/* 文件夹 */}
+          {data?.folders.map(it => (
+            <tr key={it} onClick={() => router.replace(`/dashboard/r2/${it}`)}>
+              <td className="text-slate-500 dark:text-zinc-400">
+                <Folder />
+              </td>
+              <td>{it.split('/').at(-2)}</td>
+              <td colSpan={3}></td>
+            </tr>
+          ))}
+          {/* 文件 */}
+          {data?.files.map((it, index) => (
+            <tr key={it.key} onClick={() => handleFileRowClick(it)}>
+              <td className="text-slate-500 dark:text-zinc-400">
+                <FileIcon type={it.contentType} />
+              </td>
+              <td className="truncate">{it.key.split('/').at(-1)}</td>
+              <td>{formatFileSize(it.size)}</td>
+              <td>{formatISOTime(it.lastModified)}</td>
+              <td className="flex items-center justify-end">
+                <Button
+                  size="sm"
+                  variant="plain"
+                  onClick={event => {
+                    event.stopPropagation()
+                    copyLinkRef.current?.open([it])
+                  }}
+                >
+                  直链
+                </Button>
+                <ModalDelete
                   component={props => (
-                    <Button size="sm" variant="plain" {...props}>
-                      上传
+                    <Button color="danger" size="sm" variant="plain" {...props}>
+                      删除
                     </Button>
                   )}
-                  path={`/${path}`}
-                  onFinished={mutate}
+                  description={it.key}
+                  onSubmit={async () => {
+                    await Toast(R2.delete([it.key]), { description: it.key, success: '删除成功' })
+                    await mutate(
+                      produce(state => {
+                        state.files.splice(index, 1)
+                      }),
+                      { revalidate: false }
+                    )
+                  }}
                 />
-              </th>
+              </td>
             </tr>
-          </thead>
-          <tbody className={cn(['[&_tr]:cursor-pointer', 'hover:[&_tr]:bg-slate-100 hover:[&_tr]:dark:bg-[#292930]', 'hover:[&_tr]:text-sky-500'])}>
-            {/* 返回上层 */}
-            {slug?.length ? (
-              <tr onClick={() => router.replace(`/dashboard/r2/${slug.slice(0, -1).join('/')}`)}>
-                <td className="text-slate-500 dark:text-zinc-400">
-                  <Folder />
-                </td>
-                <td className="select-none tracking-widest" colSpan={4}>
-                  ..
-                </td>
-              </tr>
-            ) : null}
-            {/* 文件夹 */}
-            {data?.folders.map(it => (
-              <tr key={it} onClick={() => router.replace(`/dashboard/r2/${it}`)}>
-                <td className="text-slate-500 dark:text-zinc-400">
-                  <Folder />
-                </td>
-                <td>{it.split('/').at(-2)}</td>
-                <td colSpan={3}></td>
-              </tr>
-            ))}
-            {/* 文件 */}
-            {data?.files.map((it, index) => (
-              <tr key={it.key} onClick={() => handleFileRowClick(it)}>
-                <td className="text-slate-500 dark:text-zinc-400">
-                  <FileIcon type={it.contentType} />
-                </td>
-                <td className="truncate">{it.key.split('/').at(-1)}</td>
-                <td>{formatFileSize(it.size)}</td>
-                <td>{formatISOTime(it.lastModified)}</td>
-                <td className="flex items-center justify-end">
-                  <Button
-                    size="sm"
-                    variant="plain"
-                    onClick={event => {
-                      event.stopPropagation()
-                      copyLinkRef.current?.open([it])
-                    }}
-                  >
-                    直链
-                  </Button>
-                  <ModalDelete
-                    component={props => (
-                      <Button color="danger" size="sm" variant="plain" {...props}>
-                        删除
-                      </Button>
-                    )}
-                    description={it.key}
-                    onSubmit={async () => {
-                      await Toast(R2.delete([it.key]), { description: it.key, success: '删除成功' })
-                      await mutate(
-                        produce(state => {
-                          state.files.splice(index, 1)
-                        }),
-                        { revalidate: false }
-                      )
-                    }}
-                  />
-                </td>
-              </tr>
-            ))}
-            <TableStatus colSpan={5} isEmpty={data?.folders.length == 0 && data.files.length == 0} isError={error} isLoading={isLoading} />
-          </tbody>
-        </Table>
-      </TableWrapper>
+          ))}
+          <TableStatus colSpan={5} isEmpty={data?.folders.length == 0 && data.files.length == 0} isError={error} isLoading={isLoading} />
+        </tbody>
+      </Table>
       <ModalCopy ref={copyLinkRef} />
     </section>
   )

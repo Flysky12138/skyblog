@@ -9,7 +9,7 @@ export default function Breadcrumb() {
 
   return (
     <Breadcrumbs
-      className="mb-2 px-2 py-0"
+      className="mb-2 px-0 py-0"
       slotProps={{
         li: {
           className: '[&>*]:px-1 rounded border border-transparent hover:s-bg-content hover:s-border-color-divider'
