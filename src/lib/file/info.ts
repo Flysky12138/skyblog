@@ -1,3 +1,5 @@
+import 'client-only'
+
 /** 获取图片宽高 */
 export const getImageSize = async (blob: Blob) => {
   const url = URL.createObjectURL(blob)

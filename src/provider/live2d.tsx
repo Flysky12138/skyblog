@@ -35,14 +35,9 @@ interface Live2DContextProps {
   src?: string
 }
 
-export const Live2DContext = React.createContext<Live2DContextProps>({
-  enable: false,
-  loading: false,
-  message: { content: null },
-  setEnable: () => null,
-  setLoading: () => null,
-  setMessage: () => null
-})
+const Live2DContext = React.createContext<Live2DContextProps>(null!)
+
+export const useLive2DContext = () => React.useContext(Live2DContext)
 
 export const Live2DProvider = ({ children }: React.PropsWithChildren) => {
   const [enable, setEnable] = useLocalStorage('live2d', false)

@@ -8,7 +8,7 @@ import { formatFileSize } from '@/lib/parser/size'
 import { formatISOTime } from '@/lib/parser/time'
 import { R2, R2FileInfoType } from '@/lib/server/r2'
 import { Toast } from '@/lib/toast'
-import { ImageViewerContext } from '@/provider/image-viewer'
+import { useImageViewerContext } from '@/provider/image-viewer'
 import {
   AudioFileOutlined,
   DataObjectOutlined,
@@ -49,7 +49,7 @@ export default function Page() {
 
   const { isLoading, data, mutate, error } = useSWR(`/r2/${path}`, () => R2.list(path ? `${decodeURIComponent(path)}/` : ''))
 
-  const { openViewer } = React.useContext(ImageViewerContext)
+  const { openViewer } = useImageViewerContext()
   /** 文件点击 */
   const handleFileRowClick = React.useCallback<(file: R2FileInfoType) => void>(
     file => {

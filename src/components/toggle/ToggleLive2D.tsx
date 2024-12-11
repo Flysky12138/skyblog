@@ -1,12 +1,11 @@
 'use client'
 
-import { Live2DContext } from '@/provider/live2d'
+import { useLive2DContext } from '@/provider/live2d'
 import { FaceRetouchingOffRounded, FaceRounded } from '@mui/icons-material'
 import { IconButton, Tooltip } from '@mui/joy'
-import React from 'react'
 
 export default function ToggleLive2D() {
-  const { enable, setEnable, loading, src } = React.useContext(Live2DContext)
+  const { enable, setEnable, loading, src } = useLive2DContext()
 
   if (!src) return null
 

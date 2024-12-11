@@ -1,7 +1,7 @@
 'use client'
 
-import { deepTraversalReactElement } from '@/lib/dom/react'
-import { ImageViewerContext } from '@/provider/image-viewer'
+import { deepTraversalReactElement } from '@/lib/react'
+import { useImageViewerContext } from '@/provider/image-viewer'
 import { Chip } from '@mui/joy'
 import React from 'react'
 
@@ -12,14 +12,13 @@ interface ImagesProps {
 }
 
 export default function Images({ children, className, defaultAlt }: ImagesProps) {
-  const images: React.ReactElement[] = []
+  const images: React.ReactElement<React.ComponentProps<'img'>>[] = []
 
-  deepTraversalReactElement(children, node => {
-    if (!React.isValidElement(node)) return
+  deepTraversalReactElement<{ src?: string }>(children, node => {
     if (node.props.src) images.push(node)
   })
 
-  const { openViewer } = React.useContext(ImageViewerContext)
+  const { openViewer } = useImageViewerContext()
 
   return (
     <section className={className}>

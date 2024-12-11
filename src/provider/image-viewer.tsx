@@ -14,9 +14,9 @@ interface ImageViewerContextProps {
   openViewer: (payload: Pick<IPhotoSliderProps, 'images' | 'overlayRender' | 'index'>) => void
 }
 
-export const ImageViewerContext = React.createContext<ImageViewerContextProps>({
-  openViewer: () => null
-})
+const ImageViewerContext = React.createContext<ImageViewerContextProps>(null!)
+
+export const useImageViewerContext = () => React.useContext(ImageViewerContext)
 
 /**
  * 一款超精致的 React 图片预览组件

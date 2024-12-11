@@ -2,7 +2,7 @@
 
 import useLive2D from '@/hooks/useLive2D'
 import { cn } from '@/lib/cn'
-import { Live2DContext } from '@/provider/live2d'
+import { useLive2DContext } from '@/provider/live2d'
 import { delay } from 'es-toolkit'
 import { AnimatePresence, motion } from 'framer-motion'
 import React from 'react'
@@ -10,7 +10,7 @@ import './live2d.css'
 
 export default function Live2D() {
   const containerRef = React.useRef<HTMLElement>(null)
-  const { setLoading, setEnable, message, src } = React.useContext(Live2DContext)
+  const { setLoading, setEnable, message, src } = useLive2DContext()
 
   const { live2dRef, model } = useLive2D(src, {
     model: {

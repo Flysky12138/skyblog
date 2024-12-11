@@ -1,6 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/cn'
+import { deepTraversalReactElement } from '@/lib/react'
 import { Tab as JoyTab, TabList as JoyTabList, TabPanel as JoyTabPanel, Tabs as JoyTabs, TabsProps as JoyTabsProps } from '@mui/joy'
 import React from 'react'
 
@@ -12,10 +13,13 @@ export default function Tabs({ children, activeIndex, ...props }: TabsProps) {
   const TabList: React.ReactNode[] = []
   const TabPanel: React.ReactNode[] = []
 
-  React.Children.forEach(children, (item, index) => {
-    if (!React.isValidElement(item)) return
-    if (item.type == 'tab') {
-      const { label, children: _children, className: _className, ..._props } = item.props
+  deepTraversalReactElement<
+    Pick<JoyTabsProps, 'children' | 'className'> & {
+      label?: string
+    }
+  >(children, (node, index) => {
+    if (node.type == 'tab') {
+      const { label, children: _children, className: _className, ..._props } = node.props
       TabList.push(
         <JoyTab key={index} indicatorInset className={cn('font-semibold aria-selected:text-blue-500', _className)} {..._props}>
           {label}

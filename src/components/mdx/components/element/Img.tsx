@@ -1,11 +1,11 @@
 'use client'
 
 import Image from '@/components/Image'
-import { ImageViewerContext } from '@/provider/image-viewer'
+import { useImageViewerContext } from '@/provider/image-viewer'
 import React from 'react'
 
 export default function Img({ alt, src, ...props }: React.ComponentProps<'img'>) {
-  const { openViewer } = React.useContext(ImageViewerContext)
+  const { openViewer } = useImageViewerContext()
 
   return (
     <figure className="text-center">
