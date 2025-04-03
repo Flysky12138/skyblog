@@ -7,7 +7,6 @@ import { DiffEditor, DiffEditorProps, Editor, EditorProps, loader, Monaco } from
 import { toMerged } from 'es-toolkit'
 import * as monaco from 'monaco-editor'
 import { editor, IDisposable } from 'monaco-editor'
-import 'node_modules/monaco-editor/min/vs/nls.messages.zh-cn.js'
 import React from 'react'
 import './index.css'
 import { monacoEditorDefaultOptions } from './options'

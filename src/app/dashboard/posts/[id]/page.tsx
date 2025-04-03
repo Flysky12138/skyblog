@@ -3,7 +3,7 @@
 import { GET, PUT } from '@/app/api/dashboard/posts/[id]/route'
 import { ErrorComponent } from '@/components/error-component'
 import { MDXClient } from '@/components/mdx/client'
-import MonacoEditor, { MonacoEditorRef } from '@/components/monaco-editor'
+import { MonacoEditorRef } from '@/components/monaco-editor'
 import { markdownConfig } from '@/components/monaco-editor/languages/markdown'
 import { Button } from '@/components/ui/button'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
@@ -15,6 +15,7 @@ import { isEqual } from 'es-toolkit'
 import { AppWindow, CloudUpload, Eye, EyeClosed, GitCompare, ReceiptText, Save, WandSparkles } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { ErrorBoundary } from 'next/dist/client/components/error-boundary'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { useAsync, useDebounce, useEvent } from 'react-use'
@@ -268,3 +269,5 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
 }
 
 const Separator = () => <hr className="bg-divide h-4 w-0.5 rounded-full"></hr>
+
+const MonacoEditor = dynamic(() => import('@/components/monaco-editor'), { ssr: false })
