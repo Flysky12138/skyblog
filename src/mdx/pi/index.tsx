@@ -49,7 +49,7 @@ export default function Pi() {
 
   return (
     <section className="flex flex-col gap-3">
-      <div className="flex gap-4">
+      <div className="flex flex-wrap gap-4">
         <Select
           defaultValue={form.mode}
           onValueChange={(mode: ModeType) => {
@@ -95,7 +95,7 @@ export default function Pi() {
             <DialogTrigger asChild>
               <Button>源码</Button>
             </DialogTrigger>
-            <DialogContent className="scrollbar-hidden z-1000 max-h-[calc(100vh-40px)] max-w-(--breakpoint-md)! overflow-auto p-0 [&>button]:hidden">
+            <DialogContent className="max-w-3xl p-0 [&>button]:hidden">
               {form.mode == 'chudnovsky' && <ChudnovskyCode />}
               {form.mode == 'chudnovsky-bs' && <ChudnovskyBsCode />}
             </DialogContent>

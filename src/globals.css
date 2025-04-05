@@ -29,7 +29,7 @@
 .dark {
   --root: oklch(0.19 0.01 285.45);
   --divide: var(--color-slate-700);
-  --card: var(--color-zinc-700);
+  --card: --alpha(var(--color-zinc-700) / 30%);
   --card-border: var(--color-zinc-700);
   --link: var(--color-slate-700);
   --link-foreground: var(--color-sky-500);
@@ -39,8 +39,6 @@
 }
 
 @theme inline {
-  /* override shadcn css variables */
-  --color-background: var(--root);
   /* override default variables */
   --font-*: initial;
   /* static variables */
@@ -50,10 +48,10 @@
   --font-code: 'Cascadia Code PL';
   --height-footer: 9.375rem;
   --height-header: 3.125rem;
-  --z-index-footer: 10;
-  --z-index-header: 100;
-  --z-index-main: 25;
-  --z-index-nav: 50;
+  --z-index-footer: 20;
+  --z-index-header: 50;
+  --z-index-main: 30;
+  --z-index-nav: 40;
   /* dark & light variables */
   --color-root: var(--root);
   --color-divide: var(--divide);

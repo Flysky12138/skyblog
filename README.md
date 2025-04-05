@@ -55,12 +55,11 @@ NEXTAUTH_SECRET=8j1a9s2d0f5g4h7j6k8l3m4n5b0v
 
 ### 规范
 
-1. 优先使用 `tailwindcss`，只有在使用 `mui` & `joy` 组建时需要修改内部指定类或 CSS 变量时才使用 `sx` 调整样式
-2. 为了减少客户端包的大小并充分利用服务器，请尽可能将状态 `'use client'` 移动到组件树的较低位置 [参考 ↗](https://nextjs.org/docs/getting-started/react-essentials#moving-client-components-to-the-leaves)
-3. `/src/app/**/_components` 是对应路由用的非通用组建
-4. 组件根标签是 `div` 等无意义标签，换成 `section`；`React.Fragment` 除外
-5. 接口类型导出 `export type POST = RouteMethodType<{}>`
-6. 对数据库的 CRUD 方法提取到外层，并命名为 `db<Get|Post...>`，以便使用 `Prisma.PromiseReturnType<typeof dbGet>` 获取返回类型
+1. 为了减少客户端包的大小并充分利用服务器，请尽可能将状态 `'use client'` 移动到组件树的较低位置 [参考 ↗](https://nextjs.org/docs/getting-started/react-essentials#moving-client-components-to-the-leaves)
+2. `/src/app/**/_components` 是对应路由用的非通用组建
+3. 组件根标签是 `div` 等无意义标签，换成 `section`；`React.Fragment` 除外
+4. 接口类型导出 `export type POST = RouteHandlerType<{}>`
+5. 对数据库的 CRUD 方法提取到外层，并命名为 `db<Get|Post...>`，以便使用 `Prisma.PromiseReturnType<typeof dbGet>` 获取返回类型
 
 ### 坑
 

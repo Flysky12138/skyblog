@@ -21,8 +21,8 @@ export default function Page() {
   if (!post || !post.content) return null
 
   return (
-    <Card asChild className="max-w-none">
-      <article>
+    <Card asChild>
+      <article className="max-w-none p-5">
         <MDXClient value={post.content} />
       </article>
     </Card>

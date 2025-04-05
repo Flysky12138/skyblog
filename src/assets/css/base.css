@@ -1,18 +1,19 @@
-:focus-visible {
-  @apply rounded-sm;
-}
 * {
   -webkit-tap-highlight-color: transparent;
+  @apply border-border outline-ring/50;
 }
 html {
   @apply font-root antialiased;
   @apply selection:bg-teal-500 selection:text-white;
 }
+body {
+  @apply bg-root text-foreground;
+}
 img {
   @apply dark:brightness-80;
 }
 article {
-  @apply font-article overflow-hidden p-5 *:first:mt-0 *:last:mb-0;
+  @apply font-article overflow-hidden *:first:mt-0 *:last:mb-0;
   @apply prose prose-sm prose-sky dark:prose-invert md:prose-base;
 }
 pre,

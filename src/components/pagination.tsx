@@ -14,13 +14,13 @@ import { PaginationArgs, PaginationResult } from 'prisma-paginate'
 
 export interface PaginationProps extends Partial<Pick<PaginationResult, 'count' | 'limit' | 'page' | 'totalPages'>> {
   /**
-   * 开始和结束页码相邻的位数
+   * 开头和结尾始终可见的页数
    */
   boundaryCount?: number
   className?: string
   onChange?: (payload: PaginationArgs) => void
   /**
-   * 两侧显示的位数
+   * 当前页面之前和之后始终可见的页面数
    */
   siblingCount?: number
 }
@@ -57,7 +57,7 @@ export const Pagination = ({
 
   return (
     <PaginationPrimitive className={className}>
-      <PaginationContent className="ml-auto">
+      <PaginationContent>
         <span className="mr-4 pb-0.5 text-sm opacity-75">
           {(page - 1) * limit + 1}-{page * limit} of {count} items
         </span>

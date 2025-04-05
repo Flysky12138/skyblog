@@ -32,7 +32,7 @@ export const FriendDetail = ({ children, value, onSubmit }: FriendDetailProps) =
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>友链</DialogTitle>
           <DialogDescription>友链表单。</DialogDescription>

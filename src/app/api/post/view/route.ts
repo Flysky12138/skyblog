@@ -3,8 +3,6 @@ import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
-// export const runtime = 'nodejs'
-
 const dbPost = async (id: string) => {
   return await prisma.post.update({
     data: {

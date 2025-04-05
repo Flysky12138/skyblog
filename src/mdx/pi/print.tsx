@@ -15,7 +15,7 @@ interface PrintProps {
   time: number
 }
 
-const Print = ({ time, size, pi, onClose }: PrintProps) => {
+const Print_ = ({ time, size, pi, onClose }: PrintProps) => {
   const [sectionRef, { width }] = useMeasure<HTMLElement>()
   const [fontRef, { width: fontWidth }] = useMeasure<HTMLElement>()
 
@@ -69,4 +69,4 @@ const Print = ({ time, size, pi, onClose }: PrintProps) => {
   )
 }
 
-export { Print }
+export const Print = React.memo(Print_)

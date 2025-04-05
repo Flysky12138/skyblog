@@ -3,7 +3,7 @@ import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 
 const dbGet = async () => {
-  return await prisma.category.findMany({})
+  return await prisma.category.findMany()
 }
 
 export type GET = RouteHandlerType<{

@@ -1,6 +1,7 @@
 'use client'
 
 import { Pagination, PaginationProps } from '@/components/pagination'
+import { cn } from '@/lib/cn'
 import { useRouter } from 'next/navigation'
 
 export interface PostListPaginationProps extends Omit<PaginationProps, 'onChange'> {
@@ -12,11 +13,12 @@ export interface PostListPaginationProps extends Omit<PaginationProps, 'onChange
   path?: `${string}[page]${string}`
 }
 
-export const PostListPagination = ({ path, ...props }: PostListPaginationProps) => {
+export const PostListPagination = ({ path, className, ...props }: PostListPaginationProps) => {
   const router = useRouter()
 
   return (
     <Pagination
+      className={cn('[&_span]:hidden', className)}
       {...props}
       onChange={({ page }) => {
         let href = ''

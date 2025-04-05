@@ -1,3 +1,4 @@
+import { CacheClear } from '@/lib/cache'
 import prisma from '@/lib/prisma'
 import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
@@ -35,6 +36,8 @@ export const POST = async (request: NextRequest) => {
   try {
     const data = await request.json()
     const res = await dbPost(data)
+
+    CacheClear.friends()
 
     return CustomResponse.encrypt(res)
   } catch (error) {

@@ -30,12 +30,12 @@ export default async function Page() {
       {data.map(({ dataSource, name }) => (
         <React.Fragment key={name}>
           <TableCaption className="mt-6 mb-3 text-lg first:mt-0">{name}</TableCaption>
-          <TablePrimitive>
+          <TablePrimitive className="table-auto">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-10">#</TableHead>
-                <TableHead className="w-60">name</TableHead>
-                <TableHead className="w-28">version</TableHead>
+                <TableHead>#</TableHead>
+                <TableHead>name</TableHead>
+                <TableHead>version</TableHead>
                 <TableHead>description</TableHead>
               </TableRow>
             </TableHeader>
@@ -45,7 +45,7 @@ export default async function Page() {
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>
                     <DisplayByConditional condition={!!pkg.homepage} fallback={name}>
-                      <a className="text-link-foreground" href={pkg.homepage} rel="noreferrer nofollow" target="_blank">
+                      <a className="text-link-foreground whitespace-nowrap" href={pkg.homepage} rel="noreferrer nofollow" target="_blank">
                         {name}
                       </a>
                     </DisplayByConditional>

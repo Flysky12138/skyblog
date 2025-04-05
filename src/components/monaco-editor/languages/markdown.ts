@@ -72,7 +72,7 @@ export const markdownConfig: LanguageConfig = {
             {
               detail: '选项卡',
               key: 'tabs',
-              value: ['::::tabs', '::tabtrigger[$1]', ':::tabscontent', '$2', ':::', '::::']
+              value: ['::::tabs', '::tabtrigger[$1]', ':::tabscontent', '$2', ':::', '::', '::::']
             },
             { detail: 'MDX 页面', key: 'mdx', value: ['::mdx{path=$0}'] }
           ])
@@ -110,9 +110,9 @@ export const markdownConfig: LanguageConfig = {
         if (/\/\/$/.test(textUntilPosition)) {
           return {
             suggestions: [
+              { label: 'highlight', value: ' [!code highlight:${0:1}]' },
               { label: 'diff +', value: ' [!code ++]' },
-              { label: 'diff -', value: ' [!code --]' },
-              { label: 'highlight', value: ' [!code highlight:${0:1}]' }
+              { label: 'diff -', value: ' [!code --]' }
             ].map(({ label, value }) => ({
               label,
               range,

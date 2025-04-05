@@ -4,6 +4,7 @@ import { DisplayByConditional } from '@/components/display/display-by-conditiona
 import { useTheme } from '@/hooks/use-theme'
 import { cn } from '@/lib/cn'
 import { DiffEditor, DiffEditorProps, Editor, EditorProps, loader, Monaco } from '@monaco-editor/react'
+import 'client-only'
 import { toMerged } from 'es-toolkit'
 import * as monaco from 'monaco-editor'
 import { editor, IDisposable } from 'monaco-editor'

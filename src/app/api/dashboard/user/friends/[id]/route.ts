@@ -1,3 +1,4 @@
+import { CacheClear } from '@/lib/cache'
 import prisma from '@/lib/prisma'
 import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
@@ -20,6 +21,8 @@ export const PUT = async (request: NextRequest, { params }: DynamicRouteProps<{ 
 
     const data = await request.json()
     const res = await dbPut(id, data)
+
+    CacheClear.friends()
 
     return CustomResponse.encrypt(res)
   } catch (error) {
@@ -44,6 +47,8 @@ export const DELETE = async (request: NextRequest, { params }: DynamicRouteProps
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
     const res = await dbDelete(id)
+
+    CacheClear.friends()
 
     return CustomResponse.encrypt(res)
   } catch (error) {

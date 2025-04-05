@@ -51,7 +51,7 @@ export default async function Page({ params }: PageProps) {
   return (
     <section className="space-y-5">
       <DisplayByConditional condition={(post.display & POST_CARD_DISPLAY.HEADER) == POST_CARD_DISPLAY.HEADER}>
-        <Card className="relative flex flex-col gap-2 p-5">
+        <Card className="relative flex flex-col gap-2 p-3 md:p-5">
           <DisplayByAuth role="ADMIN">
             <Button asChild className="absolute top-5 right-5" size="icon" variant="ghost">
               <Link href={`/dashboard/posts/${post.id}`} target="_blank">
@@ -77,8 +77,8 @@ export default async function Page({ params }: PageProps) {
       {post.content && (
         <section className="flex gap-4">
           <style>{`html { scroll-padding-top: 60px }`}</style>
-          <Card asChild className="max-w-none grow">
-            <article id={ATTRIBUTE.ID.POST_CONTAINER}>
+          <Card asChild>
+            <article className="max-w-none grow px-3 py-5 md:px-5" id={ATTRIBUTE.ID.POST_CONTAINER}>
               <MDXServer value={post.content} />
             </article>
           </Card>

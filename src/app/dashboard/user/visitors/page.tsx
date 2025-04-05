@@ -54,12 +54,12 @@ export default function Page() {
                       <Eye />
                     </TableActionButton>
                   </DialogTrigger>
-                  <DialogContent className="max-w-(--breakpoint-md)!">
+                  <DialogContent className="max-w-3xl">
                     <DialogHeader>
                       <DialogTitle>访客</DialogTitle>
                       <DialogDescription>访客的全部信息</DialogDescription>
                     </DialogHeader>
-                    <div className="*:scrollbar-hidden *:max-h-[75vh] *:overflow-auto! [&_span]:break-all [&_span]:whitespace-pre-wrap">
+                    <div className="[&_span]:break-all [&_span]:whitespace-pre-wrap">
                       <MDXClient value={'```json expand\n' + JSON.stringify(record, null, 2) + '\n```'} />
                     </div>
                   </DialogContent>

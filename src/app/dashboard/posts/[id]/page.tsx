@@ -257,7 +257,7 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
                 </div>
               )}
             >
-              <article className="min-h-screen max-w-none">
+              <article className="min-h-screen max-w-none p-5">
                 <MDXClient value={previewContent || ''} />
               </article>
             </ErrorBoundary>

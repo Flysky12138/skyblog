@@ -4,8 +4,6 @@ import { Prisma } from '@prisma/client'
 import { Geo } from '@vercel/functions'
 import { NextRequest, userAgent } from 'next/server'
 
-// export const runtime = 'nodejs'
-
 const dbPost = async (data: Prisma.VisitorLogCreateInput) => {
   return await prisma.visitorLog.create({ data })
 }

@@ -75,8 +75,8 @@ export const POST = async (request: NextRequest, { params }: DynamicRouteProps<{
     if (id != 'new') return CustomResponse.error("{id} 值不为 'new'", 422)
 
     const data = await request.json()
-
     const res = await dbPost(data)
+
     CacheClear.post(res.id)
 
     return CustomResponse.encrypt(res)
@@ -93,7 +93,6 @@ const dbPut = async (id: string, data: PUT['body']) => {
     },
     where: { id }
   })
-
   return await prisma.post.update({
     include,
     data: {
@@ -133,6 +132,7 @@ export const PUT = async (request: NextRequest, { params }: DynamicRouteProps<{ 
 
     const data = await request.json()
     const res = await dbPut(id, data)
+
     CacheClear.post(id)
 
     return CustomResponse.encrypt(res)
@@ -162,6 +162,7 @@ export const PATCH = async (request: NextRequest, { params }: DynamicRouteProps<
 
     const data = await request.json()
     const res = await dbPatch(id, data)
+
     CacheClear.post(id)
 
     return CustomResponse.encrypt(res)
@@ -187,6 +188,7 @@ export const DELETE = async (request: NextRequest, { params }: DynamicRouteProps
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
     const res = await dbDelete(id)
+
     CacheClear.post(id)
 
     return CustomResponse.encrypt(res)

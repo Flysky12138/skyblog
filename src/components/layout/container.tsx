@@ -18,5 +18,5 @@ interface ContainerProps extends React.PropsWithChildren, VariantProps<typeof to
 }
 
 export const Container = ({ children, className, variant }: ContainerProps) => {
-  return <section className={cn('container mx-auto max-w-(--breakpoint-xl)', toggleVariants({ variant }), className)}>{children}</section>
+  return <section className={cn('container mx-auto max-w-7xl', toggleVariants({ variant }), className)}>{children}</section>
 }

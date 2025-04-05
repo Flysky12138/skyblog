@@ -88,17 +88,11 @@ export const R2Upload = ({ children, path, onSubmit, onFinished }: R2UploadProps
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
-        className="min-w-(--breakpoint-md)"
+        className="max-w-5xl"
         onCloseAutoFocus={event => {
           event.preventDefault()
         }}
-        onEscapeKeyDown={event => {
-          event.preventDefault()
-        }}
         onOpenAutoFocus={event => {
-          event.preventDefault()
-        }}
-        onPointerDownOutside={event => {
           event.preventDefault()
         }}
       >

@@ -20,7 +20,12 @@ export const Tabs = ({ children, ...props }: TabsProps) => {
     switch (node.type) {
       case 'tabtrigger':
         tabsTrigger.push(
-          <TabsPrimitive.TabsTrigger key={tabsTrigger.length} className={cn('px-8', className)} value={String(tabsTrigger.length)} {..._props} />
+          <TabsPrimitive.TabsTrigger
+            key={tabsTrigger.length}
+            className={cn('px-8 font-semibold', className)}
+            value={String(tabsTrigger.length)}
+            {..._props}
+          />
         )
         break
       case 'tabscontent':

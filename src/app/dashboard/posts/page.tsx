@@ -12,7 +12,7 @@ import useSWR from 'swr'
 import { useImmer } from 'use-immer'
 
 export default function Page() {
-  const [search, setSearch] = useImmer<GET['search']>({ limit: 12, page: 1 })
+  const [search, setSearch] = useImmer<GET['search']>({ limit: 20, page: 1 })
 
   const { data, isLoading, mutate } = useSWR(['6a75f4b6-326d-5aa8-b53c-e5af8d86dec2', search], () => {
     return CustomRequest('GET api/dashboard/posts', { search })

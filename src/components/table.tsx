@@ -150,7 +150,7 @@ export const Table = <T,>({
           </DisplayByConditional>
         </TableBody>
       </TablePrimitive>
-      {showPagination && <Pagination className="mt-5" {...pagination} />}
+      {showPagination && <Pagination className="mt-5 justify-end" {...pagination} />}
     </>
   )
 }
