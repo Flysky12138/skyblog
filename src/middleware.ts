@@ -14,6 +14,22 @@ const matchUrls = (request: NextRequest, urls: StartsWith<'/'>[]) => urls.some(u
 export const middleware: NextMiddleware = async (request, event) => {
   if (process.env.NODE_ENV == 'development') return
 
+  /** 访客信息 */
+  const visitor: POST['body'] = {
+    agent: userAgent(request),
+    geo: geolocation(request),
+    ip: ipAddress(request) || '',
+    referer: request.headers.get('referer')
+  }
+
+  // 封禁华为
+  if (
+    ['huawei', 'honor', 'harmonyos'].some(device => visitor.agent.ua.toLowerCase().includes(device)) ||
+    visitor.agent.device.vendor?.toLowerCase() == 'huawei'
+  ) {
+    return NextResponse.redirect(new URL('/ban', request.url))
+  }
+
   const session = await auth()
 
   // 权限管理
@@ -26,14 +42,6 @@ export const middleware: NextMiddleware = async (request, event) => {
   }
 
   const response = NextResponse.next()
-
-  /** 访客信息 */
-  const visitor: POST['body'] = {
-    agent: userAgent(request),
-    geo: geolocation(request),
-    ip: ipAddress(request) || '',
-    referer: request.headers.get('referer')
-  }
 
   // 记录访客信息
   if (
