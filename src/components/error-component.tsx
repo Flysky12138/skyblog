@@ -10,7 +10,7 @@ export interface ErrorComponentProps extends React.ComponentProps<ErrorComponent
 
 export const ErrorComponent = ({ error, reset, className }: ErrorComponentProps) => {
   return (
-    <Card className={cn('flex max-w-xl flex-col items-center justify-center gap-5 px-3 py-5 text-center', className)}>
+    <Card className={cn('flex max-w-xl flex-col items-center justify-center gap-5 px-8 py-5 text-center', className)} data-slot="error-component">
       <p className="text-lg">Something went wrong!</p>
       <p className="text-subtitle-foreground text-sm break-all">{error.message}</p>
       <Button className="mt-3" variant="outline" onClick={reset}>

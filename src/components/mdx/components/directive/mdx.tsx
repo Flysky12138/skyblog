@@ -4,12 +4,12 @@ import { AlertCircle } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { Code } from '../element/code'
 
-interface MdxProps {
+interface MdxProps extends React.PropsWithChildren {
   path: string
 }
 
-export const Mdx = ({ path }: MdxProps) => {
-  const Componet = dynamic(
+export const Mdx = ({ path, ...props }: MdxProps) => {
+  const Componet = dynamic<Omit<MdxProps, 'path'>>(
     () => {
       return import(`@/mdx/${path}`).catch(() => ({
         default: () => (
@@ -27,5 +27,5 @@ export const Mdx = ({ path }: MdxProps) => {
     }
   )
 
-  return <Componet />
+  return <Componet {...props} />
 }
