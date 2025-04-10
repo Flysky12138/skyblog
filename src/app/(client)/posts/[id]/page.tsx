@@ -79,7 +79,7 @@ export default async function Page({ params }: PageProps) {
           <style>{`html { scroll-padding-top: 60px }`}</style>
           <Card asChild>
             <article className="group relative max-w-none grow px-3 py-5 md:px-5" id={ATTRIBUTE.ID.POST_CONTAINER}>
-              <ResizeButton className="invisible absolute top-1 right-1 z-10 group-hover:visible" />
+              <ResizeButton className="invisible absolute top-1 right-1 z-10 group-hover:visible [&+*]:mt-0" />
               <MDXServer value={post.content} />
             </article>
           </Card>
