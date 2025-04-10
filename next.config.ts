@@ -46,11 +46,8 @@ const headers: NextConfig['headers'] = async () => [
 ]
 
 const images: NextConfig['images'] = {
-  remotePatterns: [{ hostname: 'raw.githubusercontent.com', protocol: 'https' as const }].concat(
-    [process.env.NEXT_PUBLIC_WEBSITE_URL, process.env.NEXT_PUBLIC_R2_URL].filter(Boolean).map(it => ({
-      hostname: new URL(it).hostname,
-      protocol: new URL(it).protocol.slice(0, -1) as 'https'
-    }))
+  remotePatterns: [new URL('https://raw.githubusercontent.com')].concat(
+    [process.env.NEXT_PUBLIC_WEBSITE_URL, process.env.NEXT_PUBLIC_R2_URL].filter(Boolean).map(it => new URL(it))
   )
 }
 
