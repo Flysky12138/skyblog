@@ -15,32 +15,9 @@ import { PostInfo } from './_components/post-info'
 import { PostTocWrapper } from './_components/post-toc-wrapper'
 import { ResizeButton } from './_components/resize-button'
 
-const getPost = async (id: string) => {
-  return await prisma.post.findUnique({
-    include: { author: true, categories: true, tags: true },
-    where: { id }
-  })
-}
+export const dynamicParams = false
 
 interface PageProps extends DynamicRouteProps<{ id: string }> {}
-
-export const generateStaticParams = async (): Promise<Awaited<PageProps['params']>[]> => {
-  const posts = await prisma.post.findMany({ select: { id: true } })
-  return posts.map(post => ({ id: post.id }))
-}
-export const generateMetadata = async ({ params }: PageProps): Promise<Metadata> => {
-  const { id } = await params
-
-  const post = await getPost(id)
-  if (!post) return {}
-  return {
-    category: post.categories.map(({ name }) => name).join(','),
-    creator: post.author.name,
-    description: post.description,
-    keywords: post.tags.map(({ name }) => name),
-    title: post.title
-  }
-}
 
 export default async function Page({ params }: PageProps) {
   const { id } = await params
@@ -61,17 +38,7 @@ export default async function Page({ params }: PageProps) {
           </DisplayByAuth>
           <p className="font-title text-2xl font-normal md:text-3xl">{post.title}</p>
           {post.description && <p className="text-subtitle-foreground">{post.description}</p>}
-          <PostInfo
-            defaultValue={{
-              categories: post.categories,
-              createdAt: post.createdAt,
-              links: post.links,
-              published: post.published,
-              updatedAt: post.updatedAt,
-              views: post.views
-            }}
-            id={post.id}
-          />
+          <PostInfo defaultValue={post} id={post.id} />
         </Card>
       </DisplayByConditional>
       {post.content && (
@@ -101,4 +68,34 @@ export default async function Page({ params }: PageProps) {
       )}
     </section>
   )
+}
+
+const getPost = async (id: string) => {
+  return await prisma.post.findUnique({
+    include: {
+      author: true,
+      categories: true,
+      tags: true
+    },
+    where: { id }
+  })
+}
+
+export const generateStaticParams = async (): Promise<Awaited<PageProps['params']>[]> => {
+  const posts = await prisma.post.findMany({ select: { id: true } })
+  return posts.map(post => ({ id: post.id }))
+}
+
+export const generateMetadata = async ({ params }: PageProps): Promise<Metadata> => {
+  const { id } = await params
+
+  const post = await getPost(id)
+  if (!post) return {}
+  return {
+    category: post.categories.map(({ name }) => name).join(','),
+    creator: post.author.name,
+    description: post.description,
+    keywords: post.tags.map(({ name }) => name),
+    title: post.title
+  }
 }
