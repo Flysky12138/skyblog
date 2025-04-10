@@ -7,12 +7,14 @@ import { PaginationArgs, PaginationResult } from 'prisma-paginate'
 export interface PaginationProps extends Partial<Pick<PaginationResult, 'count' | 'limit' | 'page' | 'totalPages'>> {
   /**
    * 开头和结尾始终可见的页数
+   * @default 1
    */
   boundaryCount?: number
   className?: string
   onChange?: (payload: PaginationArgs) => void
   /**
    * 当前页面之前和之后始终可见的页面数
+   * @default 2
    */
   siblingCount?: number
 }
@@ -24,7 +26,7 @@ export const Pagination = ({
   totalPages = 1,
   boundaryCount = 1,
   className,
-  siblingCount = 1,
+  siblingCount = 2,
   onChange
 }: PaginationProps) => {
   const range = (start: number, end: number) => Array.from({ length: end - start + 1 }, (_, i) => start + i)
