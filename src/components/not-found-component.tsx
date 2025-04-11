@@ -1,4 +1,4 @@
-import { NotFound } from '@/components/svg-icon/not-found'
+import NotFound from '@/assets/svg/not-found.svg'
 
 export const NotFoundComponent = () => {
   return (

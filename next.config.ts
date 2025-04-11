@@ -70,11 +70,26 @@ const rewrites: NextConfig['rewrites'] = async () => [
   }
 ]
 
+const webpack: NextConfig['webpack'] = config => {
+  // @ts-ignore
+  const svgLoaderRule = config.module.rules.find(rule => rule.test?.test?.('.svg'))
+  config.module.rules.push({
+    oneOf: [
+      { ...svgLoaderRule, resourceQuery: /url/, type: 'asset/resource' }, // .svg?url
+      { issuer: svgLoaderRule.issuer, resourceQuery: { not: [...svgLoaderRule.resourceQuery.not, /url/] }, use: ['@svgr/webpack'] } // .svg
+    ],
+    test: /\.svg$/i
+  })
+  svgLoaderRule.exclude = /\.svg$/i
+  return config
+}
+
 const nextConfig: NextConfig = {
   headers,
   images,
   redirects,
   rewrites,
+  webpack,
   pageExtensions: ['mdx', 'ts', 'tsx'],
   reactStrictMode: true,
   transpilePackages: ['next-mdx-remote'],

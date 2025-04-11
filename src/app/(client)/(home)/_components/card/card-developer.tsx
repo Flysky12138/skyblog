@@ -1,5 +1,7 @@
+import Github from '@/assets/svg/github.svg'
+import LeetCode from '@/assets/svg/leetcode.svg'
+import Spotify from '@/assets/svg/spotify.svg'
 import { Card } from '@/components/layout/card'
-import { Github, LeetCode, Spotify } from '@/components/svg-icon'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'

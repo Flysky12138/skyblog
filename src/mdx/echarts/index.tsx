@@ -20,11 +20,15 @@ interface EchartsProps {
 
 export default function Echarts({ children }: EchartsProps) {
   const id = React.useId()
-  const [code, setCode] = useImmer(atob(children?.props?.children || btoa('{}')))
+  const [code, setCode] = useImmer(atob(children?.props?.children || btoa('option = {}')))
   const echartsRef = React.useRef<ECharts>(null)
   const [height, setHeight] = React.useState(600)
 
-  useDebounce(() => echartsRef.current?.setOption(getOptions(code), true), 800, [code])
+  React.useLayoutEffect(() => {
+    const main = document.querySelector('main')
+    if (!main) return
+    setHeight(main.clientHeight - 9 * 4 * 2)
+  }, [])
 
   React.useEffect(() => {
     echartsRef.current = echarts.init(document.getElementById(id))
@@ -39,11 +43,7 @@ export default function Echarts({ children }: EchartsProps) {
     })
   })
 
-  React.useLayoutEffect(() => {
-    const main = document.querySelector('main')
-    if (!main) return
-    setHeight(main.clientHeight - 9 * 4 * 2)
-  }, [])
+  useDebounce(() => echartsRef.current?.setOption(getOptions(code), true), 800, [code])
 
   return (
     <section className="post-full-page:h-full!" style={{ height }}>
@@ -79,13 +79,11 @@ export default function Echarts({ children }: EchartsProps) {
 
 const getOptions = (code: string) => {
   try {
-    return new Function(
-      'echarts',
-      transpile(`${code};return option;`, {
-        module: ModuleKind.None,
-        target: ScriptTarget.ES2015
-      })
-    )(echarts)
+    const transpiledCode = transpile(`${code}; return option;`, {
+      module: ModuleKind.None,
+      target: ScriptTarget.ES2015
+    })
+    return new Function('echarts', transpiledCode)(echarts)
   } catch (error) {
     return {}
   }
