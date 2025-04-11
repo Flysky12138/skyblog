@@ -14,15 +14,13 @@ export const markdownConfig: LanguageConfig = {
     monaco.languages.registerDocumentFormattingEditProvider(markdownConfig.language, {
       provideDocumentFormattingEdits: async model => {
         const source = model.getValue().replace(/^[^\S\n]+(?=:+)/gm, '') // 移除 : 符号前面的空格
-        const text = await format(
-          source,
-          toMerged<Options, Options>(require('/.prettierrc.cjs'), {
-            jsxSingleQuote: true,
-            parser: markdownConfig.language,
-            plugins: [estreePlugins, babelPlugins, markdownPlugins],
-            requirePragma: false
-          })
-        )
+        const options = toMerged<Options, Options>(require('/.prettierrc.cjs'), {
+          jsxSingleQuote: true,
+          parser: markdownConfig.language,
+          plugins: [estreePlugins, babelPlugins, markdownPlugins],
+          requirePragma: false
+        })
+        const text = await format(source, options)
         return [{ text, range: model.getFullModelRange() }]
       }
     }),

@@ -31,13 +31,11 @@ export const tsEchartsConfig: LanguageConfig = {
       // 格式化
       monaco.languages.registerDocumentFormattingEditProvider(tsEchartsConfig.language, {
         provideDocumentFormattingEdits: async model => {
-          const text = await format(
-            model.getValue(),
-            toMerged<Options, Options>(require('/.prettierrc.cjs'), {
-              parser: tsEchartsConfig.language,
-              plugins: [estreePlugins, babelPlugins, typescriptPlugins]
-            })
-          )
+          const options = toMerged<Options, Options>(require('/.prettierrc.cjs'), {
+            parser: tsEchartsConfig.language,
+            plugins: [estreePlugins, babelPlugins, typescriptPlugins]
+          })
+          const text = await format(model.getValue(), options)
           return [{ text, range: model.getFullModelRange() }]
         }
       })

@@ -112,3 +112,17 @@ loader.config({
     }
   }
 })
+
+if (typeof window != 'undefined') {
+  window.MonacoEnvironment = {
+    // @ts-ignore
+    getWorker(_, label) {
+      switch (label) {
+        case 'yaml':
+          return new Worker(new URL('monaco-yaml/yaml.worker', import.meta.url))
+        // default:
+        //   return new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker', import.meta.url))
+      }
+    }
+  }
+}

@@ -12,13 +12,11 @@ export const yamlClashConfig: LanguageConfig = {
     // 格式化
     monaco.languages.registerDocumentFormattingEditProvider(yamlClashConfig.language, {
       provideDocumentFormattingEdits: async model => {
-        const text = await format(
-          model.getValue(),
-          toMerged<Options, Options>(require('/.prettierrc.cjs'), {
-            parser: yamlClashConfig.language,
-            plugins: [yamlPlugins]
-          })
-        )
+        const options = toMerged<Options, Options>(require('/.prettierrc.cjs'), {
+          parser: yamlClashConfig.language,
+          plugins: [yamlPlugins]
+        })
+        const text = await format(model.getValue(), options)
         return [{ text, range: model.getFullModelRange() }]
       }
     }),
@@ -34,8 +32,7 @@ export const yamlClashConfig: LanguageConfig = {
           schema: schema as unknown as JSONSchema,
           uri: 'monaco://schemas/clash-meta-schema.json'
         }
-      ],
-      validate: true
+      ]
     })
   ]
 }
