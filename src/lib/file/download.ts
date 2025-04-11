@@ -1,5 +1,3 @@
-import 'client-only'
-
 /**
  * 下载
  * @param blob 二进制文件对象

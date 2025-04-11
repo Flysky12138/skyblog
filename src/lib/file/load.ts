@@ -1,5 +1,3 @@
-import 'client-only'
-
 /**
  * 加载 JS 脚本
  * @param source JS 文件地址
