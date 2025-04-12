@@ -6,7 +6,14 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-
 import { ChevronUp } from 'lucide-react'
 import React from 'react'
 
-export const ScrollToTop = () => {
+interface ScrollToTopProps extends React.ComponentProps<typeof Button> {
+  /**
+   * @default 200
+   */
+  showOnScrollYOverflow?: number
+}
+
+export const ScrollToTop = ({ className, showOnScrollYOverflow = 200, ...props }: ScrollToTopProps) => {
   const [showProgress, setShowProgress] = React.useState(false)
   const [progress, setProgress] = React.useState(0)
 
@@ -19,12 +26,12 @@ export const ScrollToTop = () => {
     timer.current = setTimeout(setShowProgress, 500, false)
   })
 
-  if (scrollY.get() <= 200) return null
+  if (scrollY.get() <= showOnScrollYOverflow) return null
 
   return (
     <Button
       aria-label="Scroll back to top"
-      className={cn('relative p-4 select-none', {
+      className={cn('relative p-4 select-none', className, {
         'cursor-default': showProgress
       })}
       size="icon"
@@ -32,6 +39,7 @@ export const ScrollToTop = () => {
         if (showProgress) return
         window.scrollTo({ behavior: 'smooth', top: 0 })
       }}
+      {...props}
     >
       <AnimatePresence initial={false}>
         {showProgress ? (

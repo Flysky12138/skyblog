@@ -24,6 +24,9 @@ export default function Layout({ children }: React.PropsWithChildren) {
             <Logo />
           </Link>
           <span aria-hidden="true" className="grow"></span>
+          <DisplayByBreakPoint up="sm">
+            <ScrollToTop showOnScrollYOverflow={500} variant="outline" />
+          </DisplayByBreakPoint>
           <DisplayByAuth role="ADMIN">
             <Button asChild size="icon" variant="outline">
               <Link href="/dashboard">
