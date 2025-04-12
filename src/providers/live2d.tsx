@@ -1,7 +1,9 @@
 'use client'
 
 import { DisplayByBreakPoint } from '@/components/display/display-by-breakpoint'
+import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
 import { CustomRequest } from '@/lib/server/request'
+import { get } from '@/lib/server/vercel-edge'
 import React from 'react'
 import { useAsync, useInterval, useLocalStorage } from 'react-use'
 import { useImmer } from 'use-immer'
@@ -45,7 +47,7 @@ export const Live2DProvider = ({ children }: React.PropsWithChildren) => {
   const [src, setSrc] = React.useState<Live2DContextProps['src']>()
   useAsync(async () => {
     try {
-      const { src } = await CustomRequest('GET api/live2d', {})
+      const src = await get<string>(VERCEL_EDGE_CONFIG.LIVE2D_SRC)
       if (!src) throw new Error()
       setSrc(src)
     } catch (error) {

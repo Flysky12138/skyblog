@@ -1,7 +1,8 @@
-import { EdgeConfigValue } from '@vercel/edge-config'
-import { CustomFetch } from './fetch'
+'use server'
 
-interface VercelEdgeFetchOption {
+import { digest, EdgeConfigValue, get, getAll, has } from '@vercel/edge-config'
+
+interface PatchOption {
   key: string
   operation: 'create' | 'update' | 'upsert' | 'delete'
   value?: EdgeConfigValue
@@ -11,20 +12,25 @@ interface VercelEdgeFetchOption {
  * vercel edge config's `create | update | upsert | delete` function
  * @see https://vercel.com/docs/storage/edge-config/vercel-api
  */
-export const VercelEdgeFetch = async (items: VercelEdgeFetchOption[]) => {
+const patch = async (items: PatchOption[]) => {
   try {
-    const data = await CustomFetch(`https://api.vercel.com/v1/edge-config/${process.env.EDGE_ID}/items`, {
-      body: { items },
+    const res = await fetch(`https://api.vercel.com/v1/edge-config/${process.env.EDGE_ID}/items`, {
+      body: JSON.stringify({ items }),
       headers: {
-        Authorization: `Bearer ${process.env.TOKEN_VERCEL}`
+        Authorization: `Bearer ${process.env.TOKEN_VERCEL}`,
+        'Content-Type': 'application/json'
       },
       method: 'PATCH'
     })
+    const data = await res.json()
 
-    if ('error' in data) throw new Error(data.error)
+    // https://vercel.com/docs/edge-config/vercel-api#failing-edge-config-patch-requests
+    if ('error' in data) throw new Error(data.error.message)
 
     return data
   } catch (error) {
     return Promise.reject(error)
   }
 }
+
+export { digest, get, getAll, has, patch }
