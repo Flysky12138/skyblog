@@ -3,10 +3,11 @@
 import { R2Upload } from '@/app/dashboard/r2/[[...slug]]/_components/r2-upload'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { AppWindow, CloudUpload, Eye, EyeClosed, GitCompare, ReceiptText, Save, WandSparkles } from 'lucide-react'
+import { AppWindow, Binary, CloudUpload, Eye, EyeClosed, GitCompare, ReceiptText, Save, WandSparkles } from 'lucide-react'
 import { Updater } from 'use-immer'
 import { DefaultPostType } from '../page'
 import { PostDetail } from './post-detail'
+import { Transcoder } from './transcoder'
 
 interface EditorToolbarProps {
   disabled: {
@@ -26,6 +27,16 @@ const EditorToolbar = ({ post, isCreate, disabled, setPost, onCompare, onFormat,
   return (
     <section className="border-divide bg-sidebar flex items-center gap-3 border-b px-3 py-2">
       <TooltipProvider>
+        <Tooltip>
+          <Transcoder>
+            <TooltipTrigger asChild>
+              <Button size="icon" variant="outline">
+                <Binary />
+              </Button>
+            </TooltipTrigger>
+          </Transcoder>
+          <TooltipContent>转码</TooltipContent>
+        </Tooltip>
         <span aria-hidden="true" className="grow"></span>
         <Separator />
         <Tooltip>
@@ -46,13 +57,13 @@ const EditorToolbar = ({ post, isCreate, disabled, setPost, onCompare, onFormat,
         </Tooltip>
         <Separator />
         <Tooltip>
-          <TooltipTrigger>
-            <R2Upload path={`/posts/${post.id}/`}>
+          <R2Upload path={`/posts/${post.id}/`}>
+            <TooltipTrigger asChild>
               <Button disabled={isCreate} size="icon" variant="outline">
                 <CloudUpload />
               </Button>
-            </R2Upload>
-          </TooltipTrigger>
+            </TooltipTrigger>
+          </R2Upload>
           <TooltipContent>文件</TooltipContent>
         </Tooltip>
         <Separator />
@@ -104,4 +115,4 @@ const EditorToolbar = ({ post, isCreate, disabled, setPost, onCompare, onFormat,
 }
 export { EditorToolbar }
 
-const Separator = () => <hr className="bg-divide h-4 w-0.5 rounded-full"></hr>
+const Separator = () => <hr className="bg-divide h-4 w-0.5 rounded-full" />
