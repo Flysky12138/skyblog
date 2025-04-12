@@ -39,7 +39,7 @@ export const Pre = ({ children, className, tabIndex, ...props }: React.Component
     <pre ref={preRef} className={cn('relative', className)} {...props}>
       {children}
       <Button
-        className="absolute top-1.5 right-1.5 size-8 p-2 text-[initial] dark:bg-stone-800 hover:dark:bg-stone-900"
+        className="absolute top-1 right-1.5 size-8 p-2 text-[initial] md:top-1.5 dark:bg-stone-800 hover:dark:bg-stone-900"
         variant="outline"
         onClick={handleCopyClick}
       >
