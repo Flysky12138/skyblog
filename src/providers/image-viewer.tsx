@@ -1,5 +1,6 @@
 'use client'
 
+import { tw } from '@/lib/cn'
 import { download } from '@/lib/file/download'
 import { Ban, CircleMinus, CirclePlus, Download, Maximize, Minimize, RotateCw } from 'lucide-react'
 import React from 'react'
@@ -30,7 +31,7 @@ export const ImageViewerProvider = ({ children }: React.PropsWithChildren) => {
 
   const [isFullScreen, setIsFullScreen] = React.useState(false)
 
-  const toolbarSvgClassName = 'cursor-pointer p-3 opacity-75 transition-opacity hover:opacity-100'
+  const toolbarSvgClassName = tw`cursor-pointer p-3 opacity-75 transition-opacity hover:opacity-100`
 
   return (
     <>

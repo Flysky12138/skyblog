@@ -1,16 +1,15 @@
+import { cn } from '@/lib/cn'
 import { ExternalLink, Hash } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
-export const A = ({ children, ...props }: React.ComponentProps<'a'>) => {
+export const A = ({ children, className, ...props }: React.ComponentProps<'a'>) => {
   if (!props.href) return null
-
-  props.className = `${props.className} no-underline hover:underline underline-offset-2`
 
   // 外部链接
   if (['http', '//'].some(it => props.href?.startsWith(it))) {
     return (
-      <a {...props} rel="noreferrer nofollow" target="_blank">
+      <a className={cn('no-underline underline-offset-2 hover:underline', className)} rel="noreferrer nofollow" target="_blank" {...props}>
         {children}
         <ExternalLink className="ml-1 inline-block" size={14} />
       </a>
