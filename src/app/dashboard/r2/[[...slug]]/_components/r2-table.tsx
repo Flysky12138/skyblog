@@ -12,9 +12,9 @@ import {
   TableRow,
   TableRowLoading
 } from '@/components/table'
+import { R2 } from '@/lib/http/r2'
 import { formatFileSize } from '@/lib/parser/size'
 import { formatISOTime } from '@/lib/parser/time'
-import { R2 } from '@/lib/server/r2'
 import { Toast } from '@/lib/toast'
 import { useImageViewerContext } from '@/providers/image-viewer'
 import { produce } from 'immer'

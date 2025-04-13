@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth'
 import GitHub from 'next-auth/providers/github'
-import { CustomRequest } from './server/request'
+import { CustomRequest } from './http/request'
 
 // https://next-auth.js.org/configuration/callbacks
 export const {

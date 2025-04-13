@@ -1,6 +1,6 @@
 import { CacheClear } from '@/lib/cache'
+import { CustomResponse } from '@/lib/http/response'
 import prisma from '@/lib/prisma'
-import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 

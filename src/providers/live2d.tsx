@@ -2,8 +2,8 @@
 
 import { DisplayByBreakPoint } from '@/components/display/display-by-breakpoint'
 import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
-import { CustomRequest } from '@/lib/server/request'
-import { get } from '@/lib/server/vercel-edge'
+import { CustomRequest } from '@/lib/http/request'
+import { get } from '@/server/edge-config'
 import React from 'react'
 import { useAsync, useInterval, useLocalStorage } from 'react-use'
 import { useImmer } from 'use-immer'

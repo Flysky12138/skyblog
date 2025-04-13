@@ -1,8 +1,8 @@
 'use client'
 
 import { Table } from '@/components/table'
+import { CustomRequest } from '@/lib/http/request'
 import { formatISOTime } from '@/lib/parser/time'
-import { CustomRequest } from '@/lib/server/request'
 import useSWR from 'swr'
 
 export default function Page() {

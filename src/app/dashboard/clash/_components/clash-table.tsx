@@ -2,8 +2,8 @@
 
 import { Table, TableActionButton, TableDeleteButton } from '@/components/table'
 import { Switch } from '@/components/ui/switch'
+import { CustomRequest } from '@/lib/http/request'
 import { formatISOTime } from '@/lib/parser/time'
-import { CustomRequest } from '@/lib/server/request'
 import { Toast } from '@/lib/toast'
 import { produce } from 'immer'
 import { Pencil, Plus, Share2 } from 'lucide-react'

@@ -1,5 +1,5 @@
-import { CustomFetch } from '@/lib/server/fetch'
-import { CustomResponse } from '@/lib/server/response'
+import { CustomFetch } from '@/lib/http/fetch'
+import { CustomResponse } from '@/lib/http/response'
 import { geolocation, ipAddress } from '@vercel/functions'
 import { NextRequest } from 'next/server'
 

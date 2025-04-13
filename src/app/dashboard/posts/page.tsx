@@ -3,7 +3,7 @@
 import { GET } from '@/app/api/dashboard/posts/route'
 import { Table, TableActionButton, TableDeleteButton } from '@/components/table'
 import { Switch } from '@/components/ui/switch'
-import { CustomRequest } from '@/lib/server/request'
+import { CustomRequest } from '@/lib/http/request'
 import { Toast } from '@/lib/toast'
 import { produce } from 'immer'
 import { Eye, Pencil } from 'lucide-react'

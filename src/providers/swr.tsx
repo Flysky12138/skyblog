@@ -1,6 +1,6 @@
 'use client'
 
-import { CustomFetch } from '@/lib/server/fetch'
+import { CustomFetch } from '@/lib/http/fetch'
 import { SWRConfig } from 'swr'
 
 /**

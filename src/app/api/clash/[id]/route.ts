@@ -1,6 +1,6 @@
+import { CustomResponse } from '@/lib/http/response'
 import { replaceVariables } from '@/lib/parser/string'
 import prisma from '@/lib/prisma'
-import { CustomResponse } from '@/lib/server/response'
 import { Prisma } from '@prisma/client'
 import { ipAddress } from '@vercel/functions'
 import { NextRequest, NextResponse, userAgent } from 'next/server'

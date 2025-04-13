@@ -1,5 +1,5 @@
+import { CustomResponse } from '@/lib/http/response'
 import prisma from '@/lib/prisma'
-import { CustomResponse } from '@/lib/server/response'
 import { Prisma, VisitorLog } from '@prisma/client'
 import { NextRequest } from 'next/server'
 import { PaginationArgs } from 'prisma-paginate'
