@@ -17,16 +17,6 @@ export const A = ({ children, ...props }: React.ComponentProps<'a'>) => {
     )
   }
 
-  // TOC
-  if (props.className?.includes('toc-link')) {
-    return (
-      // @ts-ignore
-      <Link replace {...props}>
-        {children}
-      </Link>
-    )
-  }
-
   // 内部链接
   return (
     <Link href={props.href}>

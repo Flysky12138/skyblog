@@ -15,7 +15,8 @@ export const CardDeveloper = async () => {
   return (
     <Card className="flex flex-col items-center p-6">
       <Avatar className="bg-secondary size-28 transition-transform duration-500 hover:rotate-[360deg]">
-        <AvatarImage alt={data.login} loading="lazy" src={data.avatar_url.replace('https://', '/cdn/')} />
+        <link as="image" fetchPriority="high" href={data.avatar_url.replace('https://', '/cdn/')} rel="preload" type="image/png" />
+        <AvatarImage alt={data.login} src={data.avatar_url.replace('https://', '/cdn/')} />
         <AvatarFallback />
       </Avatar>
       <p className="font-title mt-3 text-2xl">Flysky</p>

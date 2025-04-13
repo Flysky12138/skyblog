@@ -12,7 +12,7 @@ export const Transcoder = ({ children }: TranscoderProps) => {
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
-        className="max-w-3xl"
+        className="max-w-5xl"
         onCloseAutoFocus={event => {
           event.preventDefault()
         }}
