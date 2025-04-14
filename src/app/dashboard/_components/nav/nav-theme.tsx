@@ -2,11 +2,15 @@
 
 import { SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 import { Switch } from '@/components/ui/switch'
+import { useIsClient } from '@/hooks/use-is-client'
 import { useTheme } from '@/hooks/use-theme'
 import { MoonStar, Sun } from 'lucide-react'
 
 export const NavTheme = () => {
   const { toggleTheme, isDark } = useTheme()
+
+  const isClient = useIsClient()
+  if (!isClient) return <div className="skeleton h-8 rounded-md" />
 
   return (
     <SidebarMenu>

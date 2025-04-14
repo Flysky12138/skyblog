@@ -9,6 +9,7 @@ export const Header = ({ className, ...props }: React.ComponentProps<'header'>) 
 
   return (
     <header
+      suppressHydrationWarning
       className={cn(
         'z-header h-header dark:bg-root/80 border-divide fixed inset-x-0 top-0 border-b bg-white backdrop-blur-sm transition-shadow',
         className,

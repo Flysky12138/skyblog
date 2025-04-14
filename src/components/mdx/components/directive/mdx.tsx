@@ -1,4 +1,4 @@
-import { Card } from '@/components/layout/card'
+import Loading from '@/assets/svg/loading.svg'
 import { Alert, AlertTitle } from '@/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
 import dynamic from 'next/dynamic'
@@ -23,7 +23,11 @@ export const Mdx = ({ path, ...props }: MdxProps) => {
       }))
     },
     {
-      loading: () => <Card className="skeleton font-title flex h-20 items-center justify-center">Loading</Card>
+      loading: () => (
+        <div className="flex items-center justify-center">
+          <Loading />
+        </div>
+      )
     }
   )
 

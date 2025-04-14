@@ -132,7 +132,7 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
     <section className="flex h-screen">
       <style>{`main { padding: 0 !important }`}</style>
       <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel>
+        <ResizablePanel defaultSize={60}>
           <div className="flex h-full flex-col">
             <EditorToolbar
               disabled={{
