@@ -19,14 +19,14 @@ const generatePath = (path: string, params: object) => {
 /**
  * 用于请求基于 Nextjs 文件路由定义的接口
  */
-export const CustomRequest = async <T extends keyof ApiMethodMap>(input: T, options: CustomRequestOptions<T>): Promise<ApiMethodMap[T]['return']> => {
+export const CustomRequest = async <T extends keyof ApiMethodMap>(input: T, options: CustomRequestOptions<T>) => {
   const [method, api] = input.split(' ') as [Method, keyof typeof ApiPaths]
   const { body, search = {}, params = {} } = options || {}
 
   const url = new URL(generatePath(api, params), process.env.NEXT_PUBLIC_WEBSITE_URL)
   url.search = new URLSearchParams(search).toString()
 
-  const res = await CustomFetch(url, {
+  const res = await CustomFetch<ApiMethodMap[T]['return']>(url, {
     body,
     method
   })

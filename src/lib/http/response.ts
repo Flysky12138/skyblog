@@ -31,7 +31,7 @@ export class CustomResponse {
   static async encrypt(content: object | null, status = 200) {
     const headers = new Headers()
 
-    if (process.env.NODE_ENV == 'development') {
+    if (process.env.NEXT_PUBLIC_ENCRYPT_API == 'false') {
       headers.set('Content-Type', 'application/json')
       return new Response(JSON.stringify(content), {
         headers,

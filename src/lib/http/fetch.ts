@@ -1,4 +1,3 @@
-import { cloneDeep } from 'es-toolkit'
 import { toast } from 'sonner'
 import { HEADER } from '../constants'
 import { AesGcm } from '../crypto/aes-gcm'
@@ -48,13 +47,13 @@ const Core = async (promise: () => Promise<Response>) => {
  * 封装的基础请求方法
  */
 export const CustomFetch = async <T = any>(input: RequestInfo | URL, { body, headers = {}, ...init }: FetchOptions = {}): Promise<T> => {
-  const clonedHeaders = cloneDeep(headers) // 避免修改原对象
+  headers = Object.assign({}, headers) // 避免修改原对象
 
   if (!(body instanceof FormData)) {
-    if (!clonedHeaders['Content-Type']) {
-      clonedHeaders['Content-Type'] = 'application/json'
+    if (!headers['Content-Type']) {
+      headers['Content-Type'] = 'application/json'
     }
-    if (clonedHeaders['Content-Type'].includes('application/json')) {
+    if (headers['Content-Type'].includes('application/json')) {
       body = JSON.stringify(body)
     }
   }

@@ -4,7 +4,7 @@ import * as PaginationPrimitive from '@/components/ui/pagination'
 import { cn } from '@/lib/cn'
 import { PaginationArgs, PaginationResult } from 'prisma-paginate'
 
-export interface PaginationProps extends Partial<Pick<PaginationResult, 'count' | 'limit' | 'page' | 'totalPages'>> {
+export interface PaginationProps extends Partial<Pick<PaginationResult<unknown[]>, 'count' | 'limit' | 'page' | 'totalPages'>> {
   /**
    * 开头和结尾始终可见的页数
    * @default 1

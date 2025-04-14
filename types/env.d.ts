@@ -28,6 +28,8 @@ declare namespace NodeJS {
     NEXTAUTH_SECRET: string
     /** 博客描述 */
     NEXT_PUBLIC_DESCRIPTION: string
+    /** 加密响应内容 */
+    NEXT_PUBLIC_ENCRYPT_API: 'true' | 'false'
     /** github username */
     NEXT_PUBLIC_GITHUB_NAME: string
     /**

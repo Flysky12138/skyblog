@@ -1,7 +1,9 @@
-import { SwapWithSin } from './swap'
 import { xor } from './xor'
 
-type IvJwkType = { iv: string; jwk: JsonWebKey }
+type IvJwkType = {
+  iv: string
+  jwk: JsonWebKey
+}
 
 export class AesGcm {
   /**
@@ -29,10 +31,9 @@ export class AesGcm {
     const jwk = await crypto.subtle.exportKey('jwk', key)
 
     // 编码 - 初始化向量、可传输密钥
-    let ivJwk = JSON.stringify({ jwk, iv: Buffer.from(iv).toString('base64') } as IvJwkType)
+    let ivJwk = JSON.stringify({ jwk, iv: Buffer.from(iv).toString('base64') } satisfies IvJwkType)
     ivJwk = xor(ivJwk)
-    ivJwk = btoa(ivJwk).slice(0, -2)
-    ivJwk = SwapWithSin.encrypt(ivJwk)
+    ivJwk = btoa(ivJwk)
 
     return { buffer, ivJwk }
   }
@@ -45,8 +46,7 @@ export class AesGcm {
    */
   static async decrypt(buffer: ArrayBuffer, ivJwk: string) {
     // 解码 - 初始化向量、可传输密钥
-    ivJwk = SwapWithSin.decrypt(ivJwk)
-    ivJwk = atob(ivJwk + '==')
+    ivJwk = atob(ivJwk)
     ivJwk = xor(ivJwk)
     const { iv, jwk }: IvJwkType = JSON.parse(ivJwk)
 
