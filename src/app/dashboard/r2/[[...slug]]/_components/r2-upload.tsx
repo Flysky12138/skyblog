@@ -72,7 +72,7 @@ export const R2Upload = ({ children, path, onSubmit, onFinished }: R2UploadProps
         onSubmit?.(data)
       })
     )
-  }, [])
+  }, [filelist, onSubmit])
 
   useBeforeUnload(isUploading, '正在上传中，不要关闭窗口')
 
