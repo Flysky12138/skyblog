@@ -36,10 +36,14 @@ export const Pre = ({ children, className, tabIndex, ...props }: React.Component
   }
 
   return (
-    <pre ref={preRef} className={cn('relative', className)} {...props}>
+    <pre ref={preRef} className={cn('group/pre relative', className)} {...props}>
       {children}
       <Button
-        className="absolute top-1 right-1 size-8 p-2 text-[initial] md:top-1.5 md:right-1.5 dark:bg-stone-800 hover:dark:bg-stone-900"
+        className={cn(
+          'absolute top-1 right-1 size-8 p-2 text-[initial] md:top-1.5 md:right-1.5',
+          'dark:bg-stone-800 hover:dark:bg-stone-900',
+          'opacity-0 transition-opacity group-hover/pre:opacity-100 focus-visible:opacity-100'
+        )}
         variant="outline"
         onClick={handleCopyClick}
       >

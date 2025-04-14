@@ -19,6 +19,14 @@ const CodeBlock = ({ children, className, style = {}, ...props }: React.Componen
   const expandLine = Number.parseInt(Reflect.get(props, DATA_EXPAND_LINE))
   const isOver = codeLine > (expandLine || Infinity)
 
+  const handleExpandToggle = (event: React.KeyboardEvent | React.MouseEvent) => {
+    if (event.type == 'keydown' && (event as React.KeyboardEvent).key != 'Enter') return
+    const target = codeRef.current
+    if (!target) return
+    const isExpanded = target.getAttribute('aria-expanded') == 'true'
+    target.setAttribute('aria-expanded', isExpanded ? 'false' : 'true')
+  }
+
   return (
     <code
       ref={codeRef}
@@ -47,12 +55,9 @@ const CodeBlock = ({ children, className, style = {}, ...props }: React.Componen
             aria-label="Expanded toggle button"
             className="flex h-full w-8 items-center justify-center overflow-hidden"
             role="button"
-            onClick={() => {
-              const target = codeRef.current
-              if (!target) return
-              const isExpanded = target.getAttribute('aria-expanded') == 'true'
-              target.setAttribute('aria-expanded', isExpanded ? 'false' : 'true')
-            }}
+            tabIndex={0}
+            onClick={handleExpandToggle}
+            onKeyDown={handleExpandToggle}
           >
             <ChevronDown className="group-aria-expanded:rotate-180" size={20} />
           </div>

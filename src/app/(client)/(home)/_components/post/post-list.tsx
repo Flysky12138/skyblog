@@ -54,7 +54,7 @@ export const PostList = ({ posts, ...props }: PostListProps) => {
         <Card key={post.id} className="space-y-4 p-5 break-all">
           <div className="flex items-center gap-2">
             {post.sticky > 0 && <Award size={20} />}
-            <Link className="font-title hover:text-link-foreground text-xl" href={`/posts/${post.id}`}>
+            <Link className="font-title hover:text-link-foreground focus-within:text-link-foreground text-xl" href={`/posts/${post.id}`}>
               {post.title}
             </Link>
           </div>
@@ -68,7 +68,7 @@ export const PostList = ({ posts, ...props }: PostListProps) => {
               · <Shapes size={12} />
               {post.categories.map((category, index) => (
                 <span key={category.id}>
-                  <Link className="hover:text-link-foreground" href={`/search?categories=${category.name}`}>
+                  <Link className="hover:text-link-foreground focus-visible:text-link-foreground" href={`/search?categories=${category.name}`}>
                     {category.name}
                   </Link>
                   {index < post.categories.length - 1 ? ',' : null}
@@ -79,7 +79,7 @@ export const PostList = ({ posts, ...props }: PostListProps) => {
               · <Tag size={12} />
               {post.tags.map((tag, index) => (
                 <span key={tag.id}>
-                  <Link className="hover:text-link-foreground" href={`/search?tags=${tag.name}`}>
+                  <Link className="hover:text-link-foreground focus-visible:text-link-foreground" href={`/search?tags=${tag.name}`}>
                     {tag.name}
                   </Link>
                   {index < post.tags.length - 1 ? ',' : null}
