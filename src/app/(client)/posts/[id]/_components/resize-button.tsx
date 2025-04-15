@@ -42,7 +42,6 @@ export const ResizeButton = ({ className, ...props }: ResizeButtonProps) => {
         variant="ghost"
         onClick={() => {
           isFullPageToggle()
-          window.dispatchEvent(new Event('resize'))
           document.documentElement.classList.toggle('post-full-page', !isFullPage)
         }}
         {...props}

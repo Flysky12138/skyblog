@@ -6,7 +6,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/componen
 import * as echarts from 'echarts'
 import { ECharts } from 'echarts'
 import React from 'react'
-import { useDebounce, useEvent } from 'react-use'
+import { useDebounce, useMeasure } from 'react-use'
 import { ModuleKind, ScriptTarget, transpile } from 'typescript'
 import { useImmer } from 'use-immer'
 
@@ -37,16 +37,15 @@ export default function Echarts({ children }: EchartsProps) {
     }
   }, [id])
 
-  useEvent('resize', () => {
-    setTimeout(() => {
-      echartsRef.current?.resize()
-    })
-  })
-
   useDebounce(() => echartsRef.current?.setOption(getOptions(code), true), 800, [code])
 
+  const [containerRef, { width: w, height: h }] = useMeasure<HTMLElement>()
+  React.useEffect(() => {
+    echartsRef.current?.resize()
+  }, [w, h])
+
   return (
-    <section className="post-full-page:h-full!" style={{ height }}>
+    <section ref={containerRef} className="post-full-page:h-full!" style={{ height }}>
       <style>{`article { padding: 0 }`}</style>
       <ResizablePanelGroup
         direction="horizontal"
