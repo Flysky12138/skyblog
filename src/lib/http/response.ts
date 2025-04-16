@@ -11,13 +11,7 @@ export class CustomResponse {
    * status = 500
    */
   static async error(message: unknown, status = 500) {
-    const headers = new Headers()
-    headers.set('Content-Type', 'application/json')
-
-    return new Response(JSON.stringify({ message }), {
-      headers,
-      status
-    })
+    return Response.json({ message }, { status })
   }
 
   /**
@@ -29,16 +23,11 @@ export class CustomResponse {
    * status = 200
    */
   static async encrypt(content: object | null, status = 200) {
-    const headers = new Headers()
-
     if (process.env.NEXT_PUBLIC_ENCRYPT_API == 'false') {
-      headers.set('Content-Type', 'application/json')
-      return new Response(JSON.stringify(content), {
-        headers,
-        status
-      })
+      return Response.json(content, { status })
     }
 
+    const headers = new Headers()
     headers.set('Content-Type', 'application/octet-stream')
     const { buffer, ivJwk } = await AesGcm.encrypt(content)
     headers.set(HEADER.AES_GCM_IVJWK, ivJwk)

@@ -12,12 +12,16 @@ const S3 = new S3Client({
 })
 
 export class R2 {
-  /** 获取直链 */
+  /**
+   * 获取直链
+   */
   static get(key: string) {
     return `${process.env.NEXT_PUBLIC_R2_URL}/${key}`
   }
 
-  /** 获取目录结构 */
+  /**
+   * 获取目录结构
+   */
   static async list<T>(Prefix: T extends StartsWith<'/'> ? never : T extends EndsWith<'/'> | '' ? T : never) {
     const { CommonPrefixes, Contents } = await S3.send(
       new ListObjectsV2Command({
@@ -32,7 +36,9 @@ export class R2 {
     }
   }
 
-  /** 获取文件信息 */
+  /**
+   * 获取文件信息
+   */
   static async info(Key: string): Promise<R2.FileInfo> {
     const head = await S3.send(new HeadObjectCommand({ Bucket, Key }))
     return {
@@ -78,7 +84,9 @@ export class R2 {
     }
   }
 
-  /** 删除 */
+  /**
+   * 删除
+   */
   static async delete(Keys: string[]) {
     return await S3.send(
       new DeleteObjectsCommand({

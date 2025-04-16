@@ -122,7 +122,6 @@ export const Live2DToggleButton = () => {
 }
 
 const Live2DContent_ = () => {
-  const canvasRef = React.useRef<HTMLCanvasElement>(null)
   const [model, setModel] = React.useState<Live2DModel>()
   const { enable, loading, message, src, setEnable, setLoading } = useLive2DContext()
 
@@ -147,6 +146,7 @@ const Live2DContent_ = () => {
   }, [enable, src])
 
   // 创建容器，并装载模型
+  const canvasRef = React.useRef<HTMLCanvasElement>(null)
   React.useEffect(() => {
     if (!model || !canvasRef.current) return
     const app = new window.PIXI.Application({

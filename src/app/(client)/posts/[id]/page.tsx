@@ -17,6 +17,36 @@ import { ResizeButton } from './_components/resize-button'
 
 export const dynamicParams = false
 
+export const generateStaticParams = async (): Promise<Awaited<PageProps['params']>[]> => {
+  const posts = await prisma.post.findMany({ select: { id: true } })
+  return posts.map(post => ({ id: post.id }))
+}
+
+export const generateMetadata = async ({ params }: PageProps): Promise<Metadata> => {
+  const { id } = await params
+
+  const post = await getPost(id)
+  if (!post) return {}
+  return {
+    category: post.categories.map(({ name }) => name).join(','),
+    creator: post.author.name,
+    description: post.description,
+    keywords: post.tags.map(({ name }) => name),
+    title: post.title
+  }
+}
+
+const getPost = async (id: string) => {
+  return await prisma.post.findUnique({
+    include: {
+      author: true,
+      categories: true,
+      tags: true
+    },
+    where: { id }
+  })
+}
+
 interface PageProps extends DynamicRouteProps<{ id: string }> {}
 
 export default async function Page({ params }: PageProps) {
@@ -68,34 +98,4 @@ export default async function Page({ params }: PageProps) {
       )}
     </section>
   )
-}
-
-const getPost = async (id: string) => {
-  return await prisma.post.findUnique({
-    include: {
-      author: true,
-      categories: true,
-      tags: true
-    },
-    where: { id }
-  })
-}
-
-export const generateStaticParams = async (): Promise<Awaited<PageProps['params']>[]> => {
-  const posts = await prisma.post.findMany({ select: { id: true } })
-  return posts.map(post => ({ id: post.id }))
-}
-
-export const generateMetadata = async ({ params }: PageProps): Promise<Metadata> => {
-  const { id } = await params
-
-  const post = await getPost(id)
-  if (!post) return {}
-  return {
-    category: post.categories.map(({ name }) => name).join(','),
-    creator: post.author.name,
-    description: post.description,
-    keywords: post.tags.map(({ name }) => name),
-    title: post.title
-  }
 }
