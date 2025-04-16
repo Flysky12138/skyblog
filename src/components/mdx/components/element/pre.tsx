@@ -42,7 +42,7 @@ export const Pre = ({ children, className, tabIndex, ...props }: React.Component
         className={cn(
           'absolute top-1 right-1 size-8 p-2 text-[initial] md:top-1.5 md:right-1.5',
           'dark:bg-stone-800 hover:dark:bg-stone-900',
-          'opacity-0 transition-opacity group-hover/pre:opacity-100 focus-visible:opacity-100'
+          'media-hover:opacity-0 group-hover/pre:opacity-100 focus-visible:opacity-100'
         )}
         variant="outline"
         onClick={handleCopyClick}
