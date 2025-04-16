@@ -5,10 +5,10 @@ import { Container } from '@/components/layout/container'
 import { Header } from '@/components/layout/header'
 import { Logo } from '@/components/layout/logo'
 import { ScrollToTop } from '@/components/scroll-to-top'
-import { ToggleTheme } from '@/components/toggle/toggle-theme'
 import { Button } from '@/components/ui/button'
 import { ATTRIBUTE } from '@/lib/constants'
 import { Live2DContent, Live2DProvider, Live2DToggleButton } from '@/providers/live2d'
+import { ThemeToggleButton } from '@/providers/theme'
 import { LayoutDashboard } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -35,7 +35,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
           </DisplayByAuth>
           <div className="empty:hidden" id={ATTRIBUTE.ID.ISSUES_MOBILE}></div>
           <Live2DToggleButton />
-          <ToggleTheme />
+          <ThemeToggleButton />
         </Container>
       </Header>
       <main className="border-divide bg-root z-main relative mt-(--height-header) mb-(--height-footer) min-h-[calc(100dvh-var(--height-header))] border-b">
