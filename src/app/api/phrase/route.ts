@@ -7,7 +7,7 @@ export const runtime = 'nodejs'
 export type GET = RouteHandlerType<{
   return: {
     from: string
-    hitokoto: string
+    hitokoto?: string
   }
 }>
 

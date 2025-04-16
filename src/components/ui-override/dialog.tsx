@@ -3,7 +3,7 @@
 import { cn } from '@/lib/cn'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { XIcon } from 'lucide-react'
-import * as React from 'react'
+import React from 'react'
 import { DialogOverlay, DialogPortal } from '../ui/dialog'
 
 export const DialogContent = ({ className, children, ...props }: React.ComponentProps<typeof DialogPrimitive.Content>) => {

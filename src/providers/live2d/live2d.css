@@ -1,9 +1,3 @@
-#waifu {
-  transition:
-    opacity 1.5s,
-    transform 1s cubic-bezier(0.075, 0.82, 0.165, 1);
-}
-
 #waifu-message {
   animation: shake 50s ease-in-out infinite;
 }

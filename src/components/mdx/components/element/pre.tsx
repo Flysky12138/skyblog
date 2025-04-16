@@ -9,13 +9,13 @@ import React from 'react'
 import { useCopyToClipboard } from 'react-use'
 
 const variants: Variants = {
-  invisible: {
-    opacity: 0,
-    scale: 0.2
-  },
-  visible: {
+  active: {
     opacity: 1,
     scale: 1
+  },
+  inactive: {
+    opacity: 0,
+    scale: 0.2
   }
 }
 
@@ -51,12 +51,12 @@ export const Pre = ({ children, className, tabIndex, ...props }: React.Component
           <DisplayByConditional
             condition={copied}
             fallback={
-              <motion.div key={2} animate="visible" exit="invisible" initial="invisible" variants={variants}>
+              <motion.div key={2} animate="active" exit="inactive" initial="inactive" variants={variants}>
                 <Clipboard />
               </motion.div>
             }
           >
-            <motion.div key={1} animate="visible" exit="invisible" initial="invisible" variants={variants}>
+            <motion.div key={1} animate="active" exit="inactive" initial="inactive" variants={variants}>
               <Check />
             </motion.div>
           </DisplayByConditional>

@@ -1,4 +1,3 @@
-import { Live2D } from '@/components/canvas/live2d'
 import { DisplayByAuth } from '@/components/display/display-by-auth'
 import { DisplayByBreakPoint } from '@/components/display/display-by-breakpoint'
 import { About } from '@/components/layout/about'
@@ -6,11 +5,10 @@ import { Container } from '@/components/layout/container'
 import { Header } from '@/components/layout/header'
 import { Logo } from '@/components/layout/logo'
 import { ScrollToTop } from '@/components/scroll-to-top'
-import { ToggleLive2D } from '@/components/toggle/toggle-live2d'
 import { ToggleTheme } from '@/components/toggle/toggle-theme'
 import { Button } from '@/components/ui/button'
 import { ATTRIBUTE } from '@/lib/constants'
-import { Live2DBreakpoint, Live2DEnable, Live2DProvider } from '@/providers/live2d'
+import { Live2DContent, Live2DProvider, Live2DToggleButton } from '@/providers/live2d'
 import { LayoutDashboard } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -36,9 +34,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
             <hr className="bg-divide h-4 w-0.5 rounded-full" />
           </DisplayByAuth>
           <div className="empty:hidden" id={ATTRIBUTE.ID.ISSUES_MOBILE}></div>
-          <Live2DBreakpoint>
-            <ToggleLive2D />
-          </Live2DBreakpoint>
+          <Live2DToggleButton />
           <ToggleTheme />
         </Container>
       </Header>
@@ -63,11 +59,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
         </DisplayByBreakPoint> */}
       </footer>
       <aside>
-        <Live2DBreakpoint>
-          <Live2DEnable>
-            <Live2D />
-          </Live2DEnable>
-        </Live2DBreakpoint>
+        <Live2DContent />
       </aside>
     </Live2DProvider>
   )
