@@ -90,6 +90,9 @@ const nextConfig: NextConfig = {
   redirects,
   rewrites,
   webpack,
+  experimental: {
+    useCache: true
+  },
   pageExtensions: ['mdx', 'ts', 'tsx'],
   reactStrictMode: true,
   transpilePackages: ['next-mdx-remote'],

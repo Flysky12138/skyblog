@@ -1,3 +1,5 @@
+'use cache'
+
 import Github from '@/assets/svg/github.svg'
 import LeetCode from '@/assets/svg/leetcode.svg'
 import Spotify from '@/assets/svg/spotify.svg'
