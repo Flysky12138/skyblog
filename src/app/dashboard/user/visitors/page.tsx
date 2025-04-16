@@ -60,7 +60,7 @@ export default function Page() {
                       <DialogDescription>访客的全部信息</DialogDescription>
                     </DialogHeader>
                     <div className="[&_span]:break-all [&_span]:whitespace-pre-wrap">
-                      <MDXClient value={'```json expand\n' + JSON.stringify(record, null, 2) + '\n```'} />
+                      <MDXClient value={'```json\n' + JSON.stringify(record, null, 2) + '\n```'} />
                     </div>
                   </DialogContent>
                 </Dialog>

@@ -1,10 +1,8 @@
 'use client'
 
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
-import { DATA_EXPAND_LINE, DATA_IS_BLOCK } from '@/components/mdx/rehype/rehype-code'
+import { DATA_IS_BLOCK } from '@/components/mdx/rehype/rehype-code'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/cn'
-import { toMerged } from 'es-toolkit'
-import { ChevronDown } from 'lucide-react'
 import React from 'react'
 
 export const Code = (props: React.ComponentProps<'code'>) => {
@@ -12,58 +10,12 @@ export const Code = (props: React.ComponentProps<'code'>) => {
   return <Comp {...props} />
 }
 
-const CodeBlock = ({ children, className, style = {}, ...props }: React.ComponentProps<'code'>) => {
-  const codeRef = React.useRef<HTMLElement>(null)
-
-  const codeLine = (React.Children.count(children) + 1) / 2
-  const expandLine = Number.parseInt(Reflect.get(props, DATA_EXPAND_LINE))
-  const isOver = codeLine > (expandLine || Infinity)
-
-  const handleExpandToggle = (event: React.KeyboardEvent | React.MouseEvent) => {
-    if (event.type == 'keydown' && (event as React.KeyboardEvent).key != 'Enter') return
-    const target = codeRef.current
-    if (!target) return
-    const isExpanded = target.getAttribute('aria-expanded') == 'true'
-    target.setAttribute('aria-expanded', isExpanded ? 'false' : 'true')
-  }
-
+const CodeBlock = ({ className, ...props }: React.ComponentProps<'code'>) => {
   return (
-    <code
-      ref={codeRef}
-      aria-expanded={!isOver}
-      className={cn(
-        'group text-[1em] font-semibold aria-[expanded="false"]:h-(--max-h) aria-[expanded="false"]:overflow-hidden',
-        {
-          'aria-expanded:pb-8!': isOver
-        },
-        className
-      )}
-      style={toMerged(style, {
-        '--max-h': `${expandLine * 1.25}rem`
-      } as React.CSSProperties)}
-      {...props}
-    >
-      {children}
-      <DisplayByConditional condition={isOver}>
-        <div
-          className={cn(
-            'absolute bottom-0 flex h-8 w-full items-center justify-center text-[initial]',
-            'bg-linear-to-b from-transparent to-white to-50% dark:to-[#25252C]'
-          )}
-        >
-          <div
-            aria-label="Expanded toggle button"
-            className="flex h-full w-8 items-center justify-center overflow-hidden"
-            role="button"
-            tabIndex={0}
-            onClick={handleExpandToggle}
-            onKeyDown={handleExpandToggle}
-          >
-            <ChevronDown className="group-aria-expanded:rotate-180" size={20} />
-          </div>
-        </div>
-      </DisplayByConditional>
-    </code>
+    <ScrollArea className="*:data-[slot='scroll-area-viewport']:max-h-[600px] *:data-[slot='scroll-area-viewport']:overflow-scroll!">
+      <code className={cn('text-[1em] font-semibold', className)} {...props} />
+      <ScrollBar orientation="horizontal" />
+    </ScrollArea>
   )
 }
 
