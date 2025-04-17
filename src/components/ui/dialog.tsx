@@ -2,9 +2,9 @@
 
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
-import { DialogContent } from '../ui-override/dialog'
 
 import { cn } from "@/lib/utils"
+import { DialogContent } from '../ui-override/dialog'
 
 function Dialog({
   ...props
