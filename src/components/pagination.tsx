@@ -1,8 +1,7 @@
 'use client'
 
 import * as PaginationPrimitive from '@/components/ui/pagination'
-import { cn } from '@/lib/cn'
-import { PaginationArgs, PaginationResult } from 'prisma-paginate'
+import { PaginationResult } from 'prisma-paginate'
 
 export interface PaginationProps extends Partial<Pick<PaginationResult<unknown[]>, 'count' | 'limit' | 'page' | 'totalPages'>> {
   /**
@@ -11,7 +10,8 @@ export interface PaginationProps extends Partial<Pick<PaginationResult<unknown[]
    */
   boundaryCount?: number
   className?: string
-  onChange?: (payload: PaginationArgs) => void
+  getHref?: (payload: Pick<PaginationResult<unknown[]>, 'count' | 'limit' | 'page' | 'totalPages'>) => string
+  onChange?: (payload: Pick<PaginationResult<unknown[]>, 'count' | 'limit' | 'page' | 'totalPages'>) => void
   /**
    * 当前页面之前和之后始终可见的页面数
    * @default 2
@@ -19,7 +19,7 @@ export interface PaginationProps extends Partial<Pick<PaginationResult<unknown[]
   siblingCount?: number
 }
 
-export const Pagination = ({
+const Pagination = ({
   count = 1,
   limit = 1,
   page = 1,
@@ -27,6 +27,7 @@ export const Pagination = ({
   boundaryCount = 1,
   className,
   siblingCount = 2,
+  getHref,
   onChange
 }: PaginationProps) => {
   const range = (start: number, end: number) => Array.from({ length: end - start + 1 }, (_, i) => start + i)
@@ -55,27 +56,25 @@ export const Pagination = ({
         <span className="mr-4 pb-0.5 text-sm opacity-75">
           {(page - 1) * limit + 1}-{page * limit} of {count} items
         </span>
-        <PaginationPrimitive.PaginationItem
-          className={cn('cursor-pointer select-none', {
-            'cursor-not-allowed opacity-50': page <= 1
-          })}
-        >
+        <PaginationPrimitive.PaginationItem>
           <PaginationPrimitive.PaginationPrevious
+            disabled={page <= 1}
+            href={getHref?.({ count, limit, totalPages, page: page - 1 })}
             size="sm"
             onClick={() => {
-              if (page <= 1) return
-              onChange?.({ limit, page: page - 1 })
+              onChange?.({ count, limit, totalPages, page: page - 1 })
             }}
           />
         </PaginationPrimitive.PaginationItem>
         {itemList.map(it =>
           typeof it == 'number' ? (
-            <PaginationPrimitive.PaginationItem key={it} className="cursor-pointer select-none">
+            <PaginationPrimitive.PaginationItem key={it}>
               <PaginationPrimitive.PaginationLink
+                href={getHref?.({ count, limit, totalPages, page: it })}
                 isActive={it == page}
                 size="sm"
                 onClick={() => {
-                  onChange?.({ limit, page: it })
+                  onChange?.({ count, limit, totalPages, page: it })
                 }}
               >
                 {it}
@@ -87,16 +86,13 @@ export const Pagination = ({
             </PaginationPrimitive.PaginationItem>
           )
         )}
-        <PaginationPrimitive.PaginationItem
-          className={cn('cursor-pointer select-none', {
-            'cursor-not-allowed opacity-50': page >= totalPages
-          })}
-        >
+        <PaginationPrimitive.PaginationItem>
           <PaginationPrimitive.PaginationNext
+            disabled={page >= totalPages}
+            href={getHref?.({ count, limit, totalPages, page: page + 1 })}
             size="sm"
             onClick={() => {
-              if (page >= totalPages) return
-              onChange?.({ limit, page: page + 1 })
+              onChange?.({ count, limit, totalPages, page: page + 1 })
             }}
           />
         </PaginationPrimitive.PaginationItem>
@@ -104,3 +100,5 @@ export const Pagination = ({
     </PaginationPrimitive.Pagination>
   )
 }
+
+export { Pagination }
