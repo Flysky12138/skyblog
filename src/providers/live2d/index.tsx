@@ -193,7 +193,7 @@ const Live2DContent_ = () => {
               key={message}
               animate={{ opacity: 1, transition: { delay: 0.1 } }}
               className={cn(
-                'absolute -top-12 left-24 w-max max-w-xs rounded-xl px-3 py-1 backdrop-blur-xs',
+                'absolute -top-12 left-24 z-10 w-max max-w-xs rounded-xl px-3 py-1 backdrop-blur-xs',
                 'pointer-events-none text-sm break-all text-fuchsia-700 dark:text-white',
                 'dark:border-opacity-30 border border-orange-300',
                 'bg-orange-300/20 dark:bg-yellow-200/20',
@@ -207,7 +207,9 @@ const Live2DContent_ = () => {
             </motion.p>
           )}
         </AnimatePresence>
-        <canvas ref={canvasRef} className="dark:brightness-75"></canvas>
+        <div className="border border-dashed transition-[backdrop-filter] not-hover:border-transparent hover:backdrop-blur-sm">
+          <canvas ref={canvasRef} className="dark:brightness-75" />
+        </div>
       </motion.section>
     </DisplayByConditional>
   )
