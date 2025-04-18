@@ -16,7 +16,7 @@ export const CardDeveloper = async () => {
 
   return (
     <Card className="flex flex-col items-center p-6">
-      <Avatar className="bg-secondary size-28 transition-transform duration-500 hover:rotate-[360deg]">
+      <Avatar className="bg-secondary size-28 transition-transform duration-500 hover:rotate-[360deg] focus:rotate-[360deg]" tabIndex={-1}>
         <link as="image" fetchPriority="high" href={data.avatar_url.replace('https://', '/cdn/')} rel="preload" type="image/png" />
         <AvatarImage alt={data.login} src={data.avatar_url.replace('https://', '/cdn/')} />
         <AvatarFallback />

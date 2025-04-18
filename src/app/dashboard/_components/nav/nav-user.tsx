@@ -12,7 +12,7 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
 import { cn } from '@/lib/cn'
 import { ChevronsUpDown, LogOut } from 'lucide-react'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 
 export const NavUser = () => {
   const { isMobile, open } = useSidebar()
@@ -63,7 +63,12 @@ export const NavUser = () => {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive! cursor-pointer">
+            <DropdownMenuItem
+              className="text-destructive! cursor-pointer"
+              onClick={() => {
+                signOut()
+              }}
+            >
               <LogOut />
               登出
             </DropdownMenuItem>

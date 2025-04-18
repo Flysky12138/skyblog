@@ -12,7 +12,7 @@ import { Bot, BotOff, Loader2 } from 'lucide-react'
 import { Live2DModel } from 'pixi-live2d-display'
 import React from 'react'
 import { useAsync, useInterval, useLocalStorage } from 'react-use'
-import './live2d.css'
+import styles from './live2d.module.css'
 import { initGlobalScript, loadModelSync, PADDING } from './utils'
 
 interface MessageDetail {
@@ -149,7 +149,7 @@ const Live2DContent_ = () => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null)
   React.useEffect(() => {
     if (!model || !canvasRef.current) return
-    const app = new window.PIXI.Application({
+    const app = new window.PIXI!.Application({
       antialias: true,
       autoDensity: true,
       autoStart: true,
@@ -197,10 +197,10 @@ const Live2DContent_ = () => {
                 'pointer-events-none text-sm break-all text-fuchsia-700 dark:text-white',
                 'dark:border-opacity-30 border border-orange-300',
                 'bg-orange-300/20 dark:bg-yellow-200/20',
-                'shadow-[1px_3px_5px] shadow-orange-300/20'
+                'shadow-[1px_3px_5px] shadow-orange-300/20',
+                styles.message
               )}
               exit={{ opacity: 0 }}
-              id="waifu-message"
               initial={{ opacity: 0 }}
             >
               {message}

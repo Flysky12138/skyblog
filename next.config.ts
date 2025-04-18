@@ -71,8 +71,7 @@ const rewrites: NextConfig['rewrites'] = async () => [
 ]
 
 const webpack: NextConfig['webpack'] = config => {
-  // @ts-ignore
-  const svgLoaderRule = config.module.rules.find(rule => rule.test?.test?.('.svg'))
+  const svgLoaderRule = config.module.rules.find((rule: any) => rule.test?.test?.('.svg'))
   config.module.rules.push({
     oneOf: [
       { ...svgLoaderRule, resourceQuery: /url/, type: 'asset/resource' }, // .svg?url

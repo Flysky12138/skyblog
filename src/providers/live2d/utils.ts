@@ -19,11 +19,13 @@ export const initGlobalScript = async () => {
   await loadJSFile('/live2d/lib/pixi.min.js')
   await loadJSFile('/live2d/lib/index.min.js')
   // .zip 模型文件加载方法实现
-  window.PIXI.live2d.ZipLoader.zipReader = data => JSZip.loadAsync(data)
-  window.PIXI.live2d.ZipLoader.readText = (reader, path) => reader.file(path).async('text')
-  window.PIXI.live2d.ZipLoader.getFilePaths = reader => Promise.resolve(Object.keys(reader.files))
-  window.PIXI.live2d.ZipLoader.getFiles = (reader, paths) =>
-    Promise.all(paths.map(async path => new File([await reader.file(path).async('blob')], path.slice(path.lastIndexOf('/') + 1))))
+  if (window.PIXI?.live2d) {
+    window.PIXI.live2d.ZipLoader.zipReader = data => JSZip.loadAsync(data)
+    window.PIXI.live2d.ZipLoader.readText = (reader, path) => reader.file(path).async('text')
+    window.PIXI.live2d.ZipLoader.getFilePaths = reader => Promise.resolve(Object.keys(reader.files))
+    window.PIXI.live2d.ZipLoader.getFiles = (reader, paths) =>
+      Promise.all(paths.map(async path => new File([await reader.file(path).async('blob')], path.slice(path.lastIndexOf('/') + 1))))
+  }
 }
 
 /**
@@ -32,6 +34,7 @@ export const initGlobalScript = async () => {
  */
 export const loadModelSync = async (source: string | JSONObject | ModelSettings) => {
   try {
+    if (!window.PIXI?.live2d) throw new Error('Live2D is not loaded')
     const model = await window.PIXI.live2d.Live2DModel.from(source)
     // 设置模型样式
     model.x = PADDING.x

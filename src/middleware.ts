@@ -2,14 +2,11 @@ import { POST } from '@/app/api/visitor/route'
 import { auth } from '@/lib/auth'
 import { COOKIE } from '@/lib/constants'
 import { geolocation, ipAddress } from '@vercel/functions'
-import { MiddlewareConfig, NextMiddleware, NextRequest, NextResponse, userAgent } from 'next/server'
+import { MiddlewareConfig, NextMiddleware, NextResponse, userAgent } from 'next/server'
 
 export const config: MiddlewareConfig = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)']
 }
-
-/** 匹配路由 */
-const matchUrls = (request: NextRequest, urls: StartsWith<'/'>[]) => urls.some(url => request.nextUrl.pathname.startsWith(url))
 
 export const middleware: NextMiddleware = async (request, event) => {
   if (process.env.NODE_ENV == 'development') return
@@ -33,7 +30,7 @@ export const middleware: NextMiddleware = async (request, event) => {
   const session = await auth()
 
   // 权限管理
-  if (matchUrls(request, ['/dashboard', '/api/dashboard'])) {
+  if (['/dashboard', '/api/dashboard'].some(url => request.nextUrl.pathname.startsWith(url))) {
     if (session?.role != 'ADMIN') {
       const url = new URL('/auth/signin', request.url)
       url.searchParams.set('to', request.nextUrl.pathname)
@@ -50,12 +47,20 @@ export const middleware: NextMiddleware = async (request, event) => {
     !request.cookies.has(COOKIE.VISITED) &&
     !visitor.agent.ua.toLowerCase().includes('vercel')
   ) {
-    response.cookies.set(COOKIE.VISITED, Date.now().toString(), {
+    response.cookies.set(COOKIE.VISITED, 'true', {
       httpOnly: true,
       sameSite: 'strict',
       secure: true
     })
-    event.waitUntil(fetch(new URL('/api/visitor', request.url), { body: JSON.stringify(visitor), method: 'POST' }))
+    event.waitUntil(
+      fetch(new URL('/api/visitor', request.url), {
+        body: JSON.stringify(visitor),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST'
+      })
+    )
   }
 
   return response

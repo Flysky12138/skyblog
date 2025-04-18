@@ -54,7 +54,7 @@ const Pagination = ({
     <PaginationPrimitive.Pagination className={className}>
       <PaginationPrimitive.PaginationContent>
         <span className="mr-4 pb-0.5 text-sm opacity-75">
-          {(page - 1) * limit + 1}-{page * limit} of {count} items
+          {(page - 1) * limit + 1}-{page * limit} of {count} rows
         </span>
         <PaginationPrimitive.PaginationItem>
           <PaginationPrimitive.PaginationPrevious

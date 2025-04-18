@@ -1,6 +1,8 @@
 'use client'
 
 import { GET } from '@/app/api/dashboard/user/visitors/route'
+import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Pagination } from '@/components/pagination'
 import { Table, TableActionButton } from '@/components/table'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { CustomRequest } from '@/lib/http/request'
@@ -11,7 +13,10 @@ import { useSet } from 'react-use'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
 
-const MDXClient = dynamic(() => import('@/components/mdx/client').then(it => it.MDXClient), { ssr: false })
+const MDXClient = dynamic(() => import('@/components/mdx/client').then(it => it.MDXClient), {
+  loading: () => <div className="skeleton h-20 rounded-md" />,
+  ssr: false
+})
 
 export default function Page() {
   const [search, setSearch] = useImmer<GET['search']>({ limit: 20, page: 1 })
@@ -28,8 +33,7 @@ export default function Page() {
   const [checked, setChecked] = useSet<string>()
 
   return (
-    <>
-      <style>{`html { scroll-padding-top: 1rem }`}</style>
+    <section className="space-y-4">
       <Table
         columns={[
           { key: 'index' },
@@ -71,11 +75,10 @@ export default function Page() {
         ]}
         dataSource={data?.result}
         loading={isLoading}
-        pagination={{
-          ...data,
-          onChange: setSearch
-        }}
       />
+      <DisplayByConditional condition={(data?.totalPages || 0) > 1}>
+        <Pagination className="justify-end" onChange={setSearch} {...data} />
+      </DisplayByConditional>
       {/* <div className="flex pt-4">
         <DisplayByConditional condition={checked.size > 0}>
           <ModalDelete
@@ -94,6 +97,6 @@ export default function Page() {
           />
         </DisplayByConditional>
       </div> */}
-    </>
+    </section>
   )
 }

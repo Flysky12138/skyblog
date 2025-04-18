@@ -1,12 +1,11 @@
 'use client'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Alert, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { AlertCircle, Info, Loader2 } from 'lucide-react'
-import Link from 'next/link'
+import { AlertCircle, Loader2 } from 'lucide-react'
 import React from 'react'
 import { useToggle } from 'react-use'
 import { useImmer } from 'use-immer'
@@ -16,6 +15,7 @@ import ChudnovskyBs from './chudnovsky-bs.mdx'
 import ChudnovskyCode from './chudnovsky-code.mdx'
 import Chudnovsky from './chudnovsky.mdx'
 import { Print } from './print'
+import Quote from './quote.mdx'
 
 type ModeType = 'arctan' | 'chudnovsky' | 'chudnovsky-bs'
 
@@ -146,18 +146,7 @@ export default function Pi() {
         {form.mode == 'chudnovsky-bs' && <ChudnovskyBs />}
       </div>
       <DisplayByConditional condition={['chudnovsky', 'chudnovsky-bs'].includes(form.mode)}>
-        <Alert>
-          <Info />
-          <AlertTitle>引用文献</AlertTitle>
-          <AlertDescription>
-            <Link href="https://pi-calculator.netlify.app/" rel="noreferrer nofollow" target="_blank">
-              https://pi-calculator.netlify.app/
-            </Link>
-            <Link href="https://www.craig-wood.com/nick/articles/pi-chudnovsky/" rel="noreferrer nofollow" target="_blank">
-              https://www.craig-wood.com/nick/articles/pi-chudnovsky/
-            </Link>
-          </AlertDescription>
-        </Alert>
+        <Quote />
       </DisplayByConditional>
     </section>
   )

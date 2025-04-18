@@ -27,10 +27,12 @@ export class CustomResponse {
       return Response.json(content, { status })
     }
 
-    const headers = new Headers()
-    headers.set('Content-Type', 'application/octet-stream')
     const { buffer, ivJwk } = await AesGcm.encrypt(content)
-    headers.set(HEADER.AES_GCM_IVJWK, ivJwk)
+
+    const headers = new Headers({
+      'Content-Type': 'application/octet-stream',
+      [HEADER.AES_GCM_IVJWK]: ivJwk
+    })
 
     return new Response(buffer, {
       headers,

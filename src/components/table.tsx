@@ -1,6 +1,5 @@
 'use client'
 
-import { Pagination, PaginationProps } from '@/components/pagination'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -71,10 +70,6 @@ interface TableProps<T> {
    */
   onRow?: (record: T, index: number) => React.ComponentProps<'tr'>
   /**
-   * 分页器
-   */
-  pagination?: PaginationProps
-  /**
    * 表格行的类名
    */
   rowClassName?: ClassValue | ((record: T, index: number) => ClassValue)
@@ -97,61 +92,52 @@ export const Table = <T,>({
   rowKey = 'id',
   loading,
   rowClassName,
-  pagination,
   onRow
 }: TableProps<T>) => {
-  // 序号列默认配置描述
-  const index = columns.findIndex(column => column.key == 'index')
-  if (index != -1) {
-    columns[index] = Object.assign(
-      {
-        headerClassName: 'w-9',
-        render: (_, index: number) => index + 1,
-        title: '#'
-      } as ColumnType<T>,
-      columns[index]
-    )
-  }
-
-  const showPagination = pagination && !loading && (pagination.totalPages || 0) > 1
+  columns = columns.map(column => {
+    switch (column.key) {
+      case 'index':
+        // 序号列默认配置描述
+        return Object.assign({ headerClassName: 'w-9', render: (_, index: number) => index + 1, title: '#' } as ColumnType<T>, column)
+      default:
+        return column
+    }
+  })
 
   return (
-    <>
-      <TablePrimitive className={className}>
-        <TableHeader>
-          <TableRow>
-            {columns.map(column => (
-              <TableHead key={(column.dataIndex || column.key) as string} className={cn(column.headerClassName, alignClassName(column.align))}>
-                {typeof column.title == 'function' ? column.title() : column.title}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <DisplayByConditional
-            condition={!loading && !!dataSource.length}
-            fallback={<TableRowLoading colSpan={columns.length}>{loading ? 'Loading...' : '内容为空'}</TableRowLoading>}
-          >
-            {dataSource.map((record, index) => (
-              <TableRow
-                key={typeof rowKey == 'function' ? rowKey(record) : renderCellData(record[rowKey])}
-                className={typeof rowClassName == 'function' ? rowClassName(record, index) : rowClassName}
-                {...onRow?.(record, index)}
-              >
-                {columns.map(column => (
-                  <TableCell key={(column.dataIndex || column.key) as string} className={cn(column.className, alignClassName(column.align))}>
-                    {typeof column.render == 'function'
-                      ? Reflect.apply(column.render, null, column.dataIndex ? [record[column.dataIndex], record, index] : [record, index])
-                      : renderCellData(column.dataIndex && record[column.dataIndex])}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </DisplayByConditional>
-        </TableBody>
-      </TablePrimitive>
-      {showPagination && <Pagination className="mt-5 justify-end" {...pagination} />}
-    </>
+    <TablePrimitive className={className}>
+      <TableHeader>
+        <TableRow>
+          {columns.map(column => (
+            <TableHead key={(column.dataIndex || column.key) as string} className={cn(column.headerClassName, alignClassName(column.align))}>
+              {typeof column.title == 'function' ? column.title() : column.title}
+            </TableHead>
+          ))}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <DisplayByConditional
+          condition={!loading && !!dataSource.length}
+          fallback={<TableRowLoading colSpan={columns.length}>{loading ? 'Loading...' : '内容为空'}</TableRowLoading>}
+        >
+          {dataSource.map((record, index) => (
+            <TableRow
+              key={typeof rowKey == 'function' ? rowKey(record) : renderCellData(record[rowKey])}
+              className={typeof rowClassName == 'function' ? rowClassName(record, index) : rowClassName}
+              {...onRow?.(record, index)}
+            >
+              {columns.map(column => (
+                <TableCell key={(column.dataIndex || column.key) as string} className={cn(column.className, alignClassName(column.align))}>
+                  {typeof column.render == 'function'
+                    ? Reflect.apply(column.render, null, column.dataIndex ? [record[column.dataIndex], record, index] : [record, index])
+                    : renderCellData(column.dataIndex && record[column.dataIndex])}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </DisplayByConditional>
+      </TableBody>
+    </TablePrimitive>
   )
 }
 

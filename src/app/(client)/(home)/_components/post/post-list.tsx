@@ -90,7 +90,9 @@ export const PostList = ({ posts, ...props }: PostListProps) => {
           {post.description && <span className="text-subtitle-foreground line-clamp-3 text-sm">{post.description}</span>}
         </Card>
       ))}
-      {(props.totalPages || 0) > 1 && <PostListPagination {...props} />}
+      <DisplayByConditional condition={(props?.totalPages || 0) > 1}>
+        <PostListPagination {...props} />
+      </DisplayByConditional>
     </>
   )
 }
