@@ -21,7 +21,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
           <Link href="/">
             <Logo />
           </Link>
-          <span aria-hidden="true" className="grow"></span>
+          <span aria-hidden="true" className="grow" />
           <DisplayByBreakPoint up="sm">
             <ScrollToTop showOnScrollYOverflow={500} variant="outline" />
           </DisplayByBreakPoint>
@@ -33,7 +33,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
             </Button>
             <hr className="bg-divide h-4 w-0.5 rounded-full" />
           </DisplayByAuth>
-          <div className="empty:hidden" id={ATTRIBUTE.ID.ISSUES_MOBILE}></div>
+          <div className="empty:hidden" id={ATTRIBUTE.ID.ISSUES_MOBILE} />
           <Live2DToggleButton />
           <ThemeToggleButton />
         </Container>
@@ -46,7 +46,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
       </main>
       <nav className="z-nav fixed inset-x-0 bottom-[calc(var(--height-footer)+--spacing(12))]">
         <Container className="flex h-0 flex-col items-end justify-end gap-3" variant="nav">
-          <div id={ATTRIBUTE.ID.ISSUES_PC}></div>
+          <div id={ATTRIBUTE.ID.ISSUES_PC} />
           <DisplayByBreakPoint down="sm">
             <ScrollToTop />
           </DisplayByBreakPoint>

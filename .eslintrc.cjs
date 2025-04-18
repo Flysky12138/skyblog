@@ -43,6 +43,14 @@ const reactRules = {
       shorthandFirst: true,
       shorthandLast: false
     }
+  ],
+  // 不允许没有子组件的组件使用额外的结束标签
+  'react/self-closing-comp': [
+    'error',
+    {
+      component: true,
+      html: true
+    }
   ]
 }
 

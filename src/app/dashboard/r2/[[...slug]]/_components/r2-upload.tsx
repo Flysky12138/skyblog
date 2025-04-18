@@ -117,7 +117,7 @@ export const R2Upload = ({ children, path, onSubmit, onFinished }: R2UploadProps
                 <input hidden multiple type="file" onChange={onChange} />
               </label>
             </Button>
-            <span className="w-px" role="separator"></span>
+            <span className="w-px" role="separator" />
             <Button asChild className="rounded-l-none focus-visible:z-10">
               <label role="button" tabIndex={0}>
                 <FolderUp strokeWidth={3} />

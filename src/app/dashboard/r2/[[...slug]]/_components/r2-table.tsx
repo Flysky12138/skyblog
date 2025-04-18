@@ -84,7 +84,7 @@ export const R2Table = ({ paths, hiddenUploadButton, hiddenParentDirectoryRow, c
     <TablePrimitive className={className}>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-10"></TableHead>
+          <TableHead className="w-10" />
           <TableHead>名称</TableHead>
           <TableHead className="w-28">大小</TableHead>
           <TableHead className="w-44">修改时间</TableHead>
@@ -133,7 +133,7 @@ export const R2Table = ({ paths, hiddenUploadButton, hiddenParentDirectoryRow, c
               <Folder size={18} />
             </TableCell>
             <TableCell>{it.split('/').at(-2)}</TableCell>
-            <TableCell colSpan={3}></TableCell>
+            <TableCell colSpan={3} />
           </TableRow>
         ))}
         {/* 文件 */}

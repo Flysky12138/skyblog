@@ -21,7 +21,7 @@ export default function Ribbon() {
 
   return (
     <section className="absolute inset-0 -z-10 [clip-path:inset(0)]">
-      <canvas ref={canvasRef} className="fixed inset-0"></canvas>
+      <canvas ref={canvasRef} className="fixed inset-0" />
     </section>
   )
 }

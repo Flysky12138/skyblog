@@ -35,7 +35,7 @@ export default async function Page() {
           <td>{session.user.email}</td>
         </tr>
         <tr>
-          <th scope="row"></th>
+          <th scope="row" />
           <td className="space-x-5 pt-6">
             <Button asChild size="icon" variant="outline">
               <Link replace href="/">

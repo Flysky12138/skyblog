@@ -36,7 +36,7 @@ export const PostInfo = ({ id, defaultValue }: PostInfoProps) => {
   }, 5 * 1000)
 
   if (!post) {
-    return <span className="skeleton block h-5.25 w-60 rounded-md"></span>
+    return <span className="skeleton block h-5.25 w-60 rounded-md" />
   }
 
   return (

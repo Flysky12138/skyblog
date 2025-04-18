@@ -21,7 +21,7 @@ export const ThemeToggleButton = () => {
   const { isDark, toggleTheme } = useTheme()
 
   const isClient = useIsClient()
-  if (!isClient) return <span className="skeleton size-8 rounded-md"></span>
+  if (!isClient) return <span className="skeleton size-8 rounded-md" />
 
   return (
     <Button

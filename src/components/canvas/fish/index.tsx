@@ -24,5 +24,5 @@ export const Fish = () => {
     }
   }, [isDark])
 
-  return <canvas ref={canvasRef} className="absolute inset-0 -z-10"></canvas>
+  return <canvas ref={canvasRef} className="absolute inset-0 -z-10" />
 }

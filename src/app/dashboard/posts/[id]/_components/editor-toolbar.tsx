@@ -37,7 +37,7 @@ const EditorToolbar = ({ post, isCreate, disabled, setPost, onCompare, onFormat,
           </Transcoder>
           <TooltipContent>转码</TooltipContent>
         </Tooltip>
-        <span aria-hidden="true" className="grow"></span>
+        <span aria-hidden="true" className="grow" />
         <Separator />
         <Tooltip>
           <TooltipTrigger asChild>
