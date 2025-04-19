@@ -1,4 +1,4 @@
-import { dependencies, devDependencies } from '@/../package.json'
+import packageJson from '@/../package.json'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/layout/card'
 import { Button } from '@/components/ui/button'
@@ -9,7 +9,7 @@ import Link from 'next/link'
 export const CardButtons = async () => {
   const friendCount = await prisma.friend.count()
 
-  const pkgCount = Object.keys(dependencies).length + Object.keys(devDependencies).length
+  const pkgCount = Object.keys(packageJson.dependencies).length + Object.keys(packageJson.devDependencies).length
 
   return (
     <Card className="flex flex-col gap-3 p-6">

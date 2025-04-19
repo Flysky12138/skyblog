@@ -46,11 +46,11 @@ NEXT_PUBLIC_S3_ACCESS_KEY=05e34ea2c231c6baa4d84591bb65df7eb7c2a7989c2d3d6e863813
 # 登录
 ## https://github.com/settings/developers
 ## Authorization callback URL example: https://blog.flysky.xyz/api/auth/callback/github
-GITHUB_ID=p2j1w7l0i4e9t5k8u3y6c
-GITHUB_SECRET=5c8e2b4f7a3d9b1e6c0g2a5h9j1k4l6m7n0o
+AUTH_GITHUB_ID=p2j1w7l0i4e9t5k8u3y6c
+AUTH_GITHUB_SECRET=5c8e2b4f7a3d9b1e6c0g2a5h9j1k4l6m7n0o
 ## 库用来加密令牌和电子邮件验证哈希的随机字符串
 ## 访问 https://generate-secret.vercel.app/32 可获取一个随机值
-NEXTAUTH_SECRET=8j1a9s2d0f5g4h7j6k8l3m4n5b0v
+AUTH_SECRET=8j1a9s2d0f5g4h7j6k8l3m4n5b0v
 ```
 
 ### 规范

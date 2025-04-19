@@ -10,46 +10,26 @@ export default async function Page() {
 
   if (session?.user) {
     return (
-      <table>
-        <tr>
-          <th className="text-subtitle-foreground px-6 py-3" scope="row">
-            avatar
-          </th>
-          <td>
-            <Avatar className="bg-secondary size-28">
-              <AvatarImage loading="lazy" src={session.user.image?.replace('https://', '/cdn/')} />
-              <AvatarFallback />
-            </Avatar>
-          </td>
-        </tr>
-        <tr>
-          <th className="text-subtitle-foreground px-6 py-3" scope="row">
-            name
-          </th>
-          <td>{session.user.name}</td>
-        </tr>
-        <tr>
-          <th className="text-subtitle-foreground px-6 py-3" scope="row">
-            email
-          </th>
-          <td>{session.user.email}</td>
-        </tr>
-        <tr>
-          <th scope="row" />
-          <td className="space-x-5 pt-6">
-            <Button asChild size="icon" variant="outline">
-              <Link replace href="/">
-                <House />
-              </Link>
-            </Button>
-            <Button asChild size="icon" variant="outline">
-              <Link replace href="/dashboard">
-                <LayoutDashboard />
-              </Link>
-            </Button>
-          </td>
-        </tr>
-      </table>
+      <section className="flex flex-col items-center justify-center gap-2">
+        <Avatar className="bg-secondary size-28">
+          <AvatarImage loading="lazy" src={session.user.image?.replace('https://', '/cdn/')} />
+          <AvatarFallback />
+        </Avatar>
+        <p>{session.user.name}</p>
+        <p>{session.user.email}</p>
+        <div className="mt-4 space-x-4">
+          <Button asChild size="icon" variant="outline">
+            <Link replace href="/">
+              <House />
+            </Link>
+          </Button>
+          <Button asChild size="icon" variant="outline">
+            <Link replace href="/dashboard">
+              <LayoutDashboard />
+            </Link>
+          </Button>
+        </div>
+      </section>
     )
   }
 

@@ -3,11 +3,6 @@ export const HEADER = {
   AES_GCM_IVJWK: 'X-Aes'
 } as const
 
-/** cookie */
-export const COOKIE = {
-  VISITED: 'visited'
-} as const
-
 /** edge 对象 key */
 export const VERCEL_EDGE_CONFIG = {
   LIVE2D_SRC: 'live2d-src'

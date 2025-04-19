@@ -11,14 +11,13 @@ interface OAuthSignInButtonProps extends React.ComponentProps<typeof Button> {
 }
 
 export const OAuthSignInButton = ({ provider, className, ...props }: OAuthSignInButtonProps) => {
-  const [{ loading }, handleSignIn] = useAsyncFn(async (provider: BuiltInProviderType) => {
-    await signIn(provider)
-  })
+  const [{ loading }, handleSignIn] = useAsyncFn(signIn)
 
   return (
     <Button
-      className={cn('grid grid-cols-[auto_1fr] gap-5 font-bold', className)}
+      className={cn('grid grid-cols-[auto_1fr] gap-4 font-bold', className)}
       disabled={loading}
+      size="lg"
       variant="outline"
       onClick={() => {
         handleSignIn(provider)

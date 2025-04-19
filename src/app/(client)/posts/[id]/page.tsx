@@ -24,7 +24,6 @@ export const generateStaticParams = async (): Promise<Awaited<PageProps['params'
 
 export const generateMetadata = async ({ params }: PageProps): Promise<Metadata> => {
   const { id } = await params
-
   const post = await getPost(id)
   if (!post) return {}
   return {

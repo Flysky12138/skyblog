@@ -1,3 +1,4 @@
+import { Report } from '@/components/report'
 import { Toaster } from '@/components/ui/sonner'
 import '@/globals.css'
 import { ImageViewerProvider } from '@/providers/image-viewer'
@@ -40,6 +41,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
             <SWRProvider>
               <ImageViewerProvider>{children}</ImageViewerProvider>
               <Toaster />
+              <Report />
             </SWRProvider>
           </SessionProvider>
         </ThemeProvider>

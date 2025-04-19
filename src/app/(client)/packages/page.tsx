@@ -1,28 +1,12 @@
-import { dependencies, devDependencies } from '@/../package.json'
+import packageJson from '@/../package.json'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { TableBody, TableCaption, TableCell, TableHead, TableHeader, TablePrimitive, TableRow } from '@/components/table'
 import React from 'react'
 
 export default async function Page() {
   const data = [
-    {
-      dataSource: await Promise.all(
-        Object.entries(dependencies).map(async ([name, version]) => {
-          const pkg = await import(`node_modules/${name}/package.json`)
-          return { name, pkg, version }
-        })
-      ),
-      name: 'dependencies'
-    },
-    {
-      dataSource: await Promise.all(
-        Object.entries(devDependencies).map(async ([name, version]) => {
-          const pkg = await import(`node_modules/${name}/package.json`)
-          return { name, pkg, version }
-        })
-      ),
-      name: 'devDependencies'
-    }
+    { dataSource: await getPackagesInfo(packageJson.dependencies), name: 'dependencies' },
+    { dataSource: await getPackagesInfo(packageJson.devDependencies), name: 'devDependencies' }
   ]
 
   return (
@@ -59,5 +43,14 @@ export default async function Page() {
         </React.Fragment>
       ))}
     </section>
+  )
+}
+
+const getPackagesInfo = async (json: Record<string, string>) => {
+  return Promise.all(
+    Object.entries(json).map(async ([name, version]) => {
+      const pkg = await import(`node_modules/${name}/package.json`)
+      return { name, pkg, version }
+    })
   )
 }

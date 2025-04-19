@@ -1,31 +1,31 @@
 declare namespace NodeJS {
   interface ProcessEnv {
     /**
-     * vercel edge storage id
-     * @example
-     * "ecfg_7bhjqwklveuyz9ix4n2tr3mfa5gd8sp"
-     */
-    EDGE_ID: string
-    /**
-     * github OAuth App's id for `next-auth`
+     * github OAuth app's id for `next-auth`
      * @see https://github.com/settings/developers
      * @example
      * "p2j1w7l0i4e9t5k8u3y6c"
      */
-    GITHUB_ID: string
+    AUTH_GITHUB_ID: string
     /**
-     * github OAuth App's secret for `next-auth`
+     * github OAuth app's secret for `next-auth`
      * @see https://github.com/settings/developers
      * @example
      * "5c8e2b4f7a3d9b1e6c0g2a5h9j1k4l6m7n0o"
      */
-    GITHUB_SECRET: string
+    AUTH_GITHUB_SECRET: string
     /**
      * `next-auth` 用来加密令牌和电子邮件验证哈希的随机字符串
      * @example
      * "8j1a9s2d0f5g4h7j6k8l3m4n5b0v"
      */
-    NEXTAUTH_SECRET: string
+    AUTH_SECRET: string
+    /**
+     * vercel edge storage id
+     * @example
+     * "ecfg_7bhjqwklveuyz9ix4n2tr3mfa5gd8sp"
+     */
+    EDGE_ID: string
     /** 博客描述 */
     NEXT_PUBLIC_DESCRIPTION: string
     /** 加密响应内容 */

@@ -2,11 +2,10 @@ import NextAuth from 'next-auth'
 import GitHub from 'next-auth/providers/github'
 import { CustomRequest } from './http/request'
 
-// https://next-auth.js.org/configuration/callbacks
-export const {
-  handlers: { GET, POST },
-  auth
-} = NextAuth({
+/**
+ * @see https://authjs.dev/getting-started/migrating-to-v5#configuration-file
+ */
+export const { handlers, auth } = NextAuth({
   callbacks: {
     jwt: async ({ token, account }) => {
       if (account) {
@@ -23,7 +22,7 @@ export const {
     },
     signIn: async ({ profile = {}, account }) => {
       const { email, login, avatar_url } = profile
-      if (!email || !login || !account) return false
+      if (!email || !account) return false
 
       const { id, role } = await CustomRequest('POST api/auth/user', {
         body: {
@@ -44,11 +43,11 @@ export const {
   },
   providers: [
     GitHub({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET
+      clientId: process.env.AUTH_GITHUB_ID,
+      clientSecret: process.env.AUTH_GITHUB_SECRET
     })
   ],
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET,
   session: {
     strategy: 'jwt'
   }

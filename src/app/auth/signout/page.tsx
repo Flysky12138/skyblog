@@ -10,11 +10,7 @@ export default function Page() {
   const router = useRouter()
   const session = useSession()
 
-  const [{ loading }, handleSignOut] = useAsyncFn(async () => {
-    await signOut({
-      callbackUrl: '/auth/signin'
-    })
-  })
+  const [{ loading }, handleSignOut] = useAsyncFn(signOut)
 
   if (session.status == 'unauthenticated') {
     toast.error('未登陆')
@@ -22,7 +18,15 @@ export default function Page() {
   }
 
   return (
-    <Button className="min-w-3xs" disabled={session.status == 'loading' || loading} variant="destructive" onClick={handleSignOut}>
+    <Button
+      className="min-w-3xs"
+      disabled={session.status == 'loading' || loading}
+      size="lg"
+      variant="destructive"
+      onClick={() => {
+        handleSignOut()
+      }}
+    >
       {loading ? '正在退出登陆...' : '退出登陆'}
     </Button>
   )
