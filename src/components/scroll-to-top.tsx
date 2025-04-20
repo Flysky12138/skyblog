@@ -44,7 +44,7 @@ export const ScrollToTop = ({ className, showOnScrollYOverflow = 200, ...props }
       <AnimatePresence initial={false}>
         {showProgress ? (
           <motion.div key={1} animate={{ opacity: 1 }} className="absolute" exit={{ opacity: 0 }} initial={{ opacity: 0 }}>
-            {(progress * 100) >> 0}
+            {Math.round(progress * 100)}
           </motion.div>
         ) : (
           <motion.div key={2} animate={{ opacity: 1, y: 0 }} className="absolute" exit={{ opacity: 0 }} initial={{ opacity: 0, y: 15 }}>
