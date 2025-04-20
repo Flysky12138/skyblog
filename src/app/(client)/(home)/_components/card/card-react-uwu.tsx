@@ -9,7 +9,7 @@ const Lottie = dynamic(() => import('@lottielab/lottie-player/react'), { ssr: fa
 
 export const CardReactUwU = () => {
   return (
-    <Card asChild>
+    <Card asChild className="aspect-[254/152.4] has-[>template]:hidden">
       <TransitionCollapse>
         <Lottie lottie={react} />
       </TransitionCollapse>

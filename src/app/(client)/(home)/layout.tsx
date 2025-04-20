@@ -1,11 +1,9 @@
 import { Card } from '@/components/layout/card'
-import dynamic from 'next/dynamic'
 import React from 'react'
 import { CardButtons } from './_components/card/card-buttons'
 import { CardDeveloper } from './_components/card/card-developer'
 import { CardGuestInfo } from './_components/card/card-guest-info'
-
-const CardReactUwU = dynamic(() => import('./_components/card/card-react-uwu').then(it => it.CardReactUwU))
+import { CardReactUwU } from './_components/card/card-react-uwu'
 
 export default function Layout({ children }: React.PropsWithChildren) {
   return (
