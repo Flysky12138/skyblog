@@ -1,4 +1,3 @@
-import { Pool } from '@neondatabase/serverless'
 import { PrismaNeon } from '@prisma/adapter-neon'
 import { PrismaClient } from '@prisma/client'
 import paginate from 'prisma-paginate'
@@ -11,9 +10,7 @@ const prismaClientSingleton = () => {
     prisma = new PrismaClient()
   } else {
     // https://www.prisma.io/docs/orm/prisma-client/deployment/edge/deploy-to-vercel#vercel-postgres
-    const pool = new Pool({ connectionString: process.env.POSTGRES_PRISMA_URL })
-    const adapter = new PrismaNeon(pool)
-    // @ts-ignore
+    const adapter = new PrismaNeon({ connectionString: process.env.POSTGRES_PRISMA_URL })
     prisma = new PrismaClient({ adapter })
   }
   return prisma.$extends(paginate)
