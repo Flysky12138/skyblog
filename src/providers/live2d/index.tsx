@@ -2,6 +2,7 @@
 
 import { DisplayByBreakPoint } from '@/components/display/display-by-breakpoint'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { TransitionCollapse } from '@/components/transition/transition-collapse'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/cn'
 import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
@@ -112,11 +113,13 @@ export const Live2DToggleButton = () => {
 
   return (
     <Live2DBreakpoint>
-      <Button disabled={loading} size="icon" variant="outline" onClick={() => setEnable(!enable)}>
-        <DisplayByConditional condition={loading} fallback={enable ? <Bot /> : <BotOff />}>
-          <Loader2 className="animate-spin" />
-        </DisplayByConditional>
-      </Button>
+      <TransitionCollapse orientation="horizontal">
+        <Button disabled={loading} size="icon" variant="outline" onClick={() => setEnable(!enable)}>
+          <DisplayByConditional condition={loading} fallback={enable ? <Bot /> : <BotOff />}>
+            <Loader2 className="animate-spin" />
+          </DisplayByConditional>
+        </Button>
+      </TransitionCollapse>
     </Live2DBreakpoint>
   )
 }

@@ -5,6 +5,7 @@ import { Container } from '@/components/layout/container'
 import { Header } from '@/components/layout/header'
 import { Logo } from '@/components/layout/logo'
 import { ScrollToTop } from '@/components/scroll-to-top'
+import { TransitionCollapse } from '@/components/transition/transition-collapse'
 import { Button } from '@/components/ui/button'
 import { ATTRIBUTE } from '@/lib/constants'
 import { Live2DContent, Live2DProvider, Live2DToggleButton } from '@/providers/live2d'
@@ -26,11 +27,13 @@ export default function Layout({ children }: React.PropsWithChildren) {
             <ScrollToTop showOnScrollYOverflow={500} variant="outline" />
           </DisplayByBreakPoint>
           <DisplayByAuth role="ADMIN">
-            <Button asChild size="icon" variant="outline">
-              <Link href="/dashboard">
-                <LayoutDashboard />
-              </Link>
-            </Button>
+            <TransitionCollapse orientation="horizontal">
+              <Button asChild size="icon" variant="outline">
+                <Link href="/dashboard">
+                  <LayoutDashboard />
+                </Link>
+              </Button>
+            </TransitionCollapse>
             <hr className="bg-divide h-4 w-0.5 rounded-full" />
           </DisplayByAuth>
           <div className="empty:hidden" id={ATTRIBUTE.ID.ISSUES_MOBILE} />
