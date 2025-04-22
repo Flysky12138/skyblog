@@ -1,5 +1,6 @@
 import createMDX from '@next/mdx'
 import { NextConfig } from 'next'
+import './env.zod'
 import { serializeOptions } from './src/components/mdx/options'
 
 /**
