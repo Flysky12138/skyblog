@@ -1,4 +1,4 @@
-import { cn } from '@/lib/cn'
+import { cn } from '@/lib/utils'
 import { Root, SlotProps } from '@radix-ui/react-slot'
 
 interface CardProps extends SlotProps {

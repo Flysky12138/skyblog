@@ -1,7 +1,7 @@
 'use client'
 
 import { Pagination, PaginationProps } from '@/components/pagination'
-import { cn } from '@/lib/cn'
+import { cn } from '@/lib/utils'
 
 export interface PostListPaginationProps extends Omit<PaginationProps, 'getHref'> {
   /**

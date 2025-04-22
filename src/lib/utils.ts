@@ -1,4 +1,12 @@
-import { clsx, type ClassValue } from 'clsx'
+import clsx, { ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
-export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs))
+/**
+ * 合并 `class` 针对于 `tailwindcss`
+ */
+export const cn = (...classes: ClassValue[]) => twMerge(clsx(classes))
+
+/**
+ * 带提示，定义 `className` 字符串
+ */
+export const tw = (classes: TemplateStringsArray) => twMerge(clsx(classes))

@@ -1,8 +1,8 @@
 'use client'
 
 import * as TabsPrimitive from '@/components/ui/tabs'
-import { cn } from '@/lib/cn'
 import { deepTraversalReactElement } from '@/lib/react'
+import { cn } from '@/lib/utils'
 import React from 'react'
 
 interface TabsProps extends React.ComponentProps<(typeof TabsPrimitive)['Tabs']> {}

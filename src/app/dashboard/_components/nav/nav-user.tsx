@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
-import { cn } from '@/lib/cn'
+import { cn } from '@/lib/utils'
 import { ChevronsUpDown, LogOut } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
 

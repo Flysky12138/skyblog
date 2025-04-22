@@ -36,6 +36,7 @@ export const useWorker = <T, D>(scriptURL: string | URL, options?: WorkerOptions
     setIsRunning(false)
     setError(null)
     setResult(null)
+    workerRef.current?.terminate()
   }
 
   return { clear, error, isRunning, result, run }

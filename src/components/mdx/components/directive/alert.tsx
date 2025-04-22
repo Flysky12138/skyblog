@@ -1,5 +1,5 @@
 import * as AlertPrimitive from '@/components/ui/alert'
-import { cn } from '@/lib/cn'
+import { cn } from '@/lib/utils'
 import { Terminal } from 'lucide-react'
 
 export const Alert = ({ title, children, className, ...props }: React.ComponentProps<typeof AlertPrimitive.Alert>) => {

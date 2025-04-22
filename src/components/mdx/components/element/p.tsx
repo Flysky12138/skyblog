@@ -1,4 +1,4 @@
-import { cn } from '@/lib/cn'
+import { cn } from '@/lib/utils'
 import React from 'react'
 
 export const P = ({ className, ...props }: React.ComponentProps<'p'>) => {

@@ -1,7 +1,7 @@
 'use client'
 
-import { tw } from '@/lib/cn'
 import { download } from '@/lib/file/download'
+import { tw } from '@/lib/utils'
 import { Ban, CircleMinus, CirclePlus, Download, Maximize, Minimize, RotateCw } from 'lucide-react'
 import React from 'react'
 import { PhotoSlider } from 'react-photo-view'

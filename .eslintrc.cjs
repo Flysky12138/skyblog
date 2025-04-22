@@ -79,7 +79,7 @@ const typescriptSortKeysRules = {
 
 module.exports = {
   extends: ['next/core-web-vitals', 'plugin:prettier/recommended'],
-  ignorePatterns: ['public'],
+  ignorePatterns: ['public', '/api.d.ts', 'src/components/ui/'],
   parser: '@typescript-eslint/parser',
   plugins: ['eslint-plugin-sort-keys-plus', 'typescript-sort-keys'],
   rules: {

@@ -1,6 +1,6 @@
 'use server'
 
-import { cn } from '@/lib/cn'
+import { cn } from '@/lib/utils'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import Link from 'next/link'
 import rehypeSlug from 'rehype-slug'

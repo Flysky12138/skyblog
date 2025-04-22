@@ -1,4 +1,4 @@
-import { cn } from '@/lib/cn'
+import { cn } from '@/lib/utils'
 import { ExternalLink, Hash } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'

@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/cn'
+import { cn } from '@/lib/utils'
 import { ClassValue } from 'clsx'
 import { Trash } from 'lucide-react'
 import React from 'react'

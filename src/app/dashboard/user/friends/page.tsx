@@ -13,9 +13,9 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/cn'
 import { CustomRequest } from '@/lib/http/request'
 import { Toast } from '@/lib/toast'
+import { cn } from '@/lib/utils'
 import { produce } from 'immer'
 import { Eye, Pencil, Plus, Trash } from 'lucide-react'
 import Link from 'next/link'

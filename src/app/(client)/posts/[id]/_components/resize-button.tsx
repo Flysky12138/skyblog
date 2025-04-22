@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/cn'
+import { cn } from '@/lib/utils'
 import { Expand, Shrink } from 'lucide-react'
 import React from 'react'
 import { useToggle } from 'react-use'

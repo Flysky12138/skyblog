@@ -1,5 +1,5 @@
 import { Card } from '@/components/layout/card'
-import { cn } from '@/lib/cn'
+import { cn } from '@/lib/utils'
 
 export default function Loading() {
   return Array.from({ length: 4 }).map((_, index) => (

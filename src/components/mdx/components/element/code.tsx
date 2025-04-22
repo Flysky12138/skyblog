@@ -2,7 +2,7 @@
 
 import { DATA_IS_BLOCK } from '@/components/mdx/rehype/rehype-code'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { cn } from '@/lib/cn'
+import { cn } from '@/lib/utils'
 import React from 'react'
 
 export const Code = (props: React.ComponentProps<'code'>) => {

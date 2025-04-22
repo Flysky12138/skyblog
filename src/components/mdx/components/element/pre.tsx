@@ -2,7 +2,7 @@
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/cn'
+import { cn } from '@/lib/utils'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import { Check, Clipboard } from 'lucide-react'
 import React from 'react'

@@ -36,6 +36,3 @@ next-env.d.ts
 
 # types
 /api.d.ts
-
-# wrangler
-/.wrangler
