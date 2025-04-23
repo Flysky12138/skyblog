@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+
 import { Nav } from './_components/nav'
 
 export const metadata: Metadata = {

@@ -15,6 +15,7 @@ import { isEqual, pickBy } from 'es-toolkit'
 import React from 'react'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
+
 import { SWR_KEY_CLASH_TEMPLATES } from './clash-template-table'
 
 interface ClashDetailProps extends React.PropsWithChildren {
@@ -22,7 +23,7 @@ interface ClashDetailProps extends React.PropsWithChildren {
   value?: Pick<POST['body'], keyof PUT['body']>
 }
 
-export const ClashDetail = ({ children, value, onSubmit }: ClashDetailProps) => {
+export const ClashDetail = ({ children, onSubmit, value }: ClashDetailProps) => {
   const [open, setOpen] = React.useState(false)
 
   const [form, setForm] = useImmer<NonNullable<ClashDetailProps['value']>>({

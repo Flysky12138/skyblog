@@ -17,7 +17,7 @@ export const ScrollToTop = ({ className, showOnScrollYOverflow = 200, ...props }
   const [showProgress, setShowProgress] = React.useState(false)
   const [progress, setProgress] = React.useState(0)
 
-  const { scrollYProgress, scrollY } = useScroll()
+  const { scrollY, scrollYProgress } = useScroll()
   const timer = React.useRef<NodeJS.Timeout>(undefined)
   useMotionValueEvent(scrollYProgress, 'change', value => {
     clearTimeout(timer.current)

@@ -4,6 +4,7 @@ import babelPlugins from 'prettier/plugins/babel'
 import estreePlugins from 'prettier/plugins/estree'
 import typescriptPlugins from 'prettier/plugins/typescript'
 import { format } from 'prettier/standalone'
+
 import { LanguageConfig } from '../index'
 
 export const tsEchartsConfig: LanguageConfig = {
@@ -36,7 +37,7 @@ export const tsEchartsConfig: LanguageConfig = {
             plugins: [estreePlugins, babelPlugins, typescriptPlugins]
           })
           const text = await format(model.getValue(), options)
-          return [{ text, range: model.getFullModelRange() }]
+          return [{ range: model.getFullModelRange(), text }]
         }
       })
     ]

@@ -29,7 +29,7 @@ declare namespace NodeJS {
     /** 博客描述 */
     NEXT_PUBLIC_DESCRIPTION: string
     /** 加密响应内容 */
-    NEXT_PUBLIC_ENCRYPT_API: 'true' | 'false'
+    NEXT_PUBLIC_ENCRYPT_API: 'false' | 'true'
     /** github username */
     NEXT_PUBLIC_GITHUB_NAME: string
     /**

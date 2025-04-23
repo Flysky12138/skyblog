@@ -3,6 +3,7 @@ import { CustomResponse } from '@/lib/http/response'
 import prisma from '@/lib/prisma'
 import { Category, Post, Prisma, Tag } from '@prisma/client'
 import { NextRequest } from 'next/server'
+
 import { include } from '../prisma.config'
 
 const dbGet = async (id: string) => {
@@ -32,7 +33,6 @@ export const GET = async (request: NextRequest, { params }: DynamicRouteProps<{ 
 
 const dbPost = async (data: POST['body']) => {
   return await prisma.post.create({
-    include,
     data: {
       author: {
         connect: {
@@ -56,12 +56,13 @@ const dbPost = async (data: POST['body']) => {
         }))
       },
       title: data.title
-    }
+    },
+    include
   })
 }
 
 export type POST = RouteHandlerType<{
-  body: Pick<Post, 'title' | 'description' | 'content' | 'authorId' | 'sticky' | 'display'> & {
+  body: Pick<Post, 'authorId' | 'content' | 'description' | 'display' | 'sticky' | 'title'> & {
     categories: Category['name'][]
     tags: Tag['name'][]
   }
@@ -94,7 +95,6 @@ const dbPut = async (id: string, data: PUT['body']) => {
     where: { id }
   })
   return await prisma.post.update({
-    include,
     data: {
       categories: {
         connectOrCreate: data.categories.map(name => ({
@@ -115,6 +115,7 @@ const dbPut = async (id: string, data: PUT['body']) => {
       title: data.title,
       updatedAt: new Date().toISOString()
     },
+    include,
     where: { id }
   })
 }

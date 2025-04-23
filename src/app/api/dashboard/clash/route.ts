@@ -37,7 +37,7 @@ const dbPost = async (data: POST['body']) => {
 
 export type POST = RouteHandlerType<{
   body: Omit<Prisma.ClashUncheckedCreateInput, 'variables'> & {
-    variables: Record<string, string | null | undefined>
+    variables: Record<string, null | string | undefined>
   }
   return: Prisma.PromiseReturnType<typeof dbPost>
 }>
@@ -55,17 +55,17 @@ export const POST = async (request: NextRequest) => {
 
 const dbPut = async (id: string, data: PUT['body']) => {
   return await prisma.clash.update({
-    include,
     data: {
       ...data,
       updatedAt: new Date().toISOString()
     },
+    include,
     where: { id }
   })
 }
 
 export type PUT = RouteHandlerType<{
-  body: Pick<Prisma.ClashUncheckedCreateInput, 'name' | 'subtitle' | 'content' | 'clashTemplateId'> & {
+  body: Pick<Prisma.ClashUncheckedCreateInput, 'clashTemplateId' | 'content' | 'name' | 'subtitle'> & {
     variables: object
   }
   return: Prisma.PromiseReturnType<typeof dbPut>

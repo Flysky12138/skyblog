@@ -1,7 +1,7 @@
-import { SerializeOptions } from 'node_modules/next-mdx-remote/dist/types'
 // import rehypeKatex, { Options as RehypeKatexOptions } from 'rehype-katex'
 import { transformerColorizedBrackets } from '@shikijs/colorized-brackets'
 import { transformerNotationDiff, transformerNotationHighlight } from '@shikijs/transformers'
+import { SerializeOptions } from 'node_modules/next-mdx-remote/dist/types'
 import rehypeMathjax, { Options as RehypeMathjaxOptions } from 'rehype-mathjax'
 import rehypePrettyCode, { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code'
 import rehypeSlug from 'rehype-slug'
@@ -10,6 +10,7 @@ import remarkDirectiveRehype from 'remark-directive-rehype'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import { PluggableList } from 'unified'
+
 import { rehypeCode } from './rehype/rehype-code'
 
 /**

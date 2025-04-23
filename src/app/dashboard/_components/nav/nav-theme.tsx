@@ -7,7 +7,7 @@ import { useTheme } from '@/hooks/use-theme'
 import { MoonStar, Sun } from 'lucide-react'
 
 export const NavTheme = () => {
-  const { toggleTheme, isDark } = useTheme()
+  const { isDark, toggleTheme } = useTheme()
 
   const isClient = useIsClient()
   if (!isClient) return <div className="skeleton h-8 rounded-md" />

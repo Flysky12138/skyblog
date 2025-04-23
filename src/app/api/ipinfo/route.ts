@@ -6,7 +6,7 @@ import { NextRequest } from 'next/server'
 export const runtime = 'nodejs'
 
 export type GET = RouteHandlerType<{
-  return: Record<string, string | number | boolean>
+  return: Record<string, boolean | number | string>
 }>
 
 export const GET = async (request: NextRequest) => {

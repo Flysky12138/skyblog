@@ -13,23 +13,9 @@ import { Bot, BotOff, Loader2 } from 'lucide-react'
 import { Live2DModel } from 'pixi-live2d-display'
 import React from 'react'
 import { useAsync, useInterval, useLocalStorage } from 'react-use'
+
 import styles from './live2d.module.css'
 import { initGlobalScript, loadModelSync, PADDING } from './utils'
-
-interface MessageDetail {
-  /** 文本内容 */
-  content: string | null
-  /**
-   * 权重，大的覆盖小的
-   * @default 0
-   */
-  priority?: number
-  /**
-   * 显示时间 ms
-   * @default 6000
-   */
-  timeout?: number
-}
 
 interface Live2DContextProps {
   /** 开关 */
@@ -44,6 +30,21 @@ interface Live2DContextProps {
   setSrc: React.Dispatch<Live2DContextProps['src']>
   /** 地址 */
   src?: string
+}
+
+interface MessageDetail {
+  /** 文本内容 */
+  content: null | string
+  /**
+   * 权重，大的覆盖小的
+   * @default 0
+   */
+  priority?: number
+  /**
+   * 显示时间 ms
+   * @default 6000
+   */
+  timeout?: number
 }
 
 const Live2DContext = React.createContext<Live2DContextProps>(null!)
@@ -89,12 +90,12 @@ export const Live2DProvider = ({ children }: React.PropsWithChildren) => {
       value={{
         enable,
         loading,
+        message: messageDetail.content,
         setEnable,
         setLoading,
         setMessage,
         setSrc,
-        src,
-        message: messageDetail.content
+        src
       }}
     >
       {children}
@@ -107,7 +108,7 @@ export const Live2DBreakpoint = (props: React.PropsWithChildren) => {
 }
 
 export const Live2DToggleButton = () => {
-  const { enable, setEnable, loading, src } = useLive2DContext()
+  const { enable, loading, setEnable, src } = useLive2DContext()
 
   if (!src) return null
 
@@ -126,7 +127,7 @@ export const Live2DToggleButton = () => {
 
 const Live2DContent_ = () => {
   const [model, setModel] = React.useState<Live2DModel>()
-  const { enable, loading, message, src, setEnable, setLoading } = useLive2DContext()
+  const { enable, loading, message, setEnable, setLoading, src } = useLive2DContext()
 
   // 模型加载
   useAsync(async () => {

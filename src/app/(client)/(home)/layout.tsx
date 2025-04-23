@@ -1,5 +1,6 @@
 import { Card } from '@/components/layout/card'
 import React from 'react'
+
 import { CardButtons } from './_components/card/card-buttons'
 import { CardDeveloper } from './_components/card/card-developer'
 import { CardGuestInfo } from './_components/card/card-guest-info'

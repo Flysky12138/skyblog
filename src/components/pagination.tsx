@@ -20,15 +20,15 @@ export interface PaginationProps extends Partial<Pick<PaginationResult<unknown[]
 }
 
 const Pagination = ({
-  count = 1,
-  limit = 1,
-  page = 1,
-  totalPages = 1,
   boundaryCount = 1,
   className,
-  siblingCount = 2,
+  count = 1,
   getHref,
-  onChange
+  limit = 1,
+  onChange,
+  page = 1,
+  siblingCount = 2,
+  totalPages = 1
 }: PaginationProps) => {
   const range = (start: number, end: number) => Array.from({ length: end - start + 1 }, (_, i) => start + i)
 
@@ -59,10 +59,10 @@ const Pagination = ({
         <PaginationPrimitive.PaginationItem>
           <PaginationPrimitive.PaginationPrevious
             disabled={page <= 1}
-            href={getHref?.({ count, limit, totalPages, page: page - 1 })}
+            href={getHref?.({ count, limit, page: page - 1, totalPages })}
             size="sm"
             onClick={() => {
-              onChange?.({ count, limit, totalPages, page: page - 1 })
+              onChange?.({ count, limit, page: page - 1, totalPages })
             }}
           />
         </PaginationPrimitive.PaginationItem>
@@ -70,11 +70,11 @@ const Pagination = ({
           typeof it == 'number' ? (
             <PaginationPrimitive.PaginationItem key={it}>
               <PaginationPrimitive.PaginationLink
-                href={getHref?.({ count, limit, totalPages, page: it })}
+                href={getHref?.({ count, limit, page: it, totalPages })}
                 isActive={it == page}
                 size="sm"
                 onClick={() => {
-                  onChange?.({ count, limit, totalPages, page: it })
+                  onChange?.({ count, limit, page: it, totalPages })
                 }}
               >
                 {it}
@@ -89,10 +89,10 @@ const Pagination = ({
         <PaginationPrimitive.PaginationItem>
           <PaginationPrimitive.PaginationNext
             disabled={page >= totalPages}
-            href={getHref?.({ count, limit, totalPages, page: page + 1 })}
+            href={getHref?.({ count, limit, page: page + 1, totalPages })}
             size="sm"
             onClick={() => {
-              onChange?.({ count, limit, totalPages, page: page + 1 })
+              onChange?.({ count, limit, page: page + 1, totalPages })
             }}
           />
         </PaginationPrimitive.PaginationItem>

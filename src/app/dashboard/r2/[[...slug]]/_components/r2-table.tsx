@@ -37,6 +37,7 @@ import {
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import useSWR from 'swr'
+
 import { R2Upload } from './r2-upload'
 
 interface R2TableProps {
@@ -46,12 +47,12 @@ interface R2TableProps {
   paths?: string[]
 }
 
-export const R2Table = ({ paths, hiddenUploadButton, hiddenParentDirectoryRow, className }: R2TableProps) => {
+export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButton, paths }: R2TableProps) => {
   const router = useRouter()
 
   const path = decodeURIComponent(paths?.length ? `/${paths.join('/')}/` : '/') as FilePathType
 
-  const { isLoading, data, mutate } = useSWR(
+  const { data, isLoading, mutate } = useSWR(
     ['3e7d7b49-e149-57c5-9e16-4396344fc8e9', path],
     () => R2.list(path == '/' ? '' : (path.slice(1) as EndsWith<'/'>)),
     {
@@ -154,7 +155,7 @@ export const R2Table = ({ paths, hiddenUploadButton, hiddenParentDirectoryRow, c
                 >
                   <Eye />
                 </TableActionButton>
-                <TableActionButton onClick={() => {}}>
+                <TableActionButton>
                   <Link />
                 </TableActionButton>
                 <TableDeleteButton

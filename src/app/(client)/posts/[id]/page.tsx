@@ -11,6 +11,7 @@ import { PencilLine } from 'lucide-react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+
 import { PostInfo } from './_components/post-info'
 import { PostTocWrapper } from './_components/post-toc-wrapper'
 import { ResizeButton } from './_components/resize-button'

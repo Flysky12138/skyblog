@@ -4,6 +4,7 @@ import { configureMonacoYaml, JSONSchema } from 'monaco-yaml'
 import { Options } from 'prettier'
 import yamlPlugins from 'prettier/plugins/yaml'
 import { format } from 'prettier/standalone'
+
 import { LanguageConfig } from '../index'
 
 export const yamlClashConfig: LanguageConfig = {
@@ -17,7 +18,7 @@ export const yamlClashConfig: LanguageConfig = {
           plugins: [yamlPlugins]
         })
         const text = await format(model.getValue(), options)
-        return [{ text, range: model.getFullModelRange() }]
+        return [{ range: model.getFullModelRange(), text }]
       }
     }),
 

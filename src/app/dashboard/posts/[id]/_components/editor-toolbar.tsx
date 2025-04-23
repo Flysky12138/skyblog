@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { AppWindow, Binary, CloudUpload, Eye, EyeClosed, GitCompare, ReceiptText, Save, WandSparkles } from 'lucide-react'
 import { Updater } from 'use-immer'
+
 import { DefaultPostType } from '../page'
 import { PostDetail } from './post-detail'
 import { Transcoder } from './transcoder'
@@ -23,7 +24,7 @@ interface EditorToolbarProps {
   setPost: Updater<DefaultPostType>
 }
 
-const EditorToolbar = ({ post, isCreate, disabled, setPost, onCompare, onFormat, onPreview, onSave }: EditorToolbarProps) => {
+const EditorToolbar = ({ disabled, isCreate, onCompare, onFormat, onPreview, onSave, post, setPost }: EditorToolbarProps) => {
   return (
     <section className="border-divide bg-sidebar flex items-center gap-3 border-b px-3 py-2">
       <TooltipProvider>

@@ -2,9 +2,10 @@ import { cn } from '@/lib/utils'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { XIcon } from 'lucide-react'
 import React from 'react'
+
 import { DialogOverlay, DialogPortal } from '../ui/dialog'
 
-export const DialogContent = ({ className, children, ...props }: React.ComponentProps<typeof DialogPrimitive.Content>) => {
+export const DialogContent = ({ children, className, ...props }: React.ComponentProps<typeof DialogPrimitive.Content>) => {
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay className="flex justify-center overflow-y-auto p-6">

@@ -13,27 +13,24 @@ const S3 = new S3Client({
 
 export class R2 {
   /**
+   * 删除
+   */
+  static async delete(Keys: string[]) {
+    return await S3.send(
+      new DeleteObjectsCommand({
+        Bucket,
+        Delete: {
+          Objects: Keys.map(Key => ({ Key }))
+        }
+      })
+    )
+  }
+
+  /**
    * 获取直链
    */
   static get(key: string) {
     return `${process.env.NEXT_PUBLIC_R2_URL}/${key}`
-  }
-
-  /**
-   * 获取目录结构
-   */
-  static async list<T>(Prefix: T extends StartsWith<'/'> ? never : T extends EndsWith<'/'> | '' ? T : never) {
-    const { CommonPrefixes, Contents } = await S3.send(
-      new ListObjectsV2Command({
-        Bucket,
-        Prefix,
-        Delimiter: '/'
-      })
-    )
-    return {
-      files: Contents ? await Promise.all(Contents.filter(it => it.Key).map(async file => this.info(file.Key!))) : [],
-      folders: CommonPrefixes?.map(it => it.Prefix!) || []
-    }
   }
 
   /**
@@ -51,14 +48,31 @@ export class R2 {
   }
 
   /**
+   * 获取目录结构
+   */
+  static async list<T>(Prefix: T extends StartsWith<'/'> ? never : T extends '' | EndsWith<'/'> ? T : never) {
+    const { CommonPrefixes, Contents } = await S3.send(
+      new ListObjectsV2Command({
+        Bucket,
+        Delimiter: '/',
+        Prefix
+      })
+    )
+    return {
+      files: Contents ? await Promise.all(Contents.filter(it => it.Key).map(async file => this.info(file.Key!))) : [],
+      folders: CommonPrefixes?.map(it => it.Prefix!) || []
+    }
+  }
+
+  /**
    * 覆盖、新增
    * @default
    * metadata = {}
    */
   static async put({
-    Key,
     Body,
     ContentType,
+    Key,
     Metadata = {}
   }: {
     Body: NonNullable<PutObjectCommandInput['Body']>
@@ -82,19 +96,5 @@ export class R2 {
       metadata: Metadata,
       size: 0
     }
-  }
-
-  /**
-   * 删除
-   */
-  static async delete(Keys: string[]) {
-    return await S3.send(
-      new DeleteObjectsCommand({
-        Bucket,
-        Delete: {
-          Objects: Keys.map(Key => ({ Key }))
-        }
-      })
-    )
   }
 }

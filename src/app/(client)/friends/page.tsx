@@ -12,7 +12,6 @@ export default async function Page() {
       className="group relative aspect-video overflow-hidden ring-cyan-500 transition-shadow focus-within:ring-2 hover:ring-2"
     >
       <Link href={friend.url} rel="noreferrer nofollow" target="_blank">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           alt={friend.name}
           className="absolute inset-0 transition-transform group-hover:scale-110"

@@ -16,6 +16,7 @@ import { FileUp, FolderUp, Loader2, Trash, Upload } from 'lucide-react'
 import React from 'react'
 import { useAsyncFn, useBeforeUnload } from 'react-use'
 import { useImmer } from 'use-immer'
+
 import { R2Table } from './r2-table'
 
 interface R2UploadProps extends React.PropsWithChildren {
@@ -24,7 +25,7 @@ interface R2UploadProps extends React.PropsWithChildren {
   path: FilePathType & {}
 }
 
-export const R2Upload = ({ children, path, onSubmit, onFinished }: R2UploadProps) => {
+export const R2Upload = ({ children, onFinished, onSubmit, path }: R2UploadProps) => {
   const [basePath, setBasePath] = React.useState<R2UploadProps['path']>('/')
 
   /** 检测 basePath 是否合法 */
@@ -57,7 +58,7 @@ export const R2Upload = ({ children, path, onSubmit, onFinished }: R2UploadProps
           Object.assign(Metadata, convertObjectValues(imageSize, { height: String, width: String }))
         }
         const filename = getFileName(file)
-        const data = await Toast(R2.put({ Metadata, Body: file, ContentType: file.type, Key: `${basePath}${filename}`.slice(1) }), {
+        const data = await Toast(R2.put({ Body: file, ContentType: file.type, Key: `${basePath}${filename}`.slice(1), Metadata }), {
           description: filename,
           error: e => e.message,
           success: '上传成功'

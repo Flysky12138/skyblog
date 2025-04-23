@@ -10,7 +10,7 @@ interface OAuthSignInButtonProps extends React.ComponentProps<typeof Button> {
   provider: BuiltInProviderType
 }
 
-export const OAuthSignInButton = ({ provider, className, ...props }: OAuthSignInButtonProps) => {
+export const OAuthSignInButton = ({ className, provider, ...props }: OAuthSignInButtonProps) => {
   const [{ loading }, handleSignIn] = useAsyncFn(signIn)
 
   return (

@@ -25,7 +25,7 @@ interface Menu {
     href: StartsWith<'/'>
     icon: LucideIcon
     name: string
-    onlyShow?: 'open' | 'close'
+    onlyShow?: 'close' | 'open'
   }[]
   label: string
 }

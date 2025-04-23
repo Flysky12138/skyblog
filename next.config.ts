@@ -1,5 +1,6 @@
 import createMDX from '@next/mdx'
 import { NextConfig } from 'next'
+
 import './env.zod'
 import { serializeOptions } from './src/components/mdx/options'
 
@@ -85,20 +86,20 @@ const webpack: NextConfig['webpack'] = config => {
 }
 
 const nextConfig: NextConfig = {
-  headers,
-  images,
-  redirects,
-  rewrites,
-  webpack,
   experimental: {
     useCache: true
   },
+  headers,
+  images,
   pageExtensions: ['mdx', 'ts', 'tsx'],
   reactStrictMode: true,
+  redirects,
+  rewrites,
   transpilePackages: ['next-mdx-remote'],
   typescript: {
     ignoreBuildErrors: true
-  }
+  },
+  webpack
 }
 
 // https://nextjs.org/docs/app/building-your-application/configuring/mdx

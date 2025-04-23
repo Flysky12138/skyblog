@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { auth } from '@/lib/auth'
 import { Github, House, LayoutDashboard } from 'lucide-react'
 import Link from 'next/link'
+
 import { OAuthSignInButton } from './_components/oauth-signin-button'
 
 export default async function Page() {

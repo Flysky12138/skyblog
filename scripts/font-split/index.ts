@@ -15,8 +15,8 @@ for (const _path of fs.readdirSync(BASE_URL, { recursive: true }) as string[]) {
   fs.rmSync(outDir, { force: true, recursive: true })
 
   fontSplit({
-    outDir,
     input: path.join(BASE_URL, _path),
+    outDir,
     reporter: false,
     targetType: 'woff2'
   })

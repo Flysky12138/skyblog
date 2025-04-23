@@ -21,7 +21,7 @@ const generatePath = (path: string, params: object) => {
  */
 export const CustomRequest = async <T extends keyof ApiMethodMap>(input: T, options: CustomRequestOptions<T>) => {
   const [method, api] = input.split(' ') as [Method, keyof typeof ApiPaths]
-  const { body, search = {}, params = {} } = options || {}
+  const { body, params = {}, search = {} } = options || {}
 
   const url = new URL(generatePath(api, params), process.env.NEXT_PUBLIC_WEBSITE_URL)
   url.search = new URLSearchParams(search).toString()

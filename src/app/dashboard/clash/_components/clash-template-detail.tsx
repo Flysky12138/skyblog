@@ -16,7 +16,7 @@ interface ClashTemplateDetailProps extends React.PropsWithChildren {
   value?: Pick<POST['body'], keyof PUT['body']>
 }
 
-export const ClashTemplateDetail = ({ children, value, onSubmit }: ClashTemplateDetailProps) => {
+export const ClashTemplateDetail = ({ children, onSubmit, value }: ClashTemplateDetailProps) => {
   const [open, setOpen] = React.useState(false)
 
   const [form, setForm] = useImmer<NonNullable<ClashTemplateDetailProps['value']>>({

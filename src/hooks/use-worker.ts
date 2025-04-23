@@ -3,7 +3,7 @@ import React from 'react'
 export const useWorker = <T, D>(scriptURL: string | URL, options?: WorkerOptions) => {
   const [result, setResult] = React.useState<D | null>(null)
   const [isRunning, setIsRunning] = React.useState(false)
-  const [error, setError] = React.useState<string | null>(null)
+  const [error, setError] = React.useState<null | string>(null)
 
   const workerRef = React.useRef<Worker>(null)
 

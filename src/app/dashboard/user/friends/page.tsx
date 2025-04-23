@@ -20,6 +20,7 @@ import { produce } from 'immer'
 import { Eye, Pencil, Plus, Trash } from 'lucide-react'
 import Link from 'next/link'
 import useSWR from 'swr'
+
 import { FriendDetail } from './_components/friend-detail'
 
 export default function Page() {
@@ -35,7 +36,6 @@ export default function Page() {
     <section className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5">
       {friends?.map((friend, index) => (
         <Card key={friend.id} className="group relative aspect-video overflow-hidden select-none">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             alt={friend.name}
             className="absolute inset-0"

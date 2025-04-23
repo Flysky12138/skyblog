@@ -1,6 +1,7 @@
 'use server'
 
 import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc'
+
 import { components } from './components'
 import './css'
 import { serializeOptions } from './options'

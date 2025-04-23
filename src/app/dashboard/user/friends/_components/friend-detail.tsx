@@ -11,7 +11,7 @@ interface FriendDetailProps extends React.PropsWithChildren {
   value?: POST['body']
 }
 
-export const FriendDetail = ({ children, value, onSubmit }: FriendDetailProps) => {
+export const FriendDetail = ({ children, onSubmit, value }: FriendDetailProps) => {
   const [open, setOpen] = React.useState(false)
 
   const [form, setForm] = useImmer<POST['body']>({

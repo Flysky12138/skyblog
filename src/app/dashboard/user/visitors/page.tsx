@@ -21,7 +21,7 @@ const MDXClient = dynamic(() => import('@/components/mdx/client').then(it => it.
 export default function Page() {
   const [search, setSearch] = useImmer<GET['search']>({ limit: 20, page: 1 })
 
-  const { data, mutate, isLoading } = useSWR(
+  const { data, isLoading, mutate } = useSWR(
     ['9670f632-f40e-5695-b0c6-5cb539b4a957', search],
     () => CustomRequest('GET api/dashboard/user/visitors', { search }),
     {

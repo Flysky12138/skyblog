@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+
 import ribbon from './ribbon'
 
 export default function Ribbon() {

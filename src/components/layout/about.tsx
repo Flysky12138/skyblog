@@ -2,7 +2,7 @@ import Link, { LinkProps } from 'next/link'
 
 interface OuterLinkProps extends LinkProps, React.PropsWithChildren {}
 
-const OuterLink: React.FC<OuterLinkProps> = ({ children, ...props }) => {
+const OuterLink = ({ children, ...props }: OuterLinkProps) => {
   return (
     <Link
       className="text-link-foreground decoration-wavy underline-offset-2 hover:underline"

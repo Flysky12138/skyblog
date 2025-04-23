@@ -7,9 +7,9 @@ export const getImageSize = async (blob: Blob) => {
   const image = new Image()
   image.src = url
 
-  return new Promise<Record<'width' | 'height', number>>((resolve, reject) => {
+  return new Promise<Record<'height' | 'width', number>>((resolve, reject) => {
     image.onload = () => {
-      const { width, height } = image
+      const { height, width } = image
       resolve({ height, width })
       URL.revokeObjectURL(url)
     }

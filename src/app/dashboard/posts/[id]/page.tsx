@@ -19,11 +19,12 @@ import { useAsync, useDebounce, useEvent } from 'react-use'
 import { toast } from 'sonner'
 import { useImmer } from 'use-immer'
 import { uuidv7 } from 'uuidv7'
+
 import { EditorToolbar } from './_components/editor-toolbar'
 
 export type DefaultPostType = NonNullable<GET['return']>
-export interface MessageEventDataRefreshType extends MessageEventData<'post-refresh', DefaultPostType> {}
 export interface MessageEventDataMountedType extends MessageEventData<'post-preview-mounted'> {}
+export interface MessageEventDataRefreshType extends MessageEventData<'post-refresh', DefaultPostType> {}
 
 const DEFAULT_POST: DefaultPostType = {
   authorId: '',
@@ -62,7 +63,7 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
   // 编辑器引用
   const editorRef = React.useRef<MonacoEditorRef>(null)
   // 预览窗口引用
-  const previewWindowRef = React.useRef<WindowProxy | null>(null)
+  const previewWindowRef = React.useRef<null | WindowProxy>(null)
 
   // 初始化数据
   const initData = (data: DefaultPostType | null) => {

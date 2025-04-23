@@ -20,7 +20,7 @@ export const PostTocWrapper = ({ ref, ...props }: PostTocWrapperProps) => {
       activeIndex == i ? el.setAttribute('data-active', '') : el.removeAttribute('data-active')
       if (activeIndex != i) return
       const { offsetHeight: parentHeight, scrollTop } = container
-      const { offsetTop, offsetHeight } = el as HTMLElement
+      const { offsetHeight, offsetTop } = el as HTMLElement
       if (!isBetween(offsetTop - scrollTop, offsetHeight + 20, parentHeight - offsetHeight - 20)) {
         container.scroll({ behavior: 'smooth', top: offsetTop - parentHeight * 0.5 })
       }

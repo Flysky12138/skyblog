@@ -2,10 +2,10 @@ import { Root } from 'hast'
 import { visit } from 'unist-util-visit'
 
 class Stack {
-  #tags: Array<{
+  #tags: {
     h: number
     order: number[]
-  }>
+  }[]
 
   constructor() {
     this.#tags = []

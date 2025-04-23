@@ -10,6 +10,7 @@ import { Pencil, Plus, Share2 } from 'lucide-react'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
 import useSWR from 'swr'
+
 import { ClashDetail } from './clash-detail'
 
 export const ClashTable = () => {
@@ -74,7 +75,7 @@ export const ClashTable = () => {
               </TableActionButton>
               <ClashDetail
                 value={record}
-                onSubmit={async ({ name, subtitle, content, variables, clashTemplateId }) => {
+                onSubmit={async ({ clashTemplateId, content, name, subtitle, variables }) => {
                   const data = await Toast(
                     CustomRequest('PUT api/dashboard/clash', {
                       body: { clashTemplateId, content, name, subtitle, variables },

@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import Link from 'next/link'
 import rehypeSlug from 'rehype-slug'
+
 import { remarkPlugins } from './options'
 import { HEADING_ATTRIBUTE, rehypeHeadingOrder } from './rehype/rehype-heading-level'
 import { remarkPickHeading } from './remark/remark-pick-heading'
@@ -36,7 +37,7 @@ export const MDXToc = async ({ value }: MDXTocProps) => {
 
 interface HeadingProps extends React.ComponentProps<'a'> {}
 
-const Heading: React.FC<HeadingProps> = ({ className, children, id, ...props }) => {
+const Heading = ({ children, className, id, ...props }: HeadingProps) => {
   const depth = Reflect.get(props, HEADING_ATTRIBUTE).split('.').length - 1
 
   return (

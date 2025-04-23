@@ -19,9 +19,9 @@ export const monacoEditorDefaultOptions: editor.IStandaloneEditorConstructionOpt
   },
   renderLineHighlight: 'all',
   roundedSelection: true,
-  scrollBeyondLastLine: true,
   scrollbar: {
     alwaysConsumeMouseWheel: true // 默认值；滚动行为 preventDefault() & stopPropagation()
   },
+  scrollBeyondLastLine: true,
   smoothScrolling: true
 }

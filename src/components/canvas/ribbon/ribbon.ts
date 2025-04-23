@@ -5,90 +5,30 @@ const random = (a: number, b: number): number => {
 // screen helper
 const screenInfo = () => {
   const [doc, body] = [document.documentElement, document.body]
-  const width = window.innerWidth || doc.clientWidth || body.clientWidth || 0,
-    height = window.innerHeight || doc.clientHeight || body.clientHeight || 0,
+  const height = window.innerHeight || doc.clientHeight || body.clientHeight || 0,
     scrollx = (window.pageXOffset || doc.scrollLeft || body.scrollLeft || 0) - (doc.clientLeft || 0),
-    scrolly = (window.pageYOffset || doc.scrollTop || body.scrollTop || 0) - (doc.clientTop || 0)
+    scrolly = (window.pageYOffset || doc.scrollTop || body.scrollTop || 0) - (doc.clientTop || 0),
+    width = window.innerWidth || doc.clientWidth || body.clientWidth || 0
   return {
-    height,
-    scrollx,
-    scrolly,
-    width,
     centerx: width / 2,
     centery: height / 2,
-    ratio: width / height
+    height,
+    ratio: width / height,
+    scrollx,
+    scrolly,
+    width
   }
 }
 // mouse/input helper
 const mouseInfo = (event: MouseEvent) => {
-  const screen = screenInfo(),
-    mousex = event ? event.pageX || event.clientX || 0 : 0,
-    mousey = event ? event.pageY || event.clientY || 0 : 0
+  const mousex = event ? event.pageX || event.clientX || 0 : 0,
+    mousey = event ? event.pageY || event.clientY || 0 : 0,
+    screen = screenInfo()
   return {
-    mousex,
-    mousey,
     centerx: mousex - screen.width / 2,
-    centery: mousey - screen.height / 2
-  }
-}
-
-class Point {
-  public x: number
-  public y: number
-
-  constructor(x?: number, y?: number) {
-    this.x = x || 0
-    this.y = y || 0
-  }
-
-  public copy(point: { x: number; y: number }) {
-    this.x = point.x || 0
-    this.y = point.y || 0
-    return this
-  }
-
-  public multiply(x: number, y: number) {
-    this.x *= x || 1
-    this.y *= y || 1
-    return this
-  }
-
-  public divide(x: number, y: number) {
-    this.x /= x || 1
-    this.y /= y || 1
-    return this
-  }
-
-  public add(x: number, y: number) {
-    this.x += x || 0
-    this.y += y || 0
-    return this
-  }
-
-  public subtract(x: number, y: number) {
-    this.x -= x || 0
-    this.y -= y || 0
-    return this
-  }
-
-  public clampX(min: number, max: number) {
-    this.x = Math.max(min, Math.min(this.x, max))
-    return this
-  }
-
-  public clampY(min: number, max: number) {
-    this.y = Math.max(min, Math.min(this.y, max))
-    return this
-  }
-
-  public flipX() {
-    this.x *= -1
-    return this
-  }
-
-  public flipY() {
-    this.y *= -1
-    return this
+    centery: mousey - screen.height / 2,
+    mousex,
+    mousey
   }
 }
 
@@ -113,9 +53,10 @@ interface Options {
   // add stroke along with ribbon fill colors
   strokeSize: number
   // where to start from on the Y axis on each side
-  verticalPosition: 'top' | 'center' | 'bottom' | 'random'
+  verticalPosition: 'bottom' | 'center' | 'random' | 'top'
 }
-type RibbonType = {
+
+interface RibbonType {
   alpha: number
   color: number
   delay: number
@@ -125,15 +66,74 @@ type RibbonType = {
   point2: Point
   point3: Point
 }
+class Point {
+  public x: number
+  public y: number
+
+  constructor(x?: number, y?: number) {
+    this.x = x || 0
+    this.y = y || 0
+  }
+
+  public add(x: number, y: number) {
+    this.x += x || 0
+    this.y += y || 0
+    return this
+  }
+
+  public clampX(min: number, max: number) {
+    this.x = Math.max(min, Math.min(this.x, max))
+    return this
+  }
+
+  public clampY(min: number, max: number) {
+    this.y = Math.max(min, Math.min(this.y, max))
+    return this
+  }
+
+  public copy(point: { x: number; y: number }) {
+    this.x = point.x || 0
+    this.y = point.y || 0
+    return this
+  }
+
+  public divide(x: number, y: number) {
+    this.x /= x || 1
+    this.y /= y || 1
+    return this
+  }
+
+  public flipX() {
+    this.x *= -1
+    return this
+  }
+
+  public flipY() {
+    this.y *= -1
+    return this
+  }
+
+  public multiply(x: number, y: number) {
+    this.x *= x || 1
+    this.y *= y || 1
+    return this
+  }
+
+  public subtract(x: number, y: number) {
+    this.x -= x || 0
+    this.y -= y || 0
+    return this
+  }
+}
 
 class Ribbon {
   private _canvas: HTMLCanvasElement
   private _context: CanvasRenderingContext2D | undefined
-  private _width: number
   private _height: number
-  private _scroll: number
-  private _ribbons: Array<RibbonType[] | null>
   private _options: Options
+  private _ribbons: (null | RibbonType[])[]
+  private _scroll: number
+  private _width: number
 
   constructor(canvas: HTMLCanvasElement, options?: Partial<Options>) {
     this._canvas = canvas
@@ -161,101 +161,9 @@ class Ribbon {
     this.init()
   }
 
-  // Set and merge local options
-  private setOptions(options?: Partial<Options>) {
-    for (const key in options) {
-      if (Object.prototype.hasOwnProperty.call(this._options, key)) {
-        this._options[key] = options[key]
-      }
-    }
-  }
-
-  // Initialize the ribbons effect
-  private init() {
-    this._onResize()
-    window.addEventListener('resize', this._onResize)
-    window.addEventListener('scroll', this._onScroll)
-    this._context = this._canvas.getContext('2d') as CanvasRenderingContext2D
-    this._context.clearRect(0, 0, this._width, this._height)
-    this._context.globalAlpha = this._options.colorAlpha
-    this._onDraw()
-  }
-
   public destroy() {
     window.removeEventListener('resize', this._onResize)
     window.removeEventListener('scroll', this._onScroll)
-  }
-
-  // Create a new random ribbon and to the list
-  private addRibbon() {
-    // movement data
-    const dir = Math.round(random(1, 9)) > 5 ? 'right' : 'left',
-      hide = 200,
-      min = 0 - hide,
-      max = this._width + hide,
-      startx = dir == 'right' ? min : max
-    let starty = Math.round(random(0, this._height)),
-      stop = 1000,
-      movex = 0,
-      movey = 0
-
-    // asjust starty based on options
-    if (this._options.verticalPosition == 'top') {
-      starty = 0 + hide
-    } else if (this._options.verticalPosition == 'center') {
-      starty = this._height / 2
-    } else if (this._options.verticalPosition == 'bottom') {
-      starty = this._height - hide
-    }
-
-    // ribbon sections data
-    const ribbon: RibbonType[] = [],
-      point1 = new Point(startx, starty),
-      point2 = new Point(startx, starty)
-    let point3 = null,
-      delay = 0,
-      color = Math.round(random(0, 360))
-
-    // buils ribbon sections
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      if (stop <= 0) break
-      stop--
-
-      movex = Math.round((Math.random() * 1 - 0.2) * this._options.horizontalSpeed)
-      movey = Math.round((Math.random() * 1 - 0.5) * (this._height * 0.25))
-
-      point3 = new Point()
-      point3.copy(point2)
-
-      if (dir == 'right') {
-        point3.add(movex, movey)
-        if (point2.x >= max) break
-      } else if (dir == 'left') {
-        point3.subtract(movex, movey)
-        if (point2.x <= min) break
-      }
-      // point3.clampY(0, this._height)
-
-      ribbon.push({
-        alpha: 0,
-        color: color,
-        delay: delay,
-        dir: dir,
-        phase: 0,
-        // single ribbon section
-        point1: new Point(point1.x, point1.y),
-        point2: new Point(point2.x, point2.y),
-        point3: point3
-      })
-
-      point1.copy(point2)
-      point2.copy(point3)
-
-      delay += 4
-      color += this._options.colorCycleSpeed
-    }
-    this._ribbons.push(ribbon)
   }
 
   // Draw single section
@@ -288,8 +196,8 @@ class Ribbon {
         section.delay -= 0.5
       }
 
-      const s = this._options.colorSaturation,
-        l = this._options.colorBrightness,
+      const l = this._options.colorBrightness,
+        s = this._options.colorSaturation,
         c = 'hsla(' + section.color + ', ' + s + ', ' + l + ', ' + section.alpha + ' )'
       if (this._context) {
         this._context.save()
@@ -330,8 +238,8 @@ class Ribbon {
       if (!ribbon) continue
       let numDone = 0
       // ribbon section
-      for (let b = 0; b < ribbon.length; b++) {
-        if (this._drawRibbonSection(ribbon[b])) {
+      for (const r of ribbon) {
+        if (this._drawRibbonSection(r)) {
           numDone++ // section done
         }
       }
@@ -364,6 +272,98 @@ class Ribbon {
   private _onScroll() {
     const screen = screenInfo()
     this._scroll = screen.scrolly
+  }
+
+  // Create a new random ribbon and to the list
+  private addRibbon() {
+    // movement data
+    const dir = Math.round(random(1, 9)) > 5 ? 'right' : 'left',
+      hide = 200,
+      max = this._width + hide,
+      min = 0 - hide,
+      startx = dir == 'right' ? min : max
+    let movex = 0,
+      movey = 0,
+      starty = Math.round(random(0, this._height)),
+      stop = 1000
+
+    // asjust starty based on options
+    if (this._options.verticalPosition == 'top') {
+      starty = 0 + hide
+    } else if (this._options.verticalPosition == 'center') {
+      starty = this._height / 2
+    } else if (this._options.verticalPosition == 'bottom') {
+      starty = this._height - hide
+    }
+
+    // ribbon sections data
+    const point1 = new Point(startx, starty),
+      point2 = new Point(startx, starty),
+      ribbon: RibbonType[] = []
+    let color = Math.round(random(0, 360)),
+      delay = 0,
+      point3 = null
+
+    // buils ribbon sections
+
+    while (true) {
+      if (stop <= 0) break
+      stop--
+
+      movex = Math.round((Math.random() * 1 - 0.2) * this._options.horizontalSpeed)
+      movey = Math.round((Math.random() * 1 - 0.5) * (this._height * 0.25))
+
+      point3 = new Point()
+      point3.copy(point2)
+
+      if (dir == 'right') {
+        point3.add(movex, movey)
+        if (point2.x >= max) break
+      } else if (dir == 'left') {
+        point3.subtract(movex, movey)
+        if (point2.x <= min) break
+      }
+      // point3.clampY(0, this._height)
+
+      ribbon.push({
+        alpha: 0,
+        color: color,
+        delay: delay,
+        dir: dir,
+        phase: 0,
+        // single ribbon section
+        point1: new Point(point1.x, point1.y),
+        point2: new Point(point2.x, point2.y),
+        point3: point3
+      })
+
+      point1.copy(point2)
+      point2.copy(point3)
+
+      delay += 4
+      color += this._options.colorCycleSpeed
+    }
+    this._ribbons.push(ribbon)
+  }
+
+  // Initialize the ribbons effect
+  private init() {
+    this._onResize()
+    window.addEventListener('resize', this._onResize)
+    window.addEventListener('scroll', this._onScroll)
+    this._context = this._canvas.getContext('2d') as CanvasRenderingContext2D
+    this._context.clearRect(0, 0, this._width, this._height)
+    this._context.globalAlpha = this._options.colorAlpha
+    this._onDraw()
+  }
+
+  // Set and merge local options
+  private setOptions(options?: Partial<Options>) {
+    for (const key in options) {
+      if (Object.prototype.hasOwnProperty.call(this._options, key)) {
+        this._options[key] = options[key]
+      }
+    }
   }
 }
 

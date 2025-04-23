@@ -30,6 +30,6 @@ export const VIEW_TRANSITION_NAME = {
 /** post card display */
 export enum POST_CARD_DISPLAY {
   HEADER = 1 << 0,
-  TOC = 1 << 1,
-  ISSUES = 1 << 2
+  ISSUES = 1 << 2,
+  TOC = 1 << 1
 }

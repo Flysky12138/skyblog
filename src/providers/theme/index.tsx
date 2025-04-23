@@ -7,6 +7,7 @@ import { VIEW_TRANSITION_NAME } from '@/lib/constants'
 import { MoonStar, Sun } from 'lucide-react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import React from 'react'
+
 import './view-transition.css'
 
 /**

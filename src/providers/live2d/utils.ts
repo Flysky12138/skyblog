@@ -2,9 +2,9 @@ import { loadJSFile } from '@/lib/file/load'
 import JSZip from 'jszip'
 import { JSONObject, ModelSettings } from 'pixi-live2d-display'
 
-export enum PADDING {
-  x = 10,
-  y = 10
+export const PADDING = {
+  x: 10,
+  y: 10
 }
 
 /**
@@ -32,7 +32,7 @@ export const initGlobalScript = async () => {
  * 加载模型
  * @see https://github.com/Stuk/jszip
  */
-export const loadModelSync = async (source: string | JSONObject | ModelSettings) => {
+export const loadModelSync = async (source: JSONObject | ModelSettings | string) => {
   try {
     if (!window.PIXI?.live2d) throw new Error('Live2D is not loaded')
     const model = await window.PIXI.live2d.Live2DModel.from(source)

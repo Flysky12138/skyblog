@@ -39,7 +39,7 @@ export default function Echarts({ children }: EchartsProps) {
 
   useDebounce(() => echartsRef.current?.setOption(getOptions(code), true), 800, [code])
 
-  const [containerRef, { width: w, height: h }] = useMeasure<HTMLElement>()
+  const [containerRef, { height: h, width: w }] = useMeasure<HTMLElement>()
   React.useEffect(() => {
     echartsRef.current?.resize()
   }, [w, h])

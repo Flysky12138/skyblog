@@ -12,7 +12,7 @@ declare module 'next-auth/jwt' {
 }
 
 declare module 'next-auth' {
-  interface Session extends Partial<Auth> {}
   interface Account extends Auth {}
   interface Profile extends GitHubProfile {}
+  interface Session extends Partial<Auth> {}
 }

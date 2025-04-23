@@ -15,7 +15,7 @@ interface PrintProps {
   time: number
 }
 
-const Print_ = ({ time, size, pi, onClose }: PrintProps) => {
+const Print_ = ({ onClose, pi, size, time }: PrintProps) => {
   const [sectionRef, { width }] = useMeasure<HTMLElement>()
   const [fontRef, { width: fontWidth }] = useMeasure<HTMLElement>()
 
@@ -58,7 +58,7 @@ const Print_ = ({ time, size, pi, onClose }: PrintProps) => {
           overscanCount={10}
           width="100%"
         >
-          {({ data, style, index }) => (
+          {({ data, index, style }) => (
             <span key={index} style={style}>
               {data[index]}
             </span>

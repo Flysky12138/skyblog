@@ -1,18 +1,18 @@
-/** 请求方法 */
-type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD'
-
-/** 协议 */
-type Protocol = 'http:' | 'https:'
+/** `CustomRequest` 请求配置 */
+type CustomRequestOptions<T extends keyof ApiMethodMap> = Omit<ApiMethodMap[T], 'return'> & RemoveKeysByEmptyValue<{ params: RouteParams<T> }>
 
 /** `fetch` 请求配置 */
-interface FetchOptions extends Omit<RequestInit, 'method' | 'headers' | 'body'> {
+interface FetchOptions extends Omit<RequestInit, 'body' | 'headers' | 'method'> {
   body?: any
   headers?: Record<string, string>
   method?: Method
 }
 
-/** `CustomRequest` 请求配置 */
-type CustomRequestOptions<T extends keyof ApiMethodMap> = Omit<ApiMethodMap[T], 'return'> & RemoveKeysByEmptyValue<{ params: RouteParams<T> }>
+/** 请求方法 */
+type Method = 'DELETE' | 'GET' | 'HEAD' | 'PATCH' | 'POST' | 'PUT'
+
+/** 协议 */
+type Protocol = 'http:' | 'https:'
 
 /** 接口返回的错误类型 */
 interface ResponseError {

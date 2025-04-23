@@ -6,6 +6,7 @@ import { MDXRemoteProps } from 'next-mdx-remote/rsc'
 import { serialize } from 'next-mdx-remote/serialize'
 import React from 'react'
 import { useAsync } from 'react-use'
+
 import { DisplayByConditional } from '../display/display-by-conditional'
 import { components } from './components'
 import './css'
@@ -16,7 +17,7 @@ interface MDXClientProps {
 }
 
 const MDXClient_ = ({ value }: MDXClientProps) => {
-  const { value: source, loading, error } = useAsync(() => serialize(value, serializeOptions), [value])
+  const { error, loading, value: source } = useAsync(() => serialize(value, serializeOptions), [value])
 
   if (!source) {
     return (

@@ -5,6 +5,7 @@ import { Prisma } from '@prisma/client'
 import { toMerged } from 'es-toolkit'
 import { Award, CalendarDays, Shapes, Tag } from 'lucide-react'
 import Link from 'next/link'
+
 import { PostListPagination, PostListPaginationProps } from './post-list-pagination'
 import { PostUpdateAt } from './post-update-at'
 
@@ -29,8 +30,8 @@ export const getPosts = async (page: number, where: Prisma.PostWhereInput = {}) 
       where: toMerged(POST_WHERE_INPUT, where)
     },
     {
-      page,
-      limit: Number.parseInt(process.env.NEXT_PUBLIC_PAGE_POSTCARD_COUNT)
+      limit: Number.parseInt(process.env.NEXT_PUBLIC_PAGE_POSTCARD_COUNT),
+      page
     }
   )
   return {

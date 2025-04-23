@@ -1,11 +1,11 @@
 /** @type {import("prettier").Options} */
 module.exports = {
+  arrowParens: 'avoid',
+  endOfLine: 'lf',
+  plugins: ['prettier-plugin-organize-imports', 'prettier-plugin-tailwindcss'],
   printWidth: 150,
-  useTabs: false,
   semi: false,
   singleQuote: true,
-  arrowParens: 'avoid',
   trailingComma: 'none',
-  endOfLine: 'lf',
-  plugins: ['prettier-plugin-organize-imports', 'prettier-plugin-tailwindcss']
+  useTabs: false
 }

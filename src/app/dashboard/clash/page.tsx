@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
 import { ClashTable } from './_components/clash-table'
 import { ClashTemplateTable } from './_components/clash-template-table'
 

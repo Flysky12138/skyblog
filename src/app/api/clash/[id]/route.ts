@@ -23,8 +23,8 @@ const dbGet = async (id: string, data: Prisma.VisitorLogCreateInput) => {
       visitorInfos: true
     },
     where: {
-      id,
-      enabled: true
+      enabled: true,
+      id
     }
   })
 }

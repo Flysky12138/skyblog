@@ -1,6 +1,7 @@
 'use client'
 
 import { breakpoints, useBreakpoint } from '@/hooks/use-breakpoint'
+
 import { DisplayByConditional, DisplayByConditionalProps } from './display-by-conditional'
 
 interface DisplayByBreakPointProps extends Omit<DisplayByConditionalProps, 'condition'> {
@@ -16,7 +17,7 @@ interface DisplayByBreakPointProps extends Omit<DisplayByConditionalProps, 'cond
   up?: keyof typeof breakpoints | number
 }
 
-export const DisplayByBreakPoint = ({ up = Infinity, down = -Infinity, ...props }: DisplayByBreakPointProps) => {
+export const DisplayByBreakPoint = ({ down = -Infinity, up = Infinity, ...props }: DisplayByBreakPointProps) => {
   const breakpoint = useBreakpoint()
   const breakpointMatchedValue = breakpoints[breakpoint]
 

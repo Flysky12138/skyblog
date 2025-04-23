@@ -11,8 +11,8 @@ import useSWR from 'swr'
 
 export const Live2D = () => {
   const {
-    isLoading,
     data: src,
+    isLoading,
     mutate: setSrc
   } = useSWR('83724997-81e4-585a-babe-c007cc366f7f', () => get<string>(VERCEL_EDGE_CONFIG.LIVE2D_SRC), {
     fallbackData: ''

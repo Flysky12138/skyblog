@@ -12,7 +12,7 @@ export interface PostListPaginationProps extends Omit<PaginationProps, 'getHref'
   path?: `${string}[page]${string}`
 }
 
-export const PostListPagination = ({ path, className, ...props }: PostListPaginationProps) => {
+export const PostListPagination = ({ className, path, ...props }: PostListPaginationProps) => {
   return (
     <Pagination
       className={cn('[&_span]:hidden', className)}

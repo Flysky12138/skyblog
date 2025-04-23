@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils'
 import useSWR from 'swr'
 import { Updater } from 'use-immer'
 import { uuidv7 } from 'uuidv7'
+
 import { DefaultPostType } from '../page'
 
 interface PostDetailProps {
@@ -18,7 +19,7 @@ interface PostDetailProps {
   value: DefaultPostType
 }
 
-export const PostDetail = ({ children, value: post, onChange: setPost }: PostDetailProps) => {
+export const PostDetail = ({ children, onChange: setPost, value: post }: PostDetailProps) => {
   const { data: categories } = useSWR('0e6f0c70-c012-5c78-86b3-8ad4104132c2', () => CustomRequest('GET api/dashboard/posts/categories', {}), {
     fallbackData: []
   })
@@ -69,7 +70,7 @@ export const PostDetail = ({ children, value: post, onChange: setPost }: PostDet
               fieldNames={{ label: 'name', value: 'id' }}
               options={categories}
               value={post.categories}
-              onAddOption={name => ({ name, id: uuidv7() })}
+              onAddOption={name => ({ id: uuidv7(), name })}
               onSelect={payload => {
                 setPost(state => {
                   state.categories = payload
@@ -84,7 +85,7 @@ export const PostDetail = ({ children, value: post, onChange: setPost }: PostDet
               fieldNames={{ label: 'name', value: 'id' }}
               options={tags}
               value={post.tags}
-              onAddOption={name => ({ name, id: uuidv7() })}
+              onAddOption={name => ({ id: uuidv7(), name })}
               onSelect={payload => {
                 setPost(state => {
                   state.tags = payload

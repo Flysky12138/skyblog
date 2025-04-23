@@ -1,13 +1,14 @@
 import NextAuth from 'next-auth'
 import GitHub from 'next-auth/providers/github'
+
 import { CustomRequest } from './http/request'
 
 /**
  * @see https://authjs.dev/getting-started/migrating-to-v5#configuration-file
  */
-export const { handlers, auth } = NextAuth({
+export const { auth, handlers } = NextAuth({
   callbacks: {
-    jwt: async ({ token, account }) => {
+    jwt: async ({ account, token }) => {
       if (account) {
         token.id = account.id
         token.role = account.role
@@ -20,8 +21,8 @@ export const { handlers, auth } = NextAuth({
       session.role = token.role
       return session
     },
-    signIn: async ({ profile = {}, account }) => {
-      const { email, login, avatar_url } = profile
+    signIn: async ({ account, profile = {} }) => {
+      const { avatar_url, email, login } = profile
       if (!email || !account) return false
 
       const { id, role } = await CustomRequest('POST api/auth/user', {

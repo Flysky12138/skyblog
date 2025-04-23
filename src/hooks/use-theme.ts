@@ -1,9 +1,9 @@
 import { useTheme as useThemeContext } from 'next-themes'
 
-type ThemeType = 'light' | 'dark' | 'system'
+type ThemeType = 'dark' | 'light' | 'system'
 
 export const useTheme = () => {
-  const { theme, resolvedTheme, systemTheme, setTheme } = useThemeContext()
+  const { resolvedTheme, setTheme, systemTheme, theme } = useThemeContext()
 
   const isDark = resolvedTheme == 'dark'
 
@@ -15,7 +15,7 @@ export const useTheme = () => {
     isDark,
     setTheme,
     systemTheme,
-    toggleTheme,
-    theme: theme as ThemeType
+    theme: theme as ThemeType,
+    toggleTheme
   }
 }

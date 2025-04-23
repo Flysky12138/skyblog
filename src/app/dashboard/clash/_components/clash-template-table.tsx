@@ -7,6 +7,7 @@ import { Toast } from '@/lib/toast'
 import { produce } from 'immer'
 import { Pencil, Plus } from 'lucide-react'
 import useSWR from 'swr'
+
 import { ClashTemplateDetail } from './clash-template-detail'
 
 export const SWR_KEY_CLASH_TEMPLATES = '5139cbc3-691c-54b6-8657-5a02ae60f58f'
@@ -32,7 +33,7 @@ export const ClashTemplateTable = () => {
             <div className="flex justify-end gap-2">
               <ClashTemplateDetail
                 value={record}
-                onSubmit={async ({ name, content }) => {
+                onSubmit={async ({ content, name }) => {
                   const data = await Toast(
                     CustomRequest('PUT api/dashboard/clash/template', { body: { content, name }, search: { id: record.id } }),
                     {

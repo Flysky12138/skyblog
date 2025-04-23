@@ -28,7 +28,7 @@ const envSchema = z.interface({
   TOKEN_VERCEL: z.string().length(24)
 })
 
-const { success, error } = envSchema.safeParse(process.env)
+const { error, success } = envSchema.safeParse(process.env)
 
 if (!success) {
   console.log('\x1b[31m%s\x1b[0m', JSON.stringify(error, null, 2))

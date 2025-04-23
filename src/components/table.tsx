@@ -16,9 +16,10 @@ import { cn } from '@/lib/utils'
 import { ClassValue } from 'clsx'
 import { Trash } from 'lucide-react'
 import React from 'react'
+
 import { DisplayByConditional } from './display/display-by-conditional'
 
-type AlignType = 'left' | 'center' | 'right'
+type AlignType = 'center' | 'left' | 'right'
 
 type ColumnItemType<T> = {
   [K in keyof T]: {
@@ -28,7 +29,7 @@ type ColumnItemType<T> = {
   }
 }[keyof T]
 
-type ColumnSlotType<T> = {
+interface ColumnSlotType<T> {
   dataIndex?: never
   key: 'index' | (string & {})
   render?: (record: T, index: number) => React.ReactNode
@@ -48,7 +49,7 @@ type ColumnType<T> = {
   /**
    * 头部行的标题
    */
-  title?: string | (() => React.ReactNode)
+  title?: (() => React.ReactNode) | string
 } & (ColumnItemType<T> | ColumnSlotType<T>)
 
 interface TableProps<T> {
@@ -72,12 +73,12 @@ interface TableProps<T> {
   /**
    * 表格行的类名
    */
-  rowClassName?: ClassValue | ((record: T, index: number) => ClassValue)
+  rowClassName?: ((record: T, index: number) => ClassValue) | ClassValue
   /**
    * 表格行 key 的取值
    * @default 'id'
    */
-  rowKey?: keyof T | ((record: T) => string)
+  rowKey?: ((record: T) => string) | keyof T
   /**
    * 表格行是否可选择
    */
@@ -88,11 +89,11 @@ export const Table = <T,>({
   className,
   columns,
   dataSource = [],
-  // @ts-ignore
-  rowKey = 'id',
   loading,
+  onRow,
   rowClassName,
-  onRow
+  // @ts-ignore
+  rowKey = 'id'
 }: TableProps<T>) => {
   columns = columns.map(column => {
     switch (column.key) {
@@ -175,7 +176,7 @@ export const TableCaption = ({ className, ...props }: React.ComponentProps<'capt
   <caption className={cn('text-muted-foreground text-sm', className)} {...props} />
 )
 
-export const TableRowLoading = ({ className, children, ...props }: RequiredPick<React.ComponentProps<'td'>, 'colSpan'>) => (
+export const TableRowLoading = ({ children, className, ...props }: RequiredPick<React.ComponentProps<'td'>, 'colSpan'>) => (
   <TableRow>
     <TableCell className={cn('font-title cursor-default text-center', className)} {...props}>
       {children || 'Loading...'}
@@ -192,7 +193,7 @@ const TableDeleteButton: React.FC<{
   disabled?: boolean
   onConfirm: () => void
   title: string
-}> = ({ title, description, disabled, onConfirm }) => (
+}> = ({ description, disabled, onConfirm, title }) => (
   <AlertDialog>
     <AlertDialogTrigger asChild>
       <TableActionButton className="border-0!" disabled={disabled} variant="destructive">
@@ -224,11 +225,11 @@ const renderCellData = (text: any): string => {
 
 const alignClassName = (align: AlignType = 'left') => {
   switch (align) {
+    case 'center':
+      return 'text-center'
     case 'left':
       return 'text-left'
     case 'right':
       return 'text-right'
-    case 'center':
-      return 'text-center'
   }
 }

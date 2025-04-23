@@ -5,6 +5,7 @@ import estreePlugins from 'prettier/plugins/estree'
 import markdownPlugins from 'prettier/plugins/markdown'
 import { format } from 'prettier/standalone'
 import { grammars } from 'tm-grammars'
+
 import { LanguageConfig } from '../index'
 
 export const markdownConfig: LanguageConfig = {
@@ -21,7 +22,7 @@ export const markdownConfig: LanguageConfig = {
           requirePragma: false
         })
         const text = await format(source, options)
-        return [{ text, range: model.getFullModelRange() }]
+        return [{ range: model.getFullModelRange(), text }]
       }
     }),
 
@@ -29,7 +30,7 @@ export const markdownConfig: LanguageConfig = {
     monaco.languages.registerCompletionItemProvider(markdownConfig.language, {
       provideCompletionItems: (model, position) => {
         const { endColumn, startColumn } = model.getWordUntilPosition(position)
-        const range = { endColumn, startColumn, endLineNumber: position.lineNumber, startLineNumber: position.lineNumber }
+        const range = { endColumn, endLineNumber: position.lineNumber, startColumn, startLineNumber: position.lineNumber }
 
         const textUntilPosition = model.getValueInRange({
           endColumn: position.column,
@@ -43,26 +44,26 @@ export const markdownConfig: LanguageConfig = {
         const isBlockCode = /^`{3}/.test(textUntilPosition)
         if (isInlineCode || isBlockCode) {
           return {
-            suggestions: grammars.map(({ name, displayName }) => ({
-              range,
+            suggestions: grammars.map(({ displayName, name }) => ({
               detail: displayName,
               insertText: name,
               insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
               kind: monaco.languages.CompletionItemKind.Enum,
-              label: name
+              label: name,
+              range
             }))
           }
         }
 
         // 自定义组建提示
-        const suggestField = (payload: Array<{ detail: string; key: string; value: string[] }>) => ({
-          suggestions: payload.map(({ key, value, detail }) => ({
+        const suggestField = (payload: { detail: string; key: string; value: string[] }[]) => ({
+          suggestions: payload.map(({ detail, key, value }) => ({
             detail,
-            range,
             insertText: value.join('\n'),
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             kind: monaco.languages.CompletionItemKind.Field,
-            label: key
+            label: key,
+            range
           }))
         })
         if (/^\s*$/.test(textUntilPosition)) {
@@ -78,23 +79,21 @@ export const markdownConfig: LanguageConfig = {
         }
 
         // 自定义组建属性提示
-        const suggestProperty = (payload: Array<{ key: string } & XOR<{ value?: string }, { values?: string[] }>>) => ({
+        const suggestProperty = (payload: (XOR<{ value?: string }, { values?: string[] }> & { key: string })[]) => ({
           suggestions: payload.map(({ key, value, values }) => {
             let insertText = key
             if (typeof value != 'undefined') insertText += `="${value || '$0'}"`
             else if (values && values.length > 0) insertText += `="\${1|${values.join(',')}|}"`
             return {
               insertText,
-              range,
               insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
               kind: monaco.languages.CompletionItemKind.Property,
-              label: key
+              label: key,
+              range
             }
           })
         })
         switch (textUntilPosition.match(/:{1,}(\S+?)(?:\[.*\])?{/)?.[1] || '') {
-          case 'tabs':
-            return suggestProperty([{ key: 'defaultValue', value: '${0:0}' }])
           case 'img':
             return suggestProperty([
               { key: 'src', value: '' },
@@ -103,6 +102,8 @@ export const markdownConfig: LanguageConfig = {
               { key: 'height', value: '${0:200}' },
               { key: 'priority', value: 'true' }
             ])
+          case 'tabs':
+            return suggestProperty([{ key: 'defaultValue', value: '${0:0}' }])
         }
 
         // shiki 转换器 命令提示
@@ -113,11 +114,11 @@ export const markdownConfig: LanguageConfig = {
               { label: 'diff +', value: ' [!code ++]' },
               { label: 'diff -', value: ' [!code --]' }
             ].map(({ label, value }) => ({
-              label,
-              range,
               insertText: value,
               insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-              kind: monaco.languages.CompletionItemKind.Snippet
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              label,
+              range
             }))
           }
         }

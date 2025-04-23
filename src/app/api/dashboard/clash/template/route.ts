@@ -18,8 +18,8 @@ const select = Prisma.validator<Prisma.ClashTemplateSelect>()({
 
 const dbGet = async () => {
   return await prisma.clashTemplate.findMany({
-    select,
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
+    select
   })
 }
 
@@ -65,7 +65,7 @@ const dbPut = async (id: string, data: PUT['body']) => {
 }
 
 export type PUT = RouteHandlerType<{
-  body: Pick<Prisma.ClashTemplateUpdateInput, 'name' | 'content'>
+  body: Pick<Prisma.ClashTemplateUpdateInput, 'content' | 'name'>
   return: Prisma.PromiseReturnType<typeof dbPut>
   search: {
     id: string

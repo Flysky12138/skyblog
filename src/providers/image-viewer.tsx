@@ -10,7 +10,7 @@ import 'react-photo-view/dist/react-photo-view.css'
 import { useImmer } from 'use-immer'
 
 interface ImageViewerContextProps {
-  openViewer: (payload: Pick<IPhotoSliderProps, 'images' | 'overlayRender' | 'index'>) => void
+  openViewer: (payload: Pick<IPhotoSliderProps, 'images' | 'index' | 'overlayRender'>) => void
 }
 
 const ImageViewerContext = React.createContext<ImageViewerContextProps>(null!)
@@ -22,7 +22,7 @@ export const useImageViewerContext = () => React.useContext(ImageViewerContext)
  * @see https://github.com/MinJieLiu/react-photo-view
  */
 export const ImageViewerProvider = ({ children }: React.PropsWithChildren) => {
-  const [data, setData] = useImmer<Pick<IPhotoSliderProps, 'images' | 'overlayRender' | 'visible' | 'index'>>({
+  const [data, setData] = useImmer<Pick<IPhotoSliderProps, 'images' | 'index' | 'overlayRender' | 'visible'>>({
     images: [],
     index: 0,
     overlayRender: undefined,
@@ -37,7 +37,7 @@ export const ImageViewerProvider = ({ children }: React.PropsWithChildren) => {
     <>
       <ImageViewerContext.Provider
         value={{
-          openViewer: ({ images, overlayRender, index }) => {
+          openViewer: ({ images, index, overlayRender }) => {
             setData(state => {
               state.index = index
               state.images = images as []
@@ -55,7 +55,7 @@ export const ImageViewerProvider = ({ children }: React.PropsWithChildren) => {
         images={data.images}
         maskClassName="bg-white/50! dark:bg-black/50! backdrop-blur-sm"
         photoWrapClassName="select-none"
-        toolbarRender={({ onRotate, onScale, scale, rotate, index, images }) => (
+        toolbarRender={({ images, index, onRotate, onScale, rotate, scale }) => (
           <section className="flex items-center" role="toolbar">
             <Download
               className={toolbarSvgClassName}

@@ -9,6 +9,7 @@ import { AlertCircle, Loader2 } from 'lucide-react'
 import React from 'react'
 import { useToggle } from 'react-use'
 import { useImmer } from 'use-immer'
+
 import Arctan from './arctan.mdx'
 import ChudnovskyBsCode from './chudnovsky-bs-code.mdx'
 import ChudnovskyBs from './chudnovsky-bs.mdx'
@@ -31,7 +32,7 @@ export default function Pi() {
     size: 1e4
   })
 
-  const [result, setResult] = React.useState<{ error: Error; pi: string; time: number } | null>(null)
+  const [result, setResult] = React.useState<null | { error: Error; pi: string; time: number }>(null)
   const [loading, loadingToggle] = useToggle(false)
 
   const workerRef = React.useRef<Worker>(null)

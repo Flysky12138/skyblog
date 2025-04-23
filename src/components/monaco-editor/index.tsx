@@ -7,21 +7,22 @@ import { DiffEditor, DiffEditorProps, Editor, EditorProps, loader, Monaco } from
 import { toMerged } from 'es-toolkit'
 import { editor, IDisposable } from 'monaco-editor'
 import React from 'react'
+
 import './index.css'
 import { monacoEditorDefaultOptions } from './options'
 
-export interface MonacoEditorRef {
-  editor: editor.IStandaloneCodeEditor | undefined
-  /** 格式化 */
-  format: () => Promise<void> | undefined
-}
 export interface LanguageConfig {
   /** 内容语言 */
   language: 'markdown' | 'yaml' | (string & {})
   /** 注册事件 */
   registerEvents?: (monaco: Monaco) => IDisposable[]
 }
-interface MonacoEditorProps extends LanguageConfig, Pick<EditorProps, 'loading' | 'className' | 'height' | 'options' | 'onChange'> {
+export interface MonacoEditorRef {
+  editor: editor.IStandaloneCodeEditor | undefined
+  /** 格式化 */
+  format: () => Promise<void> | undefined
+}
+interface MonacoEditorProps extends LanguageConfig, Pick<EditorProps, 'className' | 'height' | 'loading' | 'onChange' | 'options'> {
   code: EditorProps['value']
   /**
    * @default false
@@ -33,12 +34,12 @@ interface MonacoEditorProps extends LanguageConfig, Pick<EditorProps, 'loading' 
 
 export const MonacoEditor = ({
   className,
-  diffMode = false,
   code = '',
+  diffMode = false,
   oldCode = '',
+  onChange,
   ref,
   registerEvents,
-  onChange,
   ...props
 }: MonacoEditorProps) => {
   props.options = toMerged(monacoEditorDefaultOptions, props.options || {})

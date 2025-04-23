@@ -8,7 +8,7 @@ interface ImgProps extends Omit<React.ComponentProps<typeof Image>, 'src'> {
   src: string
 }
 
-export const Img = ({ alt = '', src, width, height, fill, ...props }: ImgProps) => {
+export const Img = ({ alt = '', fill, height, src, width, ...props }: ImgProps) => {
   const { openViewer } = useImageViewerContext()
 
   const size = width && height ? { height, width } : { fill: true }
@@ -22,7 +22,7 @@ export const Img = ({ alt = '', src, width, height, fill, ...props }: ImgProps) 
         src={src}
         onClick={() => {
           openViewer({
-            images: [{ src, key: 1 }]
+            images: [{ key: 1, src }]
           })
         }}
         {...size}

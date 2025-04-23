@@ -4,7 +4,7 @@ import { digest, EdgeConfigValue, get, getAll, has } from '@vercel/edge-config'
 
 interface PatchOption {
   key: string
-  operation: 'create' | 'update' | 'upsert' | 'delete'
+  operation: 'create' | 'delete' | 'update' | 'upsert'
   value?: EdgeConfigValue
 }
 

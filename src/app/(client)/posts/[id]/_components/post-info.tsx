@@ -15,7 +15,7 @@ interface PostInfoProps {
   id: string
 }
 
-export const PostInfo = ({ id, defaultValue }: PostInfoProps) => {
+export const PostInfo = ({ defaultValue, id }: PostInfoProps) => {
   const { data: post, isLoading } = useSWR(
     ['e07ef4cb-d4cc-587d-b2ff-58d64c2a4d57', id],
     () => CustomRequest('GET api/post/info', { search: { id } }),
