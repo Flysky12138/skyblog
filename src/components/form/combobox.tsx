@@ -17,20 +17,20 @@ const DEFAULT_FIELD_NAMES = {
 interface ComboboxProps<T, M extends boolean> {
   fieldNames?: { label: keyof T; value: keyof T }
   multiple?: M
-  onAddOption?: (value: string) => T
-  onSelect?: (value: ComboboxValueType<T, M>) => void
   options: T[]
   value: ComboboxValueType<T, M>
+  onAddOption?: (value: string) => T
+  onSelect?: (value: ComboboxValueType<T, M>) => void
 }
 type ComboboxValueType<T, M extends boolean> = M extends true ? T[] : T
 
 export const Combobox = <T extends Record<string, unknown>, M extends boolean>({
   fieldNames = DEFAULT_FIELD_NAMES,
   multiple,
-  onAddOption,
-  onSelect,
   options,
-  value
+  value,
+  onAddOption,
+  onSelect
 }: ComboboxProps<T, M>) => {
   const [open, setOpen] = React.useState(false)
   // 是否多选

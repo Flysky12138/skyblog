@@ -27,12 +27,13 @@ export const ClashTable = () => {
         { key: 'index' },
         { dataIndex: 'name', title: '名称' },
         { dataIndex: 'subtitle', title: '描述' },
-        { dataIndex: 'visitorInfos', render: text => text.length, title: '次数' },
-        { dataIndex: 'subscribeLastAt', headerClassName: 'w-48', render: text => (text ? formatISOTime(text) : null), title: '最近订阅时间' },
+        { dataIndex: 'visitorInfos', title: '次数', render: text => text.length },
+        { dataIndex: 'subscribeLastAt', headerClassName: 'w-48', title: '最近订阅时间', render: text => (text ? formatISOTime(text) : null) },
         { dataIndex: 'updatedAt', headerClassName: 'w-48', render: formatISOTime, title: '更新时间' },
         {
           dataIndex: 'enabled',
           headerClassName: 'w-12',
+          title: '启用',
           render: (text, { id }, index) => (
             <Switch
               checked={text}
@@ -56,8 +57,7 @@ export const ClashTable = () => {
                 )
               }}
             />
-          ),
-          title: '启用'
+          )
         },
         {
           align: 'right',

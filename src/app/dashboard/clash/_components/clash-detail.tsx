@@ -19,11 +19,11 @@ import { useImmer } from 'use-immer'
 import { SWR_KEY_CLASH_TEMPLATES } from './clash-template-table'
 
 interface ClashDetailProps extends React.PropsWithChildren {
-  onSubmit: (payload: NonNullable<ClashDetailProps['value']>) => Promise<void>
   value?: Pick<POST['body'], keyof PUT['body']>
+  onSubmit: (payload: NonNullable<ClashDetailProps['value']>) => Promise<void>
 }
 
-export const ClashDetail = ({ children, onSubmit, value }: ClashDetailProps) => {
+export const ClashDetail = ({ children, value, onSubmit }: ClashDetailProps) => {
   const [open, setOpen] = React.useState(false)
 
   const [form, setForm] = useImmer<NonNullable<ClashDetailProps['value']>>({

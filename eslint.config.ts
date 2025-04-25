@@ -27,12 +27,31 @@ const tseslintRules = {
   '@typescript-eslint/no-unused-vars': 0
 }
 
+const commonSortRules = [
+  2,
+  {
+    customGroups: [
+      {
+        elementNamePattern: '^on[A-Z]',
+        groupName: 'onEvent',
+        selector: 'property'
+      }
+    ],
+    groups: ['unknown', ['onEvent', 'method'], 'multiline-method'],
+    order: 'asc',
+    type: 'natural'
+  }
+]
+
 /**
  * @see https://perfectionist.dev/rules
  */
 const perfectionistRules = {
+  'perfectionist/sort-interfaces': commonSortRules,
   // 关闭，使用 react/jsx-sort-props 规则
-  'perfectionist/sort-jsx-props': 0
+  'perfectionist/sort-jsx-props': 0,
+  'perfectionist/sort-object-types': commonSortRules,
+  'perfectionist/sort-objects': commonSortRules
 }
 
 /**
@@ -70,7 +89,7 @@ const reactHooksRules = {
 
 export default tseslint.config(
   {
-    ignores: ['public/', '.next/', 'src/components/ui/']
+    ignores: ['public/', '.next/', 'src/components/ui/', 'api.d.ts']
   },
   // https://typescript-eslint.io/users/configs/#projects-without-type-checking
   tseslint.configs.recommended,

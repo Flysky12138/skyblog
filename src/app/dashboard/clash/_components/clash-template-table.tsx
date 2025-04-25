@@ -22,7 +22,7 @@ export const ClashTemplateTable = () => {
       columns={[
         { key: 'index' },
         { dataIndex: 'name', title: '名称' },
-        { dataIndex: '_count', render: text => text.clashs, title: '引用' },
+        { dataIndex: '_count', title: '引用', render: text => text.clashs },
         { dataIndex: 'createdAt', headerClassName: 'w-48', render: formatISOTime, title: '创建时间' },
         { dataIndex: 'updatedAt', headerClassName: 'w-48', render: formatISOTime, title: '更新时间' },
         {

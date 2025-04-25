@@ -27,11 +27,12 @@ export default function Page() {
           { key: 'index' },
           { dataIndex: 'title', title: '标题' },
           { dataIndex: 'description', title: '描述' },
-          { dataIndex: 'categories', render: value => value.map(category => category.name).join('、'), title: '分类' },
-          { dataIndex: 'tags', render: value => value.map(category => category.name).join('、'), title: '标签' },
+          { dataIndex: 'categories', title: '分类', render: value => value.map(category => category.name).join('、') },
+          { dataIndex: 'tags', title: '标签', render: value => value.map(category => category.name).join('、') },
           {
             dataIndex: 'published',
             headerClassName: 'w-12',
+            title: '公开',
             render: (text, record, index) => (
               <Switch
                 checked={text}
@@ -55,13 +56,13 @@ export default function Page() {
                   )
                 }}
               />
-            ),
-            title: '公开'
+            )
           },
           {
             align: 'right',
             headerClassName: 'w-36',
             key: 'edit',
+            title: '操作',
             render: (record, index) => (
               <div key={index} className="flex justify-end gap-2">
                 <TableActionButton asChild>
@@ -92,8 +93,7 @@ export default function Page() {
                   }}
                 />
               </div>
-            ),
-            title: '操作'
+            )
           }
         ]}
         dataSource={data?.result}

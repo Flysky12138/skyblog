@@ -7,11 +7,11 @@ import React from 'react'
 import { useImmer } from 'use-immer'
 
 interface FriendDetailProps extends React.PropsWithChildren {
-  onSubmit: (payload: POST['body']) => Promise<void>
   value?: POST['body']
+  onSubmit: (payload: POST['body']) => Promise<void>
 }
 
-export const FriendDetail = ({ children, onSubmit, value }: FriendDetailProps) => {
+export const FriendDetail = ({ children, value, onSubmit }: FriendDetailProps) => {
   const [open, setOpen] = React.useState(false)
 
   const [form, setForm] = useImmer<POST['body']>({

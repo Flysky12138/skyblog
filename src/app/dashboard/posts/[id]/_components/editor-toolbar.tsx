@@ -16,15 +16,15 @@ interface EditorToolbarProps {
     save: boolean
   }
   isCreate: boolean
+  post: DefaultPostType
+  setPost: Updater<DefaultPostType>
   onCompare: () => void
   onFormat: () => void
   onPreview: () => void
   onSave: () => void
-  post: DefaultPostType
-  setPost: Updater<DefaultPostType>
 }
 
-const EditorToolbar = ({ disabled, isCreate, onCompare, onFormat, onPreview, onSave, post, setPost }: EditorToolbarProps) => {
+const EditorToolbar = ({ disabled, isCreate, post, setPost, onCompare, onFormat, onPreview, onSave }: EditorToolbarProps) => {
   return (
     <section className="border-divide bg-sidebar flex items-center gap-3 border-b px-3 py-2">
       <TooltipProvider>

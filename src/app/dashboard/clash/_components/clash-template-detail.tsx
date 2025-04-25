@@ -12,11 +12,11 @@ import React from 'react'
 import { useImmer } from 'use-immer'
 
 interface ClashTemplateDetailProps extends React.PropsWithChildren {
-  onSubmit: (payload: NonNullable<ClashTemplateDetailProps['value']>) => Promise<void>
   value?: Pick<POST['body'], keyof PUT['body']>
+  onSubmit: (payload: NonNullable<ClashTemplateDetailProps['value']>) => Promise<void>
 }
 
-export const ClashTemplateDetail = ({ children, onSubmit, value }: ClashTemplateDetailProps) => {
+export const ClashTemplateDetail = ({ children, value, onSubmit }: ClashTemplateDetailProps) => {
   const [open, setOpen] = React.useState(false)
 
   const [form, setForm] = useImmer<NonNullable<ClashTemplateDetailProps['value']>>({

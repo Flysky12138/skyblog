@@ -9,13 +9,13 @@ import { useMeasure } from 'react-use'
 import { FixedSizeList } from 'react-window'
 
 interface PrintProps {
-  onClose: () => void
   pi: string
   size: number
   time: number
+  onClose: () => void
 }
 
-const Print_ = ({ onClose, pi, size, time }: PrintProps) => {
+const Print_ = ({ pi, size, time, onClose }: PrintProps) => {
   const [sectionRef, { width }] = useMeasure<HTMLElement>()
   const [fontRef, { width: fontWidth }] = useMeasure<HTMLElement>()
 

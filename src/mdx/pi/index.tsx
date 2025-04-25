@@ -96,7 +96,7 @@ export default function Pi() {
             <DialogTrigger asChild>
               <Button>源码</Button>
             </DialogTrigger>
-            <DialogContent className="max-w-3xl p-0 **:data-[slot='scroll-area-viewport']:max-h-[90svh] [&>button]:hidden">
+            <DialogContent className="max-w-2xl p-0 text-sm [&>button]:hidden">
               {form.mode == 'chudnovsky' && <ChudnovskyCode />}
               {form.mode == 'chudnovsky-bs' && <ChudnovskyBsCode />}
             </DialogContent>

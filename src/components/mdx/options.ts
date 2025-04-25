@@ -31,8 +31,8 @@ const rehypeMathjaxOptions: RehypeMathjaxOptions = {
 const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
   keepBackground: false,
   theme: {
-    dark: 'dark-plus',
-    light: 'light-plus'
+    dark: 'github-dark',
+    light: 'github-light'
   },
   transformers: [
     // 一个适用于 Shiki 的 VSCode 风格彩色括号转换器

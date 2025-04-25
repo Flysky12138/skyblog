@@ -10,13 +10,13 @@ export interface PaginationProps extends Partial<Pick<PaginationResult<unknown[]
    */
   boundaryCount?: number
   className?: string
-  getHref?: (payload: Pick<PaginationResult<unknown[]>, 'count' | 'limit' | 'page' | 'totalPages'>) => string
-  onChange?: (payload: Pick<PaginationResult<unknown[]>, 'count' | 'limit' | 'page' | 'totalPages'>) => void
   /**
    * 当前页面之前和之后始终可见的页面数
    * @default 2
    */
   siblingCount?: number
+  getHref?: (payload: Pick<PaginationResult<unknown[]>, 'count' | 'limit' | 'page' | 'totalPages'>) => string
+  onChange?: (payload: Pick<PaginationResult<unknown[]>, 'count' | 'limit' | 'page' | 'totalPages'>) => void
 }
 
 const Pagination = ({
@@ -25,10 +25,10 @@ const Pagination = ({
   count = 1,
   getHref,
   limit = 1,
-  onChange,
   page = 1,
   siblingCount = 2,
-  totalPages = 1
+  totalPages = 1,
+  onChange
 }: PaginationProps) => {
   const range = (start: number, end: number) => Array.from({ length: end - start + 1 }, (_, i) => start + i)
 

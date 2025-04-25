@@ -51,7 +51,7 @@ const Live2DContext = React.createContext<Live2DContextProps>(null!)
 
 export const useLive2DContext = () => React.useContext(Live2DContext)
 
-export const Live2DProvider = ({ children }: React.PropsWithChildren) => {
+export const Live2DProvider = (props: React.PropsWithChildren) => {
   const [enable, setEnable] = useLocalStorage('live2d-enable', false)
   const [loading, setLoading] = React.useState(false)
   const [src, setSrc] = React.useState<Live2DContextProps['src']>()
@@ -97,9 +97,8 @@ export const Live2DProvider = ({ children }: React.PropsWithChildren) => {
         setSrc,
         src
       }}
-    >
-      {children}
-    </Live2DContext.Provider>
+      {...props}
+    />
   )
 }
 

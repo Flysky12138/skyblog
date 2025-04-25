@@ -21,7 +21,7 @@ export const useImageViewerContext = () => React.useContext(ImageViewerContext)
  * 一款超精致的 React 图片预览组件
  * @see https://github.com/MinJieLiu/react-photo-view
  */
-export const ImageViewerProvider = ({ children }: React.PropsWithChildren) => {
+export const ImageViewerProvider = (props: React.PropsWithChildren) => {
   const [data, setData] = useImmer<Pick<IPhotoSliderProps, 'images' | 'index' | 'overlayRender' | 'visible'>>({
     images: [],
     index: 0,
@@ -46,16 +46,15 @@ export const ImageViewerProvider = ({ children }: React.PropsWithChildren) => {
             })
           }
         }}
-      >
-        {children}
-      </ImageViewerContext.Provider>
+        {...props}
+      />
       <PhotoSlider
         brokenElement={<Ban size={80} />}
         className="pointer-events-auto"
         images={data.images}
         maskClassName="bg-white/50! dark:bg-black/50! backdrop-blur-sm"
         photoWrapClassName="select-none"
-        toolbarRender={({ images, index, onRotate, onScale, rotate, scale }) => (
+        toolbarRender={({ images, index, rotate, scale, onRotate, onScale }) => (
           <section className="flex items-center" role="toolbar">
             <Download
               className={toolbarSvgClassName}

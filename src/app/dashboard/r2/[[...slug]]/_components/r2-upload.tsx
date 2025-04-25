@@ -20,12 +20,12 @@ import { useImmer } from 'use-immer'
 import { R2Table } from './r2-table'
 
 interface R2UploadProps extends React.PropsWithChildren {
+  path: FilePathType & {}
   onFinished?: () => void
   onSubmit?: (payload: R2.FileInfo) => void
-  path: FilePathType & {}
 }
 
-export const R2Upload = ({ children, onFinished, onSubmit, path }: R2UploadProps) => {
+export const R2Upload = ({ children, path, onFinished, onSubmit }: R2UploadProps) => {
   const [basePath, setBasePath] = React.useState<R2UploadProps['path']>('/')
 
   /** 检测 basePath 是否合法 */
@@ -60,8 +60,8 @@ export const R2Upload = ({ children, onFinished, onSubmit, path }: R2UploadProps
         const filename = getFileName(file)
         const data = await Toast(R2.put({ Body: file, ContentType: file.type, Key: `${basePath}${filename}`.slice(1), Metadata }), {
           description: filename,
-          error: e => e.message,
-          success: '上传成功'
+          success: '上传成功',
+          error: e => e.message
         })
         setFilelist(state => {
           state.uploaded.push(file)
@@ -157,18 +157,19 @@ export const R2Upload = ({ children, onFinished, onSubmit, path }: R2UploadProps
               columns={[
                 {
                   key: 'path',
+                  title: '路径',
                   render: file => (
                     <span className="block truncate" title={getFileName(file)}>
                       {getFileName(file)}
                     </span>
-                  ),
-                  title: '路径'
+                  )
                 },
                 { dataIndex: 'size', headerClassName: 'w-28', render: formatFileSize, title: '大小' },
                 {
                   align: 'right',
                   headerClassName: 'w-12',
                   key: 'action',
+                  title: '操作',
                   render: (_, index) => (
                     <TableActionButton
                       disabled={isUploading}
@@ -181,8 +182,7 @@ export const R2Upload = ({ children, onFinished, onSubmit, path }: R2UploadProps
                     >
                       <Trash />
                     </TableActionButton>
-                  ),
-                  title: '操作'
+                  )
                 }
               ]}
               dataSource={filelist.waiting}

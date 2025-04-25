@@ -37,9 +37,9 @@ export const MonacoEditor = ({
   code = '',
   diffMode = false,
   oldCode = '',
-  onChange,
   ref,
   registerEvents,
+  onChange,
   ...props
 }: MonacoEditorProps) => {
   props.options = toMerged(monacoEditorDefaultOptions, props.options || {})
