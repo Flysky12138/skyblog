@@ -1,28 +1,20 @@
 'use client'
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
-} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { Checkbox } from '@/components/ui/checkbox'
+import { cn, tw } from '@/lib/utils'
 import { ClassValue } from 'clsx'
 import { Trash } from 'lucide-react'
 import React from 'react'
 
+import { AlertDelete, AlertDeleteProps } from './alert-delete'
 import { DisplayByConditional } from './display/display-by-conditional'
 
 type AlignType = 'center' | 'left' | 'right'
 
 type ColumnItemType<T> = {
   [K in keyof T]: {
+    className?: ((text: T[K], record: T, index: number) => ClassValue) | ClassValue
     dataIndex: K
     key?: never
     render?: (text: T[K], record: T, index: number) => React.ReactNode
@@ -30,8 +22,9 @@ type ColumnItemType<T> = {
 }[keyof T]
 
 interface ColumnSlotType<T> {
+  className?: ((record: T, index: number) => ClassValue) | ClassValue
   dataIndex?: never
-  key: 'index' | (string & {})
+  key: 'checkbox' | 'index' | (string & {})
   render?: (record: T, index: number) => React.ReactNode
 }
 
@@ -41,7 +34,6 @@ type ColumnType<T> = {
    * @default 'left'
    */
   align?: AlignType
-  className?: ClassValue
   /**
    * 头部行的类名
    */
@@ -67,10 +59,6 @@ interface TableProps<T> {
    */
   loading?: boolean
   /**
-   * 设置行属性
-   */
-  onRow?: (record: T, index: number) => React.ComponentProps<'tr'>
-  /**
    * 表格行的类名
    */
   rowClassName?: ((record: T, index: number) => ClassValue) | ClassValue
@@ -78,11 +66,18 @@ interface TableProps<T> {
    * 表格行 key 的取值
    * @default 'id'
    */
-  rowKey?: ((record: T) => string) | keyof T
+  rowKey?: ((record: T, index: number) => string) | keyof T
   /**
-   * 表格行是否可选择
+   * 表格行选择器
    */
-  rowSelection?: {}
+  rowSelection?: {
+    selectedRows: T[]
+    onChange: (selectedRow: T[]) => void
+  }
+  /**
+   * 设置行属性
+   */
+  onRow?: (record: T, index: number) => React.ComponentProps<'tr'>
 }
 
 export const Table = <T,>({
@@ -90,27 +85,20 @@ export const Table = <T,>({
   columns,
   dataSource = [],
   loading,
-  onRow,
   rowClassName,
   // @ts-ignore
-  rowKey = 'id'
+  rowKey = 'id',
+  rowSelection,
+  onRow
 }: TableProps<T>) => {
-  columns = columns.map(column => {
-    switch (column.key) {
-      case 'index':
-        // 序号列默认配置描述
-        return Object.assign({ headerClassName: 'w-9', render: (_, index: number) => index + 1, title: '#' } as ColumnType<T>, column)
-      default:
-        return column
-    }
-  })
+  columns = modifyColumns(columns, { dataSource, loading, rowSelection })
 
   return (
     <TablePrimitive className={className}>
       <TableHeader>
         <TableRow>
           {columns.map(column => (
-            <TableHead key={(column.dataIndex || column.key) as string} className={cn(column.headerClassName, alignClassName(column.align))}>
+            <TableHead key={(column.dataIndex || column.key) as string} className={cn(column.headerClassName, cellAlign(column.align))}>
               {typeof column.title == 'function' ? column.title() : column.title}
             </TableHead>
           ))}
@@ -123,15 +111,23 @@ export const Table = <T,>({
         >
           {dataSource.map((record, index) => (
             <TableRow
-              key={typeof rowKey == 'function' ? rowKey(record) : renderCellData(record[rowKey])}
+              key={typeof rowKey == 'function' ? rowKey(record, index) : cellContentRender(record[rowKey])}
               className={typeof rowClassName == 'function' ? rowClassName(record, index) : rowClassName}
               {...onRow?.(record, index)}
             >
               {columns.map(column => (
-                <TableCell key={(column.dataIndex || column.key) as string} className={cn(column.className, alignClassName(column.align))}>
+                <TableCell
+                  key={(column.dataIndex || column.key) as string}
+                  className={cn(
+                    typeof column.className == 'function'
+                      ? Reflect.apply(column.className, null, column.dataIndex ? [record[column.dataIndex], record, index] : [record, index])
+                      : column.className,
+                    cellAlign(column.align)
+                  )}
+                >
                   {typeof column.render == 'function'
                     ? Reflect.apply(column.render, null, column.dataIndex ? [record[column.dataIndex], record, index] : [record, index])
-                    : renderCellData(column.dataIndex && record[column.dataIndex])}
+                    : cellContentRender(column.dataIndex && record[column.dataIndex])}
                 </TableCell>
               ))}
             </TableRow>
@@ -188,48 +184,79 @@ export const TableActionButton = ({ className, ...props }: React.ComponentProps<
   <Button className={cn('size-7 rounded-sm border not-hover:border-transparent', className)} size="icon" variant="secondary" {...props} />
 )
 
-const TableDeleteButton: React.FC<{
-  description: string
-  disabled?: boolean
-  onConfirm: () => void
-  title: string
-}> = ({ description, disabled, onConfirm, title }) => (
-  <AlertDialog>
-    <AlertDialogTrigger asChild>
-      <TableActionButton className="border-0!" disabled={disabled} variant="destructive">
-        <Trash />
-      </TableActionButton>
-    </AlertDialogTrigger>
-    <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle className="break-all">{title}</AlertDialogTitle>
-        <AlertDialogDescription>此操作无法撤消，{description}</AlertDialogDescription>
-      </AlertDialogHeader>
-      <AlertDialogFooter>
-        <AlertDialogCancel>取消</AlertDialogCancel>
-        <AlertDialogAction onClick={onConfirm}>确定</AlertDialogAction>
-      </AlertDialogFooter>
-    </AlertDialogContent>
-  </AlertDialog>
+export const TableDeleteButton = ({ disabled, ...props }: AlertDeleteProps & { disabled?: boolean }) => (
+  <AlertDelete {...props}>
+    <TableActionButton className="border-0!" disabled={disabled} variant="destructive">
+      <Trash />
+    </TableActionButton>
+  </AlertDelete>
 )
-export { TableDeleteButton }
 
 /**
- * 表格的默认显示内容
+ * 单元格内容
  */
-const renderCellData = (text: any): string => {
+const cellContentRender = (text: any): string => {
   if (!text) return ''
   if (typeof text == 'object') return JSON.stringify(text, null, 4)
   return text
 }
 
-const alignClassName = (align: AlignType = 'left') => {
+/**
+ * 列的对齐方式
+ */
+const cellAlign = (align: AlignType = 'left') => {
   switch (align) {
     case 'center':
-      return 'text-center'
+      return tw`text-center`
     case 'left':
-      return 'text-left'
+      return tw`text-left`
     case 'right':
-      return 'text-right'
+      return tw`text-right`
   }
+}
+
+/**
+ * 修改 `columns`
+ */
+const modifyColumns = <T,>(columns: ColumnType<T>[], options: Pick<TableProps<T>, 'dataSource' | 'loading' | 'rowSelection'>): ColumnType<T>[] => {
+  const { dataSource = [], loading, rowSelection } = options
+
+  return columns.map(column => {
+    switch (column.key) {
+      case 'checkbox':
+        const selectedRows = new Set<T>(rowSelection?.selectedRows)
+        const isSelectedAll = selectedRows.size == dataSource.length
+        return Object.assign(
+          {
+            className: tw`leading-0`,
+            headerClassName: tw`w-9 leading-0`,
+            key: 'checkbox',
+            render: record => (
+              <Checkbox
+                checked={selectedRows.has(record)}
+                onCheckedChange={() => {
+                  selectedRows.has(record) ? selectedRows.delete(record) : selectedRows.add(record)
+                  rowSelection?.onChange?.(Array.from(selectedRows))
+                }}
+              />
+            ),
+            title: () => (
+              <Checkbox
+                checked={!loading && isSelectedAll}
+                disabled={loading && dataSource.length == 0}
+                onCheckedChange={() => {
+                  isSelectedAll ? selectedRows.clear() : dataSource.forEach(it => selectedRows.add(it))
+                  rowSelection?.onChange?.(Array.from(selectedRows))
+                }}
+              />
+            )
+          } as ColumnType<T>,
+          column
+        )
+      case 'index':
+        return Object.assign({ headerClassName: tw`w-9`, title: '#', render: (_, index: number) => index + 1 } as ColumnType<T>, column)
+      default:
+        return column
+    }
+  })
 }

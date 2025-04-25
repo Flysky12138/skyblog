@@ -1,25 +1,29 @@
 'use client'
 
 import { GET } from '@/app/api/dashboard/user/visitors/route'
+import { AlertDelete } from '@/components/alert-delete'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Pagination } from '@/components/pagination'
 import { Table, TableActionButton } from '@/components/table'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { CustomRequest } from '@/lib/http/request'
 import { formatISOTime } from '@/lib/parser/time'
+import { Toast } from '@/lib/toast'
 import { Eye } from 'lucide-react'
 import dynamic from 'next/dynamic'
-import { useSet } from 'react-use'
+import React from 'react'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
 
 const MDXClient = dynamic(() => import('@/components/mdx/client').then(it => it.MDXClient), {
-  loading: () => <div className="skeleton h-20 rounded-md" />,
-  ssr: false
+  ssr: false,
+  loading: () => <div className="skeleton h-50 rounded-md" />
 })
 
 export default function Page() {
   const [search, setSearch] = useImmer<GET['search']>({ limit: 20, page: 1 })
+  const [checked, setChecked] = React.useState<GET['return']['result']>([])
 
   const { data, isLoading, mutate } = useSWR(
     ['9670f632-f40e-5695-b0c6-5cb539b4a957', search],
@@ -30,26 +34,26 @@ export default function Page() {
     }
   )
 
-  const [checked, setChecked] = useSet<string>()
-
   return (
     <section className="space-y-4">
       <Table
         columns={[
+          { key: 'checkbox' },
           { key: 'index' },
           { dataIndex: 'ip', title: 'Ip' },
           {
             key: 'address',
-            render: ({ geo }) => decodeURIComponent([geo.country, geo.countryRegion, geo.city].filter(Boolean).join('/')),
-            title: 'Address'
+            title: 'Address',
+            render: ({ geo }) => decodeURIComponent([geo.country, geo.countryRegion, geo.city].filter(Boolean).join('/'))
           },
-          { key: 'lon/lat', render: ({ geo }) => [geo.longitude, geo.latitude].filter(Boolean).join('/'), title: 'Lon/Lat' },
-          { key: 'device', render: ({ agent }) => agent.device.vendor, title: 'Device' },
+          { key: 'lon/lat', title: 'Lon/Lat', render: ({ geo }) => [geo.longitude, geo.latitude].filter(Boolean).join('/') },
+          { key: 'device', title: 'Device', render: ({ agent }) => agent.device.vendor },
           { dataIndex: 'createdAt', headerClassName: 'w-44', render: formatISOTime, title: '创建时间' },
           {
             align: 'right',
             headerClassName: 'w-16',
             key: 'detail',
+            title: '详情',
             render: record => (
               <div className="flex justify-end">
                 <Dialog>
@@ -60,43 +64,53 @@ export default function Page() {
                   </DialogTrigger>
                   <DialogContent className="max-w-3xl">
                     <DialogHeader>
-                      <DialogTitle>访客</DialogTitle>
-                      <DialogDescription>访客的全部信息</DialogDescription>
+                      <DialogTitle>访客信息</DialogTitle>
                     </DialogHeader>
-                    <div className="[&_span]:break-all [&_span]:whitespace-pre-wrap">
+                    <div className="text-sm">
                       <MDXClient value={'```json\n' + JSON.stringify(record, null, 2) + '\n```'} />
                     </div>
                   </DialogContent>
                 </Dialog>
               </div>
-            ),
-            title: '详情'
+            )
           }
         ]}
         dataSource={data?.result}
         loading={isLoading}
+        rowSelection={{
+          selectedRows: checked,
+          onChange: setChecked
+        }}
       />
-      <DisplayByConditional condition={(data?.totalPages || 0) > 1}>
-        <Pagination className="justify-end" onChange={setSearch} {...data} />
-      </DisplayByConditional>
-      {/* <div className="flex pt-4">
-        <DisplayByConditional condition={checked.size > 0}>
-          <ModalDelete
-            component={props => (
-              <Button className="tracking-widest text-inherit" size="icon" variant="outline" {...props}>
-                已选择 <span className="px-1 text-(--joy-palette-primary-solidBg)">{checked.size}</span> 项
-              </Button>
-            )}
-            onSubmit={async () => {
-              await Toast(CustomRequest('DELETE api/dashboard/users/visitor', { body: { ids: Array.from(checked.values()) } }), {
+      <div className="flex items-center justify-between">
+        <DisplayByConditional condition={checked.length > 0}>
+          <AlertDelete
+            description={`将永久删除 ${checked?.length} 项。`}
+            title="访客信息"
+            onConfirm={async () => {
+              await Toast(CustomRequest('DELETE api/dashboard/user/visitors', { body: { ids: checked.map(it => it.id) } }), {
                 success: '删除成功'
               })
-              setChecked.clear()
+              setChecked([])
               await mutate()
             }}
+          >
+            <Button size="sm" variant="destructive">
+              已选择 {checked?.length} 项
+            </Button>
+          </AlertDelete>
+        </DisplayByConditional>
+        <DisplayByConditional condition={(data?.totalPages || 0) > 1}>
+          <Pagination
+            className="justify-end"
+            onChange={payload => {
+              setChecked([])
+              setSearch(payload)
+            }}
+            {...data}
           />
         </DisplayByConditional>
-      </div> */}
+      </div>
     </section>
   )
 }
