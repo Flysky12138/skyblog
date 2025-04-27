@@ -12,7 +12,7 @@ export const Code = (props: React.ComponentProps<'code'>) => {
 
 const CodeBlock = ({ className, ...props }: React.ComponentProps<'code'>) => {
   return (
-    <ScrollArea className="*:data-[slot='scroll-area-viewport']:max-h-[600px] *:data-[slot='scroll-area-viewport']:overflow-scroll!">
+    <ScrollArea className="*:data-[slot='scroll-area-viewport']:max-h-[600px]">
       <code className={cn('text-[1em] font-semibold', className)} {...props} />
       <ScrollBar orientation="horizontal" />
     </ScrollArea>
@@ -20,5 +20,5 @@ const CodeBlock = ({ className, ...props }: React.ComponentProps<'code'>) => {
 }
 
 const CodeInline = ({ className, ...props }: React.ComponentProps<'code'>) => (
-  <code className={cn('bg-sheet rounded-sm px-1.5 py-1 font-semibold before:content-none after:content-none', className)} {...props} />
+  <code className={cn('bg-sheet rounded-sm px-1.5 py-1 font-semibold break-all before:content-none after:content-none', className)} {...props} />
 )

@@ -1,5 +1,8 @@
+import React from 'react'
+
 import { A } from './a'
 import { Code } from './code'
+import { Figure } from './figure'
 import * as heading from './heading'
 import { Img } from './img'
 import { P } from './p'
@@ -12,8 +15,9 @@ export const element = {
   ...table,
   a: A,
   code: Code,
+  figure: Figure,
   img: Img,
   p: P,
   pre: Pre,
   ul: Ul
-}
+} as Record<React.HTMLElementType, React.ComponentType>

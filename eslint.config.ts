@@ -30,13 +30,7 @@ const tseslintRules = {
 const commonSortRules = [
   2,
   {
-    customGroups: [
-      {
-        elementNamePattern: '^on[A-Z]',
-        groupName: 'onEvent',
-        selector: 'property'
-      }
-    ],
+    customGroups: [{ elementNamePattern: '^on[A-Z]', groupName: 'onEvent', selector: 'property' }],
     groups: ['unknown', ['onEvent', 'method'], 'multiline-method'],
     order: 'asc',
     type: 'natural'
