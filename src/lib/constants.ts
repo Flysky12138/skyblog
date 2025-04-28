@@ -22,11 +22,6 @@ export const SESSIONSTORAGE = {
   POST_VIEW_SUBMITTED: (id: string) => `post-view-submitted-${id}`
 } as const
 
-/** css `view-transition-name` */
-export const VIEW_TRANSITION_NAME = {
-  THEME: 'theme'
-} as const
-
 /** post card display */
 export enum POST_CARD_DISPLAY {
   HEADER = 1 << 0,
