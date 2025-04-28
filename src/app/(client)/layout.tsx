@@ -28,7 +28,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
           </DisplayByBreakPoint>
           <DisplayByAuth role="ADMIN">
             <TransitionCollapse orientation="horizontal">
-              <Button asChild size="icon" variant="outline">
+              <Button asChild aria-label="dashboard" size="icon" variant="outline">
                 <Link href="/dashboard">
                   <LayoutDashboard />
                 </Link>

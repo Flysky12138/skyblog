@@ -114,7 +114,7 @@ export const Live2DToggleButton = () => {
   return (
     <Live2DBreakpoint>
       <TransitionCollapse orientation="horizontal">
-        <Button disabled={loading} size="icon" variant="outline" onClick={() => setEnable(!enable)}>
+        <Button aria-label="live2d toggle" disabled={loading} size="icon" variant="outline" onClick={() => setEnable(!enable)}>
           <DisplayByConditional condition={loading} fallback={enable ? <Bot /> : <BotOff />}>
             <Loader2 className="animate-spin" />
           </DisplayByConditional>

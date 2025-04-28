@@ -39,6 +39,7 @@ export const Pre = ({ children, className, tabIndex, ...props }: React.Component
     <pre ref={preRef} className={cn('group/pre relative', className)} {...props}>
       {children}
       <Button
+        aria-label="copy code"
         className={cn(
           'absolute top-1 right-1 size-8 p-2 text-[initial] md:top-1.5 md:right-1.5',
           'dark:bg-stone-800 hover:dark:bg-stone-900',

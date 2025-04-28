@@ -26,6 +26,7 @@ export const ThemeToggleButton = () => {
 
   return (
     <Button
+      aria-label="theme toggle"
       size="icon"
       variant="outline"
       onClick={async event => {

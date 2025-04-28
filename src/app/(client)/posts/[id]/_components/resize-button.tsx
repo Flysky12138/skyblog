@@ -37,6 +37,7 @@ export const ResizeButton = ({ className, ...props }: ResizeButtonProps) => {
       `}</style>
       )}
       <Button
+        aria-label="resize toggle"
         className={cn('size-7', className)}
         size="icon"
         variant="ghost"

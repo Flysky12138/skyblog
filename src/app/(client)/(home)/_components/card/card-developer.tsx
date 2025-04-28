@@ -33,7 +33,7 @@ export const CardDeveloper = async () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button asChild size="icon" variant="secondary">
-                <a href="https://leetcode.cn/u/flysky12138" rel="noreferrer nofollow" target="_blank">
+                <a aria-label="leetcode" href="https://leetcode.cn/u/flysky12138" rel="noreferrer nofollow" target="_blank">
                   <LeetCode />
                 </a>
               </Button>
@@ -43,7 +43,7 @@ export const CardDeveloper = async () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button asChild size="icon" variant="secondary">
-                <a href="https://open.spotify.com/user/312ckxkwqn2ztud3zjzqwkhkqgrq" rel="noreferrer nofollow" target="_blank">
+                <a aria-label="spotify" href="https://open.spotify.com/user/312ckxkwqn2ztud3zjzqwkhkqgrq" rel="noreferrer nofollow" target="_blank">
                   <Spotify />
                 </a>
               </Button>
@@ -53,7 +53,7 @@ export const CardDeveloper = async () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button asChild size="icon" variant="secondary">
-                <a href="mailto:xhp443@gmail.com" rel="noreferrer nofollow">
+                <a aria-label="google email" href="mailto:xhp443@gmail.com" rel="noreferrer nofollow">
                   <Mail />
                 </a>
               </Button>
