@@ -22,3 +22,9 @@ body[data-scroll-locked] {
   }
  }
 }
+
+/** 移除子标签两端的 margin */
+article,
+[data-slot*="content"] {
+  @apply *:first:mt-0! *:last:mb-0! *:has-[+:last-child:is(style)]:mb-0! *:[:first-child:is(style)+*]:mt-0!;
+}

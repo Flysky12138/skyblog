@@ -18,7 +18,7 @@ export const Tabs = ({ children, ...props }: TabsProps) => {
         tabsContent.push(
           <TabsPrimitive.TabsContent
             key={tabsContent.length}
-            className={cn('bg-sheet rounded-lg p-2 *:first:mt-0 *:last:mb-0', className)}
+            className={cn('bg-sheet rounded-lg p-2 md:p-4', className)}
             value={String(tabsContent.length)}
             {..._props}
           />
@@ -28,7 +28,7 @@ export const Tabs = ({ children, ...props }: TabsProps) => {
         tabsTrigger.push(
           <TabsPrimitive.TabsTrigger
             key={tabsTrigger.length}
-            className={cn('px-8 font-semibold', className)}
+            className={cn('px-2 font-semibold md:px-8', className)}
             value={String(tabsTrigger.length)}
             {..._props}
           />

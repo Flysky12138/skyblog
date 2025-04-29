@@ -15,7 +15,6 @@ img {
 article {
   @apply font-article overflow-hidden;
   @apply prose prose-sm prose-sky dark:prose-invert md:prose-base;
-  @apply *:first:mt-0! *:last:mb-0! *:has-[+:last-child:is(style)]:mb-0! *:[:first-child:is(style,button)+*]:mt-0!;
 }
 pre,
 code {

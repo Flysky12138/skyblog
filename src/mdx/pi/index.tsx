@@ -10,13 +10,18 @@ import React from 'react'
 import { useToggle } from 'react-use'
 import { useImmer } from 'use-immer'
 
-import Arctan from './arctan.mdx'
-import ChudnovskyBsCode from './chudnovsky-bs-code.mdx'
-import ChudnovskyBs from './chudnovsky-bs.mdx'
-import ChudnovskyCode from './chudnovsky-code.mdx'
-import Chudnovsky from './chudnovsky.mdx'
+import Arctan_ from './arctan.mdx'
+import ChudnovskyBsCode_ from './chudnovsky-bs-code.mdx'
+import ChudnovskyBs_ from './chudnovsky-bs.mdx'
+import ChudnovskyCode_ from './chudnovsky-code.mdx'
+import Chudnovsky_ from './chudnovsky.mdx'
 import { Print } from './print'
-import Quote from './quote.mdx'
+
+const Arctan = React.memo(Arctan_)
+const ChudnovskyBsCode = React.memo(ChudnovskyBsCode_)
+const ChudnovskyBs = React.memo(ChudnovskyBs_)
+const ChudnovskyCode = React.memo(ChudnovskyCode_)
+const Chudnovsky = React.memo(Chudnovsky_)
 
 type ModeType = 'arctan' | 'chudnovsky' | 'chudnovsky-bs'
 
@@ -96,7 +101,7 @@ export default function Pi() {
             <DialogTrigger asChild>
               <Button>源码</Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl p-0 text-sm [&>button]:hidden">
+            <DialogContent className="max-w-2xl p-0 text-sm [&>button]:hidden [&>figure]:m-0">
               {form.mode == 'chudnovsky' && <ChudnovskyCode />}
               {form.mode == 'chudnovsky-bs' && <ChudnovskyBsCode />}
             </DialogContent>
@@ -141,14 +146,11 @@ export default function Pi() {
           />
         </DisplayByConditional>
       )}
-      <div>
+      <div data-slot="content">
         {form.mode == 'arctan' && <Arctan />}
         {form.mode == 'chudnovsky' && <Chudnovsky />}
         {form.mode == 'chudnovsky-bs' && <ChudnovskyBs />}
       </div>
-      <DisplayByConditional condition={['chudnovsky', 'chudnovsky-bs'].includes(form.mode)}>
-        <Quote />
-      </DisplayByConditional>
     </section>
   )
 }
