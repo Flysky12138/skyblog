@@ -1,38 +1,45 @@
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarProvider, SidebarRail } from '@/components/ui/sidebar'
+import { cn } from '@/lib/utils'
 import { cookies } from 'next/headers'
+import React from 'react'
 
 import { NavLogo } from './nav-logo'
 import { NavMain } from './nav-main'
 import { NavTheme } from './nav-theme'
 import { NavUser } from './nav-user'
 
-export const Nav = async () => {
+export const Nav = () => {
+  return (
+    <Sidebar className="border-divide whitespace-nowrap" collapsible="icon">
+      <SidebarHeader>
+        <NavLogo />
+      </SidebarHeader>
+      <SidebarContent>
+        <NavMain />
+      </SidebarContent>
+      <SidebarFooter>
+        <NavTheme />
+        <NavUser />
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
+  )
+}
+
+export const NavProvider = async ({ className, ...props }: React.ComponentProps<typeof SidebarProvider>) => {
   const cookieStore = await cookies()
   const defaultOpen = cookieStore.get('sidebar_state')?.value == 'true'
 
   return (
     <SidebarProvider
-      className="w-auto"
+      className={cn('w-auto', className)}
       defaultOpen={defaultOpen}
       style={
         {
           '--sidebar-width': '14rem'
         } as React.CSSProperties
       }
-    >
-      <Sidebar className="border-divide whitespace-nowrap" collapsible="icon">
-        <SidebarHeader>
-          <NavLogo />
-        </SidebarHeader>
-        <SidebarContent>
-          <NavMain />
-        </SidebarContent>
-        <SidebarFooter>
-          <NavTheme />
-          <NavUser />
-        </SidebarFooter>
-        <SidebarRail />
-      </Sidebar>
-    </SidebarProvider>
+      {...props}
+    />
   )
 }

@@ -28,7 +28,7 @@ export const Tabs = ({ children, ...props }: TabsProps) => {
         tabsTrigger.push(
           <TabsPrimitive.TabsTrigger
             key={tabsTrigger.length}
-            className={cn('px-2 font-semibold md:px-8', className)}
+            className={cn('px-4 font-semibold md:px-8', className)}
             value={String(tabsTrigger.length)}
             {..._props}
           />

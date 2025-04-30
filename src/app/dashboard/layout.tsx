@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 
-import { Nav } from './_components/nav'
+import { Header } from './_components/header'
+import { Nav, NavProvider } from './_components/nav'
 
 export const metadata: Metadata = {
   title: 'Dashboard'
@@ -8,9 +9,12 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: React.PropsWithChildren) {
   return (
-    <section className="relative flex h-svh w-screen overflow-hidden">
+    <NavProvider>
       <Nav />
-      <main className="bg-root flex-1 overflow-auto p-8">{children}</main>
-    </section>
+      <div className="flex flex-1 flex-col overflow-auto">
+        <Header className="md:hidden" />
+        <main className="bg-root flex-1 p-4 md:p-8">{children}</main>
+      </div>
+    </NavProvider>
   )
 }

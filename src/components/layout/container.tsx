@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { Root, SlotProps } from '@radix-ui/react-slot'
 import { cva, VariantProps } from 'class-variance-authority'
 
 const toggleVariants = cva('', {
@@ -13,10 +14,13 @@ const toggleVariants = cva('', {
   }
 })
 
-interface ContainerProps extends React.PropsWithChildren, VariantProps<typeof toggleVariants> {
+interface ContainerProps extends SlotProps, VariantProps<typeof toggleVariants> {
+  asChild?: boolean
   className?: string
 }
 
-export const Container = ({ children, className, variant }: ContainerProps) => {
-  return <section className={cn('container mx-auto max-w-7xl', toggleVariants({ variant }), className)}>{children}</section>
+export const Container = ({ asChild, className, variant, ...props }: ContainerProps) => {
+  const Comp = asChild ? Root : 'section'
+
+  return <Comp className={cn('container mx-auto max-w-7xl', toggleVariants({ variant }), className)} {...props} />
 }
