@@ -2,11 +2,11 @@ import { PrismaNeon } from '@prisma/adapter-neon'
 import { PrismaClient } from '@prisma/client'
 import paginate from 'prisma-paginate'
 
-const isDev = !process.env.NODE_ENV || process.env.NODE_ENV == 'development'
+import { isDev } from './utils'
 
 const prismaClientSingleton = () => {
   let prisma = null
-  if (isDev) {
+  if (isDev()) {
     prisma = new PrismaClient()
   } else {
     // https://www.prisma.io/docs/orm/prisma-client/deployment/edge/deploy-to-vercel#vercel-postgres
@@ -22,6 +22,6 @@ declare global {
 }
 
 const prisma = global.prisma ?? prismaClientSingleton()
-if (isDev) global.prisma = prisma
+if (isDev()) global.prisma = prisma
 
 export default prisma

@@ -3,9 +3,9 @@ model VisitorLog {
   createdAt DateTime @default(now())
   ip        String
   /// [Geo]
-  geo       Json     @default("\"{}\"")
+  geo       Json     @default("{}")
   /// [Agent]
-  agent     Json     @default("\"{}\"")
+  agent     Json     @default("{}")
   referer   String?
   clashs    Clash[]
 

@@ -1,0 +1,9 @@
+ignoredBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - cn-font-split
+  - esbuild
+  - koffi
+  - prisma
+  - protobufjs
+  - sharp

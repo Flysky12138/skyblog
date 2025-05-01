@@ -96,7 +96,7 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
   // 创建/更新
   const handleSave = async () => {
     if (!post.title) {
-      toast.error('表单验证失败')
+      toast.error('表单验证失败', { richColors: true })
       return
     }
     const putBody: PUT['body'] = {

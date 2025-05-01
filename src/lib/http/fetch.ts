@@ -34,10 +34,10 @@ const Core = async (promise: () => Promise<Response>) => {
   } catch (error) {
     console.error(error)
     const message = JSON.parse((error as Error).message)
-    const formatMessage = typeof message == 'string' ? message : JSON.stringify(message, null, '  ')
+    const formatMessage = typeof message == 'string' ? message : JSON.stringify(message, null, 2)
     if (typeof window != 'undefined') {
       if (window.location.pathname.includes('/dashboard')) {
-        toast.error(formatMessage)
+        toast.error(formatMessage, { closeButton: true, richColors: true })
       }
     }
     return Promise.reject(formatMessage)
