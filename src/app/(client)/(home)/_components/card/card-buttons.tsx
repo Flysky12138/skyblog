@@ -1,10 +1,10 @@
 import packageJson from '@/../package.json'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/layout/card'
-import { Button } from '@/components/ui/button'
 import prisma from '@/lib/prisma'
 import { Handshake, Package } from 'lucide-react'
 import Link from 'next/link'
+import { Button } from 'ui/button'
 
 export const CardButtons = async () => {
   const friendCount = await prisma.friend.count()

@@ -3,12 +3,12 @@ import { DisplayByConditional } from '@/components/display/display-by-conditiona
 import { Card } from '@/components/layout/card'
 import { MonacoEditor } from '@/components/monaco-editor'
 import { yamlClashConfig } from '@/components/monaco-editor/languages/yaml-clash'
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { getVariablesNames } from '@/lib/parser/string'
 import React from 'react'
+import { Button } from 'ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from 'ui/dialog'
+import { Input } from 'ui/input'
+import { Label } from 'ui/label'
 import { useImmer } from 'use-immer'
 
 interface ClashTemplateDetailProps extends React.PropsWithChildren {

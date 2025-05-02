@@ -1,5 +1,10 @@
 'use client'
 
+import { cn } from '@/lib/utils'
+import { isUndefined } from 'es-toolkit'
+import { Archive, House, LibraryBig, LucideIcon, NotebookPen, Plus, Settings, Share2, User, UserRoundSearch, Users } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -9,12 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar
-} from '@/components/ui/sidebar'
-import { cn } from '@/lib/utils'
-import { isUndefined } from 'es-toolkit'
-import { Archive, House, LibraryBig, LucideIcon, NotebookPen, Plus, Settings, Share2, User, UserRoundSearch, Users } from 'lucide-react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+} from 'ui/sidebar'
 
 interface Menu {
   group: {

@@ -1,6 +1,13 @@
 'use client'
 
 import { Card } from '@/components/layout/card'
+import { CustomRequest } from '@/lib/http/request'
+import { Toast } from '@/lib/toast'
+import { cn } from '@/lib/utils'
+import { produce } from 'immer'
+import { Eye, Pencil, Plus, Trash } from 'lucide-react'
+import Link from 'next/link'
+import useSWR from 'swr'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,15 +18,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger
-} from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
-import { CustomRequest } from '@/lib/http/request'
-import { Toast } from '@/lib/toast'
-import { cn } from '@/lib/utils'
-import { produce } from 'immer'
-import { Eye, Pencil, Plus, Trash } from 'lucide-react'
-import Link from 'next/link'
-import useSWR from 'swr'
+} from 'ui/alert-dialog'
+import { Button } from 'ui/button'
 
 import { FriendDetail } from './_components/friend-detail'
 

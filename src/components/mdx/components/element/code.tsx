@@ -1,9 +1,9 @@
 'use client'
 
 import { DATA_IS_BLOCK } from '@/components/mdx/rehype/rehype-code'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import React from 'react'
+import { ScrollArea, ScrollBar } from 'ui/scroll-area'
 
 export const Code = (props: React.ComponentProps<'code'>) => {
   const Comp = Reflect.has(props, DATA_IS_BLOCK) ? CodeBlock : CodeInline

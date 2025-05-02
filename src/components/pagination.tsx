@@ -1,7 +1,7 @@
 'use client'
 
-import * as PaginationPrimitive from '@/components/ui/pagination'
 import { PaginationResult } from 'prisma-paginate'
+import * as PaginationPrimitive from 'ui/pagination'
 
 export interface PaginationProps extends Partial<Pick<PaginationResult<unknown[]>, 'count' | 'limit' | 'page' | 'totalPages'>> {
   /**

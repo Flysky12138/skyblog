@@ -1,5 +1,4 @@
 import { Report } from '@/components/report'
-import { Toaster } from '@/components/ui/sonner'
 import '@/globals.css'
 import { ImageViewerProvider } from '@/providers/image-viewer'
 import { SWRProvider } from '@/providers/swr'
@@ -8,6 +7,7 @@ import { Metadata, Viewport } from 'next'
 import { SessionProvider } from 'next-auth/react'
 import { ZCOOL_KuaiLe } from 'next/font/google'
 import NextTopLoader from 'nextjs-toploader'
+import { Toaster } from 'ui/sonner'
 
 export const metadata: Metadata = {
   description: process.env.NEXT_PUBLIC_DESCRIPTION,

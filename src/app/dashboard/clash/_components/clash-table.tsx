@@ -1,7 +1,6 @@
 'use client'
 
 import { Table, TableActionButton, TableDeleteButton } from '@/components/table'
-import { Switch } from '@/components/ui/switch'
 import { CustomRequest } from '@/lib/http/request'
 import { formatISOTime } from '@/lib/parser/time'
 import { Toast } from '@/lib/toast'
@@ -10,6 +9,7 @@ import { Pencil, Plus, Share2 } from 'lucide-react'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
 import useSWR from 'swr'
+import { Switch } from 'ui/switch'
 
 import { ClashDetail } from './clash-detail'
 

@@ -1,7 +1,7 @@
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarProvider, SidebarRail } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
 import { cookies } from 'next/headers'
 import React from 'react'
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarProvider, SidebarRail } from 'ui/sidebar'
 
 import { NavLogo } from './nav-logo'
 import { NavMain } from './nav-main'
