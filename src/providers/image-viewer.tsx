@@ -1,8 +1,9 @@
 'use client'
 
+import PictureError from '@/assets/svg/picture-error.svg'
 import { download } from '@/lib/file/download'
 import { tw } from '@/lib/utils'
-import { Ban, CircleMinus, CirclePlus, Download, Maximize, Minimize, RotateCw } from 'lucide-react'
+import { CircleMinus, CirclePlus, Download, Maximize, Minimize, RotateCw } from 'lucide-react'
 import React from 'react'
 import { PhotoSlider } from 'react-photo-view'
 import { IPhotoSliderProps } from 'react-photo-view/dist/PhotoSlider'
@@ -49,7 +50,7 @@ export const ImageViewerProvider = (props: React.PropsWithChildren) => {
         {...props}
       />
       <PhotoSlider
-        brokenElement={<Ban size={80} />}
+        brokenElement={<PictureError height={80} width={80} />}
         className="pointer-events-auto"
         images={data.images}
         maskClassName="bg-white/50! dark:bg-black/50! backdrop-blur-sm"

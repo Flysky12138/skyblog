@@ -1,17 +1,10 @@
 'use client'
 
+import { Image, ImageProps } from '@/components/image'
 import { useImageViewerContext } from '@/providers/image-viewer'
-import Image from 'next/image'
-import React from 'react'
 
-interface ImgProps extends Omit<React.ComponentProps<typeof Image>, 'src'> {
-  src: string
-}
-
-export const Img = ({ alt = '', fill, height, src, width, ...props }: ImgProps) => {
+export const Img = ({ alt = '', src, ...props }: ImageProps) => {
   const { openViewer } = useImageViewerContext()
-
-  const size = width && height ? { height, width } : { fill: true }
 
   return (
     <figure className="text-center">
@@ -25,7 +18,6 @@ export const Img = ({ alt = '', fill, height, src, width, ...props }: ImgProps) 
             images: [{ key: 1, src }]
           })
         }}
-        {...size}
         {...props}
       />
       {alt && <figcaption>{alt}</figcaption>}
