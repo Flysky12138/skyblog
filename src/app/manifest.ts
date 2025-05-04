@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    background_color: '#ffffff',
+    background_color: '#000000',
     description: process.env.NEXT_PUBLIC_DESCRIPTION,
     display: 'standalone',
     icons: [
@@ -18,8 +18,9 @@ export default function manifest(): MetadataRoute.Manifest {
       { sizes: '512x512', src: 'icons/icon-512x512.png', type: 'image/png' }
     ],
     name: process.env.NEXT_PUBLIC_TITLE,
+    orientation: 'portrait',
     short_name: process.env.NEXT_PUBLIC_TITLE,
     start_url: '/',
-    theme_color: '#ffffff'
+    theme_color: '#000000'
   }
 }
