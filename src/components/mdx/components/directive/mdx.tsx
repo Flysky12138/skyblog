@@ -1,7 +1,8 @@
-import Loading from '@/assets/svg/loading.svg'
 import { AlertCircle } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { Alert, AlertTitle } from 'ui/alert'
+
+import Loading from '@/assets/svg/loading.svg'
 
 import { Code } from '../element/code'
 

@@ -1,9 +1,10 @@
 'use server'
 
-import { cn } from '@/lib/utils'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import Link from 'next/link'
 import rehypeSlug from 'rehype-slug'
+
+import { cn } from '@/lib/utils'
 
 import { remarkPlugins } from './options'
 import { HEADING_ATTRIBUTE, rehypeHeadingOrder } from './rehype/rehype-heading-level'

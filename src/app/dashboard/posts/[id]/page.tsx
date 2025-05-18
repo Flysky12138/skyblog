@@ -1,13 +1,5 @@
 'use client'
 
-import { GET, PUT } from '@/app/api/dashboard/posts/[id]/route'
-import { ErrorComponent } from '@/components/error-component'
-import { MDXClient } from '@/components/mdx/client'
-import { MonacoEditor, MonacoEditorRef } from '@/components/monaco-editor'
-import { markdownConfig } from '@/components/monaco-editor/languages/markdown'
-import { POST_CARD_DISPLAY } from '@/lib/constants'
-import { CustomRequest } from '@/lib/http/request'
-import { Toast } from '@/lib/toast'
 import { isEqual } from 'es-toolkit'
 import { useSession } from 'next-auth/react'
 import { ErrorBoundary } from 'next/dist/client/components/error-boundary'
@@ -19,6 +11,15 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from 'ui/resizab
 import { ScrollArea } from 'ui/scroll-area'
 import { useImmer } from 'use-immer'
 import { uuidv7 } from 'uuidv7'
+
+import { GET, PUT } from '@/app/api/dashboard/posts/[id]/route'
+import { ErrorComponent } from '@/components/error-component'
+import { MDXClient } from '@/components/mdx/client'
+import { MonacoEditor, MonacoEditorRef } from '@/components/monaco-editor'
+import { markdownConfig } from '@/components/monaco-editor/languages/markdown'
+import { POST_CARD_DISPLAY } from '@/lib/constants'
+import { CustomRequest } from '@/lib/http/request'
+import { Toast } from '@/lib/toast'
 
 import { EditorToolbar } from './_components/editor-toolbar'
 

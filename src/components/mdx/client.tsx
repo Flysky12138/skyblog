@@ -1,11 +1,12 @@
 'use client'
 
-import Loading from '@/assets/svg/loading.svg'
 import { MDXRemote } from 'next-mdx-remote'
 import { MDXRemoteProps } from 'next-mdx-remote/rsc'
 import { serialize } from 'next-mdx-remote/serialize'
 import React from 'react'
 import { useAsync } from 'react-use'
+
+import Loading from '@/assets/svg/loading.svg'
 
 import { DisplayByConditional } from '../display/display-by-conditional'
 import { components } from './components'

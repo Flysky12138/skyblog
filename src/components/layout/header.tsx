@@ -1,8 +1,9 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import React from 'react'
 import { useWindowScroll } from 'react-use'
+
+import { cn } from '@/lib/utils'
 
 export const Header = ({ className, ...props }: React.ComponentProps<'header'>) => {
   const { y } = useWindowScroll()

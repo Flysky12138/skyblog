@@ -1,8 +1,9 @@
 'use client'
 
-import PictureError from '@/assets/svg/picture-error.svg'
 import NextImage from 'next/image'
 import React from 'react'
+
+import PictureError from '@/assets/svg/picture-error.svg'
 
 import { DisplayByConditional } from './display/display-by-conditional'
 

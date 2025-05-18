@@ -1,6 +1,5 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import { isUndefined } from 'es-toolkit'
 import { Archive, House, LibraryBig, LucideIcon, NotebookPen, Plus, Settings, Share2, User, UserRoundSearch, Users } from 'lucide-react'
 import Link from 'next/link'
@@ -15,6 +14,8 @@ import {
   SidebarMenuItem,
   useSidebar
 } from 'ui/sidebar'
+
+import { cn } from '@/lib/utils'
 
 interface Menu {
   group: {

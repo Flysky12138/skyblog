@@ -1,12 +1,13 @@
 'use client'
 
+import { produce } from 'immer'
+import { Pencil, Plus } from 'lucide-react'
+import useSWR from 'swr'
+
 import { Table, TableActionButton, TableDeleteButton } from '@/components/table'
 import { CustomRequest } from '@/lib/http/request'
 import { formatISOTime } from '@/lib/parser/time'
 import { Toast } from '@/lib/toast'
-import { produce } from 'immer'
-import { Pencil, Plus } from 'lucide-react'
-import useSWR from 'swr'
 
 import { ClashTemplateDetail } from './clash-template-detail'
 

@@ -1,7 +1,8 @@
-import { cn } from '@/lib/utils'
 import { RotateCw } from 'lucide-react'
 import { ErrorComponent as ErrorComponentType } from 'next/dist/client/components/error-boundary'
 import { Button } from 'ui/button'
+
+import { cn } from '@/lib/utils'
 
 import { Card } from './layout/card'
 

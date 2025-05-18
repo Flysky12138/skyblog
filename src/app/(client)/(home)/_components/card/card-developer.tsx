@@ -1,14 +1,15 @@
 'use cache'
 
-import Github from '@/assets/svg/github.svg'
-import LeetCode from '@/assets/svg/leetcode.svg'
-import Spotify from '@/assets/svg/spotify.svg'
-import { Card } from '@/components/layout/card'
 import { Octokit } from '@octokit/rest'
 import { Mail } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from 'ui/avatar'
 import { Button } from 'ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'ui/tooltip'
+
+import Github from '@/assets/svg/github.svg'
+import LeetCode from '@/assets/svg/leetcode.svg'
+import Spotify from '@/assets/svg/spotify.svg'
+import { Card } from '@/components/layout/card'
 
 export const CardDeveloper = async () => {
   const octokit = new Octokit()

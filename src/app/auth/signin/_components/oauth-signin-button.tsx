@@ -1,10 +1,11 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import { BuiltInProviderType } from 'next-auth/providers'
 import { signIn } from 'next-auth/react'
 import { useAsyncFn } from 'react-use'
 import { Button } from 'ui/button'
+
+import { cn } from '@/lib/utils'
 
 interface OAuthSignInButtonProps extends React.ComponentProps<typeof Button> {
   provider: BuiltInProviderType

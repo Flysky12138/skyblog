@@ -1,10 +1,11 @@
 'use client'
 
-import { R2Upload } from '@/app/dashboard/r2/[[...slug]]/_components/r2-upload'
 import { AppWindow, Binary, CloudUpload, Eye, EyeClosed, GitCompare, ReceiptText, Save, WandSparkles } from 'lucide-react'
 import { Button } from 'ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'ui/tooltip'
 import { Updater } from 'use-immer'
+
+import { R2Upload } from '@/app/dashboard/r2/[[...slug]]/_components/r2-upload'
 
 import { DefaultPostType } from '../page'
 import { PostDetail } from './post-detail'

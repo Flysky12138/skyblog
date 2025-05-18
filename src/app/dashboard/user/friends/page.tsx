@@ -1,9 +1,5 @@
 'use client'
 
-import { Card } from '@/components/layout/card'
-import { CustomRequest } from '@/lib/http/request'
-import { Toast } from '@/lib/toast'
-import { cn } from '@/lib/utils'
 import { produce } from 'immer'
 import { Eye, Pencil, Plus, Trash } from 'lucide-react'
 import Link from 'next/link'
@@ -20,6 +16,11 @@ import {
   AlertDialogTrigger
 } from 'ui/alert-dialog'
 import { Button } from 'ui/button'
+
+import { Card } from '@/components/layout/card'
+import { CustomRequest } from '@/lib/http/request'
+import { Toast } from '@/lib/toast'
+import { cn } from '@/lib/utils'
 
 import { FriendDetail } from './_components/friend-detail'
 

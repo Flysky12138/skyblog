@@ -1,6 +1,7 @@
+import { NextRequest } from 'next/server'
+
 import { CustomFetch } from '@/lib/http/fetch'
 import { CustomResponse } from '@/lib/http/response'
-import { NextRequest } from 'next/server'
 
 export const runtime = 'nodejs'
 

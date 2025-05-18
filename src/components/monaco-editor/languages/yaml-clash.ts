@@ -1,9 +1,10 @@
-import schema from '@/assets/schema/clash-meta-schema.json'
 import { toMerged } from 'es-toolkit'
 import { configureMonacoYaml, JSONSchema } from 'monaco-yaml'
 import { Options } from 'prettier'
 import yamlPlugins from 'prettier/plugins/yaml'
 import { format } from 'prettier/standalone'
+
+import schema from '@/assets/schema/clash-meta-schema.json'
 
 import { LanguageConfig } from '../index'
 

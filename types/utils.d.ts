@@ -9,6 +9,9 @@ type PickStartsWith<T, D extends string> = {
 /** 将选中的键设置为可选 */
 type PratialPick<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
+/** 美化对象的显示 */
+type Prettify<T> = { [K in keyof T]: T[K] } & {}
+
 /** 移除值为空对象的键 */
 type RemoveKeysByEmptyValue<T extends Record<string, object>> = {
   [K in keyof T as keyof T[K] extends never ? never : K]: T[K]
@@ -19,7 +22,7 @@ type RequiredPick<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
 
 /** 以 `T` 开头的字符串 */
 type StartsWith<T extends string> = `${T}${string}`
-
 type Without<T, U> = Partial<Record<Exclude<keyof T, keyof U>, never>>
+
 /** 对象进行异或 */
 type XOR<T, U> = T | U extends object ? (T & Without<U, T>) | (U & Without<T, U>) : T | U

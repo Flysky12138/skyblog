@@ -1,10 +1,11 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import { ChevronUp } from 'lucide-react'
 import React from 'react'
 import { Button } from 'ui/button'
+
+import { cn } from '@/lib/utils'
 
 interface ScrollToTopProps extends React.ComponentProps<typeof Button> {
   /**

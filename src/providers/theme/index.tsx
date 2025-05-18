@@ -1,11 +1,12 @@
 'use client'
 
-import { useIsClient } from '@/hooks/use-is-client'
-import { useTheme } from '@/hooks/use-theme'
 import { MoonStar, Sun } from 'lucide-react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import React from 'react'
 import { Button } from 'ui/button'
+
+import { useIsClient } from '@/hooks/use-is-client'
+import { useTheme } from '@/hooks/use-theme'
 
 import './view-transition.css'
 

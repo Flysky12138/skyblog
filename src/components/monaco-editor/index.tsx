@@ -1,12 +1,13 @@
 'use client'
 
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
-import { useTheme } from '@/hooks/use-theme'
-import { cn } from '@/lib/utils'
 import { DiffEditor, DiffEditorProps, Editor, EditorProps, loader, Monaco } from '@monaco-editor/react'
 import { toMerged } from 'es-toolkit'
 import { editor, IDisposable } from 'monaco-editor'
 import React from 'react'
+
+import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { useTheme } from '@/hooks/use-theme'
+import { cn } from '@/lib/utils'
 
 import './index.css'
 import { monacoEditorDefaultOptions } from './options'

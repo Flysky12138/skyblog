@@ -1,8 +1,9 @@
+import { Prisma } from '@prisma/client'
+import { NextRequest } from 'next/server'
+
 import { CacheClear } from '@/lib/cache'
 import { CustomResponse } from '@/lib/http/response'
 import prisma from '@/lib/prisma'
-import { Prisma } from '@prisma/client'
-import { NextRequest } from 'next/server'
 
 const dbPut = async (id: string, data: PUT['body']) => {
   return await prisma.friend.update({ data, where: { id } })

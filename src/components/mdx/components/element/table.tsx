@@ -1,5 +1,6 @@
-import { cn } from '@/lib/utils'
 import React from 'react'
+
+import { cn } from '@/lib/utils'
 
 export const table = ({ className, ...props }: React.ComponentProps<'table'>) => {
   return <table className={cn('block overflow-auto', className)} {...props} />

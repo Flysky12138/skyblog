@@ -1,10 +1,11 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import { Url } from 'next/dist/shared/lib/router/router'
 import Link from 'next/link'
 import React from 'react'
 import { Button, buttonVariants } from 'ui/button'
+
+import { cn } from '@/lib/utils'
 
 interface PaginationLinkProps extends Pick<React.ComponentProps<typeof Button>, 'size'>, React.PropsWithChildren {
   className?: string

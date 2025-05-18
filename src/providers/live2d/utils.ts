@@ -1,6 +1,7 @@
-import { loadJSFile } from '@/lib/file/load'
 import JSZip from 'jszip'
 import { JSONObject, ModelSettings } from 'pixi-live2d-display'
+
+import { loadJSFile } from '@/lib/file/load'
 
 export const PADDING = {
   x: 10,

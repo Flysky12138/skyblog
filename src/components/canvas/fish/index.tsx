@@ -1,7 +1,8 @@
 'use client'
 
-import { useTheme } from '@/hooks/use-theme'
 import React from 'react'
+
+import { useTheme } from '@/hooks/use-theme'
 
 import fish from './fish'
 

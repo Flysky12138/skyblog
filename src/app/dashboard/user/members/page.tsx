@@ -1,9 +1,10 @@
 'use client'
 
+import useSWR from 'swr'
+
 import { Table } from '@/components/table'
 import { CustomRequest } from '@/lib/http/request'
 import { formatISOTime } from '@/lib/parser/time'
-import useSWR from 'swr'
 
 export default function Page() {
   const { data: members, isLoading } = useSWR('e65d0612-3536-583b-b5fa-8e32b7db7e7b', () => CustomRequest('GET api/dashboard/user/members', {}), {

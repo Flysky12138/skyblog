@@ -1,6 +1,5 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import { Draft } from 'immer'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import React from 'react'
@@ -8,6 +7,8 @@ import { Button } from 'ui/button'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from 'ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from 'ui/popover'
 import { useImmer } from 'use-immer'
+
+import { cn } from '@/lib/utils'
 
 const DEFAULT_FIELD_NAMES = {
   label: 'label',

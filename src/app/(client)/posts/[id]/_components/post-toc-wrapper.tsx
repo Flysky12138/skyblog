@@ -1,10 +1,11 @@
 'use client'
 
-import { ATTRIBUTE } from '@/lib/constants'
-import { isBetween } from '@/lib/parser/number'
 import { debounce } from 'es-toolkit'
 import React from 'react'
 import { useEvent } from 'react-use'
+
+import { ATTRIBUTE } from '@/lib/constants'
+import { isBetween } from '@/lib/parser/number'
 
 interface PostTocWrapperProps extends React.ComponentProps<'section'> {}
 

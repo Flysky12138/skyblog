@@ -1,10 +1,11 @@
-import { POST } from '@/app/api/dashboard/user/friends/route'
 import React from 'react'
 import { Button } from 'ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from 'ui/dialog'
 import { Input } from 'ui/input'
 import { Label } from 'ui/label'
 import { useImmer } from 'use-immer'
+
+import { POST } from '@/app/api/dashboard/user/friends/route'
 
 interface FriendDetailProps extends React.PropsWithChildren {
   value?: POST['body']

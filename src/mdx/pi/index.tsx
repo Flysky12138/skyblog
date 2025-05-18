@@ -1,6 +1,5 @@
 'use client'
 
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { AlertCircle, Loader2 } from 'lucide-react'
 import React from 'react'
 import { useToggle } from 'react-use'
@@ -9,6 +8,8 @@ import { Button } from 'ui/button'
 import { Dialog, DialogContent, DialogTrigger } from 'ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from 'ui/select'
 import { useImmer } from 'use-immer'
+
+import { DisplayByConditional } from '@/components/display/display-by-conditional'
 
 import Arctan_ from './arctan.mdx'
 import ChudnovskyBsCode_ from './chudnovsky-bs-code.mdx'

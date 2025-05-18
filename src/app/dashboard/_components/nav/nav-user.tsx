@@ -1,11 +1,12 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import { ChevronsUpDown, LogOut } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
 import { Avatar, AvatarFallback, AvatarImage } from 'ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from 'ui/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from 'ui/sidebar'
+
+import { cn } from '@/lib/utils'
 
 export const NavUser = () => {
   const { isMobile, open } = useSidebar()

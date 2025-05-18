@@ -1,8 +1,9 @@
+import { Category, Post, Prisma, Tag } from '@prisma/client'
+import { NextRequest } from 'next/server'
+
 import { CacheClear } from '@/lib/cache'
 import { CustomResponse } from '@/lib/http/response'
 import prisma from '@/lib/prisma'
-import { Category, Post, Prisma, Tag } from '@prisma/client'
-import { NextRequest } from 'next/server'
 
 import { include } from '../prisma.config'
 

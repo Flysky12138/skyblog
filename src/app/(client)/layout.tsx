@@ -1,3 +1,8 @@
+import { LayoutDashboard } from 'lucide-react'
+import Link from 'next/link'
+import React from 'react'
+import { Button } from 'ui/button'
+
 import { DisplayByAuth } from '@/components/display/display-by-auth'
 import { DisplayByBreakPoint } from '@/components/display/display-by-breakpoint'
 import { About } from '@/components/layout/about'
@@ -9,10 +14,6 @@ import { TransitionCollapse } from '@/components/transition/transition-collapse'
 import { ATTRIBUTE } from '@/lib/constants'
 import { Live2DContent, Live2DProvider, Live2DToggleButton } from '@/providers/live2d'
 import { ThemeToggleButton } from '@/providers/theme'
-import { LayoutDashboard } from 'lucide-react'
-import Link from 'next/link'
-import React from 'react'
-import { Button } from 'ui/button'
 
 export default function Layout({ children }: React.PropsWithChildren) {
   return (

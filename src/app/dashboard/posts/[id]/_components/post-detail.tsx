@@ -1,7 +1,3 @@
-import { Combobox } from '@/components/form/combobox'
-import { POST_CARD_DISPLAY } from '@/lib/constants'
-import { CustomRequest } from '@/lib/http/request'
-import { cn } from '@/lib/utils'
 import useSWR from 'swr'
 import { Input } from 'ui/input'
 import { Label } from 'ui/label'
@@ -10,6 +6,11 @@ import { Textarea } from 'ui/textarea'
 import { Toggle } from 'ui/toggle'
 import { Updater } from 'use-immer'
 import { uuidv7 } from 'uuidv7'
+
+import { Combobox } from '@/components/form/combobox'
+import { POST_CARD_DISPLAY } from '@/lib/constants'
+import { CustomRequest } from '@/lib/http/request'
+import { cn } from '@/lib/utils'
 
 import { DefaultPostType } from '../page'
 

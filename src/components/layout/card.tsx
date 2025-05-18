@@ -1,5 +1,6 @@
-import { cn } from '@/lib/utils'
 import { Root, SlotProps } from '@radix-ui/react-slot'
+
+import { cn } from '@/lib/utils'
 
 interface CardProps extends SlotProps {
   asChild?: boolean

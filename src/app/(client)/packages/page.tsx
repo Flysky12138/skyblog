@@ -1,7 +1,8 @@
+import React from 'react'
+
 import packageJson from '@/../package.json'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { TableBody, TableCaption, TableCell, TableHead, TableHeader, TablePrimitive, TableRow } from '@/components/table'
-import React from 'react'
 
 export default async function Page() {
   const data = [

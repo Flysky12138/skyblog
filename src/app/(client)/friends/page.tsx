@@ -1,6 +1,7 @@
+import Link from 'next/link'
+
 import { Card } from '@/components/layout/card'
 import prisma from '@/lib/prisma'
-import Link from 'next/link'
 
 export default async function Page() {
   const friends = await prisma.friend.findMany()

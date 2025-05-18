@@ -1,9 +1,10 @@
-import { CustomResponse } from '@/lib/http/response'
-import { replaceVariables } from '@/lib/parser/string'
-import prisma from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 import { ipAddress } from '@vercel/functions'
 import { NextRequest, NextResponse, userAgent } from 'next/server'
+
+import { CustomResponse } from '@/lib/http/response'
+import { replaceVariables } from '@/lib/parser/string'
+import prisma from '@/lib/prisma'
 
 const dbGet = async (id: string, data: Prisma.VisitorLogCreateInput) => {
   const subscribeLastAt = new Date().toISOString()

@@ -1,7 +1,8 @@
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import Link from 'next/link'
 import React from 'react'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from 'ui/breadcrumb'
+
+import { DisplayByConditional } from '@/components/display/display-by-conditional'
 
 interface R2BreadcrumbProps {
   paths?: string[]

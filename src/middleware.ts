@@ -1,5 +1,6 @@
-import { auth } from '@/lib/auth'
 import { MiddlewareConfig, NextMiddleware, NextResponse, userAgent } from 'next/server'
+
+import { auth } from '@/lib/auth'
 
 export const config: MiddlewareConfig = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)']

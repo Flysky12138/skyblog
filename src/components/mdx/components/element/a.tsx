@@ -1,7 +1,8 @@
-import { cn } from '@/lib/utils'
 import { ExternalLink, Hash } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
+
+import { cn } from '@/lib/utils'
 
 export const A = ({ children, className, ...props }: React.ComponentProps<'a'>) => {
   if (!props.href) return null

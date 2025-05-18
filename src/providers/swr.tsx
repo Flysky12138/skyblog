@@ -1,7 +1,8 @@
 'use client'
 
-import { CustomFetch } from '@/lib/http/fetch'
 import { SWRConfig } from 'swr'
+
+import { CustomFetch } from '@/lib/http/fetch'
 
 /**
  * 极速、轻量、可重用的 数据请求

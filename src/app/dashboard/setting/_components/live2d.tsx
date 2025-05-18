@@ -1,13 +1,14 @@
 'use client'
 
-import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
-import { Toast } from '@/lib/toast'
-import { get, patch } from '@/server/edge-config'
 import { useAsyncFn } from 'react-use'
 import useSWR from 'swr'
 import { Button } from 'ui/button'
 import { Input } from 'ui/input'
 import { Label } from 'ui/label'
+
+import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
+import { Toast } from '@/lib/toast'
+import { get, patch } from '@/server/edge-config'
 
 export const Live2D = () => {
   const {

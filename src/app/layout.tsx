@@ -1,13 +1,16 @@
-import { Report } from '@/components/report'
-import '@/globals.css'
-import { ImageViewerProvider } from '@/providers/image-viewer'
-import { SWRProvider } from '@/providers/swr'
-import { ThemeProvider } from '@/providers/theme'
 import { Metadata, Viewport } from 'next'
+
+import '@/globals.css'
+
 import { SessionProvider } from 'next-auth/react'
 import { ZCOOL_KuaiLe } from 'next/font/google'
 import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from 'ui/sonner'
+
+import { Report } from '@/components/report'
+import { ImageViewerProvider } from '@/providers/image-viewer'
+import { SWRProvider } from '@/providers/swr'
+import { ThemeProvider } from '@/providers/theme'
 
 export const metadata: Metadata = {
   description: process.env.NEXT_PUBLIC_DESCRIPTION,

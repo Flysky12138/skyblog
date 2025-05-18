@@ -1,10 +1,11 @@
 'use client'
 
-import { useIsClient } from '@/hooks/use-is-client'
-import { useTheme } from '@/hooks/use-theme'
 import { MoonStar, Sun } from 'lucide-react'
 import { SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem } from 'ui/sidebar'
 import { Switch } from 'ui/switch'
+
+import { useIsClient } from '@/hooks/use-is-client'
+import { useTheme } from '@/hooks/use-theme'
 
 export const NavTheme = () => {
   const { isDark, toggleTheme } = useTheme()

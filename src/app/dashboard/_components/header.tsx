@@ -1,5 +1,6 @@
-import { cn } from '@/lib/utils'
 import { SidebarTrigger } from 'ui/sidebar'
+
+import { cn } from '@/lib/utils'
 
 interface HeaderProps {
   className?: string

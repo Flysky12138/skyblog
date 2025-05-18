@@ -1,7 +1,8 @@
 'use client'
 
-import { Auth } from '@/../types/auth'
 import { useSession } from 'next-auth/react'
+
+import { Auth } from '@/../types/auth'
 
 import { DisplayByConditional, DisplayByConditionalProps } from './display-by-conditional'
 

@@ -1,12 +1,13 @@
 'use client'
 
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
-import { cn } from '@/lib/utils'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import { Check, Clipboard } from 'lucide-react'
 import React from 'react'
 import { useCopyToClipboard } from 'react-use'
 import { Button } from 'ui/button'
+
+import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { cn } from '@/lib/utils'
 
 const variants: Variants = {
   active: {
