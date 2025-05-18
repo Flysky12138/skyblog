@@ -57,7 +57,7 @@ export default async function Page({ params }: PageProps) {
   if (!post) return notFound()
 
   return (
-    <section className="space-y-5">
+    <>
       <DisplayByConditional condition={(post.display & POST_CARD_DISPLAY.HEADER) == POST_CARD_DISPLAY.HEADER}>
         <Card className="relative flex flex-col gap-2 p-3 md:p-5" data-slot="post-header">
           <DisplayByAuth role="ADMIN">
@@ -97,6 +97,6 @@ export default async function Page({ params }: PageProps) {
           </DisplayByConditional>
         </section>
       )}
-    </section>
+    </>
   )
 }

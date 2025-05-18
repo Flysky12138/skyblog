@@ -1,7 +1,7 @@
 import { Root, SlotProps } from '@radix-ui/react-slot'
 import { cva, VariantProps } from 'class-variance-authority'
 
-import { cn } from '@/lib/utils'
+import { cn, tw } from '@/lib/utils'
 
 const toggleVariants = cva('', {
   defaultVariants: {
@@ -9,8 +9,8 @@ const toggleVariants = cva('', {
   },
   variants: {
     variant: {
-      default: 'px-4 sm:px-6 xl:px-20',
-      nav: 'px-8 sm:px-10 xl:px-6'
+      default: tw`px-2 sm:px-6 xl:px-20`,
+      nav: tw`px-8 sm:px-10 xl:px-6`
     }
   }
 })
