@@ -19,6 +19,8 @@ import {
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React from 'react'
+import { useCopyToClipboard } from 'react-use'
+import { toast } from 'sonner'
 import useSWR from 'swr'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
@@ -50,6 +52,7 @@ interface R2TableProps {
 
 export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButton, paths }: R2TableProps) => {
   const router = useRouter()
+  const [{}, copy] = useCopyToClipboard()
 
   const path = decodeURIComponent(paths?.length ? `/${paths.join('/')}/` : '/') as FilePathType
 
@@ -156,7 +159,12 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
                 >
                   <Eye />
                 </TableActionButton>
-                <TableActionButton>
+                <TableActionButton
+                  onClick={() => {
+                    copy(R2.get(it.key))
+                    toast.success('复制成功')
+                  }}
+                >
                   <Link />
                 </TableActionButton>
                 <TableDeleteButton
