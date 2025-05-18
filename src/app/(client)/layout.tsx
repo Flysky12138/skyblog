@@ -43,7 +43,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
         </Container>
       </Header>
       <main className="border-divide bg-root z-main relative mt-(--height-header) mb-(--height-footer) min-h-[calc(100dvh-var(--height-header))] border-b">
-        <Container className="py-6 md:py-9">{children}</Container>
+        <Container className="py-4 sm:py-6 md:py-9">{children}</Container>
         {/* <DisplayByBreakPoint down="md">
           <Ribbon />
         </DisplayByBreakPoint> */}

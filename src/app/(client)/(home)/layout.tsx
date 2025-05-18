@@ -10,11 +10,11 @@ import { CardReactUwU } from './_components/card/card-react-uwu'
 export default function Layout({ children }: React.PropsWithChildren) {
   return (
     <section className="flex flex-col gap-6 sm:flex-row">
-      <div className="relative flex grow flex-col gap-6">
+      <div className="relative flex grow flex-col gap-3 sm:gap-6">
         <Card className="font-title p-5 text-center text-base">开发中</Card>
         {children}
       </div>
-      <div className="flex shrink-0 flex-col gap-6 sm:w-56 md:w-64">
+      <div className="flex shrink-0 flex-col gap-3 sm:w-56 sm:gap-6 md:w-64">
         <CardDeveloper />
         <CardReactUwU />
         <CardButtons />
