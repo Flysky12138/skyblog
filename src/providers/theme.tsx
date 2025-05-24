@@ -8,8 +8,6 @@ import { Button } from 'ui/button'
 import { useIsClient } from '@/hooks/use-is-client'
 import { useTheme } from '@/hooks/use-theme'
 
-import './view-transition.css'
-
 /**
  * Adding dark mode to your next app.
  * @see https://www.shadcn.com.cn/docs/dark-mode/next
@@ -19,13 +17,13 @@ export const ThemeProvider = (props: React.PropsWithChildren) => {
 }
 
 export const ThemeToggleButton = () => {
-  const { animateToggleTheme, isDark } = useTheme()
+  const { isDark, toggleTheme } = useTheme()
 
   const isClient = useIsClient()
   if (!isClient) return <span className="skeleton size-8 rounded-md" />
 
   return (
-    <Button aria-label="theme toggle" size="icon" variant="outline" onClick={animateToggleTheme}>
+    <Button aria-label="theme toggle" size="icon" variant="outline" onClick={toggleTheme}>
       {isDark ? <MoonStar /> : <Sun />}
     </Button>
   )
