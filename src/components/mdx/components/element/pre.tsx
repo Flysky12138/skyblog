@@ -27,7 +27,7 @@ export const Pre = ({ children, className, tabIndex, ...props }: React.Component
   const preRef = React.useRef<HTMLPreElement>(null)
   const handleCopyClick = () => {
     if (copied) return
-    const code = preRef.current?.textContent
+    const code = preRef.current?.querySelector('code')?.textContent
     if (!code) return
     copy(code)
     setCopied(true)
