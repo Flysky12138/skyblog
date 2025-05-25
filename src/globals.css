@@ -4,11 +4,6 @@
 @custom-variant dark (&:is(.dark, .dark *));
 @custom-variant light (&:is(.light, .light *));
 @custom-variant post-full-page (&:is(.post-full-page *));
-@custom-variant media-hover {
-  @media (hover: hover) {
-    @slot;
-  }
-}
 
 @import 'tailwindcss';
 

@@ -9,7 +9,7 @@ const toggleVariants = cva('', {
   },
   variants: {
     variant: {
-      default: tw`px-2 sm:px-6 xl:px-20`,
+      default: tw`px-3 sm:px-5 xl:px-20`,
       nav: tw`px-8 sm:px-10 xl:px-6`
     }
   }

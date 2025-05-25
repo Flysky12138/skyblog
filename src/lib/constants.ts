@@ -11,8 +11,6 @@ export const VERCEL_EDGE_CONFIG = {
 /** 元素 attribute */
 export const ATTRIBUTE = {
   ID: {
-    ISSUES_MOBILE: 'issues-mobile',
-    ISSUES_PC: 'issues-pc',
     POST_CONTAINER: 'post-container'
   }
 } as const

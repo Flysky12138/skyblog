@@ -11,7 +11,6 @@ import { Header } from '@/components/layout/header'
 import { Logo } from '@/components/layout/logo'
 import { ScrollToTop } from '@/components/scroll-to-top'
 import { TransitionCollapse } from '@/components/transition/transition-collapse'
-import { ATTRIBUTE } from '@/lib/constants'
 import { Live2DContent, Live2DProvider, Live2DToggleButton } from '@/providers/live2d'
 import { ThemeToggleButton } from '@/providers/theme'
 
@@ -37,26 +36,24 @@ export default function Layout({ children }: React.PropsWithChildren) {
             </TransitionCollapse>
             <hr className="bg-divide h-4 w-0.5 rounded-full" />
           </DisplayByAuth>
-          <div className="empty:hidden" id={ATTRIBUTE.ID.ISSUES_MOBILE} />
           <Live2DToggleButton />
           <ThemeToggleButton />
         </Container>
       </Header>
       <main className="border-divide bg-root z-main relative mt-(--height-header) mb-(--height-footer) min-h-[calc(100dvh-var(--height-header))] border-b">
-        <Container className="py-4 sm:py-6 md:py-9">{children}</Container>
+        <Container className="py-5 sm:py-7 md:py-9">{children}</Container>
         {/* <DisplayByBreakPoint down="md">
           <Ribbon />
         </DisplayByBreakPoint> */}
       </main>
       <nav className="z-nav fixed inset-x-0 bottom-[calc(var(--height-footer)+--spacing(12))]">
         <Container className="flex h-0 flex-col items-end justify-end gap-3" variant="nav">
-          <div id={ATTRIBUTE.ID.ISSUES_PC} />
           <DisplayByBreakPoint down="sm">
             <ScrollToTop />
           </DisplayByBreakPoint>
         </Container>
       </nav>
-      <footer className="z-footer h-footer fixed inset-x-0 bottom-0 flex items-center justify-center">
+      <footer className="z-footer dark:bg-root/80 h-footer fixed inset-x-0 bottom-0 flex items-center justify-center bg-white/70">
         <About />
         {/* <DisplayByBreakPoint down="md">
           <Fish />

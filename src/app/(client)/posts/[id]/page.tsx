@@ -73,7 +73,7 @@ export default async function Page({ params }: PageProps) {
         </Card>
       </DisplayByConditional>
       {post.content && (
-        <section className="flex gap-4">
+        <section className="flex gap-5">
           <style>{`html { scroll-padding-top: 60px }`}</style>
           <Card asChild>
             <article className="group/article relative max-w-none grow px-3 py-5 md:px-5" id={ATTRIBUTE.ID.POST_CONTAINER}>

@@ -5,7 +5,7 @@ export default function Loading() {
   return Array.from({ length: 4 }).map((_, index) => (
     <Card
       key={index}
-      className={cn('flex flex-col justify-center gap-4 p-5', {
+      className={cn('p-card flex flex-col justify-center gap-4', {
         'md:hidden': index == 0
       })}
     >

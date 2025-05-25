@@ -16,7 +16,7 @@ export const CardGuestInfo = () => {
   if (!ipinfo) return null
 
   return (
-    <Card asChild className="space-y-3 overflow-clip p-6">
+    <Card asChild className="p-card space-y-3 overflow-clip">
       <TransitionCollapse>
         <Label htmlFor={id}>访客信息</Label>
         <div className="flex flex-col gap-1" id={id}>

@@ -9,12 +9,12 @@ import { CardReactUwU } from './_components/card/card-react-uwu'
 
 export default function Layout({ children }: React.PropsWithChildren) {
   return (
-    <section className="flex flex-col gap-6 sm:flex-row">
-      <div className="relative flex grow flex-col gap-3 sm:gap-6">
+    <section className="gap-card-large flex flex-col sm:flex-row">
+      <div className="gap-card relative flex grow flex-col">
         <Card className="font-title p-5 text-center text-base">开发中</Card>
         {children}
       </div>
-      <div className="flex shrink-0 flex-col gap-3 sm:w-56 sm:gap-6 md:w-64">
+      <div className="gap-card flex shrink-0 flex-col sm:w-56 md:w-64">
         <CardDeveloper />
         <CardReactUwU />
         <CardButtons />
