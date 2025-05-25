@@ -1,7 +1,13 @@
+import { GradientText } from '@/components/ui/gradient-text'
+
 export const Logo = () => {
   return (
-    <span className="font-title bg-linear-to-r from-cyan-500 to-blue-500 bg-clip-text text-lg font-semibold whitespace-nowrap text-transparent select-none">
+    <GradientText
+      animationSpeed={2}
+      className="font-title mx-0 text-lg font-semibold tracking-wider whitespace-nowrap backdrop-blur-none select-none"
+      colors={['var(--color-cyan-500)', 'var(--color-blue-500)']}
+    >
       {process.env.NEXT_PUBLIC_TITLE}
-    </span>
+    </GradientText>
   )
 }

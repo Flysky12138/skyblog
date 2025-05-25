@@ -19,7 +19,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
     <Live2DProvider>
       <Header>
         <Container className="flex h-full items-center gap-4">
-          <Link href="/">
+          <Link aria-label="home" href="/">
             <Logo />
           </Link>
           <span aria-hidden="true" className="grow" />
