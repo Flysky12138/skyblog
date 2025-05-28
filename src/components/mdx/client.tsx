@@ -1,37 +1,39 @@
 'use client'
 
-import { MDXRemote } from 'next-mdx-remote'
-import { MDXRemoteProps } from 'next-mdx-remote/rsc'
-import { serialize } from 'next-mdx-remote/serialize'
+import { evaluate, EvaluateResult } from 'next-mdx-remote-client/rsc'
 import React from 'react'
 import { useAsync } from 'react-use'
+import { useImmer } from 'use-immer'
 
 import Loading from '@/assets/svg/loading.svg'
 
-import { DisplayByConditional } from '../display/display-by-conditional'
 import { components } from './components'
 import './css'
-import { serializeOptions } from './options'
+import { mdxOptions } from './options'
 
 interface MDXClientProps {
-  value: MDXRemoteProps['source']
+  source?: string
 }
 
-const MDXClient_ = ({ value }: MDXClientProps) => {
-  const { error, loading, value: source } = useAsync(() => serialize(value, serializeOptions), [value])
+const MDXClient_ = ({ source = '' }: MDXClientProps) => {
+  const [{ content, error }, setEvaluateResult] = useImmer<Partial<EvaluateResult>>({})
 
-  if (!source) {
+  const { loading } = useAsync(async () => {
+    const result = await evaluate({ components, options: { mdxOptions }, source })
+    setEvaluateResult(result)
+  }, [source])
+
+  if (loading) {
     return (
-      <DisplayByConditional condition={loading} fallback={<div className="flex h-20 items-center justify-center text-xl">无内容</div>}>
-        <div className="flex items-center justify-center">
-          <Loading />
-        </div>
-      </DisplayByConditional>
+      <div className="flex items-center justify-center">
+        <Loading />
+      </div>
     )
   }
   if (error) return <div className="flex h-20 items-center justify-center text-xl">{error.message}</div>
+  if (!content) return <div className="flex h-20 items-center justify-center text-xl">无内容</div>
 
-  return <MDXRemote {...source} components={components} />
+  return content
 }
 
 export const MDXClient = React.memo(MDXClient_)

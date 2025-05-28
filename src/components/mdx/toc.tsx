@@ -1,6 +1,6 @@
 'use server'
 
-import { MDXRemote } from 'next-mdx-remote/rsc'
+import { MDXRemote } from 'next-mdx-remote-client/rsc'
 import Link from 'next/link'
 import rehypeSlug from 'rehype-slug'
 
@@ -11,10 +11,10 @@ import { HEADING_ATTRIBUTE, rehypeHeadingOrder } from './rehype/rehype-heading-l
 import { remarkPickHeading } from './remark/remark-pick-heading'
 
 export interface MDXTocProps {
-  value: string
+  source: string
 }
 
-export const MDXToc = async ({ value }: MDXTocProps) => {
+export const MDXToc = async ({ source }: MDXTocProps) => {
   return (
     <MDXRemote
       components={{
@@ -31,14 +31,12 @@ export const MDXToc = async ({ value }: MDXTocProps) => {
           remarkPlugins: [remarkPickHeading, ...remarkPlugins]
         }
       }}
-      source={value}
+      source={source}
     />
   )
 }
 
-interface HeadingProps extends React.ComponentProps<'a'> {}
-
-const Heading = ({ children, className, id, ...props }: HeadingProps) => {
+const Heading = ({ children, className, id, ...props }: React.ComponentProps<'a'>) => {
   const depth = Reflect.get(props, HEADING_ATTRIBUTE).split('.').length - 1
 
   return (

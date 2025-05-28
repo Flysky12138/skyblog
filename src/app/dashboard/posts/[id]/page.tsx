@@ -180,7 +180,7 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
               )}
             >
               <article className="min-h-screen max-w-none p-5">
-                <MDXClient value={previewContent || ''} />
+                <MDXClient source={previewContent || ''} />
               </article>
             </ErrorBoundary>
           </ScrollArea>

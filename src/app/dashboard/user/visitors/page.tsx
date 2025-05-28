@@ -67,8 +67,8 @@ export default function Page() {
                     <DialogHeader>
                       <DialogTitle>访客信息</DialogTitle>
                     </DialogHeader>
-                    <div className="text-sm [&_span[data-line]]:whitespace-pre-wrap">
-                      <MDXClient value={'```json\n' + JSON.stringify(record, null, 2) + '\n```'} />
+                    <div className="text-sm *:m-0 [&_span[data-line]]:whitespace-pre-wrap">
+                      <MDXClient source={'```json\n' + JSON.stringify(record, null, 2) + '\n```'} />
                     </div>
                   </DialogContent>
                 </Dialog>

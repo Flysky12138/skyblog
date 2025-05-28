@@ -2,7 +2,7 @@ import createMDX from '@next/mdx'
 import { NextConfig } from 'next'
 
 import './env.zod'
-import { serializeOptions } from './src/components/mdx/options'
+import { mdxOptions } from './src/components/mdx/options'
 
 /**
  * 内容安全策略 (CSP)
@@ -104,7 +104,7 @@ const nextConfig: NextConfig = {
 
 // https://nextjs.org/docs/app/building-your-application/configuring/mdx
 const withMDX = createMDX({
-  options: serializeOptions.mdxOptions
+  options: mdxOptions
 })
 
 export default withMDX(nextConfig)

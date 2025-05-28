@@ -24,7 +24,7 @@ export default function Page() {
   return (
     <Card asChild>
       <article className="max-w-none p-5">
-        <MDXClient value={post.content} />
+        <MDXClient source={post.content} />
       </article>
     </Card>
   )

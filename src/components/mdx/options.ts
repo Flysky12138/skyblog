@@ -1,7 +1,7 @@
 // import rehypeKatex, { Options as RehypeKatexOptions } from 'rehype-katex'
 import { transformerColorizedBrackets } from '@shikijs/colorized-brackets'
 import { transformerNotationDiff, transformerNotationHighlight } from '@shikijs/transformers'
-import { SerializeOptions } from 'node_modules/next-mdx-remote/dist/types'
+import { EvaluateOptions } from 'next-mdx-remote-client/rsc'
 import rehypeMathjax, { Options as RehypeMathjaxOptions } from 'rehype-mathjax'
 import rehypePrettyCode, { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code'
 import rehypeSlug from 'rehype-slug'
@@ -66,9 +66,7 @@ export const remarkPlugins: PluggableList = [remarkGfm, remarkMath, remarkDirect
 /**
  * mdx options
  */
-export const serializeOptions: SerializeOptions = {
-  mdxOptions: {
-    rehypePlugins,
-    remarkPlugins
-  }
+export const mdxOptions: EvaluateOptions['mdxOptions'] = {
+  rehypePlugins,
+  remarkPlugins
 }

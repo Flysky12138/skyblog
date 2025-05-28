@@ -78,7 +78,7 @@ export default async function Page({ params }: PageProps) {
           <Card asChild>
             <article className="group/article relative max-w-none grow px-3 py-5 md:px-5" id={ATTRIBUTE.ID.POST_CONTAINER}>
               <ResizeButton className="absolute top-1 right-1 z-10 opacity-0 group-hover/article:opacity-100 focus-visible:opacity-100 [&+*]:mt-0" />
-              <MDXServer value={post.content} />
+              <MDXServer source={post.content} />
             </article>
           </Card>
           <DisplayByConditional condition={(post.display & POST_CARD_DISPLAY.TOC) == POST_CARD_DISPLAY.TOC}>
@@ -91,7 +91,7 @@ export default async function Page({ params }: PageProps) {
                 )}
                 data-slot="post-toc"
               >
-                <MDXToc value={post.content} />
+                <MDXToc source={post.content} />
               </PostTocWrapper>
             </Card>
           </DisplayByConditional>

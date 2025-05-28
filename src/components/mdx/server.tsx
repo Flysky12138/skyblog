@@ -1,15 +1,15 @@
 'use server'
 
-import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc'
+import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote-client/rsc'
 
 import { components } from './components'
 import './css'
-import { serializeOptions } from './options'
+import { mdxOptions } from './options'
 
 interface MDXServerProps {
-  value: MDXRemoteProps['source']
+  source: MDXRemoteProps['source']
 }
 
-export const MDXServer = async ({ value }: MDXServerProps) => {
-  return <MDXRemote components={components} options={serializeOptions} source={value} />
+export const MDXServer = async ({ source }: MDXServerProps) => {
+  return <MDXRemote components={components} options={{ mdxOptions }} source={source} />
 }
