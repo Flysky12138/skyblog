@@ -13,16 +13,11 @@ export const Tabs = ({ children, ...props }: TabsProps) => {
   const tabsContent: React.ReactNode[] = []
 
   deepTraversalReactElement<React.PropsWithChildren<{ className?: string }>>(children, node => {
-    const { className, ..._props } = node.props
+    const { className, ...nodeProps } = node.props
     switch (node.type) {
       case 'tabscontent':
         tabsContent.push(
-          <TabsPrimitive.TabsContent
-            key={tabsContent.length}
-            className={cn('bg-sheet rounded-lg p-2 md:p-4', className)}
-            value={String(tabsContent.length)}
-            {..._props}
-          />
+          <TabsPrimitive.TabsContent key={tabsContent.length} className={cn('', className)} value={String(tabsContent.length)} {...nodeProps} />
         )
         break
       case 'tabtrigger':
@@ -31,7 +26,7 @@ export const Tabs = ({ children, ...props }: TabsProps) => {
             key={tabsTrigger.length}
             className={cn('px-4 font-semibold md:px-8', className)}
             value={String(tabsTrigger.length)}
-            {..._props}
+            {...nodeProps}
           />
         )
         break

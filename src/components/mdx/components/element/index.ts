@@ -5,6 +5,7 @@ import { Code } from './code'
 import { Figure } from './figure'
 import * as heading from './heading'
 import { Img } from './img'
+import { Li } from './li'
 import { P } from './p'
 import { Pre } from './pre'
 import * as table from './table'
@@ -17,6 +18,7 @@ export const element = {
   code: Code,
   figure: Figure,
   img: Img,
+  li: Li,
   p: P,
   pre: Pre,
   ul: Ul

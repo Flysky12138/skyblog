@@ -1,7 +1,7 @@
 'use client'
 
 import * as echarts from 'echarts'
-import { ECharts } from 'echarts'
+import { ECharts, EChartsCoreOption } from 'echarts'
 import React from 'react'
 import { useDebounce, useMeasure } from 'react-use'
 import { ModuleKind, ScriptTarget, transpile } from 'typescript'
@@ -77,7 +77,7 @@ export default function Echarts({ children }: EchartsProps) {
   )
 }
 
-const getOptions = (code: string) => {
+const getOptions = (code: string): EChartsCoreOption => {
   try {
     const transpiledCode = transpile(`${code}; return option;`, {
       module: ModuleKind.None,

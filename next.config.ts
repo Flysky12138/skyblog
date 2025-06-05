@@ -95,7 +95,6 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   redirects,
   rewrites,
-  transpilePackages: ['next-mdx-remote'],
   typescript: {
     ignoreBuildErrors: true
   },

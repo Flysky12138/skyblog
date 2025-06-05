@@ -11,7 +11,7 @@ interface MdxProps extends React.PropsWithChildren {
 }
 
 export const Mdx = ({ path, ...props }: MdxProps) => {
-  const Componet = dynamic<Omit<MdxProps, 'path'>>(
+  const Comp = dynamic<Omit<MdxProps, 'path'>>(
     () => {
       return import(`@/mdx/${path}`).catch(() => ({
         default: () => (
@@ -33,5 +33,5 @@ export const Mdx = ({ path, ...props }: MdxProps) => {
     }
   )
 
-  return <Componet {...props} />
+  return <Comp {...props} />
 }

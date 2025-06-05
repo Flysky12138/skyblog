@@ -37,6 +37,6 @@ export class CustomResponse {
    * status = 500
    */
   static async error(message: unknown, status = 500) {
-    return Response.json({ message }, { status })
+    return Response.json({ message } as ResponseError, { status })
   }
 }

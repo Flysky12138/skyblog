@@ -42,13 +42,13 @@ export const ScrollToTop = ({ className, showOnScrollYOverflow = 200, ...props }
       }}
       {...props}
     >
-      <AnimatePresence initial={false}>
+      <AnimatePresence initial={false} mode="popLayout">
         {showProgress ? (
-          <motion.div key={1} animate={{ opacity: 1 }} className="absolute" exit={{ opacity: 0 }} initial={{ opacity: 0 }}>
+          <motion.div key={1} animate={{ opacity: 1 }} exit={{ opacity: 0 }} initial={{ opacity: 0 }}>
             {Math.round(progress * 100)}
           </motion.div>
         ) : (
-          <motion.div key={2} animate={{ opacity: 1, y: 0 }} className="absolute" exit={{ opacity: 0 }} initial={{ opacity: 0, y: 15 }}>
+          <motion.div key={2} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} initial={{ opacity: 0, y: 15 }}>
             <ChevronUp strokeWidth={3} />
           </motion.div>
         )}

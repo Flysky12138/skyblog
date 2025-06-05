@@ -6,7 +6,6 @@ import React from 'react'
 import { useCopyToClipboard } from 'react-use'
 import { Button } from 'ui/button'
 
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { cn } from '@/lib/utils'
 
 const variants: Variants = {
@@ -39,31 +38,26 @@ export const Pre = ({ children, className, tabIndex, ...props }: React.Component
   return (
     <pre ref={preRef} className={cn('group/pre relative', className)} {...props}>
       {children}
-      <Button
-        aria-label="copy code"
+      <div
         className={cn(
-          'absolute top-1 right-1 size-8 p-2 text-[initial] md:top-1.5 md:right-1.5',
-          'dark:bg-stone-800 hover:dark:bg-stone-900',
+          'flex items-center justify-center gap-1 md:gap-1.5',
+          'absolute top-1 right-1 md:top-1.5 md:right-1.5',
           'opacity-0 group-hover/pre:opacity-100 focus-visible:opacity-100'
         )}
-        variant="outline"
-        onClick={handleCopyClick}
       >
-        <AnimatePresence initial={false}>
-          <DisplayByConditional
-            condition={copied}
-            fallback={
-              <motion.div key={2} animate="active" exit="inactive" initial="inactive" variants={variants}>
-                <Clipboard />
-              </motion.div>
-            }
-          >
-            <motion.div key={1} animate="active" exit="inactive" initial="inactive" variants={variants}>
-              <Check />
+        <Button
+          aria-label="copy code"
+          className="size-8 p-2 text-[initial] dark:bg-stone-800 hover:dark:bg-stone-900"
+          variant="outline"
+          onClick={handleCopyClick}
+        >
+          <AnimatePresence initial={false} mode="popLayout">
+            <motion.div key={copied ? 'check' : 'clipboard'} animate="active" exit="inactive" initial="inactive" variants={variants}>
+              {copied ? <Check /> : <Clipboard />}
             </motion.div>
-          </DisplayByConditional>
-        </AnimatePresence>
-      </Button>
+          </AnimatePresence>
+        </Button>
+      </div>
     </pre>
   )
 }
