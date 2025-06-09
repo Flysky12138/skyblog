@@ -105,6 +105,7 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
       content: post.content,
       description: post.description,
       display: post.display,
+      published: post.published,
       sticky: post.sticky,
       tags: post.tags.map(({ name }) => name),
       title: post.title

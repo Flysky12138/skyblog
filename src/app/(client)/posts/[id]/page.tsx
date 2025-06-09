@@ -17,8 +17,6 @@ import { PostInfo } from './_components/post-info'
 import { PostTocWrapper } from './_components/post-toc-wrapper'
 import { ResizeButton } from './_components/resize-button'
 
-export const dynamicParams = false
-
 export const generateStaticParams = async (): Promise<Awaited<PageProps['params']>[]> => {
   const posts = await prisma.post.findMany({ select: { id: true } })
   return posts.map(post => ({ id: post.id }))

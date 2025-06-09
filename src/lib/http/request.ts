@@ -26,7 +26,7 @@ export const CustomRequest = async <T extends keyof ApiMethodMap>(input: T, opti
   const url = new URL(generatePath(api, params), process.env.NEXT_PUBLIC_WEBSITE_URL)
   url.search = new URLSearchParams(search).toString()
 
-  const res = await CustomFetch<ApiMethodMap[T]['return']>(url, {
+  const res = await CustomFetch<Prettify<ApiMethodMap[T]['return']>>(url, {
     body,
     method
   })

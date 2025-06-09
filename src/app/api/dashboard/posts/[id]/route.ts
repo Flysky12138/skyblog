@@ -63,7 +63,7 @@ const dbPost = async (data: POST['body']) => {
 }
 
 export type POST = RouteHandlerType<{
-  body: Pick<Post, 'authorId' | 'content' | 'description' | 'display' | 'sticky' | 'title'> & {
+  body: Pick<Post, 'authorId' | 'content' | 'description' | 'display' | 'published' | 'sticky' | 'title'> & {
     categories: Category['name'][]
     tags: Tag['name'][]
   }
@@ -106,6 +106,7 @@ const dbPut = async (id: string, data: PUT['body']) => {
       content: data.content,
       description: data.description,
       display: data.display,
+      published: data.published,
       sticky: data.sticky,
       tags: {
         connectOrCreate: data.tags.map(name => ({
