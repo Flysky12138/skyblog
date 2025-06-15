@@ -1,5 +1,6 @@
-import prisma from '@/lib/prisma'
 import dotenv from 'dotenv'
+
+import prisma from '@/lib/prisma'
 
 dotenv.config({ path: '.env.local' })
 

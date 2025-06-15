@@ -39,7 +39,7 @@ export const ImageViewerProvider = (props: React.PropsWithChildren) => {
 
   return (
     <>
-      <ImageViewerContext.Provider
+      <ImageViewerContext
         value={{
           openViewer: ({ images, index, overlayRender }) => {
             setData(state => {

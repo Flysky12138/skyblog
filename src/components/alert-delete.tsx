@@ -15,10 +15,11 @@ import {
 export interface AlertDeleteProps extends React.PropsWithChildren {
   description: string
   title: string
-  onConfirm: () => void
+  onCancel?: React.MouseEventHandler<HTMLButtonElement>
+  onConfirm: React.MouseEventHandler<HTMLButtonElement>
 }
 
-const AlertDelete = ({ children, description, title, onConfirm }: AlertDeleteProps) => {
+const AlertDelete = ({ children, description, title, onCancel, onConfirm }: AlertDeleteProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
@@ -28,7 +29,7 @@ const AlertDelete = ({ children, description, title, onConfirm }: AlertDeletePro
           <AlertDialogDescription>此操作无法撤消，{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>取消</AlertDialogCancel>
+          <AlertDialogCancel onClick={onCancel}>取消</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm}>确定</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
