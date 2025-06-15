@@ -1,5 +1,7 @@
 /** `CustomRequest` 请求配置 */
-type CustomRequestOptions<T extends keyof ApiMethodMap> = Omit<ApiMethodMap[T], 'return'> & RemoveKeysByEmptyValue<{ params: RouteParams<T> }>
+type CustomRequestOptions<T extends keyof ApiMethodMap> = Prettify<
+  Omit<ApiMethodMap[T], 'return'> & RemoveKeysByEmptyValue<{ params: RouteParams<T> }>
+>
 
 /** `fetch` 请求配置 */
 interface FetchOptions extends Omit<RequestInit, 'body' | 'headers' | 'method'> {

@@ -21,5 +21,11 @@ const CodeBlockScrollArea = (props: React.ComponentProps<typeof CodeBlock>) => (
 )
 
 const CodeInline = ({ className, ...props }: React.ComponentProps<'code'>) => (
-  <code className={cn('bg-sheet rounded-sm px-1.5 py-1 font-semibold break-all before:content-none after:content-none', className)} {...props} />
+  <code
+    className={cn(
+      ['bg-sheet text-link-foreground', 'rounded-sm px-1.5 py-1 font-semibold break-all', 'before:content-none after:content-none'],
+      className
+    )}
+    {...props}
+  />
 )

@@ -2,7 +2,7 @@
 module.exports = {
   arrowParens: 'avoid',
   endOfLine: 'lf',
-  plugins: ['prettier-plugin-organize-imports', 'prettier-plugin-tailwindcss'],
+  plugins: ['prettier-plugin-tailwindcss'],
   printWidth: 150,
   semi: false,
   singleQuote: true,

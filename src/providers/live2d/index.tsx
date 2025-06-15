@@ -86,21 +86,21 @@ export const Live2DProvider = (props: React.PropsWithChildren) => {
     setMessage({ content: data.hitokoto, priority: 1 })
   }, 1000 * 30)
 
-  return (
-    <Live2DContext.Provider
-      value={{
-        enable,
-        loading,
-        message: messageDetail.content,
-        setEnable,
-        setLoading,
-        setMessage,
-        setSrc,
-        src
-      }}
-      {...props}
-    />
+  const contextValue = React.useMemo(
+    () => ({
+      enable,
+      loading,
+      message: messageDetail.content,
+      setEnable,
+      setLoading,
+      setMessage,
+      setSrc,
+      src
+    }),
+    [enable, loading, messageDetail.content, setEnable, setLoading, setMessage, setSrc, src]
   )
+
+  return <Live2DContext value={contextValue} {...props} />
 }
 
 export const Live2DBreakpoint = (props: React.PropsWithChildren) => {
