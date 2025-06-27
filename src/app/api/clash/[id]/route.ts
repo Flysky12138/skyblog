@@ -4,7 +4,7 @@ import { NextRequest, NextResponse, userAgent } from 'next/server'
 
 import { CustomResponse } from '@/lib/http/response'
 import { replaceVariables } from '@/lib/parser/string'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 const dbGet = async (id: string, data: Prisma.VisitorLogCreateInput) => {
   const subscribeLastAt = new Date().toISOString()

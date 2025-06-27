@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 import React from 'react'
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarProvider, SidebarRail } from 'ui/sidebar'
+import { Sidebar, SIDEBAR_COOKIE_NAME, SidebarContent, SidebarFooter, SidebarHeader, SidebarProvider, SidebarRail } from 'ui/sidebar'
 
 import { cn } from '@/lib/utils'
 
@@ -29,7 +29,7 @@ export const Nav = () => {
 
 export const NavProvider = async ({ className, ...props }: React.ComponentProps<typeof SidebarProvider>) => {
   const cookieStore = await cookies()
-  const defaultOpen = cookieStore.get('sidebar_state')?.value == 'true'
+  const defaultOpen = cookieStore.get(SIDEBAR_COOKIE_NAME)?.value == 'true'
 
   return (
     <SidebarProvider

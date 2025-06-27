@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server'
 
 import { CacheClear } from '@/lib/cache'
 import { CustomResponse } from '@/lib/http/response'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 const dbGet = async () => {
   return await prisma.friend.findMany()

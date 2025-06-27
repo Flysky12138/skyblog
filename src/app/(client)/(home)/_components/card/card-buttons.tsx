@@ -5,7 +5,7 @@ import { Button } from 'ui/button'
 import packageJson from '@/../package.json'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/layout/card'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 export const CardButtons = async () => {
   const friendCount = await prisma.friend.count()

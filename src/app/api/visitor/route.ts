@@ -3,7 +3,7 @@ import { geolocation, ipAddress } from '@vercel/functions'
 import { after, NextRequest, userAgent } from 'next/server'
 
 import { CustomResponse } from '@/lib/http/response'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 const dbPost = async (data: Prisma.VisitorLogCreateInput) => {
   return await prisma.visitorLog.create({ data })

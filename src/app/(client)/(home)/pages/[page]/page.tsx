@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 import { getPosts, POST_WHERE_INPUT, PostList } from '../../_components/post/post-list'
 

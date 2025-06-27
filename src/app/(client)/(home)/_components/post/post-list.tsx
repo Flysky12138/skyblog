@@ -5,17 +5,19 @@ import Link from 'next/link'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/layout/card'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 import { PostListPagination, PostListPaginationProps } from './post-list-pagination'
 import { PostUpdateAt } from './post-update-at'
 
+/** 文章查询过滤器 */
 export const POST_WHERE_INPUT: Prisma.PostWhereInput = {
   published: true
 }
 
+/** 文章查询 */
 export const getPosts = async (page: number, where: Prisma.PostWhereInput = {}) => {
-  const data = await prisma.post.paginate(
+  return await prisma.post.paginate(
     {
       orderBy: [{ sticky: 'desc' }, { updatedAt: 'desc' }],
       select: {
@@ -35,10 +37,6 @@ export const getPosts = async (page: number, where: Prisma.PostWhereInput = {}) 
       page
     }
   )
-  return {
-    ...data,
-    totalPages: data.totalPages
-  }
 }
 
 interface PostListProps extends PostListPaginationProps {
@@ -92,9 +90,7 @@ export const PostList = ({ posts, ...props }: PostListProps) => {
           {post.description && <span className="text-subtitle-foreground line-clamp-3 text-sm">{post.description}</span>}
         </Card>
       ))}
-      <DisplayByConditional condition={(props?.totalPages || 0) > 1}>
-        <PostListPagination {...props} />
-      </DisplayByConditional>
+      <PostListPagination {...props} />
     </>
   )
 }

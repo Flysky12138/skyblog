@@ -6,29 +6,39 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 /**
- * @see https://eslint.org/docs/latest/rules
+ * 规则严重性
+ * @see https://eslint.org.cn/docs/latest/use/configure/rules#rule-severities
+ */
+enum RuleSeverity {
+  error = 2,
+  off = 0,
+  warn = 1
+}
+
+/**
+ * @see https://eslint.org.cn/docs/latest/rules
  */
 const eslintRules = {
   // 使用函数表达式而不是函数声明
-  'func-style': [2, 'expression'],
+  'func-style': [RuleSeverity.error, 'expression'],
   // 要求使用箭头函数进行回调
-  'prefer-arrow-callback': 2
+  'prefer-arrow-callback': RuleSeverity.error
 }
 
 /**
  * @see https://typescript-eslint.io/rules
  */
 const tseslintRules = {
-  '@typescript-eslint/ban-ts-comment': 0,
-  '@typescript-eslint/no-empty-object-type': 0,
-  '@typescript-eslint/no-explicit-any': 0,
-  '@typescript-eslint/no-require-imports': 0,
-  '@typescript-eslint/no-unused-expressions': 0,
-  '@typescript-eslint/no-unused-vars': 0
+  '@typescript-eslint/ban-ts-comment': RuleSeverity.off,
+  '@typescript-eslint/no-empty-object-type': RuleSeverity.off,
+  '@typescript-eslint/no-explicit-any': RuleSeverity.off,
+  '@typescript-eslint/no-require-imports': RuleSeverity.off,
+  '@typescript-eslint/no-unused-expressions': RuleSeverity.off,
+  '@typescript-eslint/no-unused-vars': RuleSeverity.off
 }
 
 const commonSortRules = [
-  2,
+  RuleSeverity.error,
   {
     customGroups: [{ elementNamePattern: '^on[A-Z]', groupName: 'onEvent', selector: 'property' }],
     groups: ['unknown', ['onEvent', 'method'], 'multiline-method'],
@@ -43,7 +53,7 @@ const commonSortRules = [
 const perfectionistRules = {
   'perfectionist/sort-interfaces': commonSortRules,
   // 关闭，使用 react/jsx-sort-props 规则
-  'perfectionist/sort-jsx-props': 0,
+  'perfectionist/sort-jsx-props': RuleSeverity.off,
   'perfectionist/sort-object-types': commonSortRules,
   'perfectionist/sort-objects': commonSortRules
 }
@@ -53,12 +63,12 @@ const perfectionistRules = {
  */
 const reactRules = {
   // 强制 props、state 和 context 使用解构赋值
-  'react/destructuring-assignment': [2, 'always'],
+  'react/destructuring-assignment': [RuleSeverity.error, 'always'],
   // 强制 useState 钩子值和 setter 变量的解构和对称命名
-  'react/hook-use-state': [2, { allowDestructuredState: true }],
+  'react/hook-use-state': [RuleSeverity.error, { allowDestructuredState: true }],
   // 强制 props 按字母顺序
   'react/jsx-sort-props': [
-    2,
+    RuleSeverity.error,
     {
       callbacksLast: true,
       ignoreCase: false,
@@ -68,22 +78,22 @@ const reactRules = {
       shorthandLast: false
     }
   ],
-  'react/no-unknown-property': 0,
+  'react/no-unknown-property': RuleSeverity.off,
   // 不允许没有子组件的组件使用额外的结束标签
-  'react/self-closing-comp': [2, { component: true, html: true }]
+  'react/self-closing-comp': [RuleSeverity.error, { component: true, html: true }]
 }
 
 /**
  * @see https://www.npmjs.com/package/eslint-plugin-react-hooks
  */
 const reactHooksRules = {
-  'react-hooks/exhaustive-deps': 2,
-  'react-hooks/rules-of-hooks': 2
+  'react-hooks/exhaustive-deps': RuleSeverity.error,
+  'react-hooks/rules-of-hooks': RuleSeverity.error
 }
 
 export default tseslint.config(
   {
-    ignores: ['public/', '.next/', 'src/components/ui/', 'api.d.ts']
+    ignores: ['public/', '.next/', 'api.d.ts']
   },
   // https://typescript-eslint.io/users/configs/#projects-without-type-checking
   tseslint.configs.recommended,
@@ -98,6 +108,36 @@ export default tseslint.config(
   eslintPluginReact.configs.flat.recommended,
   eslintPluginReact.configs.flat['jsx-runtime'],
   // 自定义规则
+  {
+    ignores: [
+      '*.config.ts',
+      'src/app/**/page.tsx',
+      'src/app/**/layout.tsx',
+      'src/app/**/error.tsx',
+      'src/app/**/loading.tsx',
+      'src/app/**/not-found.tsx',
+      'src/app/**/robots.ts',
+      'src/app/**/sitemap.ts',
+      'src/app/**/global-error.tsx',
+      'src/app/**/manifest.ts',
+      'src/mdx/**/*.tsx'
+    ],
+    rules: {
+      // 禁止默认导出
+      'no-restricted-exports': [
+        RuleSeverity.error,
+        {
+          restrictDefaultExports: {
+            defaultFrom: true,
+            direct: true,
+            named: true,
+            namedFrom: true,
+            namespaceFrom: true
+          }
+        }
+      ]
+    }
+  },
   {
     languageOptions: {
       globals: {

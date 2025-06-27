@@ -341,4 +341,4 @@ class SURFACE_POINT {
   }
 }
 
-export default Fish
+export { Fish }

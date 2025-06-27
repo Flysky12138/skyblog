@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client'
 
 import { CustomResponse } from '@/lib/http/response'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 const dbGet = async () => {
   return await prisma.tag.findMany()

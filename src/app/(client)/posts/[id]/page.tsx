@@ -10,7 +10,7 @@ import { Card } from '@/components/layout/card'
 import { MDXServer } from '@/components/mdx/server'
 import { MDXToc } from '@/components/mdx/toc'
 import { ATTRIBUTE, POST_CARD_DISPLAY } from '@/lib/constants'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 import { cn } from '@/lib/utils'
 
 import { PostInfo } from './_components/post-info'

@@ -1,6 +1,5 @@
 import { useTheme as useThemeContext } from 'next-themes'
-
-type ThemeType = 'dark' | 'light' | 'system'
+import { ToasterProps } from 'sonner'
 
 export const useTheme = () => {
   const { resolvedTheme, setTheme, systemTheme, theme } = useThemeContext()
@@ -16,7 +15,7 @@ export const useTheme = () => {
     isDark,
     setTheme,
     systemTheme,
-    theme: theme as ThemeType,
+    theme: theme as ToasterProps['theme'],
     /** 切换主题 */
     toggleTheme
   }

@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server'
 import { PaginationArgs } from 'prisma-paginate'
 
 import { CustomResponse } from '@/lib/http/response'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 import { include } from './prisma.config'
 

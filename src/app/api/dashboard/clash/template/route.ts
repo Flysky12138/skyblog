@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
 import { CustomResponse } from '@/lib/http/response'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 const select = Prisma.validator<Prisma.ClashTemplateSelect>()({
   _count: {

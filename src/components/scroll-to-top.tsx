@@ -1,14 +1,16 @@
 'use client'
 
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronUp } from 'lucide-react'
 import React from 'react'
 import { Button } from 'ui/button'
 
+import { useWindowScroll } from '@/hooks/use-window-scroll'
 import { cn } from '@/lib/utils'
 
 interface ScrollToTopProps extends React.ComponentProps<typeof Button> {
   /**
+   * 滚动超出多少才显示
    * @default 200
    */
   showOnScrollYOverflow?: number
@@ -16,18 +18,17 @@ interface ScrollToTopProps extends React.ComponentProps<typeof Button> {
 
 export const ScrollToTop = ({ className, showOnScrollYOverflow = 200, ...props }: ScrollToTopProps) => {
   const [showProgress, setShowProgress] = React.useState(false)
-  const [progress, setProgress] = React.useState(0)
 
-  const { scrollY, scrollYProgress } = useScroll()
+  const { y, yProgress } = useWindowScroll()
+
   const timer = React.useRef<NodeJS.Timeout>(undefined)
-  useMotionValueEvent(scrollYProgress, 'change', value => {
+  React.useEffect(() => {
     clearTimeout(timer.current)
-    setProgress(value)
     setShowProgress(true)
     timer.current = setTimeout(setShowProgress, 500, false)
-  })
+  }, [yProgress])
 
-  if (scrollY.get() <= showOnScrollYOverflow) return null
+  if (y <= showOnScrollYOverflow) return null
 
   return (
     <Button
@@ -45,7 +46,7 @@ export const ScrollToTop = ({ className, showOnScrollYOverflow = 200, ...props }
       <AnimatePresence initial={false} mode="popLayout">
         {showProgress ? (
           <motion.div key={1} animate={{ opacity: 1 }} exit={{ opacity: 0 }} initial={{ opacity: 0 }}>
-            {Math.round(progress * 100)}
+            {yProgress}
           </motion.div>
         ) : (
           <motion.div key={2} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} initial={{ opacity: 0, y: 15 }}>

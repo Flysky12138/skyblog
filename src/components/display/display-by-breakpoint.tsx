@@ -6,26 +6,26 @@ import { DisplayByConditional, DisplayByConditionalProps } from './display-by-co
 
 interface DisplayByBreakPointProps extends Omit<DisplayByConditionalProps, 'condition'> {
   /**
-   * `>=` 最小宽度
-   * @default -Infinity
-   */
-  down?: Exclude<keyof typeof breakpoints, 'xs'> | number
-  /**
-   * `<` 最大宽度
+   * 最大宽度
    * @default Infinity
    */
-  up?: keyof typeof breakpoints | number
+  max?: keyof typeof breakpoints | number
+  /**
+   * 最小宽度
+   * @default -Infinity
+   */
+  min?: Exclude<keyof typeof breakpoints, 'xs'> | number
 }
 
-export const DisplayByBreakPoint = ({ down = -Infinity, up = Infinity, ...props }: DisplayByBreakPointProps) => {
+export const DisplayByBreakPoint = ({ max: up = Infinity, min: down = -Infinity, ...props }: DisplayByBreakPointProps) => {
   const breakpoint = useBreakpoint()
   const breakpointMatchedValue = breakpoints[breakpoint]
 
-  const upValue = typeof up == 'string' ? breakpoints[up] : up
+  const maxValue = typeof up == 'string' ? breakpoints[up] : up
   const downValue = typeof down == 'string' ? breakpoints[down] : down
 
-  const isLtUpValue = breakpointMatchedValue < upValue
-  const isGteDownValue = breakpointMatchedValue >= downValue
+  const isLtMaxValue = breakpointMatchedValue < maxValue
+  const isGteMinValue = breakpointMatchedValue >= downValue
 
-  return <DisplayByConditional condition={isGteDownValue && isLtUpValue} {...props} />
+  return <DisplayByConditional condition={isGteMinValue && isLtMaxValue} {...props} />
 }

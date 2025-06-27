@@ -23,7 +23,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
             <Logo />
           </Link>
           <span aria-hidden="true" className="grow" />
-          <DisplayByBreakPoint up="sm">
+          <DisplayByBreakPoint max="sm">
             <ScrollToTop showOnScrollYOverflow={500} variant="outline" />
           </DisplayByBreakPoint>
           <DisplayByAuth role="ADMIN">
@@ -42,20 +42,20 @@ export default function Layout({ children }: React.PropsWithChildren) {
       </Header>
       <main className="border-divide bg-root z-main relative mt-(--height-header) mb-(--height-footer) min-h-[calc(100dvh-var(--height-header))] border-b">
         <Container className="py-5 sm:py-7 md:py-9">{children}</Container>
-        {/* <DisplayByBreakPoint down="md">
+        {/* <DisplayByBreakPoint min="md">
           <Ribbon />
         </DisplayByBreakPoint> */}
       </main>
       <nav className="z-nav fixed inset-x-0 bottom-[calc(var(--height-footer)+--spacing(12))]">
         <Container className="flex h-0 flex-col items-end justify-end gap-3" variant="nav">
-          <DisplayByBreakPoint down="sm">
+          <DisplayByBreakPoint min="sm">
             <ScrollToTop />
           </DisplayByBreakPoint>
         </Container>
       </nav>
       <footer className="z-footer dark:bg-root/80 h-footer fixed inset-x-0 bottom-0 flex items-center justify-center bg-white/70">
         <About />
-        {/* <DisplayByBreakPoint down="md">
+        {/* <DisplayByBreakPoint min="md">
           <Fish />
         </DisplayByBreakPoint> */}
       </footer>

@@ -2,15 +2,15 @@
 
 import React from 'react'
 
-import ribbon from './ribbon'
+import { Ribbon } from './ribbon'
 
-export default function Ribbon() {
-  const ribbonRef = React.useRef<ribbon>(null)
+export const RibbonCanvas = () => {
+  const ribbonRef = React.useRef<Ribbon>(null)
   const canvasRef = React.useRef<HTMLCanvasElement>(null)
 
   React.useEffect(() => {
     if (canvasRef.current) {
-      ribbonRef.current = new ribbon(canvasRef.current, {
+      ribbonRef.current = new Ribbon(canvasRef.current, {
         parallaxAmount: 0,
         ribbonCount: 3
       })

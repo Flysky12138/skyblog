@@ -4,15 +4,15 @@ import React from 'react'
 
 import { useTheme } from '@/hooks/use-theme'
 
-import fish from './fish'
+import { Fish } from './fish'
 
-export const Fish = () => {
-  const fishRef = React.useRef<fish>(null)
+export const FishCanvas = () => {
+  const fishRef = React.useRef<Fish>(null)
   const canvasRef = React.useRef<HTMLCanvasElement>(null)
 
   React.useEffect(() => {
     if (canvasRef.current) {
-      fishRef.current = new fish(canvasRef.current)
+      fishRef.current = new Fish(canvasRef.current)
     }
     return () => {
       fishRef.current?.destroy()

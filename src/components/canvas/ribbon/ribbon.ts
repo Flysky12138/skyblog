@@ -367,4 +367,4 @@ class Ribbon {
   }
 }
 
-export default Ribbon
+export { Ribbon }

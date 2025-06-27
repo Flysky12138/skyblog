@@ -1,7 +1,7 @@
 'use client'
 
 import { DiffEditor, DiffEditorProps, Editor, EditorProps, loader, Monaco } from '@monaco-editor/react'
-import { toMerged } from 'es-toolkit'
+import { isBrowser, toMerged } from 'es-toolkit'
 import { editor, IDisposable } from 'monaco-editor'
 import React from 'react'
 
@@ -115,7 +115,7 @@ loader.config({
   }
 })
 
-if (typeof window != 'undefined') {
+if (isBrowser()) {
   window.MonacoEnvironment = {
     // @ts-ignore
     getWorker(_, label) {

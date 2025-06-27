@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import puppeteer, { Browser } from 'puppeteer-core'
 
 import { CustomResponse } from '@/lib/http/response'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 export const revalidate = 43200
 

@@ -19,7 +19,7 @@ export interface AlertDeleteProps extends React.PropsWithChildren {
   onConfirm: React.MouseEventHandler<HTMLButtonElement>
 }
 
-const AlertDelete = ({ children, description, title, onCancel, onConfirm }: AlertDeleteProps) => {
+export const AlertDelete = ({ children, description, title, onCancel, onConfirm }: AlertDeleteProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
@@ -36,5 +36,3 @@ const AlertDelete = ({ children, description, title, onCancel, onConfirm }: Aler
     </AlertDialog>
   )
 }
-
-export { AlertDelete }

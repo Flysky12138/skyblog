@@ -104,7 +104,7 @@ export const Live2DProvider = (props: React.PropsWithChildren) => {
 }
 
 export const Live2DBreakpoint = (props: React.PropsWithChildren) => {
-  return <DisplayByBreakPoint down="lg" {...props} />
+  return <DisplayByBreakPoint min="lg" {...props} />
 }
 
 export const Live2DToggleButton = () => {

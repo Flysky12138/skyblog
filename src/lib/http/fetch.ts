@@ -1,3 +1,4 @@
+import { isBrowser } from 'es-toolkit'
 import { toast } from 'sonner'
 
 import { HEADER } from '../constants'
@@ -35,7 +36,7 @@ const Core = async (promise: () => Promise<Response>) => {
     console.error(error)
     const message = JSON.parse((error as Error).message)
     const formatMessage = typeof message == 'string' ? message : JSON.stringify(message, null, 2)
-    if (typeof window != 'undefined') {
+    if (isBrowser()) {
       if (window.location.pathname.includes('/dashboard')) {
         toast.error(formatMessage, { closeButton: true, richColors: true })
       }
