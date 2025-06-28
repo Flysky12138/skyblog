@@ -2,73 +2,76 @@ import eslintPluginPerfectionist from 'eslint-plugin-perfectionist'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import eslintPluginReact from 'eslint-plugin-react'
 import eslintPluginReactHooks from 'eslint-plugin-react-hooks'
-import globals from 'globals'
+import eslintPluginUnusedImports from 'eslint-plugin-unused-imports'
 import tseslint from 'typescript-eslint'
 
-/**
- * 规则严重性
- * @see https://eslint.org.cn/docs/latest/use/configure/rules#rule-severities
- */
-enum RuleSeverity {
-  error = 2,
-  off = 0,
-  warn = 1
-}
+type ExtractConfig<T> = T extends unknown[] ? never : T
+type InfiniteDepthConfigWithExtends = Parameters<typeof tseslint.config>[number]
+type RuleEntry = Rules[string]
+type Rules = Required<ExtractConfig<InfiniteDepthConfigWithExtends>>['rules']
 
 /**
  * @see https://eslint.org.cn/docs/latest/rules
  */
 const eslintRules = {
   // 使用函数表达式而不是函数声明
-  'func-style': [RuleSeverity.error, 'expression'],
+  'func-style': ['error', 'expression'],
   // 要求使用箭头函数进行回调
-  'prefer-arrow-callback': RuleSeverity.error
-}
+  'prefer-arrow-callback': 'error'
+} satisfies Rules
 
 /**
  * @see https://typescript-eslint.io/rules
  */
 const tseslintRules = {
-  '@typescript-eslint/ban-ts-comment': RuleSeverity.off,
-  '@typescript-eslint/no-empty-object-type': RuleSeverity.off,
-  '@typescript-eslint/no-explicit-any': RuleSeverity.off,
-  '@typescript-eslint/no-require-imports': RuleSeverity.off,
-  '@typescript-eslint/no-unused-expressions': RuleSeverity.off,
-  '@typescript-eslint/no-unused-vars': RuleSeverity.off
-}
+  '@typescript-eslint/ban-ts-comment': 'off',
+  '@typescript-eslint/no-empty-object-type': 'off',
+  '@typescript-eslint/no-explicit-any': 'off',
+  '@typescript-eslint/no-require-imports': 'off',
+  '@typescript-eslint/no-unused-expressions': 'off',
+  '@typescript-eslint/no-unused-vars': [
+    'error',
+    {
+      args: 'none',
+      caughtErrors: 'none',
+      destructuredArrayIgnorePattern: '.',
+      vars: 'all'
+    }
+  ]
+} satisfies Rules
 
-const commonSortRules = [
-  RuleSeverity.error,
+const sortRulesEntry = [
+  'error',
   {
     customGroups: [{ elementNamePattern: '^on[A-Z]', groupName: 'onEvent', selector: 'property' }],
     groups: ['unknown', ['onEvent', 'method'], 'multiline-method'],
     order: 'asc',
     type: 'natural'
   }
-]
+] satisfies RuleEntry
 
 /**
  * @see https://perfectionist.dev/rules
  */
 const perfectionistRules = {
-  'perfectionist/sort-interfaces': commonSortRules,
+  'perfectionist/sort-interfaces': sortRulesEntry,
   // 关闭，使用 react/jsx-sort-props 规则
-  'perfectionist/sort-jsx-props': RuleSeverity.off,
-  'perfectionist/sort-object-types': commonSortRules,
-  'perfectionist/sort-objects': commonSortRules
-}
+  'perfectionist/sort-jsx-props': 'off',
+  'perfectionist/sort-object-types': sortRulesEntry,
+  'perfectionist/sort-objects': sortRulesEntry
+} satisfies Rules
 
 /**
  * @see https://github.com/jsx-eslint/eslint-plugin-react
  */
 const reactRules = {
   // 强制 props、state 和 context 使用解构赋值
-  'react/destructuring-assignment': [RuleSeverity.error, 'always'],
+  'react/destructuring-assignment': ['error', 'always'],
   // 强制 useState 钩子值和 setter 变量的解构和对称命名
-  'react/hook-use-state': [RuleSeverity.error, { allowDestructuredState: true }],
+  'react/hook-use-state': ['error', { allowDestructuredState: true }],
   // 强制 props 按字母顺序
   'react/jsx-sort-props': [
-    RuleSeverity.error,
+    'error',
     {
       callbacksLast: true,
       ignoreCase: false,
@@ -78,18 +81,25 @@ const reactRules = {
       shorthandLast: false
     }
   ],
-  'react/no-unknown-property': RuleSeverity.off,
+  'react/no-unknown-property': 'off',
   // 不允许没有子组件的组件使用额外的结束标签
-  'react/self-closing-comp': [RuleSeverity.error, { component: true, html: true }]
-}
+  'react/self-closing-comp': ['error', { component: true, html: true }]
+} satisfies Rules
 
 /**
  * @see https://www.npmjs.com/package/eslint-plugin-react-hooks
  */
 const reactHooksRules = {
-  'react-hooks/exhaustive-deps': RuleSeverity.error,
-  'react-hooks/rules-of-hooks': RuleSeverity.error
-}
+  'react-hooks/exhaustive-deps': 'error',
+  'react-hooks/rules-of-hooks': 'error'
+} satisfies Rules
+
+/**
+ * @see https://github.com/sweepline/eslint-plugin-unused-imports?tab=readme-ov-file#usage
+ */
+const unusedImportsRules = {
+  'unused-imports/no-unused-imports': 'error'
+} satisfies Rules
 
 export default tseslint.config(
   {
@@ -125,7 +135,7 @@ export default tseslint.config(
     rules: {
       // 禁止默认导出
       'no-restricted-exports': [
-        RuleSeverity.error,
+        'error',
         {
           restrictDefaultExports: {
             defaultFrom: true,
@@ -140,27 +150,20 @@ export default tseslint.config(
   },
   {
     languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node
-      },
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true
-        },
-        ecmaVersion: 2020
-      }
+      ecmaVersion: 'latest',
+      sourceType: 'module'
     },
     plugins: {
-      'react-hooks': eslintPluginReactHooks
+      'react-hooks': eslintPluginReactHooks,
+      'unused-imports': eslintPluginUnusedImports
     },
-    // @ts-ignore
     rules: {
       ...eslintRules,
       ...tseslintRules,
       ...perfectionistRules,
       ...reactRules,
-      ...reactHooksRules
+      ...reactHooksRules,
+      ...unusedImportsRules
     }
   }
 )

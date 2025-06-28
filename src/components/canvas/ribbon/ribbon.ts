@@ -19,18 +19,6 @@ const screenInfo = () => {
     width
   }
 }
-// mouse/input helper
-const mouseInfo = (event: MouseEvent) => {
-  const mousex = event ? event.pageX || event.clientX || 0 : 0,
-    mousey = event ? event.pageY || event.clientY || 0 : 0,
-    screen = screenInfo()
-  return {
-    centerx: mousex - screen.width / 2,
-    centery: mousey - screen.height / 2,
-    mousex,
-    mousey
-  }
-}
 
 interface Options {
   [key: string]: unknown
