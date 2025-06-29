@@ -93,7 +93,6 @@ export const Pagination = ({
           <PaginationPrimitive.PaginationItem key={it}>
             {typeof it == 'number' ? (
               <PaginationPrimitive.PaginationLink
-                disabled={it == page}
                 href={getHref?.({ count, limit, page: it, totalPages })}
                 isActive={it == page}
                 onClick={() => {
