@@ -147,7 +147,7 @@ export default function Pi() {
           />
         </DisplayByConditional>
       )}
-      <div data-slot="content">
+      <div className="mt-2" data-slot="content">
         {form.mode == 'arctan' && <Arctan />}
         {form.mode == 'chudnovsky' && <Chudnovsky />}
         {form.mode == 'chudnovsky-bs' && <ChudnovskyBs />}

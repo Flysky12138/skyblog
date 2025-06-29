@@ -10,8 +10,8 @@ export const rehypeCode = () => {
     visit(tree, 'element', (node, _, parent) => {
       if (node.tagName == 'code' && (parent as Element | undefined)?.tagName == 'pre') {
         node.properties = toMerged(node.properties || {}, {
-          [DATA_EXPANDED]: node.data?.meta?.includes('expand'), // 默认展开
-          [DATA_IS_BLOCK]: '' // 标记为代码块
+          [DATA_EXPANDED]: node.data?.meta?.includes('expand'), // 是否展开
+          [DATA_IS_BLOCK]: true // 标记为代码块
         })
       }
     })
