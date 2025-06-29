@@ -120,6 +120,7 @@ export default tseslint.config(
   // 自定义规则
   {
     ignores: [
+      '**/*.d.ts',
       '*.config.ts',
       'src/app/**/page.tsx',
       'src/app/**/layout.tsx',

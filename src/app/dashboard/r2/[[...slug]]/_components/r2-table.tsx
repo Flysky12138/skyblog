@@ -195,11 +195,12 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
 }
 
 /** 文件图标 */
-const FileIconMap: React.FC<
-  LucideProps & {
-    type?: string
-  }
-> = ({ type = '', ...props }) => {
+const FileIconMap = ({
+  type = '',
+  ...props
+}: LucideProps & {
+  type?: string
+}) => {
   if (type.startsWith('image')) return <FileImage {...props} />
   if (type.startsWith('audio')) return <FileAudio2 {...props} />
   if (type.startsWith('video')) return <FileVideo2 {...props} />
