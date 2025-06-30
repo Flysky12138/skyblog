@@ -1,7 +1,7 @@
 'use client'
 
 import { isUndefined } from 'es-toolkit'
-import { Archive, House, LibraryBig, LucideIcon, NotebookPen, Plus, Settings, Share2, User, UserRoundSearch, Users } from 'lucide-react'
+import { Archive, House, LibraryBig, LucideIcon, NotebookPen, Plus, Settings, User, UserRoundSearch, Users } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
@@ -15,6 +15,7 @@ import {
   useSidebar
 } from 'ui/sidebar'
 
+import Clash from '@/assets/svg/clash.svg'
 import { cn } from '@/lib/utils'
 
 interface Menu {
@@ -24,7 +25,7 @@ interface Menu {
       icon: LucideIcon
     }
     href: StartsWith<'/'>
-    icon: LucideIcon
+    icon: LucideIcon | React.FC
     name: string
     onlyShow?: 'close' | 'open'
   }[]
@@ -59,7 +60,7 @@ const menus: Menu[] = [
   },
   {
     group: [
-      { href: '/dashboard/clash', icon: Share2, name: 'Clash 共享' },
+      { href: '/dashboard/clash', icon: Clash, name: 'Clash 共享' },
       { href: '/dashboard/setting', icon: Settings, name: '设置' }
     ],
     label: 'Other'
