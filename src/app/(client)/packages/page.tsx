@@ -35,8 +35,8 @@ export default async function Page() {
                       </a>
                     </DisplayByConditional>
                   </TableCell>
-                  <TableCell>{pkg.version}</TableCell>
-                  <TableCell>{pkg.description}</TableCell>
+                  <TableCell className="whitespace-nowrap">{pkg.version}</TableCell>
+                  <TableCell className="whitespace-nowrap">{pkg.description}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

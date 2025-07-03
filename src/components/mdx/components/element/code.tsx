@@ -3,7 +3,7 @@
 import React from 'react'
 import { ScrollArea, ScrollBar } from 'ui/scroll-area'
 
-import { DATA_EXPANDED, DATA_IS_BLOCK } from '@/components/mdx/rehype/rehype-code'
+import { DATA_IS_BLOCK, DATA_IS_COLLAPSED } from '@/components/mdx/rehype/rehype-code'
 import { cn } from '@/lib/utils'
 
 export const Code = (props: React.ComponentProps<'code'>) => {
@@ -13,14 +13,14 @@ export const Code = (props: React.ComponentProps<'code'>) => {
 
 const CodeBlock = ({
   className,
-  [DATA_EXPANDED]: isExpanded,
+  [DATA_IS_COLLAPSED]: isCollapsed = false,
   ...props
 }: React.ComponentProps<'code'> & {
-  [DATA_EXPANDED]?: boolean
+  [DATA_IS_COLLAPSED]?: boolean
 }) => (
   <ScrollArea
     className={cn({
-      "*:data-[slot='scroll-area-viewport']:max-h-100": !isExpanded
+      '*:data-[slot=scroll-area-viewport]:max-h-100': isCollapsed
     })}
   >
     <code className={cn('text-[1em] font-semibold', className)} {...props} />
@@ -31,7 +31,9 @@ const CodeBlock = ({
 const CodeInline = ({ className, ...props }: React.ComponentProps<'code'>) => (
   <code
     className={cn(
-      ['text-code-foreground bg-code', 'rounded-sm px-1.5 py-1 font-semibold break-all', 'before:content-none after:content-none'],
+      'text-code-foreground bg-code',
+      'rounded-sm px-1.5 py-1 font-semibold break-all',
+      'before:content-none after:content-none',
       className
     )}
     {...props}

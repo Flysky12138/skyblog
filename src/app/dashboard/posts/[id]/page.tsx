@@ -12,7 +12,7 @@ import { ScrollArea } from 'ui/scroll-area'
 import { useImmer } from 'use-immer'
 import { uuidv7 } from 'uuidv7'
 
-import { GET, PUT } from '@/app/api/dashboard/posts/[id]/route'
+import { GET } from '@/app/api/dashboard/posts/[id]/route'
 import { ErrorComponent } from '@/components/error-component'
 import { MDXClient } from '@/components/mdx/client'
 import { MonacoEditor, MonacoEditorRef } from '@/components/monaco-editor'
@@ -21,7 +21,7 @@ import { POST_CARD_DISPLAY } from '@/lib/constants'
 import { CustomRequest } from '@/lib/http/request'
 import { Toast } from '@/lib/toast'
 
-import { EditorToolbar } from './_components/editor-toolbar'
+import { EditorToolbar, EditorToolbarProps } from './_components/editor-toolbar'
 
 export type DefaultPostType = NonNullable<GET['return']>
 export interface MessageEventDataMountedType extends MessageEventData<'post-preview-mounted'> {}
@@ -51,10 +51,10 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
   const { id } = React.use(params)
   const isCreate = id == 'new'
 
-  const [post, setPost] = useImmer<DefaultPostType>(DEFAULT_POST)
+  const [post, setPost] = useImmer(DEFAULT_POST)
 
-  const oldPost = React.useRef<DefaultPostType>(DEFAULT_POST)
-  const oldCode = React.useRef<string>('')
+  const oldPost = React.useRef(DEFAULT_POST)
+  const oldCode = React.useRef('')
 
   // Diff 对比模式
   const [isCompare, setIsCompare] = React.useState(false)
@@ -64,7 +64,7 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
   // 编辑器引用
   const editorRef = React.useRef<MonacoEditorRef>(null)
   // 预览窗口引用
-  const previewWindowRef = React.useRef<null | WindowProxy>(null)
+  const previewWindowRef = React.useRef<WindowProxy>(null)
 
   // 初始化数据
   const initData = (data: DefaultPostType | null) => {
@@ -94,41 +94,60 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
     refreshPreviewWindow()
   })
 
-  // 创建/更新
-  const handleSave = async () => {
+  // 创建
+  const handleCreate = async () => {
     if (!post.title) {
       toast.error('表单验证失败', { richColors: true })
       return
     }
-    const putBody: PUT['body'] = {
-      categories: post.categories.map(({ name }) => name),
-      content: post.content,
-      description: post.description,
-      display: post.display,
-      published: post.published,
-      sticky: post.sticky,
-      tags: post.tags.map(({ name }) => name),
-      title: post.title
-    }
     const data = await Toast(
-      isCreate
-        ? CustomRequest('POST api/dashboard/posts/[id]', {
-            body: {
-              authorId: session.data?.id || uuidv7(),
-              ...putBody
-            },
-            params: { id }
-          })
-        : CustomRequest('PUT api/dashboard/posts/[id]', { body: putBody, params: { id } }),
+      CustomRequest('POST api/dashboard/posts/[id]', {
+        body: {
+          authorId: session.data?.id || uuidv7(),
+          categories: post.categories.map(({ name }) => name),
+          content: post.content,
+          description: post.description,
+          display: post.display,
+          published: post.published,
+          sticky: post.sticky,
+          tags: post.tags.map(({ name }) => name),
+          title: post.title
+        },
+        params: { id }
+      }),
       {
         success: '保存成功'
       }
     )
-    if (isCreate) {
-      router.replace(`/dashboard/posts/${data.id}`)
-    } else {
-      initData(data)
+    router.replace(`/dashboard/posts/${data.id}`)
+  }
+
+  // 更新
+  const handleUpdate: EditorToolbarProps['onUpdate'] = async type => {
+    if (!post.title) {
+      toast.error('表单验证失败', { richColors: true })
+      return
     }
+    const data = await Toast(
+      CustomRequest('PUT api/dashboard/posts/[id]', {
+        body: {
+          categories: post.categories.map(({ name }) => name),
+          content: post.content,
+          description: post.description,
+          display: post.display,
+          published: post.published,
+          sticky: post.sticky,
+          tags: post.tags.map(({ name }) => name),
+          title: post.title,
+          updatedAt: type == 'normal' ? new Date() : undefined
+        },
+        params: { id }
+      }),
+      {
+        success: '保存成功'
+      }
+    )
+    initData(data)
   }
 
   return (
@@ -148,13 +167,14 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
               onCompare={() => {
                 setIsCompare(prev => !prev)
               }}
+              onCreate={handleCreate}
               onFormat={() => {
                 editorRef.current?.format()
               }}
               onPreview={() => {
                 previewWindowRef.current = window.open(`/posts/${id}/preview`, '_blank')
               }}
-              onSave={handleSave}
+              onUpdate={handleUpdate}
             />
             <MonacoEditor
               ref={editorRef}

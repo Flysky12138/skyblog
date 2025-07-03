@@ -29,8 +29,8 @@ export const ClashTable = () => {
         { dataIndex: 'name', title: '名称' },
         { dataIndex: 'subtitle', title: '描述' },
         { dataIndex: 'visitorInfos', title: '次数', render: text => text.length },
-        { dataIndex: 'subscribeLastAt', headerClassName: 'w-48', title: '最近订阅时间', render: text => (text ? formatISOTime(text) : null) },
-        { dataIndex: 'updatedAt', headerClassName: 'w-48', render: formatISOTime, title: '更新时间' },
+        { dataIndex: 'subscribeLastAt', title: '最近订阅时间', render: text => (text ? formatISOTime(text) : null) },
+        { dataIndex: 'updatedAt', render: formatISOTime, title: '更新时间' },
         {
           dataIndex: 'enabled',
           headerClassName: 'w-12',
@@ -67,6 +67,7 @@ export const ClashTable = () => {
           render: (record, index) => (
             <div className="flex justify-end gap-2">
               <TableActionButton
+                tooltip="复制"
                 onClick={() => {
                   copy(new URL(`/api/clash/${record.id}`, window.origin).href)
                   toast.success('复制成功')

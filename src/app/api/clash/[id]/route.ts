@@ -5,6 +5,7 @@ import { NextRequest, NextResponse, userAgent } from 'next/server'
 import { CustomResponse } from '@/lib/http/response'
 import { replaceVariables } from '@/lib/parser/string'
 import { prisma } from '@/lib/prisma'
+import { isDev } from '@/lib/utils'
 
 const dbGet = async (id: string, data: Prisma.VisitorLogCreateInput) => {
   const subscribeLastAt = new Date().toISOString()
@@ -36,7 +37,7 @@ export const GET = async (request: NextRequest, { params }: DynamicRouteProps<{ 
 
     if (!id) return CustomResponse.error('{id} 值缺失', 422)
 
-    const ip = process.env.NODE_ENV == 'development' ? '0.0.0.0' : ipAddress(request)
+    const ip = isDev() ? '0.0.0.0' : ipAddress(request)
     if (!ip) return CustomResponse.error('未知访问', 400)
 
     if (!request.headers.get('user-agent')?.toLowerCase().includes('clash')) {

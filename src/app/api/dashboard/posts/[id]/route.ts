@@ -115,7 +115,7 @@ const dbPut = async (id: string, data: PUT['body']) => {
         }))
       },
       title: data.title,
-      updatedAt: new Date().toISOString()
+      updatedAt: data.updatedAt
     },
     include,
     where: { id }
@@ -123,7 +123,7 @@ const dbPut = async (id: string, data: PUT['body']) => {
 }
 
 export type PUT = RouteHandlerType<{
-  body: Omit<POST['body'], 'authorId'>
+  body: Omit<POST['body'], 'authorId'> & Partial<Pick<Post, 'updatedAt'>>
   return: Prisma.PromiseReturnType<typeof dbPut>
 }>
 

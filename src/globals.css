@@ -6,8 +6,8 @@
 @custom-variant post-full-page (&:is(.post-full-page *));
 
 @import 'tailwindcss';
+@import 'tw-animate-css';
 
-@plugin 'tailwindcss-animate';
 @plugin '@tailwindcss/typography';
 
 @import './shadcn.css';

@@ -5,6 +5,7 @@ import { Trash } from 'lucide-react'
 import React from 'react'
 import { Button } from 'ui/button'
 import { Checkbox } from 'ui/checkbox'
+import { Tooltip, TooltipContent, TooltipTrigger } from 'ui/tooltip'
 
 import { cn, tw } from '@/lib/utils'
 
@@ -141,7 +142,7 @@ export const Table = <T,>({
 
 export const TablePrimitive = ({ className, ...props }: React.ComponentProps<'table'>) => (
   <section className="relative w-full overflow-auto rounded-sm shadow-sm backdrop-brightness-130 dark:shadow-black">
-    <table className={cn('w-full table-fixed caption-bottom text-sm', className)} {...props} />
+    <table className={cn('w-full table-auto caption-bottom text-sm', className)} {...props} />
   </section>
 )
 
@@ -162,11 +163,11 @@ export const TableRow = ({ className, ...props }: React.ComponentProps<'tr'>) =>
 )
 
 export const TableHead = ({ className, ...props }: React.ComponentProps<'th'>) => (
-  <th className={cn('text-muted-foreground h-10 px-2 text-left align-middle font-medium', className)} {...props} />
+  <th className={cn('text-muted-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap', className)} {...props} />
 )
 
 export const TableCell = ({ className, ...props }: React.ComponentProps<'td'>) => (
-  <td className={cn('px-2 py-1.5 align-middle', className)} {...props} />
+  <td className={cn('px-2 py-1.5 align-middle whitespace-nowrap', className)} {...props} />
 )
 
 export const TableCaption = ({ className, ...props }: React.ComponentProps<'caption'>) => (
@@ -181,9 +182,34 @@ export const TableRowLoading = ({ children, className, ...props }: RequiredPick<
   </TableRow>
 )
 
-export const TableActionButton = ({ className, ...props }: React.ComponentProps<typeof Button>) => (
-  <Button className={cn('size-7 rounded-sm border not-hover:border-transparent', className)} size="icon" variant="secondary" {...props} />
-)
+export const TableActionButton = ({
+  className,
+  tooltip,
+  ...props
+}: React.ComponentProps<typeof Button> & {
+  tooltip?: React.ComponentProps<typeof TooltipContent> | string
+}) => {
+  const button = (
+    <Button className={cn('size-7 rounded-sm border not-hover:border-transparent', className)} size="icon" variant="secondary" {...props} />
+  )
+
+  if (!tooltip) {
+    return button
+  }
+
+  if (typeof tooltip == 'string') {
+    tooltip = {
+      children: tooltip
+    }
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <TooltipContent {...tooltip} />
+    </Tooltip>
+  )
+}
 
 export const TableDeleteButton = ({ disabled, ...props }: AlertDeleteProps & { disabled?: boolean }) => (
   <AlertDelete {...props}>
