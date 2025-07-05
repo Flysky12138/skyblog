@@ -5,8 +5,8 @@ import { Download, X } from 'lucide-react'
 import React from 'react'
 import { useMeasure } from 'react-use'
 import { FixedSizeList } from 'react-window'
-import { Button } from 'ui/button'
 
+import { Button } from '@/components/ui/button'
 import { download } from '@/lib/file/download'
 
 interface PrintProps {

@@ -3,8 +3,8 @@
 import { Expand, Shrink } from 'lucide-react'
 import React from 'react'
 import { useToggle } from 'react-use'
-import { Button } from 'ui/button'
 
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 interface ResizeButtonProps extends React.ComponentProps<typeof Button> {}

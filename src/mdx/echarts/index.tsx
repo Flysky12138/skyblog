@@ -5,11 +5,11 @@ import { ECharts, EChartsCoreOption } from 'echarts'
 import React from 'react'
 import { useDebounce, useMeasure } from 'react-use'
 import { ModuleKind, ScriptTarget, transpile } from 'typescript'
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from 'ui/resizable'
 import { useImmer } from 'use-immer'
 
 import { MonacoEditor } from '@/components/monaco-editor'
 import { tsEchartsConfig } from '@/components/monaco-editor/languages/ts-echarts'
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 
 interface EchartsProps {
   children?: {

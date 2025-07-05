@@ -2,10 +2,10 @@
 
 import React from 'react'
 import useSWR from 'swr'
-import { Label } from 'ui/label'
 
 import { Card } from '@/components/layout/card'
 import { TransitionCollapse } from '@/components/transition/transition-collapse'
+import { Label } from '@/components/ui/label'
 import { CustomRequest } from '@/lib/http/request'
 
 export const CardGuestInfo = () => {

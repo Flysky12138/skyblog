@@ -3,7 +3,8 @@
 import { isFunction, isNull } from 'es-toolkit'
 import { PaginationResult } from 'prisma-paginate'
 import React from 'react'
-import * as PaginationPrimitive from 'ui/pagination'
+
+import * as PaginationPrimitive from '@/components/ui/pagination'
 
 export interface PaginationProps extends Partial<Pick<PaginationResult<unknown[]>, 'count' | 'limit' | 'page'>> {
   /**

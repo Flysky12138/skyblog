@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import React from 'react'
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from 'ui/breadcrumb'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/layout/card'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 
 interface R2BreadcrumbProps {
   paths?: string[]

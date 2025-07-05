@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react'
-import * as TabsPrimitive from 'ui/tabs'
 
+import * as TabsPrimitive from '@/components/ui/tabs'
 import { deepTraversalReactElement } from '@/lib/react'
 import { cn } from '@/lib/utils'
 

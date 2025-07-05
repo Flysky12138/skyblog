@@ -4,6 +4,8 @@ import { isUndefined } from 'es-toolkit'
 import { Archive, House, LibraryBig, LucideIcon, NotebookPen, Plus, Settings, User, UserRoundSearch, Users } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+
+import Clash from '@/assets/svg/clash.svg'
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -13,9 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar
-} from 'ui/sidebar'
-
-import Clash from '@/assets/svg/clash.svg'
+} from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
 
 interface Menu {

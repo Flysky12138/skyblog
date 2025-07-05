@@ -1,5 +1,4 @@
-import { SidebarTrigger } from 'ui/sidebar'
-
+import { SidebarTrigger } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
 
 interface HeaderProps {

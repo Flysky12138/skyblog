@@ -1,9 +1,9 @@
 'use client'
 
 import { MoonStar, Sun } from 'lucide-react'
-import { SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem } from 'ui/sidebar'
-import { Switch } from 'ui/switch'
 
+import { SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
+import { Switch } from '@/components/ui/switch'
 import { useIsClient } from '@/hooks/use-is-client'
 import { useTheme } from '@/hooks/use-theme'
 

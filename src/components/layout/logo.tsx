@@ -1,4 +1,4 @@
-import { GradientText } from 'ui/gradient-text'
+import { GradientText } from '@/components/ui/gradient-text'
 
 export const Logo = () => {
   return (

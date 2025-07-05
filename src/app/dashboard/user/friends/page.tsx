@@ -4,6 +4,8 @@ import { produce } from 'immer'
 import { Eye, Pencil, Plus, Trash } from 'lucide-react'
 import Link from 'next/link'
 import useSWR from 'swr'
+
+import { Card } from '@/components/layout/card'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,10 +16,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger
-} from 'ui/alert-dialog'
-import { Button } from 'ui/button'
-
-import { Card } from '@/components/layout/card'
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
 import { CustomRequest } from '@/lib/http/request'
 import { Toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'

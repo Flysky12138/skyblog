@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from 'ui/sidebar'
 
 import Icon from '@/app/icon.svg'
 import { Logo } from '@/components/layout/logo'
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 
 export const NavLogo = () => {
   return (

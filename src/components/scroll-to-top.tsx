@@ -3,8 +3,8 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronUp } from 'lucide-react'
 import React from 'react'
-import { Button } from 'ui/button'
 
+import { Button } from '@/components/ui/button'
 import { useWindowScroll } from '@/hooks/use-window-scroll'
 import { cn } from '@/lib/utils'
 

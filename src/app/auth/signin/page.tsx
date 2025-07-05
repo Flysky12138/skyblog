@@ -1,8 +1,8 @@
 import { Github, House, LayoutDashboard } from 'lucide-react'
 import Link from 'next/link'
-import { Avatar, AvatarFallback, AvatarImage } from 'ui/avatar'
-import { Button } from 'ui/button'
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import { auth } from '@/lib/auth'
 
 import { OAuthSignInButton } from './_components/oauth-signin-button'

@@ -1,9 +1,9 @@
 'use client'
 
 import React from 'react'
-import { ScrollArea, ScrollBar } from 'ui/scroll-area'
 
 import { DATA_IS_BLOCK, DATA_IS_COLLAPSED } from '@/components/mdx/rehype/rehype-code'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 
 export const Code = (props: React.ComponentProps<'code'>) => {

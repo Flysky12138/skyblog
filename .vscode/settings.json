@@ -13,6 +13,6 @@
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "tailwindCSS.experimental.classRegex": ["tw`([^`]*)"]
+  "tailwindCSS.classFunctions": ["tw"],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

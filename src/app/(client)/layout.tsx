@@ -1,7 +1,6 @@
 import { LayoutDashboard } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
-import { Button } from 'ui/button'
 
 import { DisplayByAuth } from '@/components/display/display-by-auth'
 import { DisplayByBreakPoint } from '@/components/display/display-by-breakpoint'
@@ -11,6 +10,7 @@ import { Header } from '@/components/layout/header'
 import { Logo } from '@/components/layout/logo'
 import { ScrollToTop } from '@/components/scroll-to-top'
 import { TransitionCollapse } from '@/components/transition/transition-collapse'
+import { Button } from '@/components/ui/button'
 import { Live2DContent, Live2DProvider, Live2DToggleButton } from '@/providers/live2d'
 import { ThemeToggleButton } from '@/providers/theme'
 

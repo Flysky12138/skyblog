@@ -2,8 +2,8 @@ import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from 'lucide-re
 import { Url } from 'next/dist/shared/lib/router/router'
 import Link from 'next/link'
 import * as React from 'react'
-import { Button, buttonVariants } from 'ui/button'
 
+import { Button, buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 export const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => {

@@ -4,7 +4,8 @@ import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useAsyncFn } from 'react-use'
 import { toast } from 'sonner'
-import { Button } from 'ui/button'
+
+import { Button } from '@/components/ui/button'
 
 export default function Page() {
   const router = useRouter()
