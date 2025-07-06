@@ -122,15 +122,7 @@ export default tseslint.config(
     ignores: [
       '**/*.d.ts',
       '*.config.ts',
-      'src/app/**/page.tsx',
-      'src/app/**/layout.tsx',
-      'src/app/**/error.tsx',
-      'src/app/**/loading.tsx',
-      'src/app/**/not-found.tsx',
-      'src/app/**/robots.ts',
-      'src/app/**/sitemap.ts',
-      'src/app/**/global-error.tsx',
-      'src/app/**/manifest.ts',
+      'src/app/**/{layout,page,loading,not-found,global-error,error,robots,sitemap,manifest}.{js,ts,tsx}',
       'src/mdx/**/*.tsx'
     ],
     rules: {
