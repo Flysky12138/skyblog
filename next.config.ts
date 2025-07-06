@@ -78,8 +78,8 @@ const webpack: NextConfig['webpack'] = config => {
   const svgLoaderRule = config.module.rules.find((rule: any) => rule.test?.test?.('.svg'))
   config.module.rules.push({
     oneOf: [
-      { ...svgLoaderRule, resourceQuery: /url/, type: 'asset/resource' }, // .svg?url
-      { issuer: svgLoaderRule.issuer, resourceQuery: { not: [...svgLoaderRule.resourceQuery.not, /url/] }, use: ['@svgr/webpack'] } // .svg
+      { ...svgLoaderRule, resourceQuery: /url/ }, // *.svg?url
+      { issuer: svgLoaderRule.issuer, resourceQuery: { not: [...svgLoaderRule.resourceQuery.not, /url/] }, use: ['@svgr/webpack'] } // *.svg
     ],
     test: /\.svg$/i
   })
