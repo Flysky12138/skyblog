@@ -17,13 +17,15 @@ interface MDXClientProps {
 
 const MDXClient_ = ({ source = '' }: MDXClientProps) => {
   const [{ content, error }, setEvaluateResult] = useImmer<Partial<EvaluateResult>>({})
+  const isFirstRender = React.useRef(true)
 
   const { loading } = useAsync(async () => {
     const result = await evaluate({ components, options: { mdxOptions }, source })
     setEvaluateResult(result)
+    isFirstRender.current = false
   }, [source])
 
-  if (loading) {
+  if (loading && isFirstRender.current) {
     return (
       <div className="flex items-center justify-center">
         <Loading />

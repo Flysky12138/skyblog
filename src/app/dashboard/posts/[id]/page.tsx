@@ -192,7 +192,7 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={40}>
-          <ScrollArea className="h-full [&_[data-slot='scroll-area-viewport']]:*:block!">
+          <ScrollArea className="h-full *:data-[slot='scroll-area-viewport']:*:block!">
             <ErrorBoundary
               errorComponent={props => (
                 <div className="flex justify-center p-5">
@@ -200,7 +200,7 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
                 </div>
               )}
             >
-              <article className="min-h-screen max-w-none p-5">
+              <article className="bg-card min-h-screen max-w-none p-5">
                 <MDXClient source={previewContent || ''} />
               </article>
             </ErrorBoundary>
