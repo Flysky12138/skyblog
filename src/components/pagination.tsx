@@ -16,8 +16,9 @@ export interface PaginationProps extends Partial<Pick<PaginationResult<unknown[]
   /** 只有一页时是否隐藏分页器 */
   hideOnSinglePage?: boolean
   /**
-   * 用于显示数据总量和当前数据范围
-   * @example null // 不显示
+   * 用于显示数据总量和当前数据范围，默认显示
+   * @example
+   * null // 不显示
    */
   showTotal?: ((total: number, range: [number, number]) => React.ReactNode) | null
   /**
@@ -90,17 +91,17 @@ export const Pagination = ({
             }}
           />
         </PaginationPrimitive.PaginationItem>
-        {itemList.map(it => (
-          <PaginationPrimitive.PaginationItem key={it}>
-            {typeof it == 'number' ? (
+        {itemList.map(item => (
+          <PaginationPrimitive.PaginationItem key={item}>
+            {typeof item == 'number' ? (
               <PaginationPrimitive.PaginationLink
-                href={getHref?.({ count, limit, page: it, totalPages })}
-                isActive={it == page}
+                href={getHref?.({ count, limit, page: item, totalPages })}
+                isActive={item == page}
                 onClick={() => {
-                  onChange?.({ count, limit, page: it, totalPages })
+                  onChange?.({ count, limit, page: item, totalPages })
                 }}
               >
-                {it}
+                {item}
               </PaginationPrimitive.PaginationLink>
             ) : (
               <PaginationPrimitive.PaginationEllipsis />

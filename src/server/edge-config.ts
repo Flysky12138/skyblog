@@ -2,8 +2,10 @@
 
 import { digest, EdgeConfigValue, get, getAll, has } from '@vercel/edge-config'
 
+import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
+
 interface PatchOption {
-  key: string
+  key: ValueOf<typeof VERCEL_EDGE_CONFIG>
   operation: 'create' | 'delete' | 'update' | 'upsert'
   value?: EdgeConfigValue
 }

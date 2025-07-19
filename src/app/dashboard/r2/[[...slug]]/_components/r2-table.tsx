@@ -72,7 +72,7 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
     (file: R2.FileInfo) => {
       if (!data) return
       if (file.contentType?.startsWith('image')) {
-        const images = data.files.filter(it => it.contentType?.startsWith('image'))
+        const images = data.files.filter(file => file.contentType?.startsWith('image'))
         openViewer({
           images: images.map(image => ({ key: image.key, src: R2.get(image.key) })),
           index: Math.max(
@@ -126,42 +126,42 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
           <TableRowLoading colSpan={5}>{isEmpty && '内容为空'}</TableRowLoading>
         </DisplayByConditional>
         {/* 文件夹 */}
-        {data?.folders.map(it => (
+        {data?.folders.map(folder => (
           <TableRow
-            key={it}
+            key={folder}
             className="cursor-pointer"
             onClick={() => {
-              router.replace(`/dashboard/r2/${it}`)
+              router.replace(`/dashboard/r2/${folder}`)
             }}
           >
             <TableCell>
               <Folder size={18} />
             </TableCell>
-            <TableCell>{it.split('/').at(-2)}</TableCell>
+            <TableCell>{folder.split('/').at(-2)}</TableCell>
             <TableCell colSpan={3} />
           </TableRow>
         ))}
         {/* 文件 */}
-        {data?.files.map((it, index) => (
-          <TableRow key={it.key}>
+        {data?.files.map((file, index) => (
+          <TableRow key={file.key}>
             <TableCell>
-              <FileIconMap size={18} type={it.contentType} />
+              <FileIconMap size={18} type={file.contentType} />
             </TableCell>
-            <TableCell className="truncate">{it.key.split('/').at(-1)}</TableCell>
-            <TableCell>{formatFileSize(it.size)}</TableCell>
-            <TableCell>{formatISOTime(it.lastModified)}</TableCell>
+            <TableCell className="truncate">{file.key.split('/').at(-1)}</TableCell>
+            <TableCell>{formatFileSize(file.size)}</TableCell>
+            <TableCell>{formatISOTime(file.lastModified)}</TableCell>
             <TableCell>
               <div className="flex items-center justify-end gap-2">
                 <TableActionButton
                   onClick={() => {
-                    handleFileRowClick(it)
+                    handleFileRowClick(file)
                   }}
                 >
                   <Eye />
                 </TableActionButton>
                 <TableActionButton
                   onClick={() => {
-                    copy(R2.get(it.key))
+                    copy(R2.get(file.key))
                     toast.success('复制成功')
                   }}
                 >
@@ -169,10 +169,10 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
                 </TableActionButton>
                 <TableDeleteButton
                   description="这将永久删除文件。"
-                  title={it.key.slice(it.key.lastIndexOf('/') + 1)}
+                  title={file.key.slice(file.key.lastIndexOf('/') + 1)}
                   onConfirm={async () => {
-                    await Toast(R2.delete([it.key]), {
-                      description: it.key.slice(it.key.lastIndexOf('/') + 1),
+                    await Toast(R2.delete([file.key]), {
+                      description: file.key.slice(file.key.lastIndexOf('/') + 1),
                       success: '删除成功'
                     })
                     await mutate(
