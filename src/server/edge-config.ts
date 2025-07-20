@@ -2,14 +2,16 @@
 
 import { digest, EdgeConfigValue, get, getAll, has } from '@vercel/edge-config'
 
+import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
+
 interface PatchOption {
-  key: string
+  key: ValueOf<typeof VERCEL_EDGE_CONFIG>
   operation: 'create' | 'delete' | 'update' | 'upsert'
   value?: EdgeConfigValue
 }
 
 /**
- * vercel edge config's `create | update | upsert | delete` function
+ * vercel edge config's `create` | `update` | `upsert` | `delete` function
  * @see https://vercel.com/docs/storage/edge-config/vercel-api
  */
 const patch = async (items: PatchOption[]) => {

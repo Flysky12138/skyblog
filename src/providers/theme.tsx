@@ -20,7 +20,7 @@ export const ThemeToggleButton = () => {
   const { isDark, toggleTheme } = useTheme()
 
   const isClient = useIsClient()
-  if (!isClient) return <span className="skeleton size-8 rounded-md" />
+  if (!isClient) return <span className="skeleton size-9 rounded-md" />
 
   return (
     <Button aria-label="theme toggle" size="icon" variant="outline" onClick={toggleTheme}>

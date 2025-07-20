@@ -3,24 +3,39 @@ import { MetadataRoute } from 'next'
 import { prisma } from '@/lib/prisma'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const urls: StartsWith<'/'>[] = ['/']
-
-  // posts
+  /** posts */
   const postsId = await prisma.post.findMany({
-    select: { id: true },
+    select: { id: true, updatedAt: true },
     where: { published: true }
   })
-  postsId.forEach(({ id }) => urls.push(`/posts/${id}`))
 
-  // friends
+  /** friends */
   const friendsId = await prisma.friend.findMany({
-    select: { url: true }
+    select: { updatedAt: true, url: true }
   })
-  friendsId.forEach(({ url }) => urls.push(url as StartsWith<'/'>))
 
-  return urls.map(url => ({
-    changeFrequency: 'daily',
-    lastModified: new Date(),
-    url: new URL(url, process.env.NEXT_PUBLIC_WEBSITE_URL).href
-  }))
+  return [
+    {
+      changeFrequency: 'monthly',
+      lastModified: new Date(),
+      priority: 1,
+      url: new URL('/', process.env.NEXT_PUBLIC_WEBSITE_URL).href
+    },
+    ...postsId.map(post => {
+      return {
+        changeFrequency: 'daily',
+        lastModified: post.updatedAt,
+        priority: 0.8,
+        url: new URL(`/posts/${post.id}`, process.env.NEXT_PUBLIC_WEBSITE_URL).href
+      } satisfies MetadataRoute.Sitemap[number]
+    }),
+    ...friendsId.map(friend => {
+      return {
+        changeFrequency: 'weekly',
+        lastModified: friend.updatedAt,
+        priority: 0.5,
+        url: new URL(friend.url, process.env.NEXT_PUBLIC_WEBSITE_URL).href
+      } satisfies MetadataRoute.Sitemap[number]
+    })
+  ]
 }

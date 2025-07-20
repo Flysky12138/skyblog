@@ -59,7 +59,7 @@ export const ImageViewerProvider = (props: React.PropsWithChildren) => {
         maskClassName="bg-white/50! dark:bg-black/50! backdrop-blur-sm"
         photoWrapClassName="select-none"
         toolbarRender={({ images, index, rotate, scale, onRotate, onScale }) => (
-          <section className="flex items-center" role="toolbar">
+          <div className="flex items-center" role="toolbar">
             <Download
               className={toolbarSvgClassName}
               size={44}
@@ -95,7 +95,7 @@ export const ImageViewerProvider = (props: React.PropsWithChildren) => {
                 }}
               />
             )}
-          </section>
+          </div>
         )}
         {...(data.overlayRender && {
           overlayRender: props => (

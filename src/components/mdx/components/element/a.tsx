@@ -1,4 +1,4 @@
-import { ExternalLink, Hash } from 'lucide-react'
+import { ArrowUpRight, Hash } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -12,7 +12,7 @@ export const A = ({ children, className, ...props }: React.ComponentProps<'a'>) 
     return (
       <a className={cn('no-underline underline-offset-2 hover:underline', className)} rel="noreferrer nofollow" target="_blank" {...props}>
         {children}
-        <ExternalLink className="ml-1 inline-block" size={14} />
+        <ArrowUpRight className="inline-block translate-y-0.5 align-super" size={12} />
       </a>
     )
   }

@@ -26,7 +26,7 @@ export const Live2D = () => {
   })
 
   return (
-    <section className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2">
       <Label>Live2D</Label>
       <div className="flex gap-2">
         <Input
@@ -49,6 +49,6 @@ export const Live2D = () => {
           修改
         </Button>
       </div>
-    </section>
+    </div>
   )
 }

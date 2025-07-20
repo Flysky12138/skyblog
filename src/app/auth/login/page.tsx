@@ -12,7 +12,7 @@ export default async function Page() {
 
   if (session?.user) {
     return (
-      <section className="flex flex-col items-center justify-center gap-2">
+      <div className="flex flex-col items-center justify-center gap-2">
         <Avatar className="bg-secondary size-28">
           <AvatarImage loading="lazy" src={session.user.image?.replace('https://', '/cdn/')} />
           <AvatarFallback />
@@ -31,15 +31,15 @@ export default async function Page() {
             </Link>
           </Button>
         </div>
-      </section>
+      </div>
     )
   }
 
   return (
-    <section className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <OAuthSignInButton provider="github">
         <Github /> Continue With GitHub
       </OAuthSignInButton>
-    </section>
+    </div>
   )
 }

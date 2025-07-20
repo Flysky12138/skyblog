@@ -40,7 +40,7 @@ export interface EditorToolbarProps {
 
 const EditorToolbar = ({ disabled, isCreate, post, setPost, onCompare, onCreate, onFormat, onPreview, onUpdate }: EditorToolbarProps) => {
   return (
-    <section className="border-divide bg-sidebar flex items-center gap-3 border-b px-3 py-2">
+    <section aria-label="post editor toolbar" className="border-divide bg-sidebar flex items-center gap-3 border-b px-3 py-2" role="toolbar">
       <TooltipProvider>
         <Tooltip>
           <Transcoder>

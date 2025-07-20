@@ -141,9 +141,9 @@ export const Table = <T,>({
 }
 
 export const TablePrimitive = ({ className, ...props }: React.ComponentProps<'table'>) => (
-  <section className="relative w-full overflow-auto rounded-sm shadow-sm backdrop-brightness-130 dark:shadow-black">
+  <div className="relative w-full overflow-auto rounded-sm shadow-sm backdrop-brightness-130 dark:shadow-black" data-slot="table">
     <table className={cn('w-full table-auto caption-bottom text-sm', className)} {...props} />
-  </section>
+  </div>
 )
 
 export const TableHeader = ({ className, ...props }: React.ComponentProps<'thead'>) => (

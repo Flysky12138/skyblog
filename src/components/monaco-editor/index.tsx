@@ -64,6 +64,7 @@ export const MonacoEditor = ({
 
   return (
     <section
+      aria-label="Monaco Editor"
       className={cn('h-full overflow-hidden', className)}
       onKeyDown={event => {
         if (event.key == 's' && (event.ctrlKey || event.metaKey)) {

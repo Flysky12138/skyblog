@@ -57,7 +57,7 @@ const images: NextConfig['images'] = {
 
 const redirects: NextConfig['redirects'] = async () => [
   {
-    destination: '/pages/1',
+    destination: '/posts/page/1',
     permanent: true,
     source: '/'
   }

@@ -22,7 +22,7 @@ export default function Page() {
   })
 
   return (
-    <section className="space-y-4">
+    <div className="space-y-4">
       <Table
         columns={[
           { key: 'index' },
@@ -103,6 +103,6 @@ export default function Page() {
       <DisplayByConditional condition={(data?.totalPages || 0) > 1}>
         <Pagination className="justify-end" onChange={setSearch} {...data} />
       </DisplayByConditional>
-    </section>
+    </div>
   )
 }

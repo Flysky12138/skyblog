@@ -1,9 +1,8 @@
 import { z } from 'zod'
 
-const Origin = z.templateLiteral([z.url(), ':', z.number()])
-const Url = z.union([z.url().refine(it => !it.endsWith('/')), Origin])
+const Url = z.url({ protocol: /^https?$/ }).refine(it => !it.endsWith('/'))
 
-const envSchema = z.interface({
+const envSchema = z.object({
   AUTH_GITHUB_ID: z.string(),
   AUTH_GITHUB_SECRET: z.string(),
   AUTH_SECRET: z.string().min(32),
@@ -20,11 +19,11 @@ const envSchema = z.interface({
   NEXT_PUBLIC_R2_URL: Url,
   NEXT_PUBLIC_S3_ACCESS_ID: z.string().length(32),
   NEXT_PUBLIC_S3_ACCESS_KEY: z.string().length(64),
-  NEXT_PUBLIC_S3_API: z.url().refine(it => it.endsWith('.r2.cloudflarestorage.com')),
+  NEXT_PUBLIC_S3_API: z.url().endsWith('.r2.cloudflarestorage.com'),
   NEXT_PUBLIC_TITLE: z.string(),
   NEXT_PUBLIC_WEBSITE_URL: Url,
   TOKEN_BROWSERLESS: z.uuidv4(),
-  'TOKEN_IPINFO?': z.string(),
+  TOKEN_IPINFO: z.string().optional(),
   TOKEN_VERCEL: z.string().length(24)
 })
 

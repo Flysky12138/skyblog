@@ -18,7 +18,7 @@ const OuterLink = ({ children, ...props }: OuterLinkProps) => {
 
 export const About = () => {
   return (
-    <section className="flex flex-col items-center gap-2 text-sm text-slate-700/50 select-none dark:text-slate-300/50">
+    <div className="flex flex-col items-center gap-2 text-sm text-slate-700/50 select-none dark:text-slate-300/50">
       <span>©2020 - {new Date().getFullYear()} By Flysky</span>
       <div className="flex gap-1">
         <span>框架</span>
@@ -28,6 +28,6 @@ export const About = () => {
         <OuterLink href="https://www.shadcn.com.cn">Shadcn</OuterLink>
       </div>
       <span className="text-xs">Built by vercel on {new Date().toUTCString()}</span>
-    </section>
+    </div>
   )
 }

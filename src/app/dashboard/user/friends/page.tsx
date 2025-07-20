@@ -34,7 +34,7 @@ export default function Page() {
   )
 
   return (
-    <section className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5">
       {friends?.map((friend, index) => (
         <Card key={friend.id} className="group relative aspect-video overflow-hidden select-none">
           <img
@@ -128,6 +128,6 @@ export default function Page() {
           <Plus size={30} strokeWidth={3} />
         </Card>
       </FriendDetail>
-    </section>
+    </div>
   )
 }

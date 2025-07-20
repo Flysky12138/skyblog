@@ -142,6 +142,7 @@ const Live2DContent_ = () => {
         if (hitAreas.includes('breast_r')) _model.motion('breast', 0)
       })
     } catch (error) {
+      delete window.PIXI
       setEnable(false)
       console.error(error)
     } finally {
@@ -180,6 +181,7 @@ const Live2DContent_ = () => {
           opacity: 1,
           x: 0
         }}
+        aria-label="live2d"
         className="z-nav fixed bottom-0 cursor-grab select-none"
         initial={{
           opacity: 0,

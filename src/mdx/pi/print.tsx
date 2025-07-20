@@ -17,7 +17,7 @@ interface PrintProps {
 }
 
 const Print_ = ({ pi, size, time, onClose }: PrintProps) => {
-  const [sectionRef, { width }] = useMeasure<HTMLElement>()
+  const [divRef, { width }] = useMeasure<HTMLDivElement>()
   const [fontRef, { width: fontWidth }] = useMeasure<HTMLElement>()
 
   const [piChunk, setPiChunk] = React.useState<string[][]>([])
@@ -28,7 +28,7 @@ const Print_ = ({ pi, size, time, onClose }: PrintProps) => {
   }, [fontWidth, pi, width])
 
   return (
-    <section ref={sectionRef} className="flex flex-col gap-3">
+    <div ref={divRef} className="flex flex-col gap-3">
       <span ref={fontRef} aria-hidden="true" className="font-code invisible absolute h-0 self-start">
         3
       </span>
@@ -66,7 +66,7 @@ const Print_ = ({ pi, size, time, onClose }: PrintProps) => {
           )}
         </FixedSizeList>
       </div>
-    </section>
+    </div>
   )
 }
 
