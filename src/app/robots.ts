@@ -2,8 +2,8 @@ import { MetadataRoute } from 'next'
 
 // https://developers.google.com/search/docs/crawling-indexing/robots/create-robots-txt?hl=zh-cn#create_rules
 
-const allow: string[] = ['/', '/posts/']
-const disallow: string[] = ['/dashboard/', '/auth/', '/api/']
+const allow: StartsWith<'/'>[] = ['/', '/posts/']
+const disallow: StartsWith<'/'>[] = ['/dashboard/', '/auth/', '/api/']
 
 export default function robots(): MetadataRoute.Robots {
   return {

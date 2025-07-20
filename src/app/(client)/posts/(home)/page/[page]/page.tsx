@@ -2,8 +2,6 @@ import { prisma } from '@/lib/prisma'
 
 import { getPosts, POST_WHERE_INPUT, PostList } from '../../_components/post/post-list'
 
-interface PageProps extends DynamicRouteProps<{ page: string }> {}
-
 export const generateStaticParams = async (): Promise<Awaited<PageProps['params']>[]> => {
   const posts = await prisma.post.paginate(
     { where: POST_WHERE_INPUT },
@@ -16,6 +14,8 @@ export const generateStaticParams = async (): Promise<Awaited<PageProps['params'
   }))
 }
 
+interface PageProps extends DynamicRouteProps<{ page: string }> {}
+
 export default async function Page({ params }: PageProps) {
   const { page } = await params
 
@@ -23,5 +23,13 @@ export default async function Page({ params }: PageProps) {
 
   const { result: posts, ...pagination } = await getPosts(pageNumber)
 
-  return <PostList path="/pages/[page]" posts={posts} {...pagination} />
+  return (
+    <PostList
+      pagination={{
+        ...pagination,
+        path: '/posts/page/[page]'
+      }}
+      posts={posts}
+    />
+  )
 }

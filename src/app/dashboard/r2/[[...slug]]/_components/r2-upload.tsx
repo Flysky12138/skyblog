@@ -1,4 +1,4 @@
-import { unionBy } from 'es-toolkit'
+import { remove, unionBy } from 'es-toolkit'
 import { FileUp, FolderUp, Loader2, Trash, Upload } from 'lucide-react'
 import React from 'react'
 import { useAsyncFn, useBeforeUnload } from 'react-use'
@@ -66,10 +66,7 @@ export const R2Upload = ({ children, path, onFinished, onSubmit }: R2UploadProps
         })
         setFilelist(state => {
           state.uploaded.push(file)
-          state.waiting.splice(
-            state.waiting.findIndex(it => it == file),
-            1
-          )
+          remove(state.waiting, it => it == file)
         })
         onSubmit?.(data)
       })

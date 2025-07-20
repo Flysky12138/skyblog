@@ -3,8 +3,8 @@ type _IsArray<T> = T extends `${string}...${string}` ? true : false
 
 /** 动态路由类型。`T` 动态段类型，`D` 搜索参数类型 */
 interface DynamicRouteProps<T extends Record<string, string | string[]>, D extends Record<string, string | string[] | undefined> = {}> {
-  params: Promise<T>
-  searchParams: Promise<Partial<D>>
+  params: Promise<Prettify<T>>
+  searchParams: Promise<Prettify<Partial<D>>>
 }
 
 /** 文件路由请求参数、内容以及响应的类型 */

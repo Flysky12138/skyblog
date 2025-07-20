@@ -4,7 +4,7 @@ type DeepPrettify<T> = { [K in keyof T]: T[K] extends object ? Prettify<T[K]> : 
 /** 以 `T` 结尾的字符串 */
 type EndsWith<T extends string> = `${string}${T}`
 
-/** 选择对象以 `T` 开头的键 */
+/** 选择对象以 `D` 开头的键 */
 type PickStartsWith<T, D extends string> = {
   [K in keyof T as K extends StartsWith<D> ? K : never]: T[K]
 }
@@ -25,6 +25,9 @@ type RequiredPick<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
 
 /** 以 `T` 开头的字符串 */
 type StartsWith<T extends string> = `${T}${string}`
+
+/** 取对象值 */
+type ValueOf<T> = Required<T>[keyof T]
 
 type Without<T, U> = Partial<Record<Exclude<keyof T, keyof U>, never>>
 
