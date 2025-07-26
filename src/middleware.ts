@@ -21,7 +21,7 @@ export const middleware: NextMiddleware = async (request, event) => {
   // 权限管理
   if (['/dashboard', '/api/dashboard'].some(url => request.nextUrl.pathname.startsWith(url))) {
     if (session?.role != 'ADMIN') {
-      const url = new URL('/auth/signin', request.url)
+      const url = new URL('/auth/login', request.url)
       url.searchParams.set('to', request.nextUrl.pathname)
       return NextResponse.redirect(url)
     }

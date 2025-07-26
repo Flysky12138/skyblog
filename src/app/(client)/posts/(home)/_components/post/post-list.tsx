@@ -26,12 +26,12 @@ export const PostList = ({ pagination, posts }: PostListProps) => {
     <>
       {posts.map(post => (
         <Card key={post.id} className="p-card space-y-3 break-all lg:space-y-4">
-          <div className="flex items-center gap-2">
+          <h2 className="flex items-center gap-2">
             {post.sticky > 0 && <Award size={20} />}
             <Link className="font-title hover:text-link-foreground focus-within:text-link-foreground text-xl" href={`/posts/${post.id}`}>
               {post.title}
             </Link>
-          </div>
+          </h2>
           <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs">
             <CalendarDays size={12} />
             <PostUpdateAt value={post.updatedAt} />
@@ -56,7 +56,7 @@ export const PostList = ({ pagination, posts }: PostListProps) => {
               </DisplayByConditional>
             ))}
           </div>
-          {post.description && <span className="text-subtitle-foreground line-clamp-3 text-sm">{post.description}</span>}
+          {post.description && <p className="text-subtitle-foreground line-clamp-3 text-sm">{post.description}</p>}
         </Card>
       ))}
       <PostListPagination {...pagination} />

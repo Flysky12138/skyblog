@@ -15,10 +15,7 @@ import { ThemeProvider } from '@/providers/theme'
 export const metadata: Metadata = {
   description: process.env.NEXT_PUBLIC_DESCRIPTION,
   generator: 'Next.js',
-  title: {
-    default: process.env.NEXT_PUBLIC_TITLE,
-    template: `%s · ${process.env.NEXT_PUBLIC_TITLE}`
-  }
+  title: process.env.NEXT_PUBLIC_TITLE
 }
 
 export const viewport: Viewport = {

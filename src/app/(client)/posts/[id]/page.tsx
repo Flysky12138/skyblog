@@ -65,7 +65,7 @@ export default async function Page({ params }: PageProps) {
               </Link>
             </Button>
           </DisplayByAuth>
-          <p className="font-title text-2xl font-normal md:text-3xl">{post.title}</p>
+          <h1 className="font-title text-2xl font-normal md:text-3xl">{post.title}</h1>
           {post.description && <p className="text-subtitle-foreground">{post.description}</p>}
           <PostInfo defaultValue={post} id={post.id} />
         </Card>

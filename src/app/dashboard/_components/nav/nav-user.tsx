@@ -72,8 +72,7 @@ export const NavUser = () => {
                 signOut()
               }}
             >
-              <LogOut />
-              登出
+              <LogOut /> 注销
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

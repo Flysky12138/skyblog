@@ -14,12 +14,14 @@ import { Button } from '@/components/ui/button'
 import { Live2DContent, Live2DProvider, Live2DToggleButton } from '@/providers/live2d'
 import { ThemeToggleButton } from '@/providers/theme'
 
+import { AuthButton } from './_components/auth-button'
+
 export default function Layout({ children }: React.PropsWithChildren) {
   return (
     <Live2DProvider>
       <Header>
         <Container className="flex h-full items-center gap-4">
-          <Link aria-label="home" href="/">
+          <Link aria-label="to home page" href="/">
             <Logo />
           </Link>
           <span aria-hidden="true" className="grow" />
@@ -38,6 +40,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
           </DisplayByAuth>
           <Live2DToggleButton />
           <ThemeToggleButton />
+          <AuthButton />
         </Container>
       </Header>
       <main className="border-divide bg-root z-main relative mt-(--height-header) mb-(--height-footer) min-h-[calc(100dvh-var(--height-header))] border-b">
