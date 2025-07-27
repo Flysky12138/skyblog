@@ -23,8 +23,8 @@ export const ResizeButton = ({ className, ...props }: ResizeButtonProps) => {
             height: 100vh;
           }
           header, footer,
-          [data-slot="post-header"],
-          [data-slot="post-toc"] {
+          [data-slot="post-abstract"],
+          [data-slot="post-catalogue"] {
             display: none;
           }
           main {

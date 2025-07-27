@@ -36,7 +36,7 @@ export default function Page() {
   )
 
   return (
-    <section className="space-y-4">
+    <div className="space-y-4">
       <Table
         columns={[
           { key: 'checkbox' },
@@ -112,6 +112,6 @@ export default function Page() {
           />
         </DisplayByConditional>
       </div>
-    </section>
+    </div>
   )
 }

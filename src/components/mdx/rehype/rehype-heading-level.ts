@@ -41,6 +41,9 @@ class Stack {
   }
 }
 
+/**
+ * 标题标签层级关系属性名
+ */
 export const HEADING_ATTRIBUTE = 'data-level'
 
 /**

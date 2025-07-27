@@ -40,13 +40,13 @@ export default function Echarts({ children }: EchartsProps) {
 
   useDebounce(() => echartsRef.current?.setOption(getOptions(code), true), 800, [code])
 
-  const [containerRef, { height: h, width: w }] = useMeasure<HTMLElement>()
+  const [containerRef, { height: h, width: w }] = useMeasure<HTMLDivElement>()
   React.useEffect(() => {
     echartsRef.current?.resize()
   }, [w, h])
 
   return (
-    <section ref={containerRef} className="post-full-page:h-full!" style={{ height }}>
+    <div ref={containerRef} className="post-full-page:h-full!" style={{ height }}>
       <style>{`article { padding: 0 }`}</style>
       <ResizablePanelGroup
         direction="horizontal"
@@ -73,7 +73,7 @@ export default function Echarts({ children }: EchartsProps) {
           <div className="size-full" id={id} />
         </ResizablePanel>
       </ResizablePanelGroup>
-    </section>
+    </div>
   )
 }
 

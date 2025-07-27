@@ -11,7 +11,7 @@ interface TransitionCollapseProps extends Omit<MotionProps, 'animate' | 'initial
 
 export const TransitionCollapse = ({ orientation = 'vertical', ...props }: TransitionCollapseProps) => {
   return (
-    <motion.section
+    <motion.div
       animate={`${orientation}-animate`}
       initial={`${orientation}-initial`}
       transition={{

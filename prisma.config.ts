@@ -1,6 +1,5 @@
-import { PrismaConfig } from 'prisma'
+import { defineConfig } from 'prisma/config'
 
-export default {
-  earlyAccess: true,
+export default defineConfig({
   schema: './prisma/'
-} satisfies PrismaConfig<NodeJS.ProcessEnv>
+})

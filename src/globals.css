@@ -18,7 +18,7 @@
 :root {
   --root: oklch(0.98 0 0);
   --divide: oklch(0.93 0.01 0);
-  --card: var(--color-white);
+  --card: --alpha(var(--color-white) / 70%);
   --card-border: var(--color-slate-100);
   --link: var(--color-slate-200);
   --link-foreground: var(--color-sky-500);

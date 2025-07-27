@@ -55,7 +55,7 @@ export default function Pi() {
   }, [loadingToggle])
 
   return (
-    <section className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3">
       <div className="flex flex-wrap gap-4">
         <Select
           defaultValue={form.mode}
@@ -152,6 +152,6 @@ export default function Pi() {
         {form.mode == 'chudnovsky' && <Chudnovsky />}
         {form.mode == 'chudnovsky-bs' && <ChudnovskyBs />}
       </div>
-    </section>
+    </div>
   )
 }

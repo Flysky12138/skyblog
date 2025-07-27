@@ -5,7 +5,9 @@ export const CacheClear = {
     revalidatePath('/friends')
   },
   post: (id?: string) => {
-    if (id) revalidatePath(`/posts/${id}`)
-    revalidatePath('/pages')
+    if (id) {
+      revalidatePath(`/posts/${id}`)
+    }
+    revalidatePath('/posts/page')
   }
 }

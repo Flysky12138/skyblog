@@ -5,9 +5,9 @@ export default async function Page({ params }: DynamicRouteProps<{ slug?: string
   const { slug } = await params
 
   return (
-    <section className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <R2Breadcrumb paths={slug} />
       <R2Table paths={slug} />
-    </section>
+    </div>
   )
 }

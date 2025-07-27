@@ -151,7 +151,7 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
   }
 
   return (
-    <section className="flex h-screen">
+    <div className="flex h-screen">
       <style>{`main { padding: 0 !important }`}</style>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={60}>
@@ -207,6 +207,6 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
           </ScrollArea>
         </ResizablePanel>
       </ResizablePanelGroup>
-    </section>
+    </div>
   )
 }

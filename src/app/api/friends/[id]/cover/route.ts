@@ -23,7 +23,7 @@ export const GET = async (request: NextRequest, { params }: DynamicRouteProps<{ 
     })
     const page = await browser.newPage()
     await page.goto(friend.url)
-    const uint8Array = await page.screenshot({ type: 'webp' })
+    const uint8Array = await page.screenshot({ type: 'webp' }).then(buffer => Buffer.from(buffer))
 
     return new NextResponse(uint8Array, {
       headers: {

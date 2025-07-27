@@ -62,5 +62,5 @@ export class AesGcm {
   /**
    * 定义对称加解密算法
    */
-  static #algorithm = (iv: Uint8Array): AesGcmParams => ({ iv, name: 'AES-GCM' })
+  static #algorithm = (iv: Uint8Array<ArrayBuffer>): AesGcmParams => ({ iv, name: 'AES-GCM' })
 }

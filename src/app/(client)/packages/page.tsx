@@ -11,7 +11,7 @@ export default async function Page() {
   ]
 
   return (
-    <section>
+    <div>
       {data.map(({ dataSource, name }) => (
         <React.Fragment key={name}>
           <TableCaption className="mt-6 mb-3 text-lg first:mt-0">{name}</TableCaption>
@@ -43,7 +43,7 @@ export default async function Page() {
           </TablePrimitive>
         </React.Fragment>
       ))}
-    </section>
+    </div>
   )
 }
 

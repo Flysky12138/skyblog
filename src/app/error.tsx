@@ -4,8 +4,8 @@ import { ErrorComponent, ErrorComponentProps } from '@/components/error-componen
 
 export default function Error(props: ErrorComponentProps) {
   return (
-    <section className="absolute inset-0 flex items-center justify-center">
+    <div className="absolute inset-0 flex items-center justify-center">
       <ErrorComponent {...props} />
-    </section>
+    </div>
   )
 }
