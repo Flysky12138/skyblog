@@ -1,47 +1,47 @@
-import React from 'react'
+import { makeBadge } from 'badge-maker'
 
 import packageJson from '@/../package.json'
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
-import { TableBody, TableCaption, TableCell, TableHead, TableHeader, TablePrimitive, TableRow } from '@/components/table'
 
 export default async function Page() {
-  const data = [
-    { dataSource: await getPackagesInfo(packageJson.dependencies), name: 'dependencies' },
-    { dataSource: await getPackagesInfo(packageJson.devDependencies), name: 'devDependencies' }
+  const dataSource = [
+    { label: 'dependencies', value: await getPackagesInfo(packageJson.dependencies) },
+    { label: 'devDependencies', value: await getPackagesInfo(packageJson.devDependencies) }
   ]
 
   return (
-    <div>
-      {data.map(({ dataSource, name }) => (
-        <React.Fragment key={name}>
-          <TableCaption className="mt-6 mb-3 text-lg first:mt-0">{name}</TableCaption>
-          <TablePrimitive className="table-auto">
-            <TableHeader>
-              <TableRow>
-                <TableHead>#</TableHead>
-                <TableHead>name</TableHead>
-                <TableHead>version</TableHead>
-                <TableHead>description</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {dataSource.map(({ name, pkg }, index) => (
-                <TableRow key={name}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>
-                    <DisplayByConditional condition={!!pkg.homepage} fallback={name}>
-                      <a className="text-link-foreground whitespace-nowrap" href={pkg.homepage} rel="noreferrer nofollow" target="_blank">
-                        {name}
-                      </a>
-                    </DisplayByConditional>
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">{pkg.version}</TableCell>
-                  <TableCell className="whitespace-nowrap">{pkg.description}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </TablePrimitive>
-        </React.Fragment>
+    <div className="space-y-8">
+      {dataSource.map(item => (
+        <div key={item.label} className="space-y-3">
+          <h2
+            dangerouslySetInnerHTML={{
+              __html: makeBadge({
+                label: item.label,
+                message: item.value.length.toString(),
+                style: 'social'
+              })
+            }}
+          />
+          <div
+            dangerouslySetInnerHTML={{
+              __html: item.value
+                .map(({ name, pkg, version }) =>
+                  makeBadge({
+                    color: 'blue',
+                    label: name,
+                    message: version,
+                    style: 'flat-square',
+                    ...(pkg.homepage
+                      ? {
+                          links: [pkg.homepage]
+                        }
+                      : {})
+                  })
+                )
+                .join('')
+            }}
+            className="flex flex-wrap gap-2.5"
+          />
+        </div>
       ))}
     </div>
   )

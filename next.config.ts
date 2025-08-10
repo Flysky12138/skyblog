@@ -8,9 +8,9 @@ import { mdxOptions } from './src/components/mdx/options'
  * 内容安全策略 (CSP)
  * @see https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
  */
-const cspSrc = [process.env.NEXT_PUBLIC_R2_URL, process.env.NEXT_PUBLIC_S3_API.replace('//', `//${process.env.NEXT_PUBLIC_R2_BUCKET_NAME}.`)].join(
-  ' '
-)
+const cspSrc = [process.env.NEXT_PUBLIC_R2_URL, process.env.NEXT_PUBLIC_S3_API.replace('//', `//${process.env.NEXT_PUBLIC_R2_BUCKET_NAME}.`)]
+  .filter(Boolean)
+  .join(' ')
 const cspHeader = [
   "default-src 'self'",
   `img-src 'self' blob: data: ${cspSrc}`,
