@@ -1,5 +1,4 @@
 @import url('@/assets/font/FZSJ-ZHUZAYTE/result.css');
-@import url('@/assets/font/CascadiaCodePL/result.css');
 
 @custom-variant dark (&:is(.dark, .dark *));
 @custom-variant light (&:is(.light, .light *));
@@ -50,7 +49,7 @@
   --font-root: 'FZSJ-ZHUZAYTE';
   --font-title: var(--font-title);
   --font-article: 'Microsoft Yahei', '微软雅黑';
-  --font-code: 'Cascadia Code PL';
+  --font-code: var(--font-code);
   --height-footer: 9.375rem;
   --height-header: 3.125rem;
   --z-index-footer: 20;

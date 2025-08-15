@@ -1,4 +1,5 @@
-import { getPosts, PostList, PostSearchParams } from '../_components/post/post-list'
+import { getPosts } from '../../utils'
+import { PostList, PostSearchParams } from '../_components/post/post-list'
 
 interface PageProps extends DynamicRouteProps<{}, PostSearchParams & { page: string }> {}
 

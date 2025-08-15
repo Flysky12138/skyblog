@@ -60,6 +60,9 @@ export default function Echarts({ children }: EchartsProps) {
             options={{
               minimap: {
                 enabled: false
+              },
+              scrollbar: {
+                alwaysConsumeMouseWheel: false
               }
             }}
             onChange={payplod => {

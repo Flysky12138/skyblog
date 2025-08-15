@@ -1,12 +1,11 @@
 import { Prisma } from '@prisma/client'
-import { toMerged } from 'es-toolkit'
 import { Award, CalendarDays, LucideIcon, Shapes, Tag } from 'lucide-react'
 import Link from 'next/link'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/layout/card'
-import { prisma } from '@/lib/prisma'
 
+import { getPosts } from '../../../utils'
 import { PostListPagination, PostListPaginationProps } from './post-list-pagination'
 import { PostUpdateAt } from './post-update-at'
 
@@ -61,34 +60,5 @@ export const PostList = ({ pagination, posts }: PostListProps) => {
       ))}
       <PostListPagination {...pagination} />
     </>
-  )
-}
-
-/** 文章查询过滤器 */
-export const POST_WHERE_INPUT: Prisma.PostWhereInput = {
-  published: true
-}
-
-/** 文章查询 */
-export const getPosts = async (page: number, where: Prisma.PostWhereInput = {}) => {
-  return await prisma.post.paginate(
-    {
-      orderBy: [{ sticky: 'desc' }, { updatedAt: 'desc' }],
-      select: {
-        categories: true,
-        createdAt: true,
-        description: true,
-        id: true,
-        sticky: true,
-        tags: true,
-        title: true,
-        updatedAt: true
-      },
-      where: toMerged(POST_WHERE_INPUT, where)
-    },
-    {
-      limit: Number.parseInt(process.env.NEXT_PUBLIC_PAGE_POSTCARD_COUNT),
-      page
-    }
   )
 }

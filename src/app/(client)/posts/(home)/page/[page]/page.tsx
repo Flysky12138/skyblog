@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 
-import { getPosts, POST_WHERE_INPUT, PostList } from '../../_components/post/post-list'
+import { getPosts, POST_WHERE_INPUT } from '../../../utils'
+import { PostList } from '../../_components/post/post-list'
 
 export const generateStaticParams = async (): Promise<Awaited<PageProps['params']>[]> => {
   const posts = await prisma.post.paginate(
