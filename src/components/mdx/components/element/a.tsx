@@ -12,7 +12,7 @@ export const A = ({ children, className, ...props }: React.ComponentProps<'a'>) 
     return (
       <a className={cn('no-underline underline-offset-2 hover:underline', className)} rel="noreferrer nofollow" target="_blank" {...props}>
         {children}
-        <ArrowUpRight className="inline-block translate-y-0.5 align-super" size={12} />
+        <ArrowUpRight className="inline-block translate-y-1 align-super" size={12} />
       </a>
     )
   }

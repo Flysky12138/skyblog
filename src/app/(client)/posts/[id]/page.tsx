@@ -12,12 +12,14 @@ import { Button } from '@/components/ui/button'
 import { ATTRIBUTE, POST_CARD_DISPLAY } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
 
+import { SelectionCopy } from '../../../../components/selection-copy'
+import { POST_WHERE_INPUT } from '../utils'
 import { PostCatalogue, PostCatalogueHeading } from './_components/post-catalogue'
 import { PostInfo } from './_components/post-info'
 import { ResizeButton } from './_components/resize-button'
 
 export const generateStaticParams = async (): Promise<Awaited<PageProps['params']>[]> => {
-  const posts = await prisma.post.findMany({ select: { id: true } })
+  const posts = await prisma.post.findMany({ select: { id: true }, where: POST_WHERE_INPUT })
   return posts.map(post => ({ id: post.id }))
 }
 
@@ -58,7 +60,7 @@ export default async function Page({ params }: PageProps) {
       <DisplayByConditional condition={(post.display & POST_CARD_DISPLAY.HEADER) == POST_CARD_DISPLAY.HEADER}>
         <Card aria-label="post abstract" className="relative flex flex-col gap-2 p-3 md:p-5" data-slot="post-abstract">
           <DisplayByAuth role="ADMIN">
-            <Button asChild className="absolute top-5 right-5" size="icon" variant="ghost">
+            <Button asChild className="absolute top-3 right-3 md:top-5 md:right-5" size="icon" variant="ghost">
               <Link href={`/dashboard/posts/${post.id}`} target="_blank">
                 <PencilLine />
               </Link>
@@ -74,6 +76,7 @@ export default async function Page({ params }: PageProps) {
           <style>{`html { scroll-padding-top: 60px }`}</style>
           <Card asChild aria-label="post content">
             <article className="group/article relative max-w-none grow px-3 py-5 md:px-5" id={ATTRIBUTE.ID.POST_CONTAINER}>
+              <SelectionCopy selector={`#${ATTRIBUTE.ID.POST_CONTAINER}`} />
               <ResizeButton className="absolute top-1 right-1 z-10 opacity-0 group-hover/article:opacity-100 focus-visible:opacity-100 [&+*]:mt-0" />
               <MDXServer source={post.content} />
             </article>

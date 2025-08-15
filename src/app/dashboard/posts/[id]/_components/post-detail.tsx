@@ -2,7 +2,7 @@ import useSWR from 'swr'
 import { Updater } from 'use-immer'
 import { uuidv7 } from 'uuidv7'
 
-import { Combobox } from '@/components/form/combobox'
+import { MultiSelect } from '@/components/form/multi-select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
@@ -66,13 +66,13 @@ export const PostDetail = ({ children, value: post, onChange: setPost }: PostDet
           </div>
           <div className="flex flex-col gap-2">
             <Label>分类</Label>
-            <Combobox
+            <MultiSelect
               multiple
               fieldNames={{ label: 'name', value: 'id' }}
               options={categories}
               value={post.categories}
               onAddOption={name => ({ id: uuidv7(), name })}
-              onSelect={payload => {
+              onValueChange={payload => {
                 setPost(state => {
                   state.categories = payload
                 })
@@ -81,13 +81,13 @@ export const PostDetail = ({ children, value: post, onChange: setPost }: PostDet
           </div>
           <div className="flex flex-col gap-2">
             <Label>标签</Label>
-            <Combobox
+            <MultiSelect
               multiple
               fieldNames={{ label: 'name', value: 'id' }}
               options={tags}
               value={post.tags}
               onAddOption={name => ({ id: uuidv7(), name })}
-              onSelect={payload => {
+              onValueChange={payload => {
                 setPost(state => {
                   state.tags = payload
                 })

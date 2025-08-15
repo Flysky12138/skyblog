@@ -2,11 +2,13 @@ import { MetadataRoute } from 'next'
 
 import { prisma } from '@/lib/prisma'
 
+import { POST_WHERE_INPUT } from './(client)/posts/utils'
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   /** posts */
   const postsId = await prisma.post.findMany({
     select: { id: true, updatedAt: true },
-    where: { published: true }
+    where: POST_WHERE_INPUT
   })
 
   /** friends */

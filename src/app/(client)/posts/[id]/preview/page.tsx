@@ -3,7 +3,7 @@
 import React from 'react'
 import { useEvent, useMount } from 'react-use'
 
-import { DefaultPostType, MessageEventDataMountedType, MessageEventDataRefreshType } from '@/app/dashboard/posts/[id]/page'
+import { DefaultPostType, MessageEventDataMounted, MessageEventDataRefresh } from '@/app/dashboard/posts/[id]/page'
 import { Card } from '@/components/layout/card'
 import { MDXClient } from '@/components/mdx/client'
 
@@ -11,10 +11,10 @@ export default function Page() {
   const [post, setPost] = React.useState<DefaultPostType>()
 
   useMount(() => {
-    window.opener.postMessage({ type: 'post-preview-mounted' } satisfies MessageEventDataMountedType, window.origin)
+    window.opener.postMessage({ type: 'post-preview-mounted' } satisfies MessageEventDataMounted, window.origin)
   })
 
-  useEvent('message', ({ data, origin }: MessageEvent<MessageEventDataRefreshType>) => {
+  useEvent('message', ({ data, origin }: MessageEvent<MessageEventDataRefresh>) => {
     if (origin != window.origin || data.type != 'post-refresh') return
     setPost(data.value)
   })

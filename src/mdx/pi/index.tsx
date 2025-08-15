@@ -1,15 +1,16 @@
 'use client'
 
-import { AlertCircle, Loader2 } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 import React from 'react'
 import { useToggle } from 'react-use'
 import { useImmer } from 'use-immer'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui-custom/dialog'
 import { Alert, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Spinner } from '@/components/ui/spinner'
 
 import Arctan_ from './arctan.mdx'
 import ChudnovskyBsCode_ from './chudnovsky-bs-code.mdx'
@@ -102,7 +103,7 @@ export default function Pi() {
             <DialogTrigger asChild>
               <Button>源码</Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl p-0 text-sm [&>button]:hidden [&>figure]:m-0">
+            <DialogContent className="max-w-2xl p-0 text-sm [&>figure]:m-0" showCloseButton={false}>
               {form.mode == 'chudnovsky' && <ChudnovskyCode />}
               {form.mode == 'chudnovsky-bs' && <ChudnovskyBsCode />}
             </DialogContent>
@@ -116,7 +117,7 @@ export default function Pi() {
               loadingToggle(true)
             }}
           >
-            {loading && <Loader2 className="animate-spin" />}
+            {loading && <Spinner />}
             计算
           </Button>
         </DisplayByConditional>

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-custom/dialog'
 import { Textarea } from '@/components/ui/textarea'
 
 interface TranscoderProps extends React.PropsWithChildren {}

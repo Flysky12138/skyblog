@@ -24,8 +24,8 @@ import { Toast } from '@/lib/toast'
 import { EditorToolbar, EditorToolbarProps } from './_components/editor-toolbar'
 
 export type DefaultPostType = NonNullable<GET['return']>
-export interface MessageEventDataMountedType extends MessageEventData<'post-preview-mounted'> {}
-export interface MessageEventDataRefreshType extends MessageEventData<'post-refresh', DefaultPostType> {}
+export interface MessageEventDataMounted extends MessageEventData<'post-preview-mounted'> {}
+export interface MessageEventDataRefresh extends MessageEventData<'post-refresh', DefaultPostType> {}
 
 const DEFAULT_POST: DefaultPostType = {
   authorId: '',
@@ -84,12 +84,12 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
   // 预览数据更新
   const refreshPreviewWindow = () => {
     setPreviewContent(post.content)
-    previewWindowRef.current?.postMessage({ type: 'post-refresh', value: post } satisfies MessageEventDataRefreshType, window.origin)
+    previewWindowRef.current?.postMessage({ type: 'post-refresh', value: post } satisfies MessageEventDataRefresh, window.origin)
   }
   useDebounce(refreshPreviewWindow, 1000, [post])
 
   // 窗口加载完成后获取一次预览数据
-  useEvent('message', ({ data, origin }: MessageEvent<MessageEventDataMountedType>) => {
+  useEvent('message', ({ data, origin }: MessageEvent<MessageEventDataMounted>) => {
     if (origin != window.origin || data.type != 'post-preview-mounted') return
     refreshPreviewWindow()
   })

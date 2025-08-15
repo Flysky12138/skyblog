@@ -1,14 +1,15 @@
 import { remove, unionBy } from 'es-toolkit'
-import { FileUp, FolderUp, Loader2, Trash, Upload } from 'lucide-react'
+import { FileUp, FolderUp, Trash, Upload } from 'lucide-react'
 import React from 'react'
 import { useAsyncFn, useBeforeUnload } from 'react-use'
 import { useImmer } from 'use-immer'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Table, TableActionButton } from '@/components/table'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-custom/dialog'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { getImageSize } from '@/lib/file/info'
 import { R2 } from '@/lib/http/r2'
@@ -144,7 +145,7 @@ export const R2Upload = ({ children, path, onFinished, onSubmit }: R2UploadProps
                 }}
               >
                 <DisplayByConditional condition={isUploading} fallback={<Upload />}>
-                  <Loader2 className="animate-spin" />
+                  <Spinner />
                 </DisplayByConditional>
                 上传
               </Button>

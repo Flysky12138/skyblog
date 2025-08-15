@@ -13,7 +13,7 @@ export const CardButtons = async () => {
   const pkgCount = Object.keys(packageJson.dependencies).length + Object.keys(packageJson.devDependencies).length
 
   return (
-    <Card className="p-card flex flex-col gap-3">
+    <Card className="p-card grid grid-cols-2 gap-3 sm:grid-cols-1">
       <DisplayByConditional condition={friendCount > 0}>
         <Button asChild variant="outline">
           <Link href="/friends">

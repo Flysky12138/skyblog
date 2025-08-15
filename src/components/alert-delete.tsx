@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger
-} from '@/components/ui/alert-dialog'
+} from '@/components/ui-custom/alert-dialog'
 
 export interface AlertDeleteProps extends React.PropsWithChildren {
   description: string

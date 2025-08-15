@@ -4,10 +4,9 @@
 }
 html {
   @apply font-root antialiased;
-  @apply selection:bg-teal-500 selection:text-white;
 }
 body {
-  @apply bg-root text-foreground;
+  @apply bg-root text-foreground overscroll-none;
 }
 img {
   @apply dark:brightness-80;

@@ -8,7 +8,6 @@
 /* 代码块 */
 figure[data-rehype-pretty-code-figure] {
   @apply border-card-border overflow-hidden rounded-md border;
-  @apply selection:bg-[#c1def1] selection:text-[unset] dark:selection:bg-[#264f78];
   [data-rehype-pretty-code-title] {
     @apply border-divide font-title m-0 border-b px-3 py-1 shadow-sm;
   }
@@ -51,8 +50,10 @@ pre [data-line] {
   }
 }
 
-/* 标记增删的行 */
-/** @shikijs/transformers transformerNotationDiff */
+/** 
+ * 标记增删的行
+ * @shikijs/transformers transformerNotationDiff
+ */
 pre [data-line] {
   &.diff {
     @apply relative after:absolute after:left-1;

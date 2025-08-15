@@ -24,7 +24,7 @@ export const CardDeveloper = async () => {
       </Avatar>
       <p className="font-title mt-3 text-2xl">Flysky</p>
       <p className="font-title text-subtitle-foreground mt-1 text-sm">{process.env.NEXT_PUBLIC_DESCRIPTION}</p>
-      <Button asChild className="mt-4 w-full font-bold">
+      <Button asChild className="mt-4 w-full max-w-56 font-bold">
         <a href={data.html_url} rel="noreferrer nofollow" target="_blank">
           <Github /> {data.login}
         </a>

@@ -4,6 +4,10 @@ import { Header } from './_components/header'
 import { Nav, NavProvider } from './_components/nav'
 
 export const metadata: Metadata = {
+  robots: {
+    follow: false,
+    index: false
+  },
   title: 'Dashboard'
 }
 

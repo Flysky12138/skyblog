@@ -1,7 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { Bot, BotOff, Loader2 } from 'lucide-react'
+import { Bot, BotOff } from 'lucide-react'
 import { Live2DModel } from 'pixi-live2d-display'
 import React from 'react'
 import { useAsync, useInterval, useLocalStorage } from 'react-use'
@@ -10,6 +10,7 @@ import { DisplayByBreakPoint } from '@/components/display/display-by-breakpoint'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { TransitionCollapse } from '@/components/transition/transition-collapse'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
 import { CustomRequest } from '@/lib/http/request'
 import { cn } from '@/lib/utils'
@@ -117,7 +118,7 @@ export const Live2DToggleButton = () => {
       <TransitionCollapse orientation="horizontal">
         <Button aria-label="live2d toggle" disabled={loading} size="icon" variant="outline" onClick={() => setEnable(!enable)}>
           <DisplayByConditional condition={loading} fallback={enable ? <Bot /> : <BotOff />}>
-            <Loader2 className="animate-spin" />
+            <Spinner />
           </DisplayByConditional>
         </Button>
       </TransitionCollapse>
