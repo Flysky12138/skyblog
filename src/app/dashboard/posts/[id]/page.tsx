@@ -44,7 +44,7 @@ const DEFAULT_POST: DefaultPostType = {
   views: 0
 }
 
-export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
+export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   const router = useRouter()
   const session = useSession()
 
@@ -77,7 +77,7 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
   // 请求数据
   useAsync(async () => {
     if (isCreate) return
-    const data = await CustomRequest('GET api/dashboard/posts/[id]', { params: { id } })
+    const data = await CustomRequest('GET /api/dashboard/posts/[id]', { params: { id } })
     initData(data)
   }, [id])
 
@@ -101,7 +101,7 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
       return
     }
     const data = await Toast(
-      CustomRequest('POST api/dashboard/posts/[id]', {
+      CustomRequest('POST /api/dashboard/posts/[id]', {
         body: {
           authorId: session.data?.id || uuidv7(),
           categories: post.categories.map(({ name }) => name),
@@ -129,7 +129,7 @@ export default function Page({ params }: DynamicRouteProps<{ id: string }>) {
       return
     }
     const data = await Toast(
-      CustomRequest('PUT api/dashboard/posts/[id]', {
+      CustomRequest('PUT /api/dashboard/posts/[id]', {
         body: {
           categories: post.categories.map(({ name }) => name),
           content: post.content,

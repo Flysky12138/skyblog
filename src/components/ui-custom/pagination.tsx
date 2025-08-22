@@ -1,4 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { Route } from 'next'
 import { Url } from 'next/dist/shared/lib/router/router'
 import Link from 'next/link'
 import React from 'react'
@@ -28,7 +29,7 @@ export const PaginationLink = ({
     return <button data-slot="pagination-button" disabled={disabled} {...props} />
   }
 
-  return <Link aria-current={isActive ? 'page' : undefined} data-active={isActive} data-slot="pagination-link" href={href} {...props} />
+  return <Link aria-current={isActive ? 'page' : undefined} data-active={isActive} data-slot="pagination-link" href={href as Route} {...props} />
 }
 
 export const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => {

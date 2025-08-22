@@ -20,7 +20,7 @@ interface PostInfoProps {
 export const PostInfo = ({ defaultValue, id }: PostInfoProps) => {
   const { data: post, isLoading } = useSWR(
     ['e07ef4cb-d4cc-587d-b2ff-58d64c2a4d57', id],
-    () => CustomRequest('GET api/post/info', { search: { id } }),
+    () => CustomRequest('GET /api/post/info', { search: { id } }),
     {
       fallbackData: defaultValue,
       refreshInterval: 20 * 1000
@@ -33,7 +33,7 @@ export const PostInfo = ({ defaultValue, id }: PostInfoProps) => {
     if (!post?.published) return
     if (session.data?.role == 'ADMIN') return
     if (viewed) return
-    await CustomRequest('POST api/post/view', { search: { id } })
+    await CustomRequest('POST /api/post/view', { search: { id } })
     setViewed(true)
   }, 5 * 1000)
 

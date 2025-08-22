@@ -18,7 +18,7 @@ export default function Page() {
   const [search, setSearch] = useImmer<GET['search']>({ limit: 20, page: 1 })
 
   const { data, isLoading, mutate } = useSWR(['6a75f4b6-326d-5aa8-b53c-e5af8d86dec2', search], () => {
-    return CustomRequest('GET api/dashboard/posts', { search })
+    return CustomRequest('GET /api/dashboard/posts', { search })
   })
 
   return (
@@ -39,7 +39,7 @@ export default function Page() {
                 checked={text}
                 onCheckedChange={async () => {
                   const data = await Toast(
-                    CustomRequest('PATCH api/dashboard/posts/[id]', {
+                    CustomRequest('PATCH /api/dashboard/posts/[id]', {
                       body: { published: !text },
                       params: { id: record.id }
                     }),
@@ -80,7 +80,7 @@ export default function Page() {
                   description="这将永久删除文章。"
                   title={record.title}
                   onConfirm={async () => {
-                    await Toast(CustomRequest('DELETE api/dashboard/posts/[id]', { params: { id: record.id } }), {
+                    await Toast(CustomRequest('DELETE /api/dashboard/posts/[id]', { params: { id: record.id } }), {
                       success: '删除成功'
                     })
                     mutate(

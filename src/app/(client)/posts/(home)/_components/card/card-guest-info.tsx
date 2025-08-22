@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import { CustomRequest } from '@/lib/http/request'
 
 export const CardGuestInfo = () => {
-  const { data: ipinfo } = useSWR('8b23c2c2-1589-5bb2-82e6-7e1fd8943707', () => CustomRequest('GET api/ipinfo', {}))
+  const { data: ipinfo } = useSWR('8b23c2c2-1589-5bb2-82e6-7e1fd8943707', () => CustomRequest('GET /api/ipinfo', {}))
 
   const id = React.useId()
 

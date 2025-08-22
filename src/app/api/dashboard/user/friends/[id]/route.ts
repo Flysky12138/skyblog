@@ -14,7 +14,7 @@ export type PUT = RouteHandlerType<{
   return: Prisma.PromiseReturnType<typeof dbPut>
 }>
 
-export const PUT = async (request: NextRequest, { params }: DynamicRouteProps<{ id: string }>) => {
+export const PUT = async (request: NextRequest, { params }: RouteContext<'/api/dashboard/user/friends/[id]'>) => {
   try {
     const { id } = await params
 
@@ -41,7 +41,7 @@ export type DELETE = RouteHandlerType<{
   return: Prisma.PromiseReturnType<typeof dbDelete>
 }>
 
-export const DELETE = async (request: NextRequest, { params }: DynamicRouteProps<{ id: string }>) => {
+export const DELETE = async (request: NextRequest, { params }: RouteContext<'/api/dashboard/user/friends/[id]'>) => {
   try {
     const { id } = await params
 

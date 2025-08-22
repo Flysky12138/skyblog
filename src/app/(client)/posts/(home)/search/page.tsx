@@ -1,10 +1,8 @@
 import { getPosts } from '../../utils'
 import { PostList, PostSearchParams } from '../_components/post/post-list'
 
-interface PageProps extends DynamicRouteProps<{}, PostSearchParams & { page: string }> {}
-
-export default async function Page({ searchParams }: PageProps) {
-  const { categories, page, tags } = await searchParams
+export default async function Page({ searchParams }: PageProps<'/posts/search'>) {
+  const { categories, page, tags } = (await searchParams) as PostSearchParams & { page: string }
 
   const pageNumber = Number.parseInt(page || '1')
 

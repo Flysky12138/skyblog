@@ -6,7 +6,7 @@ import { prisma } from '@/lib/prisma'
 
 export const revalidate = 43200
 
-export const GET = async (request: NextRequest, { params }: DynamicRouteProps<{ id: string }>) => {
+export const GET = async (request: NextRequest, { params }: RouteContext<'/api/friends/[id]/cover'>) => {
   let browser: Browser | null = null
   try {
     const { id } = await params

@@ -2,6 +2,7 @@
 
 import { produce } from 'immer'
 import { Eye, Pencil, Plus, Trash } from 'lucide-react'
+import { Route } from 'next'
 import Link from 'next/link'
 import useSWR from 'swr'
 
@@ -27,7 +28,7 @@ import { FriendDetail } from './_components/friend-detail'
 export default function Page() {
   const { data: friends, mutate: setFriends } = useSWR(
     '127b5c9e-fe2e-5d0a-90d1-89229101ee85',
-    () => CustomRequest('GET api/dashboard/user/friends', {}),
+    () => CustomRequest('GET /api/dashboard/user/friends', {}),
     {
       fallbackData: []
     }
@@ -52,14 +53,14 @@ export default function Page() {
           >
             <p className="absolute bottom-1 left-2 text-lg opacity-75">{friend.name}</p>
             <Button asChild size="icon" variant="outline">
-              <Link href={friend.url} rel="noreferrer nofollow" target="_blank">
+              <Link href={friend.url as Route} rel="noreferrer nofollow" target="_blank">
                 <Eye />
               </Link>
             </Button>
             <FriendDetail
               value={friend}
               onSubmit={async body => {
-                const data = await Toast(CustomRequest('PUT api/dashboard/user/friends/[id]', { body, params: { id: friend.id } }), {
+                const data = await Toast(CustomRequest('PUT /api/dashboard/user/friends/[id]', { body, params: { id: friend.id } }), {
                   success: '更新成功'
                 })
                 setFriends(
@@ -88,7 +89,7 @@ export default function Page() {
                   <AlertDialogCancel>取消</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={async () => {
-                      await Toast(CustomRequest('DELETE api/dashboard/user/friends/[id]', { params: { id: friend.id } }), {
+                      await Toast(CustomRequest('DELETE /api/dashboard/user/friends/[id]', { params: { id: friend.id } }), {
                         success: '删除成功'
                       })
                       setFriends(
@@ -111,7 +112,7 @@ export default function Page() {
       ))}
       <FriendDetail
         onSubmit={async body => {
-          const data = await Toast(CustomRequest('POST api/dashboard/user/friends', { body }), {
+          const data = await Toast(CustomRequest('POST /api/dashboard/user/friends', { body }), {
             success: '保存成功'
           })
           setFriends(

@@ -38,7 +38,7 @@ export const ClashDetail = ({ children, value, onSubmit }: ClashDetailProps) => 
   const isUseTemplate = !!form.clashTemplateId
 
   // 模版内容，可从缓存中快速获取
-  const { data: clashTemplates, isLoading } = useSWR(SWR_KEY_CLASH_TEMPLATES, () => CustomRequest('GET api/dashboard/clash/template', {}), {
+  const { data: clashTemplates, isLoading } = useSWR(SWR_KEY_CLASH_TEMPLATES, () => CustomRequest('GET /api/dashboard/clash/template', {}), {
     fallbackData: []
   })
 

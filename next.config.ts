@@ -97,6 +97,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   redirects,
   rewrites,
+  typedRoutes: true,
   typescript: {
     ignoreBuildErrors: true
   },

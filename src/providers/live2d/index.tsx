@@ -82,7 +82,7 @@ export const Live2DProvider = (props: React.PropsWithChildren) => {
   // 网络语消息显示
   useInterval(async () => {
     if (!enable || loading) return
-    const data = await CustomRequest('GET api/phrase', {})
+    const data = await CustomRequest('GET /api/phrase', {})
     if (!data.hitokoto) return
     setMessage({ content: data.hitokoto, priority: 1 })
   }, 1000 * 30)

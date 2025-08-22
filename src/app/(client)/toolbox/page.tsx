@@ -1,3 +1,4 @@
+import { Route } from 'next'
 import Link from 'next/link'
 
 import { Avatar } from '@/components/avatar'
@@ -44,7 +45,7 @@ export default function Page() {
           <div className="gap-card mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             {group.children.map(child => (
               <Card key={child.label} asChild className="p-card flex gap-4">
-                <Link href={child.href}>
+                <Link href={child.href as Route}>
                   <Avatar border shadow size={55} style="shape" value={child.label} />
                   <div className="space-y-1">
                     <h3 className="text-lg">{child.label}</h3>

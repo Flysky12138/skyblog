@@ -17,7 +17,7 @@ import { ClashDetail } from './clash-detail'
 export const ClashTable = () => {
   const [{}, copy] = useCopyToClipboard()
 
-  const { data, isLoading, mutate } = useSWR('c6ecc968-aa0c-5542-93ae-ab8ad27907a4', () => CustomRequest('GET api/dashboard/clash', {}), {
+  const { data, isLoading, mutate } = useSWR('c6ecc968-aa0c-5542-93ae-ab8ad27907a4', () => CustomRequest('GET /api/dashboard/clash', {}), {
     fallbackData: [],
     refreshInterval: 10 * 1000
   })
@@ -40,7 +40,7 @@ export const ClashTable = () => {
               checked={text}
               onCheckedChange={async () => {
                 const data = await Toast(
-                  CustomRequest('PATCH api/dashboard/clash', {
+                  CustomRequest('PATCH /api/dashboard/clash', {
                     body: { enabled: !text },
                     search: { id }
                   }),
@@ -79,7 +79,7 @@ export const ClashTable = () => {
                 value={record}
                 onSubmit={async ({ clashTemplateId, content, name, subtitle, variables }) => {
                   const data = await Toast(
-                    CustomRequest('PUT api/dashboard/clash', {
+                    CustomRequest('PUT /api/dashboard/clash', {
                       body: { clashTemplateId, content, name, subtitle, variables },
                       search: { id: record.id }
                     }),
@@ -105,7 +105,7 @@ export const ClashTable = () => {
                 description="将永久删除该项。"
                 title={record.name}
                 onConfirm={async () => {
-                  await Toast(CustomRequest('DELETE api/dashboard/clash', { search: { id: record.id } }), {
+                  await Toast(CustomRequest('DELETE /api/dashboard/clash', { search: { id: record.id } }), {
                     success: '删除成功'
                   })
                   mutate(
@@ -123,7 +123,7 @@ export const ClashTable = () => {
           title: () => (
             <ClashDetail
               onSubmit={async body => {
-                const data = await Toast(CustomRequest('POST api/dashboard/clash', { body }), {
+                const data = await Toast(CustomRequest('POST /api/dashboard/clash', { body }), {
                   success: '添加成功'
                 })
                 mutate(

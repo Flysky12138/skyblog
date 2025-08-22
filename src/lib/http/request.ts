@@ -1,3 +1,5 @@
+import { ParamMap } from '.next/types/routes'
+
 import { CustomFetch } from './fetch'
 
 /**
@@ -19,14 +21,22 @@ const generatePath = (path: string, params: object) => {
 /**
  * 用于请求基于 Nextjs 文件路由定义的接口
  */
-export const CustomRequest = async <T extends keyof ApiMethodMap>(input: T, options: CustomRequestOptions<T>) => {
-  const [method, api] = input.split(' ') as [Method, keyof typeof ApiPaths]
+export const CustomRequest = async <T extends keyof AppRouteHandlerMethodMap>(
+  input: T,
+  options: DeepPrettify<
+    Omit<AppRouteHandlerMethodMap[T], 'return'> &
+      RemoveKeysByEmptyValue<{
+        params: T extends `${Method} ${infer R}` ? (R extends keyof ParamMap ? ParamMap[R] : never) : never
+      }>
+  >
+) => {
+  const [method, route] = input.split(' ') as [Method, string]
   const { body, params = {}, search = {} } = options || {}
 
-  const url = new URL(generatePath(api, params), process.env.NEXT_PUBLIC_WEBSITE_URL)
+  const url = new URL(generatePath(route, params), process.env.NEXT_PUBLIC_WEBSITE_URL)
   url.search = new URLSearchParams(search).toString()
 
-  const res = await CustomFetch<Prettify<ApiMethodMap[T]['return']>>(url, {
+  const res = await CustomFetch<Prettify<AppRouteHandlerMethodMap[T]['return']>>(url, {
     body,
     method
   })

@@ -1,6 +1,6 @@
 import Link, { LinkProps } from 'next/link'
 
-interface OuterLinkProps extends LinkProps, React.PropsWithChildren {}
+interface OuterLinkProps extends LinkProps<never>, React.PropsWithChildren {}
 
 const OuterLink = ({ children, ...props }: OuterLinkProps) => {
   return (

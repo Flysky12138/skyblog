@@ -25,7 +25,7 @@ export const { auth, handlers } = NextAuth({
       const { avatar_url, email, login } = profile
       if (!email || !account) return false
 
-      const { id, role } = await CustomRequest('POST api/auth/user', {
+      const { id, role } = await CustomRequest('POST /api/auth/user', {
         body: {
           avatarUrl: avatar_url,
           email: email,

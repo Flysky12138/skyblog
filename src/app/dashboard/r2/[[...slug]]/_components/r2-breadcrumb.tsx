@@ -16,7 +16,7 @@ export const R2Breadcrumb = ({ paths }: R2BreadcrumbProps) => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link replace href="/dashboard/r2">
+              <Link replace href="/dashboard/r2/">
                 Home
               </Link>
             </BreadcrumbLink>

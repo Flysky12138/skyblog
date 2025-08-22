@@ -15,7 +15,7 @@ export default function Page() {
 
   if (session.status == 'unauthenticated') {
     toast.error('未登陆')
-    router.replace('/auth/signin')
+    router.replace('/auth/login')
   }
 
   return (

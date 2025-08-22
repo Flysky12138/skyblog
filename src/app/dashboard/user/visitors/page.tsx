@@ -29,7 +29,7 @@ export default function Page() {
 
   const { data, isLoading, mutate } = useSWR(
     ['9670f632-f40e-5695-b0c6-5cb539b4a957', search],
-    () => CustomRequest('GET api/dashboard/user/visitors', { search }),
+    () => CustomRequest('GET /api/dashboard/user/visitors', { search }),
     {
       keepPreviousData: true,
       refreshInterval: 10 * 1000
@@ -90,7 +90,7 @@ export default function Page() {
             description={`将永久删除 ${checked?.length} 项。`}
             title="访客信息"
             onConfirm={async () => {
-              await Toast(CustomRequest('DELETE api/dashboard/user/visitors', { body: { ids: checked.map(it => it.id) } }), {
+              await Toast(CustomRequest('DELETE /api/dashboard/user/visitors', { body: { ids: checked.map(it => it.id) } }), {
                 success: '删除成功'
               })
               setChecked([])

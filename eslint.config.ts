@@ -103,7 +103,7 @@ const unusedImportsRules = {
 
 export default tseslint.config(
   {
-    ignores: ['public/', '.next/', 'api.d.ts', 'src/components/ui/']
+    ignores: ['public/', '.next/', 'src/components/ui/', 'next-env.d.ts']
   },
   // https://typescript-eslint.io/users/configs/#projects-without-type-checking
   tseslint.configs.recommended,

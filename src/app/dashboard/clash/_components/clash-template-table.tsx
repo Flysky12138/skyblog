@@ -14,7 +14,7 @@ import { ClashTemplateDetail } from './clash-template-detail'
 export const SWR_KEY_CLASH_TEMPLATES = '5139cbc3-691c-54b6-8657-5a02ae60f58f'
 
 export const ClashTemplateTable = () => {
-  const { data, isLoading, mutate } = useSWR(SWR_KEY_CLASH_TEMPLATES, () => CustomRequest('GET api/dashboard/clash/template', {}), {
+  const { data, isLoading, mutate } = useSWR(SWR_KEY_CLASH_TEMPLATES, () => CustomRequest('GET /api/dashboard/clash/template', {}), {
     fallbackData: []
   })
 
@@ -36,7 +36,7 @@ export const ClashTemplateTable = () => {
                 value={record}
                 onSubmit={async ({ content, name }) => {
                   const data = await Toast(
-                    CustomRequest('PUT api/dashboard/clash/template', { body: { content, name }, search: { id: record.id } }),
+                    CustomRequest('PUT /api/dashboard/clash/template', { body: { content, name }, search: { id: record.id } }),
                     {
                       success: '修改成功'
                     }
@@ -59,7 +59,7 @@ export const ClashTemplateTable = () => {
                 description="将永久删除该项。"
                 title={record.name}
                 onConfirm={async () => {
-                  await Toast(CustomRequest('DELETE api/dashboard/clash/template', { search: { id: record.id } }), {
+                  await Toast(CustomRequest('DELETE /api/dashboard/clash/template', { search: { id: record.id } }), {
                     success: '删除成功'
                   })
                   mutate(
@@ -77,7 +77,7 @@ export const ClashTemplateTable = () => {
           title: () => (
             <ClashTemplateDetail
               onSubmit={async body => {
-                const data = await Toast(CustomRequest('POST api/dashboard/clash/template', { body }), {
+                const data = await Toast(CustomRequest('POST /api/dashboard/clash/template', { body }), {
                   success: '添加成功'
                 })
                 mutate(

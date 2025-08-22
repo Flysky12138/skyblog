@@ -1,7 +1,7 @@
 import { R2Breadcrumb } from './_components/r2-breadcrumb'
 import { R2Table } from './_components/r2-table'
 
-export default async function Page({ params }: DynamicRouteProps<{ slug?: string[] }>) {
+export default async function Page({ params }: PageProps<'/dashboard/r2/[[...slug]]'>) {
   const { slug } = await params
 
   return (

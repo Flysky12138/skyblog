@@ -2,6 +2,7 @@
 
 import { isUndefined } from 'es-toolkit'
 import { Archive, House, LibraryBig, NotebookPen, Plus, Settings, User, UserRoundSearch, Users } from 'lucide-react'
+import { Route } from 'next'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -84,13 +85,13 @@ export const NavMain = () => {
               })}
             >
               <SidebarMenuButton asChild isActive={it.href == pathname} tooltip={it.name}>
-                <Link href={it.href}>
+                <Link href={it.href as Route}>
                   {it.icon} {it.name}
                 </Link>
               </SidebarMenuButton>
               {it.action && (
                 <SidebarMenuAction asChild>
-                  <Link href={it.action.href}>{it.action.icon}</Link>
+                  <Link href={it.action.href as Route}>{it.action.icon}</Link>
                 </SidebarMenuAction>
               )}
             </SidebarMenuItem>

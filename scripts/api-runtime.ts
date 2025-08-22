@@ -1,25 +1,25 @@
-import fs from 'node:fs'
-import path from 'node:path'
-import process from 'node:process'
-import url from 'node:url'
+import Fs from 'node:fs'
+import Path from 'node:path'
+import Process from 'node:process'
+import Url from 'node:url'
 
-const API_FOLDER_PATH = url.fileURLToPath(new URL(`../src/app/api`, import.meta.url))
+const API_FOLDER_PATH = Url.fileURLToPath(new URL(`../src/app/api`, import.meta.url))
 
-const runtime = process.argv[2] || 'edge'
+const runtime = Process.argv[2] || 'edge'
 
-for (const _path of fs.readdirSync(API_FOLDER_PATH, { recursive: true }) as string[]) {
-  const apiFileFullPath = path.join(API_FOLDER_PATH, _path)
+for (const path of Fs.readdirSync(API_FOLDER_PATH, { recursive: true }) as string[]) {
+  const apiFileFullPath = Path.join(API_FOLDER_PATH, path)
 
-  if (!fs.statSync(apiFileFullPath).isFile()) continue
-  if (!_path.endsWith(`${path.sep}route.ts`)) continue
+  if (!Fs.statSync(apiFileFullPath).isFile()) continue
+  if (!path.endsWith(`${Path.sep}route.ts`)) continue
 
   const modules = await import(apiFileFullPath)
   if (!Reflect.has(modules, 'runtime')) continue
-  if (Reflect.get(modules, 'runtime') == process.argv[2]) continue
+  if (Reflect.get(modules, 'runtime') == Process.argv[2]) continue
 
-  let source = fs.readFileSync(apiFileFullPath, { encoding: 'utf-8' })
+  let source = Fs.readFileSync(apiFileFullPath, { encoding: 'utf-8' })
   source = source.replace(/^export const runtime = [\w'"]+$/m, `export const runtime = '${runtime}'`)
-  fs.writeFileSync(apiFileFullPath, source)
+  Fs.writeFileSync(apiFileFullPath, source)
 
   console.log('\x1b[32m%s\x1b[0m', apiFileFullPath)
 }

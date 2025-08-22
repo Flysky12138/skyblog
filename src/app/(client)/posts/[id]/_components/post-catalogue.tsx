@@ -1,7 +1,8 @@
 'use client'
 
 import { debounce } from 'es-toolkit'
-import Link from 'next/link'
+import { Route } from 'next'
+import Link, { LinkProps } from 'next/link'
 import React from 'react'
 import { useEvent } from 'react-use'
 
@@ -71,7 +72,7 @@ export const PostCatalogue = ({ className, ref, ...props }: PostCatalogueProps) 
   )
 }
 
-interface PostCatalogueHeadingProps extends React.ComponentProps<'a'> {}
+interface PostCatalogueHeadingProps extends Omit<LinkProps<never>, 'href'> {}
 
 export const PostCatalogueHeading = ({ children, className, id, ...props }: PostCatalogueHeadingProps) => {
   const depth = Reflect.get(props, HEADING_ATTRIBUTE).split('.').length - 1
@@ -87,7 +88,7 @@ export const PostCatalogueHeading = ({ children, className, id, ...props }: Post
           'hover:text-link-foreground hover:bg-link/30',
           className
         )}
-        href={`#${id}`}
+        href={`#${id}` as Route}
         style={{
           paddingLeft: `${0.5 + depth}rem`
         }}

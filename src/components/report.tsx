@@ -10,7 +10,7 @@ export const Report = () => {
 
   useAsync(async () => {
     if (session.status == 'loading' || session.data?.role == 'ADMIN') return
-    await CustomRequest('POST api/visitor', {})
+    await CustomRequest('POST /api/visitor', {})
   }, [session])
 
   return null

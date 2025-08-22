@@ -1,42 +1,37 @@
-import fs from 'node:fs'
-import path from 'node:path'
-import url from 'node:url'
+import Fs from 'node:fs'
+import Path from 'node:path'
+import Url from 'node:url'
 
-const API_FOLDER_PATH = url.fileURLToPath(new URL(`../src/app/api`, import.meta.url))
-const OUTPUT_FILE_PATH = url.fileURLToPath(new URL('../api.d.ts', import.meta.url))
+const API_FOLDER_PATH = Url.fileURLToPath(new URL(`../src/app/api`, import.meta.url))
+const OUTPUT_FILE_PATH = Url.fileURLToPath(new URL('../routes.d.ts', import.meta.url))
 
-const apiPaths: string[] = []
-const apiMethodMap = new Map<string, {}>()
+const AppRouteHandlerMethodMap = new Map<string, {}>()
 
-for (const _path of fs.readdirSync(API_FOLDER_PATH, { recursive: true }) as string[]) {
-  const apiFileFullPath = path.join(API_FOLDER_PATH, _path)
+for (const path of Fs.readdirSync(API_FOLDER_PATH, { recursive: true }) as string[]) {
+  const fullPath = Path.join(API_FOLDER_PATH, path)
 
-  if (!fs.statSync(apiFileFullPath).isFile()) continue
-  if (!_path.endsWith(`${path.sep}route.ts`)) continue
+  if (!Fs.statSync(fullPath).isFile()) continue
+  if (!path.endsWith(`${Path.sep}route.ts`)) continue
 
-  const api = path.posix.join(...['api'].concat(_path.split(path.sep).slice(0, -1)))
-  apiPaths.push(`'${api}'`)
+  const routes = Path.posix.join(...[Path.sep, 'api'].concat(path.split(Path.sep).slice(0, -1)))
 
-  const modules = await import(apiFileFullPath)
+  const modules = await import(fullPath)
   for (const mode of ['DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT'] satisfies Method[]) {
     if (!Reflect.has(modules, mode)) continue
-    apiMethodMap.set(`'${mode} ${api}'`, `import('@/app/api/${_path}').${mode}`)
+    AppRouteHandlerMethodMap.set(`'${mode} ${routes}'`, `import('@/app/api/${path}').${mode}`)
   }
 }
 
 const data = `/**
  * 根据 Nextjs 文件路由系统规则生成
- * @generator [${path.basename(import.meta.url)}](${import.meta.url})
+ * @generator [${Path.basename(import.meta.url)}](${import.meta.url})
  */
-enum ApiPaths {
-${apiPaths.map(it => `  ${it}`).join(',\n')}
-}
-
-interface ApiMethodMap {
-${Array.from(apiMethodMap)
-  .map(it => `  ${it[0]}: ${it[1]}`)
+interface AppRouteHandlerMethodMap {
+${Array.from(AppRouteHandlerMethodMap)
+  .sort((a, b) => a[0].localeCompare(b[0]))
+  .map(item => `  ${item[0]}: ${item[1]}`)
   .join('\n')}
 }
 `
 
-fs.writeFileSync(OUTPUT_FILE_PATH, data, { encoding: 'utf-8' })
+Fs.writeFileSync(OUTPUT_FILE_PATH, data, { encoding: 'utf-8' })

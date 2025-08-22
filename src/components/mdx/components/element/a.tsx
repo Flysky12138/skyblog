@@ -1,4 +1,5 @@
 import { ArrowUpRight, Hash } from 'lucide-react'
+import { Route } from 'next'
 import Link from 'next/link'
 import React from 'react'
 
@@ -19,7 +20,7 @@ export const A = ({ children, className, ...props }: React.ComponentProps<'a'>) 
 
   // 内部链接
   return (
-    <Link href={props.href}>
+    <Link href={props.href as Route}>
       <Hash className="ml-1 inline-block" size={14} />
       {children}
     </Link>

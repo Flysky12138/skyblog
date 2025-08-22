@@ -18,12 +18,12 @@ import { PostCatalogue, PostCatalogueHeading } from './_components/post-catalogu
 import { PostInfo } from './_components/post-info'
 import { ResizeButton } from './_components/resize-button'
 
-export const generateStaticParams = async (): Promise<Awaited<PageProps['params']>[]> => {
+export const generateStaticParams = async (): Promise<Awaited<PageProps<'/posts/[id]'>['params']>[]> => {
   const posts = await prisma.post.findMany({ select: { id: true }, where: POST_WHERE_INPUT })
   return posts.map(post => ({ id: post.id }))
 }
 
-export const generateMetadata = async ({ params }: PageProps): Promise<Metadata> => {
+export const generateMetadata = async ({ params }: PageProps<'/posts/[id]'>): Promise<Metadata> => {
   const { id } = await params
   const post = await getPost(id)
   if (!post) return {}
@@ -47,9 +47,7 @@ const getPost = async (id: string) => {
   })
 }
 
-interface PageProps extends DynamicRouteProps<{ id: string }> {}
-
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params }: PageProps<'/posts/[id]'>) {
   const { id } = await params
 
   const post = await getPost(id)

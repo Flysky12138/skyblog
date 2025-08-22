@@ -31,7 +31,7 @@ const dbGet = async (id: string, data: Prisma.VisitorLogCreateInput) => {
   })
 }
 
-export const GET = async (request: NextRequest, { params }: DynamicRouteProps<{ id: string }>) => {
+export const GET = async (request: NextRequest, { params }: RouteContext<'/api/clash/[id]'>) => {
   try {
     const { id } = await params
 

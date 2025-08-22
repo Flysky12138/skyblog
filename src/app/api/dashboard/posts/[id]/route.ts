@@ -18,7 +18,7 @@ export type GET = RouteHandlerType<{
   return: Prisma.PromiseReturnType<typeof dbGet>
 }>
 
-export const GET = async (request: NextRequest, { params }: DynamicRouteProps<{ id: string }>) => {
+export const GET = async (request: NextRequest, { params }: RouteContext<'/api/dashboard/posts/[id]'>) => {
   try {
     const { id } = await params
 
@@ -70,7 +70,7 @@ export type POST = RouteHandlerType<{
   return: Prisma.PromiseReturnType<typeof dbPost>
 }>
 
-export const POST = async (request: NextRequest, { params }: DynamicRouteProps<{ id: string }>) => {
+export const POST = async (request: NextRequest, { params }: RouteContext<'/api/dashboard/posts/[id]'>) => {
   try {
     const { id } = await params
 
@@ -127,7 +127,7 @@ export type PUT = RouteHandlerType<{
   return: Prisma.PromiseReturnType<typeof dbPut>
 }>
 
-export const PUT = async (request: NextRequest, { params }: DynamicRouteProps<{ id: string }>) => {
+export const PUT = async (request: NextRequest, { params }: RouteContext<'/api/dashboard/posts/[id]'>) => {
   try {
     const { id } = await params
 
@@ -157,7 +157,7 @@ export type PATCH = RouteHandlerType<{
   return: Prisma.PromiseReturnType<typeof dbPatch>
 }>
 
-export const PATCH = async (request: NextRequest, { params }: DynamicRouteProps<{ id: string }>) => {
+export const PATCH = async (request: NextRequest, { params }: RouteContext<'/api/dashboard/posts/[id]'>) => {
   try {
     const { id } = await params
 
@@ -184,7 +184,7 @@ export type DELETE = RouteHandlerType<{
   return: Prisma.PromiseReturnType<typeof dbDelete>
 }>
 
-export const DELETE = async (request: NextRequest, { params }: DynamicRouteProps<{ id: string }>) => {
+export const DELETE = async (request: NextRequest, { params }: RouteContext<'/api/dashboard/posts/[id]'>) => {
   try {
     const { id } = await params
 

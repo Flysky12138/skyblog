@@ -21,10 +21,10 @@ interface PostDetailProps {
 }
 
 export const PostDetail = ({ children, value: post, onChange: setPost }: PostDetailProps) => {
-  const { data: categories } = useSWR('0e6f0c70-c012-5c78-86b3-8ad4104132c2', () => CustomRequest('GET api/dashboard/posts/categories', {}), {
+  const { data: categories } = useSWR('0e6f0c70-c012-5c78-86b3-8ad4104132c2', () => CustomRequest('GET /api/dashboard/posts/categories', {}), {
     fallbackData: []
   })
-  const { data: tags } = useSWR('a6f64593-cfc1-5feb-b5e7-37e15b3e67e0', () => CustomRequest('GET api/dashboard/posts/tags', {}), {
+  const { data: tags } = useSWR('a6f64593-cfc1-5feb-b5e7-37e15b3e67e0', () => CustomRequest('GET /api/dashboard/posts/tags', {}), {
     fallbackData: []
   })
 
