@@ -1,4 +1,5 @@
 import { Card } from '@/components/layout/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 
 export default function Loading() {
@@ -9,9 +10,9 @@ export default function Loading() {
         'md:hidden': index == 0
       })}
     >
-      <div className="skeleton h-7 w-60 rounded-md" />
-      <div className="skeleton h-5 w-40 rounded-md" />
-      <div className="skeleton h-5 w-full max-w-sm rounded-md" />
+      <Skeleton className="h-7 w-60" />
+      <Skeleton className="h-5 w-40" />
+      <Skeleton className="h-5 w-full max-w-sm" />
     </Card>
   ))
 }

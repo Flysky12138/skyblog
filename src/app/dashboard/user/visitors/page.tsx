@@ -13,13 +13,14 @@ import { Pagination } from '@/components/pagination'
 import { Table, TableActionButton } from '@/components/table'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-custom/dialog'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { CustomRequest } from '@/lib/http/request'
 import { formatISOTime } from '@/lib/parser/time'
 import { Toast } from '@/lib/toast'
 
 const MDXClient = dynamic(() => import('@/components/mdx/client').then(it => it.MDXClient), {
   ssr: false,
-  loading: () => <div className="skeleton h-50 rounded-md" />
+  loading: () => <Skeleton className="h-50" />
 })
 
 export default function Page() {

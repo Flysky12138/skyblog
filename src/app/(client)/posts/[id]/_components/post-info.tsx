@@ -7,6 +7,7 @@ import { useSessionStorage, useTimeoutFn } from 'react-use'
 import useSWR from 'swr'
 
 import { GET } from '@/app/api/post/info/route'
+import { Skeleton } from '@/components/ui/skeleton'
 import { SESSIONSTORAGE } from '@/lib/constants'
 import { CustomRequest } from '@/lib/http/request'
 import { formatISOTime2 } from '@/lib/parser/time'
@@ -37,7 +38,7 @@ export const PostInfo = ({ defaultValue, id }: PostInfoProps) => {
   }, 5 * 1000)
 
   if (!post) {
-    return <span className="skeleton block h-5.25 w-60 rounded-md" />
+    return <Skeleton className="h-5.25 w-60" />
   }
 
   return (

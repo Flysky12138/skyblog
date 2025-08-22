@@ -56,13 +56,13 @@ export const markdownConfig: LanguageConfig = {
         }
 
         // 自定义组建提示
-        const suggestField = (payload: { detail: string; key: string; value: string[] }[]) => ({
-          suggestions: payload.map(({ detail, key, value }) => ({
+        const suggestField = (payload: { detail: string; label: string; value: string[] }[]) => ({
+          suggestions: payload.map(({ detail, label, value }) => ({
             detail,
             insertText: value.join('\n'),
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             kind: monaco.languages.CompletionItemKind.Field,
-            label: key,
+            label,
             range
           }))
         })
@@ -70,11 +70,10 @@ export const markdownConfig: LanguageConfig = {
           return suggestField([
             {
               detail: '选项卡',
-              key: 'tabs',
+              label: 'tabs',
               value: ['::::tabs', '::tabtrigger[$1]', ':::tabscontent', '$2', ':::', '::', '::::']
             },
-            { detail: 'MDX 页面', key: 'mdx', value: ['::mdx{path=$0}'] },
-            { detail: '警告', key: 'alert', value: [':::alert{title="$1"}', '$2', ':::'] }
+            { detail: '警告', label: 'alert', value: [':::alert{title="$1"}', '$2', ':::'] }
           ])
         }
 

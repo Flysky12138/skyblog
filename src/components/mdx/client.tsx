@@ -15,7 +15,7 @@ interface MDXClientProps {
   source?: string
 }
 
-const MDXClient_ = ({ source = '' }: MDXClientProps) => {
+export const MDXClient = React.memo(({ source = '' }: MDXClientProps) => {
   const [{ content, error }, setEvaluateResult] = useImmer<Partial<EvaluateResult>>({})
   const isFirstRender = React.useRef(true)
 
@@ -36,6 +36,6 @@ const MDXClient_ = ({ source = '' }: MDXClientProps) => {
   if (!content) return <div className="flex h-20 items-center justify-center text-xl">无内容</div>
 
   return content
-}
+})
 
-export const MDXClient = React.memo(MDXClient_)
+MDXClient.displayName = 'MDXClient'

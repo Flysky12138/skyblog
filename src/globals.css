@@ -23,7 +23,6 @@
   --link-foreground: var(--color-sky-500);
   --subtitle-foreground: oklch(0.48 0.02 251.08);
   --sheet: --alpha(var(--color-slate-200) / 30%);
-  --skeleton: var(--color-zinc-300);
   --code: --alpha(var(--color-teal-100) / 30%);
   --code-foreground: var(--color-teal-600);
 }
@@ -37,7 +36,6 @@
   --link-foreground: var(--color-sky-500);
   --subtitle-foreground: oklch(0.72 0.01 248.12);
   --sheet: --alpha(var(--color-zinc-700) / 30%);
-  --skeleton: var(--color-zinc-700);
   --code: --alpha(var(--color-teal-800) / 30%);
   --code-foreground: var(--color-teal-300);
 }
@@ -65,7 +63,6 @@
   --color-link-foreground: var(--link-foreground);
   --color-subtitle-foreground: var(--subtitle-foreground);
   --color-sheet: var(--sheet);
-  --color-skeleton: var(--skeleton);
   --color-code: var(--code);
   --color-code-foreground: var(--code-foreground);
 }

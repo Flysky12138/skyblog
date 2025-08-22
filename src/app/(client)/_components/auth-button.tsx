@@ -5,12 +5,13 @@ import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 export const AuthButton = () => {
   const session = useSession()
 
-  if (session.status == 'loading') return <span className="skeleton size-9 rounded-md" />
+  if (session.status == 'loading') return <Skeleton className="size-9" />
 
   if (session.status != 'authenticated') {
     return (

@@ -6,10 +6,6 @@
   -ms-overflow-style: none;
 }
 
-@utility skeleton {
-  @apply animate-pulse bg-skeleton/30! backdrop-blur;
-}
-
 @utility gap-card {
   @apply gap-3 sm:gap-4 md:gap-6;
 }

@@ -6,6 +6,7 @@ import { useToggle } from 'react-use'
 import { useImmer } from 'use-immer'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Card } from '@/components/layout/card'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui-custom/dialog'
 import { Alert, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -18,6 +19,7 @@ import ChudnovskyBs_ from './chudnovsky-bs.mdx'
 import ChudnovskyCode_ from './chudnovsky-code.mdx'
 import Chudnovsky_ from './chudnovsky.mdx'
 import { Print } from './print'
+import '@/components/mdx/css/index'
 
 const Arctan = React.memo(Arctan_)
 const ChudnovskyBsCode = React.memo(ChudnovskyBsCode_)
@@ -33,7 +35,7 @@ const OPTIONS: Record<ModeType, number[]> = {
   'chudnovsky-bs': [1e4, 1e5, 1e6, 5e6, 1e7, 3e7, 5e7, 7e7]
 }
 
-export default function Pi() {
+export default function Page() {
   const [form, setForm] = useImmer<{ mode: ModeType; size: number }>({
     mode: 'chudnovsky-bs',
     size: 1e4
@@ -56,7 +58,7 @@ export default function Pi() {
   }, [loadingToggle])
 
   return (
-    <div className="flex flex-col gap-3">
+    <Card className="p-card flex flex-col gap-3">
       <div className="flex flex-wrap gap-4">
         <Select
           defaultValue={form.mode}
@@ -148,11 +150,11 @@ export default function Pi() {
           />
         </DisplayByConditional>
       )}
-      <div className="mt-2" data-slot="content">
+      <article className="mt-5 max-w-none">
         {form.mode == 'arctan' && <Arctan />}
         {form.mode == 'chudnovsky' && <Chudnovsky />}
         {form.mode == 'chudnovsky-bs' && <ChudnovskyBs />}
-      </div>
-    </div>
+      </article>
+    </Card>
   )
 }

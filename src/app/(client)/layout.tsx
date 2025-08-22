@@ -1,3 +1,4 @@
+import { ToolCase } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -7,6 +8,8 @@ import { Container } from '@/components/layout/container'
 import { Header } from '@/components/layout/header'
 import { Logo } from '@/components/layout/logo'
 import { ScrollToTop } from '@/components/scroll-to-top'
+import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Live2DContent, Live2DProvider, Live2DToggleButton } from '@/providers/live2d'
 import { ThemeToggleButton } from '@/providers/theme'
 
@@ -24,12 +27,17 @@ export default function Layout({ children }: React.PropsWithChildren) {
           <DisplayByBreakPoint max="sm">
             <ScrollToTop showOnScrollYOverflow={500} variant="outline" />
           </DisplayByBreakPoint>
-          {/* <Button asChild aria-label="tools" size="icon" variant="outline">
-            <Link href="/tools">
-              <ToolCase />
-            </Link>
-          </Button>
-          <hr className="bg-divide h-4 w-0.5 rounded-full" /> */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button asChild aria-label="toolbox" size="icon" variant="outline">
+                <Link href="/toolbox">
+                  <ToolCase />
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>工具箱</TooltipContent>
+          </Tooltip>
+          <hr className="bg-divide h-4 w-0.5 rounded-full" />
           <Live2DToggleButton />
           <ThemeToggleButton />
           <AuthButton />

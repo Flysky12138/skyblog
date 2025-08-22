@@ -13,14 +13,14 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
-import { cn } from '@/lib/utils'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export const NavUser = () => {
   const { isMobile, open } = useSidebar()
   const session = useSession()
 
   if (session.status == 'loading' || !session.data?.user) {
-    return <div className={cn('skeleton rounded-md', open ? 'h-12' : 'h-8')} />
+    return <Skeleton className={open ? 'h-12' : 'h-8'} />
   }
 
   const { email, image, name } = session.data.user

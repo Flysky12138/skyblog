@@ -126,7 +126,7 @@ export const Live2DToggleButton = () => {
   )
 }
 
-const Live2DContent_ = () => {
+const Live2D = () => {
   const [model, setModel] = React.useState<Live2DModel>()
   const { enable, loading, message, setEnable, setLoading, src } = useLive2DContext()
 
@@ -225,7 +225,7 @@ const Live2DContent_ = () => {
 export const Live2DContent = () => {
   return (
     <Live2DBreakpoint>
-      <Live2DContent_ />
+      <Live2D />
     </Live2DBreakpoint>
   )
 }

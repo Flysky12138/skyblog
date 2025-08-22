@@ -8,11 +8,11 @@ import { DisplayByConditional } from '@/components/display/display-by-conditiona
 import { Card } from '@/components/layout/card'
 import { MDXPickHeading } from '@/components/mdx/pick-heading'
 import { MDXServer } from '@/components/mdx/server'
+import { SelectionCopy } from '@/components/selection-copy'
 import { Button } from '@/components/ui/button'
 import { ATTRIBUTE, POST_CARD_DISPLAY } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
 
-import { SelectionCopy } from '../../../../components/selection-copy'
 import { POST_WHERE_INPUT } from '../utils'
 import { PostCatalogue, PostCatalogueHeading } from './_components/post-catalogue'
 import { PostInfo } from './_components/post-info'
