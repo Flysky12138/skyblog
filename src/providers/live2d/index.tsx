@@ -16,7 +16,7 @@ import { CustomRequest } from '@/lib/http/request'
 import { cn } from '@/lib/utils'
 import { get } from '@/server/edge-config'
 
-import styles from './live2d.module.css'
+import styles from './index.module.css'
 import { initGlobalScript, loadModelSync, PADDING } from './utils'
 
 interface Live2DContextProps {

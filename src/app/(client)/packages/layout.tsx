@@ -1,10 +1,8 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: {
-    default: '工具箱',
-    template: '%s | 工具箱'
-  }
+  description: '本项目使用到的依赖库',
+  title: '依赖'
 }
 
 export default function Layout({ children }: React.PropsWithChildren) {

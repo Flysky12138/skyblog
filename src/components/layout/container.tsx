@@ -23,5 +23,12 @@ interface ContainerProps extends SlotProps, VariantProps<typeof toggleVariants> 
 export const Container = ({ asChild, className, variant, ...props }: ContainerProps) => {
   const Comp = asChild ? Root : 'section'
 
-  return <Comp aria-label="container" className={cn('container mx-auto max-w-7xl', toggleVariants({ variant }), className)} {...props} />
+  return (
+    <Comp
+      aria-label="container"
+      className={cn('container mx-auto max-w-7xl', toggleVariants({ variant }), className)}
+      data-slot="container"
+      {...props}
+    />
+  )
 }

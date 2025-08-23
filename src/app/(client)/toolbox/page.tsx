@@ -42,19 +42,21 @@ export default function Page() {
       {ToolGroup.map(group => (
         <div key={group.title}>
           <h2 className="font-title text-xl font-medium">{group.title}</h2>
-          <div className="gap-card mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+          <ul className="gap-card mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             {group.children.map(child => (
-              <Card key={child.label} asChild className="p-card flex gap-4">
-                <Link href={child.href as Route}>
-                  <Avatar border shadow size={55} style="shape" value={child.label} />
-                  <div className="space-y-1">
-                    <h3 className="text-lg">{child.label}</h3>
-                    <h4 className="text-sm">{child.description}</h4>
-                  </div>
-                </Link>
-              </Card>
+              <li key={child.label}>
+                <Card asChild className="p-card flex gap-4">
+                  <Link href={child.href as Route}>
+                    <Avatar border shadow size={55} style="shape" value={child.label} />
+                    <div className="space-y-1">
+                      <h3 className="text-lg">{child.label}</h3>
+                      <h4 className="text-subtitle-foreground text-sm">{child.description}</h4>
+                    </div>
+                  </Link>
+                </Card>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       ))}
     </div>

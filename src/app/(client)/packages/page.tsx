@@ -9,9 +9,9 @@ export default async function Page() {
   ]
 
   return (
-    <div className="space-y-8">
+    <>
       {dataSource.map(item => (
-        <div key={item.label} className="space-y-3">
+        <div key={item.label} className="space-y-3 pt-[inherit] first:pt-0">
           <h2
             dangerouslySetInnerHTML={{
               __html: makeBadge({
@@ -43,7 +43,7 @@ export default async function Page() {
           />
         </div>
       ))}
-    </div>
+    </>
   )
 }
 

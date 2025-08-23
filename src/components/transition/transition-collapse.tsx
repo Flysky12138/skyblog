@@ -21,6 +21,7 @@ export const TransitionCollapse = ({ orientation = 'vertical', ...props }: Trans
       variants={{
         'horizontal-animate': {
           opacity: 1,
+          overflow: 'visible',
           width: 'auto'
         },
         'horizontal-initial': {
@@ -29,7 +30,8 @@ export const TransitionCollapse = ({ orientation = 'vertical', ...props }: Trans
         },
         'vertical-animate': {
           height: 'auto',
-          opacity: 1
+          opacity: 1,
+          overflow: 'visible'
         },
         'vertical-initial': {
           height: 0,

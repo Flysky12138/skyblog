@@ -192,7 +192,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={40}>
-          <ScrollArea className="h-full *:data-[slot='scroll-area-viewport']:*:block!">
+          <ScrollArea className="h-full *:data-[slot=scroll-area-viewport]:*:block!">
             <ErrorBoundary
               errorComponent={props => (
                 <div className="flex justify-center p-5">

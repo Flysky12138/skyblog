@@ -43,7 +43,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
           <AuthButton />
         </Container>
       </Header>
-      <main className="border-divide bg-root z-main relative mt-(--height-header) mb-(--height-footer) min-h-[calc(100dvh-var(--height-header))] border-b">
+      <main className="border-divide bg-root z-main min-h-main relative mt-(--height-header) mb-(--height-footer) border-b">
         <Container className="py-5 sm:py-7 md:py-9">{children}</Container>
         {/* <DisplayByBreakPoint min="md">
           <RibbonCanvas />
