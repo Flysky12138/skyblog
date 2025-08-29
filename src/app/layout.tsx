@@ -33,7 +33,7 @@ const title = ZCOOL_KuaiLe({
   weight: '400'
 })
 const code = Cascadia_Code({
-  subsets: ['arabic', 'braille', 'cyrillic', 'cyrillic-ext', 'greek', 'hebrew', 'latin', 'latin-ext', 'symbols2', 'vietnamese'],
+  subsets: ['latin'],
   variable: '--font-code',
   weight: '400'
 })

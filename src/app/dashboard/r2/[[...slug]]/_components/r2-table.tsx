@@ -56,12 +56,8 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
 
   const path = decodeURIComponent(paths?.length ? `/${paths.join('/')}/` : '/') as FilePathType
 
-  const { data, isLoading, mutate } = useSWR(
-    ['3e7d7b49-e149-57c5-9e16-4396344fc8e9', path],
-    () => R2.list(path == '/' ? '' : (path.slice(1) as EndsWith<'/'>)),
-    {
-      keepPreviousData: true
-    }
+  const { data, isLoading, mutate } = useSWR(['0198eb99-6327-72b5-8a08-6629db4b7a53', path], () =>
+    R2.list(path == '/' ? '' : (path.slice(1) as EndsWith<'/'>))
   )
 
   const isEmpty = data?.files.length == 0 && data?.folders.length == 0

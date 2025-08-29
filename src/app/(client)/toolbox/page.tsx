@@ -17,6 +17,16 @@ const ToolGroup: ToolGroup[] = [
   {
     children: [
       {
+        description: '共享会员，下载网易云音乐歌曲',
+        href: '/toolbox/netease-cloud-music',
+        label: '网易云音乐'
+      }
+    ],
+    title: '工具'
+  },
+  {
+    children: [
+      {
         description: 'ECharts 在线编辑预览，带类型提示',
         href: '/toolbox/echarts',
         label: 'ECharts'

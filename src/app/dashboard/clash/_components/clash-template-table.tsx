@@ -11,7 +11,7 @@ import { Toast } from '@/lib/toast'
 
 import { ClashTemplateDetail } from './clash-template-detail'
 
-export const SWR_KEY_CLASH_TEMPLATES = '5139cbc3-691c-54b6-8657-5a02ae60f58f'
+export const SWR_KEY_CLASH_TEMPLATES = '0198eb97-f705-777e-a134-9073d575c7b5'
 
 export const ClashTemplateTable = () => {
   const { data, isLoading, mutate } = useSWR(SWR_KEY_CLASH_TEMPLATES, () => CustomRequest('GET /api/dashboard/clash/template', {}), {

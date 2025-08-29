@@ -13,17 +13,17 @@ type Rules = Required<ExtractConfig<InfiniteDepthConfigWithExtends>>['rules']
 /**
  * @see https://eslint.org.cn/docs/latest/rules
  */
-const eslintRules = {
+const eslintRules: Rules = {
   // 使用函数表达式而不是函数声明
   'func-style': ['error', 'expression'],
   // 要求使用箭头函数进行回调
   'prefer-arrow-callback': 'error'
-} satisfies Rules
+}
 
 /**
  * @see https://typescript-eslint.io/rules
  */
-const tseslintRules = {
+const tseslintRules: Rules = {
   '@typescript-eslint/ban-ts-comment': 'off',
   '@typescript-eslint/no-empty-object-type': 'off',
   '@typescript-eslint/no-explicit-any': 'off',
@@ -38,9 +38,9 @@ const tseslintRules = {
       vars: 'all'
     }
   ]
-} satisfies Rules
+}
 
-const sortRulesEntry = [
+const sortRulesEntry: RuleEntry = [
   'error',
   {
     customGroups: [{ elementNamePattern: '^on[A-Z]', groupName: 'onEvent', selector: 'property' }],
@@ -48,23 +48,23 @@ const sortRulesEntry = [
     order: 'asc',
     type: 'natural'
   }
-] satisfies RuleEntry
+]
 
 /**
  * @see https://perfectionist.dev/rules
  */
-const perfectionistRules = {
+const perfectionistRules: Rules = {
   'perfectionist/sort-interfaces': sortRulesEntry,
   // 关闭，使用 react/jsx-sort-props 规则
   'perfectionist/sort-jsx-props': 'off',
   'perfectionist/sort-object-types': sortRulesEntry,
   'perfectionist/sort-objects': sortRulesEntry
-} satisfies Rules
+}
 
 /**
  * @see https://github.com/jsx-eslint/eslint-plugin-react
  */
-const reactRules = {
+const reactRules: Rules = {
   // 强制 props、state 和 context 使用解构赋值
   'react/destructuring-assignment': ['error', 'always'],
   // 强制 useState 钩子值和 setter 变量的解构和对称命名
@@ -84,22 +84,22 @@ const reactRules = {
   'react/no-unknown-property': 'off',
   // 不允许没有子组件的组件使用额外的结束标签
   'react/self-closing-comp': ['error', { component: true, html: true }]
-} satisfies Rules
+}
 
 /**
  * @see https://www.npmjs.com/package/eslint-plugin-react-hooks
  */
-const reactHooksRules = {
+const reactHooksRules: Rules = {
   'react-hooks/exhaustive-deps': 'error',
   'react-hooks/rules-of-hooks': 'error'
-} satisfies Rules
+}
 
 /**
  * @see https://github.com/sweepline/eslint-plugin-unused-imports?tab=readme-ov-file#usage
  */
-const unusedImportsRules = {
+const unusedImportsRules: Rules = {
   'unused-imports/no-unused-imports': 'error'
-} satisfies Rules
+}
 
 export default tseslint.config(
   {
@@ -119,12 +119,7 @@ export default tseslint.config(
   eslintPluginReact.configs.flat['jsx-runtime'],
   // 自定义规则
   {
-    ignores: [
-      '**/*.d.ts',
-      '*.config.ts',
-      'src/app/**/{layout,page,loading,not-found,global-error,error,robots,sitemap,manifest}.{js,ts,tsx}',
-      'src/mdx/**/*.tsx'
-    ],
+    ignores: ['**/*.d.ts', '*.config.ts', 'src/app/**/{layout,page,loading,not-found,global-error,error,robots,sitemap,manifest}.{js,ts,tsx}'],
     rules: {
       // 禁止默认导出
       'no-restricted-exports': [

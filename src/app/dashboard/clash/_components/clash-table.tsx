@@ -17,7 +17,7 @@ import { ClashDetail } from './clash-detail'
 export const ClashTable = () => {
   const [{}, copy] = useCopyToClipboard()
 
-  const { data, isLoading, mutate } = useSWR('c6ecc968-aa0c-5542-93ae-ab8ad27907a4', () => CustomRequest('GET /api/dashboard/clash', {}), {
+  const { data, isLoading, mutate } = useSWR('0198eb98-3acc-70ab-82f3-14d5ca929785', () => CustomRequest('GET /api/dashboard/clash', {}), {
     fallbackData: [],
     refreshInterval: 10 * 1000
   })

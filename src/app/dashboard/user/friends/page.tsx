@@ -27,7 +27,7 @@ import { FriendDetail } from './_components/friend-detail'
 
 export default function Page() {
   const { data: friends, mutate: setFriends } = useSWR(
-    '127b5c9e-fe2e-5d0a-90d1-89229101ee85',
+    '0198eb99-caec-75cc-a4de-05dfa95cc14a',
     () => CustomRequest('GET /api/dashboard/user/friends', {}),
     {
       fallbackData: []

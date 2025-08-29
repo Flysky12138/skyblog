@@ -1,4 +1,4 @@
-import { isBrowser } from 'es-toolkit'
+import { cloneDeep, isBrowser } from 'es-toolkit'
 import { toast } from 'sonner'
 
 import { HEADER } from '../constants'
@@ -49,7 +49,7 @@ const Core = async (promise: () => Promise<Response>) => {
  * 封装的基础请求方法
  */
 export const CustomFetch = async <T = any>(input: RequestInfo | URL, { body, headers = {}, ...init }: FetchOptions = {}): Promise<T> => {
-  headers = Object.assign({}, headers) // 避免修改原对象
+  headers = cloneDeep(headers) // 避免修改原对象
 
   if (!(body instanceof FormData)) {
     if (!headers['Content-Type']) {

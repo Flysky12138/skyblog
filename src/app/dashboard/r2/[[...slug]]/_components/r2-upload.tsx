@@ -22,7 +22,7 @@ import { cn } from '@/lib/utils'
 import { R2Table } from './r2-table'
 
 interface R2UploadProps extends React.PropsWithChildren {
-  path: FilePathType & {}
+  path: FilePathType
   onFinished?: () => void
   onSubmit?: (payload: R2.FileInfo) => void
 }

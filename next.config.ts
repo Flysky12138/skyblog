@@ -13,7 +13,8 @@ const cspSrc = [process.env.NEXT_PUBLIC_R2_URL, process.env.NEXT_PUBLIC_S3_API.r
   .join(' ')
 const cspHeader = [
   "default-src 'self'",
-  `img-src 'self' blob: data: ${cspSrc}`,
+  `img-src 'self' blob: data: ${cspSrc} *.music.126.net`,
+  `media-src 'self' ${cspSrc} *.music.126.net`,
   `connect-src 'self' blob: data: ${cspSrc}`,
   "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
   "style-src 'self' 'unsafe-inline'",
@@ -50,9 +51,10 @@ const headers: NextConfig['headers'] = async () => [
 ]
 
 const images: NextConfig['images'] = {
-  remotePatterns: [new URL('https://raw.githubusercontent.com')].concat(
-    [process.env.NEXT_PUBLIC_WEBSITE_URL, process.env.NEXT_PUBLIC_R2_URL].filter(Boolean).map(it => new URL(it))
-  )
+  formats: ['image/avif', 'image/webp'],
+  remotePatterns: ['https://raw.githubusercontent.com', process.env.NEXT_PUBLIC_WEBSITE_URL, process.env.NEXT_PUBLIC_R2_URL]
+    .filter(Boolean)
+    .map(item => new URL(item))
 }
 
 const redirects: NextConfig['redirects'] = async () => [
@@ -97,6 +99,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   redirects,
   rewrites,
+  serverExternalPackages: ['NeteaseCloudMusicApi'],
   typedRoutes: true,
   typescript: {
     ignoreBuildErrors: true

@@ -44,7 +44,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
         </Container>
       </Header>
       <main className="border-divide bg-root z-main min-h-main relative mt-(--height-header) mb-(--height-footer) border-b">
-        <Container className="py-5 sm:py-7 md:py-9">{children}</Container>
+        <Container className="py-(--py) [--py:1.25rem] sm:[--py:1.75rem] md:[--py:2.25rem]">{children}</Container>
         {/* <DisplayByBreakPoint min="md">
           <RibbonCanvas />
         </DisplayByBreakPoint> */}

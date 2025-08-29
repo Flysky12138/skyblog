@@ -13,7 +13,7 @@ type PickStartsWith<T, D extends string> = {
 type PratialPick<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 /** 美化对象的显示 */
-type Prettify<T> = { [K in keyof T]: T[K] } & {}
+type Prettify<T> = NonNullable<{ [K in keyof T]: T[K] }>
 
 /** 移除值为空对象的键 */
 type RemoveKeysByEmptyValue<T extends Record<string, object>> = {

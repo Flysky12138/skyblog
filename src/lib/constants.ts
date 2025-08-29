@@ -5,7 +5,10 @@ export const HEADER = {
 
 /** edge 对象 key */
 export const VERCEL_EDGE_CONFIG = {
-  LIVE2D_SRC: 'live2d-src'
+  /** live2d 直链 */
+  LIVE2D_SRC: 'live2d-src',
+  /** 网易云音乐 cookie */
+  NETEASE_CLOUD_MUSIC_COOKIE: 'netease-cloud-music-cookie'
 } as const
 
 /** 元素 attribute */

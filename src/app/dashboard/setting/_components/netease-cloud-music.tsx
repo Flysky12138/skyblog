@@ -1,54 +1,52 @@
 'use client'
 
+import { Label } from '@radix-ui/react-label'
 import React from 'react'
 import { useAsyncFn } from 'react-use'
 import useSWR from 'swr'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
 import { Toast } from '@/lib/toast'
 import { get, patch } from '@/server/edge-config'
 
-export const Live2D = () => {
+export const NeteaseCloudMusic = () => {
   const id = React.useId()
 
   const {
-    data: src,
+    data: cookie,
     isLoading,
-    mutate: setSrc
-  } = useSWR('0198eb99-8641-71ad-be7d-5ef3f52eda9b', () => get<string>(VERCEL_EDGE_CONFIG.LIVE2D_SRC), {
+    mutate: setCookie
+  } = useSWR('0198eb7d-3b40-742f-92ae-219524cbafa9', () => get<string>(VERCEL_EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE), {
     fallbackData: ''
   })
 
-  const [{ loading }, handleUpdate] = useAsyncFn(async src => {
-    await Toast(patch([{ key: VERCEL_EDGE_CONFIG.LIVE2D_SRC, operation: 'upsert', value: src }]), {
+  const [{ loading }, handleUpdate] = useAsyncFn(async cookie => {
+    await Toast(patch([{ key: VERCEL_EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE, operation: 'upsert', value: cookie }]), {
       success: '修改成功'
     })
   }, [])
 
   return (
     <div className="flex flex-col gap-2">
-      <Label htmlFor={id}>Live2D</Label>
+      <Label htmlFor={id}>网易云音乐</Label>
       <div className="flex gap-2">
         <Input
           className="text-ellipsis"
           disabled={isLoading || loading}
           id={id}
-          placeholder=".json or .zip"
-          value={src}
+          placeholder="网易云音乐 Cookie"
+          value={cookie}
           onChange={event => {
-            setSrc(event.target.value, {
-              revalidate: false
-            })
+            setCookie(event.target.value)
           }}
         />
         <Button
           className="w-40"
           disabled={isLoading || loading}
           onClick={() => {
-            handleUpdate(src)
+            handleUpdate(cookie)
           }}
         >
           修改
