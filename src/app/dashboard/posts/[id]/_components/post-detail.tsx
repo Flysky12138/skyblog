@@ -32,7 +32,7 @@ export const PostDetail = ({ children, value: post, onChange: setPost }: PostDet
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
-        side="left"
+        side="right"
         onCloseAutoFocus={event => {
           event.preventDefault()
         }}
