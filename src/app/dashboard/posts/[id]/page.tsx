@@ -61,6 +61,8 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   // 右侧窗口预览数据
   const [previewContent, setPreviewContent] = React.useState(post.content)
 
+  // 工具栏拖动限制区域引用
+  const dragConstraintsRef = React.useRef<HTMLDivElement>(null)
   // 编辑器引用
   const editorRef = React.useRef<MonacoEditorRef>(null)
   // 预览窗口引用
@@ -151,44 +153,44 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   }
 
   return (
-    <div className="flex h-screen">
+    <div ref={dragConstraintsRef} className="relative flex h-screen overflow-hidden">
       <style>{`main { padding: 0 !important }`}</style>
+      <EditorToolbar
+        className="absolute bottom-2 left-3/5 z-50 -translate-x-1/2"
+        disabled={{
+          format: isCompare,
+          save: isCreate ? !post.content : isEqual(post, oldPost.current)
+        }}
+        dragConstraints={dragConstraintsRef}
+        isCreate={isCreate}
+        post={post}
+        setPost={setPost}
+        onCompare={() => {
+          setIsCompare(prev => !prev)
+        }}
+        onCreate={handleCreate}
+        onFormat={() => {
+          editorRef.current?.format()
+        }}
+        onPreview={() => {
+          previewWindowRef.current = window.open(`/posts/${id}/preview`, '_blank')
+        }}
+        onUpdate={handleUpdate}
+      />
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={60}>
-          <div className="flex h-full flex-col">
-            <EditorToolbar
-              disabled={{
-                format: isCompare,
-                save: isCreate ? !post.content : isEqual(post, oldPost.current)
-              }}
-              isCreate={isCreate}
-              post={post}
-              setPost={setPost}
-              onCompare={() => {
-                setIsCompare(prev => !prev)
-              }}
-              onCreate={handleCreate}
-              onFormat={() => {
-                editorRef.current?.format()
-              }}
-              onPreview={() => {
-                previewWindowRef.current = window.open(`/posts/${id}/preview`, '_blank')
-              }}
-              onUpdate={handleUpdate}
-            />
-            <MonacoEditor
-              ref={editorRef}
-              code={post.content || ''}
-              diffMode={isCompare}
-              oldCode={oldCode.current}
-              onChange={value => {
-                setPost(state => {
-                  state.content = value || null
-                })
-              }}
-              {...markdownConfig}
-            />
-          </div>
+          <MonacoEditor
+            ref={editorRef}
+            code={post.content || ''}
+            diffMode={isCompare}
+            oldCode={oldCode.current}
+            onChange={value => {
+              setPost(state => {
+                state.content = value || null
+              })
+            }}
+            {...markdownConfig}
+          />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={40}>
@@ -200,7 +202,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
                 </div>
               )}
             >
-              <article className="bg-card min-h-screen max-w-none p-5">
+              <article className="bg-card min-h-screen max-w-none p-5 pb-[80vh]">
                 <MDXClient source={previewContent || ''} />
               </article>
             </ErrorBoundary>
