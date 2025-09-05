@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react'
 import { ErrorBoundary } from 'next/dist/client/components/error-boundary'
 import { useRouter } from 'next/navigation'
 import React from 'react'
-import { useAsync, useDebounce, useEvent } from 'react-use'
+import { useAsync, useDebounce, useEvent, useWindowSize } from 'react-use'
 import { toast } from 'sonner'
 import { useImmer } from 'use-immer'
 import { uuidv7 } from 'uuidv7'
@@ -47,12 +47,13 @@ const DEFAULT_POST: DefaultPostType = {
 export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   const router = useRouter()
   const session = useSession()
+  const { width } = useWindowSize()
 
   const { id } = React.use(params)
   const isCreate = id == 'new'
 
+  // 文章数据
   const [post, setPost] = useImmer(DEFAULT_POST)
-
   const oldPost = React.useRef(DEFAULT_POST)
   const oldCode = React.useRef('')
 
@@ -156,7 +157,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
     <div ref={dragConstraintsRef} className="relative flex h-screen overflow-hidden">
       <style>{`main { padding: 0 !important }`}</style>
       <EditorToolbar
-        className="absolute bottom-2 left-3/5 z-50 -translate-x-1/2"
+        className="absolute bottom-2 left-1/2 z-50 -translate-x-1/2"
         disabled={{
           format: isCompare,
           save: isCreate ? !post.content : isEqual(post, oldPost.current)
@@ -177,7 +178,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
         }}
         onUpdate={handleUpdate}
       />
-      <ResizablePanelGroup direction="horizontal">
+      <ResizablePanelGroup direction={width < 1200 ? 'vertical' : 'horizontal'}>
         <ResizablePanel defaultSize={60}>
           <MonacoEditor
             ref={editorRef}

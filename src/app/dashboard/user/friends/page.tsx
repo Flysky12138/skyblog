@@ -41,7 +41,9 @@ export default function Page() {
           <img
             alt={friend.name}
             className="absolute inset-0"
+            decoding="async"
             height={900}
+            loading="lazy"
             src={new URL(`/api/friends/${friend.id}/cover`, process.env.NEXT_PUBLIC_WEBSITE_URL).href}
             width={1600}
           />

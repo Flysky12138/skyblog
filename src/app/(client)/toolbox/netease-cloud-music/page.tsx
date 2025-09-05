@@ -2,7 +2,6 @@
 
 import { CirclePause, CirclePlay } from 'lucide-react'
 import dynamic from 'next/dynamic'
-import Image from 'next/image'
 import { useMemo } from 'react'
 import React from 'react'
 import { useMeasure } from 'react-use'
@@ -149,7 +148,7 @@ export default function Page() {
                           }
                         }}
                       >
-                        <Image unoptimized alt={song.al.name} height={36} src={song.al.picUrl + '?param=72y72'} width={36} />
+                        <img alt={song.al.name} decoding="async" height={36} loading="lazy" src={song.al.picUrl + '?param=72y72'} width={36} />
                         <div className="truncate">
                           <p className="truncate text-sm">{song.name}</p>
                           <p className="text-muted-foreground text-xs">

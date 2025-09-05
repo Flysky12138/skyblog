@@ -41,7 +41,7 @@ export const markdownConfig: LanguageConfig = {
 
         // 行内元素和代码块的语言提示
         const isInlineCode = /{:/.test(textUntilPosition)
-        const isBlockCode = /^`{3}/.test(textUntilPosition)
+        const isBlockCode = /^\s?`{3}/.test(textUntilPosition)
         if (isInlineCode || isBlockCode) {
           return {
             suggestions: grammars.map(({ displayName, name }) => ({

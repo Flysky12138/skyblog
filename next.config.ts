@@ -52,9 +52,7 @@ const headers: NextConfig['headers'] = async () => [
 
 const images: NextConfig['images'] = {
   formats: ['image/avif', 'image/webp'],
-  remotePatterns: ['https://raw.githubusercontent.com', process.env.NEXT_PUBLIC_WEBSITE_URL, process.env.NEXT_PUBLIC_R2_URL]
-    .filter(Boolean)
-    .map(item => new URL(item))
+  remotePatterns: [].filter(Boolean).map(item => new URL(item))
 }
 
 const redirects: NextConfig['redirects'] = async () => [

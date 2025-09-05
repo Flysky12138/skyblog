@@ -1,7 +1,6 @@
-'use cache'
-
 import { Octokit } from '@octokit/rest'
 import { Mail } from 'lucide-react'
+import { preload } from 'react-dom'
 
 import Github from '@/assets/svg/github.svg'
 import LeetCode from '@/assets/svg/leetcode.svg'
@@ -15,10 +14,11 @@ export const CardDeveloper = async () => {
   const octokit = new Octokit()
   const { data } = await octokit.users.getByUsername({ username: process.env.NEXT_PUBLIC_GITHUB_NAME })
 
+  preload(data.avatar_url.replace('https://', '/cdn/'), { as: 'image', fetchPriority: 'high' })
+
   return (
     <Card className="p-card flex flex-col items-center">
       <Avatar className="bg-secondary size-28 transition-transform duration-500 hover:rotate-[360deg] focus:rotate-[360deg]" tabIndex={-1}>
-        <link as="image" fetchPriority="high" href={data.avatar_url.replace('https://', '/cdn/')} rel="preload" type="image/png" />
         <AvatarImage alt={data.login} src={data.avatar_url.replace('https://', '/cdn/')} />
         <AvatarFallback />
       </Avatar>

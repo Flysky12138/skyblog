@@ -3,18 +3,19 @@
 import * as echarts from 'echarts'
 import { ECharts, EChartsCoreOption } from 'echarts'
 import React from 'react'
-import { useDebounce } from 'react-use'
+import { useDebounce, useWindowSize } from 'react-use'
 import { ModuleKind, ScriptTarget, transpile } from 'typescript'
-import { useImmer } from 'use-immer'
 
 import { MonacoEditor } from '@/components/monaco-editor'
 import { tsEchartsConfig } from '@/components/monaco-editor/languages/ts-echarts'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 
 export default function Page() {
-  const [code, setCode] = useImmer(DEFAULT_OPTION)
-
   const id = React.useId()
+  const { width } = useWindowSize()
+
+  const [code, setCode] = React.useState(DEFAULT_OPTION)
+
   const echartsRef = React.useRef<ECharts>(null)
 
   React.useEffect(() => {
@@ -24,7 +25,11 @@ export default function Page() {
     }
   }, [id])
 
-  useDebounce(() => echartsRef.current?.setOption(getOptions(code), true), 800, [code])
+  useDebounce(() => echartsRef.current?.setOption(getOptions(code), true, true), 800, [code])
+
+  React.useEffect(() => {
+    echartsRef.current?.resize()
+  }, [width])
 
   return (
     <div className="h-main bg-card">
@@ -38,7 +43,7 @@ export default function Page() {
         }
       `}</style>
       <ResizablePanelGroup
-        direction="horizontal"
+        direction={width < 1024 ? 'vertical' : 'horizontal'}
         onLayout={() => {
           echartsRef.current?.resize()
         }}
