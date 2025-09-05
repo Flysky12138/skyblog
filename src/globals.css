@@ -1,4 +1,5 @@
 @import url('@/assets/font/FZSJ-ZHUZAYTE/result.css');
+@import url('@/assets/font/NotoColorEmoji-Regular/result.css');
 
 @custom-variant dark (&:is(.dark, .dark *));
 @custom-variant light (&:is(.light, .light *));
@@ -46,8 +47,9 @@
   /* static variables */
   --font-root: 'FZSJ-ZHUZAYTE';
   --font-title: var(--font-title);
+  --font-emoji: 'Noto Color Emoji';
   --font-article: 'Microsoft Yahei', '微软雅黑';
-  --font-code: var(--font-code);
+  --font-code: var(--font-emoji), var(--font-code);
   --height-header: 3.125rem;
   --height-main: calc(100dvh - var(--height-header));
   --height-footer: 9.375rem;
