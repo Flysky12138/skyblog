@@ -29,7 +29,11 @@ export default function Page() {
   return (
     <div className="h-main bg-card">
       <style>{`
-        main [data-slot="container"] { padding: 0;
+        header {
+          z-index: calc(var(--z-index-main) - 1px);
+        }
+        main [data-slot="container"] { 
+          padding: 0;
           max-width: none;
         }
       `}</style>

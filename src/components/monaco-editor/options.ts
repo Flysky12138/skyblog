@@ -6,10 +6,14 @@ import { editor } from 'monaco-editor'
 export const monacoEditorDefaultOptions: editor.IStandaloneEditorConstructionOptions = {
   automaticLayout: true,
   contextmenu: false,
+  fixedOverflowWidgets: true,
   fontFamily: 'inherit',
   fontLigatures: false, // 连体字
   fontSize: 14,
   fontWeight: 'bold',
+  hover: {
+    above: true
+  },
   lineDecorationsWidth: 12,
   lineNumbersMinChars: 4,
   quickSuggestions: {
@@ -20,7 +24,7 @@ export const monacoEditorDefaultOptions: editor.IStandaloneEditorConstructionOpt
   renderLineHighlight: 'all',
   roundedSelection: true,
   scrollbar: {
-    alwaysConsumeMouseWheel: true // 默认值；滚动行为 preventDefault() & stopPropagation()
+    alwaysConsumeMouseWheel: true
   },
   scrollBeyondLastLine: true,
   smoothScrolling: true
