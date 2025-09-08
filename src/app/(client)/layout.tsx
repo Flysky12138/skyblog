@@ -10,6 +10,7 @@ import { Logo } from '@/components/layout/logo'
 import { ScrollToTop } from '@/components/scroll-to-top'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { ATTRIBUTE } from '@/lib/constants'
 import { Live2DContent, Live2DProvider, Live2DToggleButton } from '@/providers/live2d'
 import { ThemeToggleButton } from '@/providers/theme'
 
@@ -50,7 +51,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
         </DisplayByBreakPoint> */}
       </main>
       <nav className="z-nav fixed inset-x-0 bottom-[calc(var(--height-footer)+--spacing(12))]">
-        <Container className="flex h-0 flex-col items-end justify-end gap-3" variant="nav">
+        <Container className="flex h-0 flex-col items-end justify-end gap-3" id={ATTRIBUTE.ID.NAV_CONTAINER} variant="nav">
           <DisplayByBreakPoint min="sm">
             <ScrollToTop />
           </DisplayByBreakPoint>

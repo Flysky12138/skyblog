@@ -14,6 +14,7 @@ export const VERCEL_EDGE_CONFIG = {
 /** 元素 attribute */
 export const ATTRIBUTE = {
   ID: {
+    NAV_CONTAINER: 'nav-container',
     POST_CONTAINER: 'post-container'
   }
 } as const
