@@ -11,7 +11,7 @@ export const GET = async (request: NextRequest, { params }: RouteContext<'/api/f
   try {
     const { id } = await params
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 422)
+    if (!id) return CustomResponse.error('{id} 值缺失', 400)
 
     const friend = await prisma.friend.findUnique({ where: { id } })
     if (!friend) return CustomResponse.error('未找到资源', 404)

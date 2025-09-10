@@ -35,7 +35,7 @@ export const GET = async (request: NextRequest, { params }: RouteContext<'/api/c
   try {
     const { id } = await params
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 422)
+    if (!id) return CustomResponse.error('{id} 值缺失', 400)
 
     const ip = isDev() ? '0.0.0.0' : ipAddress(request)
     if (!ip) return CustomResponse.error('未知访问', 400)

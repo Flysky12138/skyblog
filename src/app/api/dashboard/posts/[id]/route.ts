@@ -22,7 +22,7 @@ export const GET = async (request: NextRequest, { params }: RouteContext<'/api/d
   try {
     const { id } = await params
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 422)
+    if (!id) return CustomResponse.error('{id} 值缺失', 400)
 
     const res = await dbGet(id)
 
@@ -74,7 +74,7 @@ export const POST = async (request: NextRequest, { params }: RouteContext<'/api/
   try {
     const { id } = await params
 
-    if (id != 'new') return CustomResponse.error("{id} 值不为 'new'", 422)
+    if (id != 'new') return CustomResponse.error("{id} 值不为 'new'", 400)
 
     const data = await request.json()
     const res = await dbPost(data)
@@ -131,7 +131,7 @@ export const PUT = async (request: NextRequest, { params }: RouteContext<'/api/d
   try {
     const { id } = await params
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 422)
+    if (!id) return CustomResponse.error('{id} 值缺失', 400)
 
     const data = await request.json()
     const res = await dbPut(id, data)
@@ -161,7 +161,7 @@ export const PATCH = async (request: NextRequest, { params }: RouteContext<'/api
   try {
     const { id } = await params
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 422)
+    if (!id) return CustomResponse.error('{id} 值缺失', 400)
 
     const data = await request.json()
     const res = await dbPatch(id, data)
@@ -188,7 +188,7 @@ export const DELETE = async (request: NextRequest, { params }: RouteContext<'/ap
   try {
     const { id } = await params
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 422)
+    if (!id) return CustomResponse.error('{id} 值缺失', 400)
 
     const res = await dbDelete(id)
 

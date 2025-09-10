@@ -28,7 +28,7 @@ export type POST = RouteHandlerType<{
 export const POST = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return CustomResponse.error('{id} 值缺失', 422)
+    if (!id) return CustomResponse.error('{id} 值缺失', 400)
 
     const res = await dbPost(id)
     return CustomResponse.encrypt(res)

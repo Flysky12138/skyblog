@@ -76,7 +76,7 @@ export type PUT = RouteHandlerType<{
 export const PUT = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return CustomResponse.error('{id} 值缺失', 422)
+    if (!id) return CustomResponse.error('{id} 值缺失', 400)
 
     const data = await request.json()
     const res = await dbPut(id, data)
@@ -101,7 +101,7 @@ export type DELETE = RouteHandlerType<{
 export const DELETE = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return CustomResponse.error('{id} 值缺失', 422)
+    if (!id) return CustomResponse.error('{id} 值缺失', 400)
 
     const res = await dbDelete(id)
 

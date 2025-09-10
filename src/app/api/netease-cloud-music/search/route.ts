@@ -64,7 +64,7 @@ export const GET = async (request: NextRequest) => {
     const page = Number.parseInt(request.nextUrl.searchParams.get('page') || '0')
     const type = Number.parseInt(request.nextUrl.searchParams.get('type') || '1') as 1
 
-    if (!keywords) return CustomResponse.error('{keywords} 值缺失', 422)
+    if (!keywords) return CustomResponse.error('{keywords} 值缺失', 400)
 
     const data = await cloudsearch({
       cookie: await get(VERCEL_EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE),
