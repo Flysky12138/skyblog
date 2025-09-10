@@ -33,7 +33,7 @@ export const Audio = ({ id, ref, onPausedChange }: AudioProps) => {
   )
 
   const [audio, { paused }, controls] = useAudio({
-    src,
+    src: src.replace('http:', 'https:'),
     onCanPlay: () => {
       controls.play()
     }

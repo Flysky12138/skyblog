@@ -44,7 +44,7 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
         const song = songs.find(song => song.id == id)
         const promise = async () => {
           const [{ md5, type, url }] = await CustomRequest('GET /api/netease-cloud-music/song/url', { search: { id, level } })
-          const blob = await fetch(url).then(res => res.blob())
+          const blob = await fetch(url.replace('http:', 'https:')).then(res => res.blob())
           // 保存文件
           const fileHandle = await dirHandle.getFileHandle(`${song?.name || md5}.${type}`, { create: true })
           const writable = await fileHandle.createWritable()
@@ -137,7 +137,14 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
                   }}
                 >
                   <Checkbox checked={selectedhas(song.id)} className="mx-1" />
-                  <img alt={song.al.name} decoding="async" height={36} loading="lazy" src={song.al.picUrl + '?param=72y72'} width={36} />
+                  <img
+                    alt={song.al.name}
+                    decoding="async"
+                    height={36}
+                    loading="lazy"
+                    src={song.al.picUrl.replace('http:', 'https:') + '?param=72y72'}
+                    width={36}
+                  />
                   <div className="truncate">
                     <p className="truncate text-sm">{song.name}</p>
                     <p className="text-muted-foreground text-xs">

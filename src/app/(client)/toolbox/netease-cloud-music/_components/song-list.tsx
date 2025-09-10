@@ -83,7 +83,14 @@ export const SongList = ({ hasMore, loadMoreRows, songs }: SongListProps) => {
                       }
                     }}
                   >
-                    <img alt={song.al.name} decoding="async" height={36} loading="lazy" src={song.al.picUrl + '?param=72y72'} width={36} />
+                    <img
+                      alt={song.al.name}
+                      decoding="async"
+                      height={36}
+                      loading="lazy"
+                      src={song.al.picUrl.replace('http:', 'https:') + '?param=72y72'}
+                      width={36}
+                    />
                     <div className="truncate">
                       <p className="truncate text-sm">{song.name}</p>
                       <p className="text-muted-foreground text-xs">
