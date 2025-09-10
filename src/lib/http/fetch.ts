@@ -1,10 +1,10 @@
-import { cloneDeep, isBrowser } from 'es-toolkit'
+import { cloneDeep, delay, isBrowser } from 'es-toolkit'
 import { toast } from 'sonner'
 
 import { HEADER } from '../constants'
 import { AesGcm } from '../crypto/aes-gcm'
 
-const Core = async (promise: () => Promise<Response>) => {
+const Core = async (promise: () => Promise<Response>, retry: number) => {
   try {
     const res = await promise()
 
@@ -33,6 +33,10 @@ const Core = async (promise: () => Promise<Response>) => {
     // blob
     return res.blob()
   } catch (error) {
+    if (retry > 0) {
+      await delay(200)
+      return Core(promise, retry - 1)
+    }
     console.error(error)
     const message = JSON.parse((error as Error).message)
     const formatMessage = typeof message == 'string' ? message : JSON.stringify(message, null, 2)
@@ -67,5 +71,5 @@ export const CustomFetch = async <T = any>(input: RequestInfo | URL, { body, hea
     }
   }
 
-  return Core(async () => await fetch(input, { body, headers, ...init }))
+  return Core(async () => await fetch(input, { body, headers, ...init }), 3)
 }
