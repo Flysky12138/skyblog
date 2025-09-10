@@ -6,7 +6,7 @@ import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
 
 const dbPost = async (data: Prisma.VisitorLogCreateInput) => {
-  return await prisma.visitorLog.create({ data })
+  return prisma.visitorLog.create({ data })
 }
 
 export const POST = async (request: NextRequest) => {

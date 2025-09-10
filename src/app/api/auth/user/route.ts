@@ -8,7 +8,7 @@ const dbPost = async (data: POST['body']) => {
   const count = await prisma.user.count()
   if (count == 0) data.role = 'ADMIN'
 
-  return await prisma.user.upsert({
+  return prisma.user.upsert({
     create: data,
     update: data,
     where: { email: data.email }
@@ -25,7 +25,7 @@ export const POST = async (request: NextRequest) => {
     const data = await request.json()
     const res = await dbPost(data)
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }

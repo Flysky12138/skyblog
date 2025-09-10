@@ -10,7 +10,7 @@ import { isDev } from '@/lib/utils'
 const dbGet = async (id: string, data: Prisma.VisitorLogCreateInput) => {
   const subscribeLastAt = new Date().toISOString()
 
-  return await prisma.clash.update({
+  return prisma.clash.update({
     data: {
       subscribeLastAt,
       visitorInfos: {
@@ -35,10 +35,10 @@ export const GET = async (request: NextRequest, { params }: RouteContext<'/api/c
   try {
     const { id } = await params
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const ip = isDev() ? '0.0.0.0' : ipAddress(request)
-    if (!ip) return CustomResponse.error('未知访问', 400)
+    if (!ip) return await CustomResponse.error('未知访问', 400)
 
     if (!request.headers.get('user-agent')?.toLowerCase().includes('clash')) {
       return NextResponse.redirect(new URL('/', request.url))

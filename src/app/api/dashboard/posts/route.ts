@@ -8,7 +8,7 @@ import { prisma } from '@/lib/prisma'
 import { include } from './prisma.config'
 
 const dbGet = async (payload: NonNullable<GET['search']>) => {
-  return await prisma.post.paginate(
+  return prisma.post.paginate(
     {
       orderBy: {
         updatedAt: 'desc'
@@ -38,7 +38,7 @@ export const GET = async (request: NextRequest) => {
     const limit = Number.parseInt(request.nextUrl.searchParams.get('limit') || '10')
 
     const res = await dbGet({ limit, page })
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }

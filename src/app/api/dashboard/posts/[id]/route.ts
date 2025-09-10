@@ -8,7 +8,7 @@ import { prisma } from '@/lib/prisma'
 import { include } from '../prisma.config'
 
 const dbGet = async (id: string) => {
-  return await prisma.post.findUnique({
+  return prisma.post.findUnique({
     include,
     where: { id }
   })
@@ -22,18 +22,18 @@ export const GET = async (request: NextRequest, { params }: RouteContext<'/api/d
   try {
     const { id } = await params
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const res = await dbGet(id)
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
 }
 
 const dbPost = async (data: POST['body']) => {
-  return await prisma.post.create({
+  return prisma.post.create({
     data: {
       author: {
         connect: {
@@ -74,14 +74,14 @@ export const POST = async (request: NextRequest, { params }: RouteContext<'/api/
   try {
     const { id } = await params
 
-    if (id != 'new') return CustomResponse.error("{id} 值不为 'new'", 400)
+    if (id != 'new') return await CustomResponse.error("{id} 值不为 'new'", 400)
 
     const data = await request.json()
     const res = await dbPost(data)
 
     CacheClear.post(res.id)
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
@@ -95,7 +95,7 @@ const dbPut = async (id: string, data: PUT['body']) => {
     },
     where: { id }
   })
-  return await prisma.post.update({
+  return prisma.post.update({
     data: {
       categories: {
         connectOrCreate: data.categories.map(name => ({
@@ -131,21 +131,21 @@ export const PUT = async (request: NextRequest, { params }: RouteContext<'/api/d
   try {
     const { id } = await params
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const data = await request.json()
     const res = await dbPut(id, data)
 
     CacheClear.post(id)
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
 }
 
 const dbPatch = async (id: string, data: PATCH['body']) => {
-  return await prisma.post.update({
+  return prisma.post.update({
     data,
     include,
     where: { id }
@@ -161,21 +161,21 @@ export const PATCH = async (request: NextRequest, { params }: RouteContext<'/api
   try {
     const { id } = await params
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const data = await request.json()
     const res = await dbPatch(id, data)
 
     CacheClear.post(id)
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
 }
 
 const dbDelete = async (id: string) => {
-  return await prisma.post.delete({
+  return prisma.post.delete({
     where: { id }
   })
 }
@@ -188,13 +188,13 @@ export const DELETE = async (request: NextRequest, { params }: RouteContext<'/ap
   try {
     const { id } = await params
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const res = await dbDelete(id)
 
     CacheClear.post(id)
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }

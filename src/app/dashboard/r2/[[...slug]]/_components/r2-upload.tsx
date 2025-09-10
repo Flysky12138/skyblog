@@ -52,7 +52,7 @@ export const R2Upload = ({ children, path, onFinished, onSubmit }: R2UploadProps
   }
 
   const [{ loading: isUploading }, handleUpload] = useAsyncFn(async () => {
-    return await promisePool(
+    return promisePool(
       Array.from(filelist.waiting).map(file => async () => {
         const Metadata = {}
         if (file.type.startsWith('image')) {

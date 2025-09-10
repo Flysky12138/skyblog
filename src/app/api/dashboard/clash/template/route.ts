@@ -18,7 +18,7 @@ const select = Prisma.validator<Prisma.ClashTemplateSelect>()({
 })
 
 const dbGet = async () => {
-  return await prisma.clashTemplate.findMany({
+  return prisma.clashTemplate.findMany({
     orderBy: { createdAt: 'desc' },
     select
   })
@@ -31,14 +31,14 @@ export type GET = RouteHandlerType<{
 export const GET = async () => {
   try {
     const res = await dbGet()
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
 }
 
 const dbPost = async (data: POST['body']) => {
-  return await prisma.clashTemplate.create({ data, select })
+  return prisma.clashTemplate.create({ data, select })
 }
 
 export type POST = RouteHandlerType<{
@@ -51,14 +51,14 @@ export const POST = async (request: NextRequest) => {
     const data = await request.json()
     const res = await dbPost(data)
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
 }
 
 const dbPut = async (id: string, data: PUT['body']) => {
-  return await prisma.clashTemplate.update({
+  return prisma.clashTemplate.update({
     data,
     select,
     where: { id }
@@ -76,19 +76,19 @@ export type PUT = RouteHandlerType<{
 export const PUT = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const data = await request.json()
     const res = await dbPut(id, data)
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
 }
 
 const dbDelete = async (id: string) => {
-  return await prisma.clashTemplate.delete({ select, where: { id } })
+  return prisma.clashTemplate.delete({ select, where: { id } })
 }
 
 export type DELETE = RouteHandlerType<{
@@ -101,11 +101,11 @@ export type DELETE = RouteHandlerType<{
 export const DELETE = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const res = await dbDelete(id)
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }

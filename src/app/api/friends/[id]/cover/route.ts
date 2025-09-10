@@ -11,10 +11,10 @@ export const GET = async (request: NextRequest, { params }: RouteContext<'/api/f
   try {
     const { id } = await params
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const friend = await prisma.friend.findUnique({ where: { id } })
-    if (!friend) return CustomResponse.error('未找到资源', 404)
+    if (!friend) return await CustomResponse.error('未找到资源', 404)
 
     browser = await puppeteer.connect({
       browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.TOKEN_BROWSERLESS}`,
@@ -33,7 +33,7 @@ export const GET = async (request: NextRequest, { params }: RouteContext<'/api/f
       }
     })
   } catch (error) {
-    return CustomResponse.error(error)
+    return await CustomResponse.error(error)
   } finally {
     await browser?.close()
   }

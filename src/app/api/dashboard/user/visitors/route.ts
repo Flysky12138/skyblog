@@ -6,7 +6,7 @@ import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
 
 const dbGet = async (payload: GET['search']) => {
-  return await prisma.visitorLog.paginate(
+  return prisma.visitorLog.paginate(
     {
       orderBy: {
         createdAt: 'desc'
@@ -27,14 +27,14 @@ export const GET = async (request: NextRequest) => {
     const limit = Number.parseInt(request.nextUrl.searchParams.get('limit') || '50')
 
     const res = await dbGet({ limit, page })
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
 }
 
 const dbDelete = async (payload: DELETE['body']) => {
-  return await prisma.visitorLog.deleteMany({
+  return prisma.visitorLog.deleteMany({
     where: {
       id: {
         in: payload.ids
@@ -55,7 +55,7 @@ export const DELETE = async (request: NextRequest) => {
     const { ids }: DELETE['body'] = await request.json()
 
     const res = await dbDelete({ ids })
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }

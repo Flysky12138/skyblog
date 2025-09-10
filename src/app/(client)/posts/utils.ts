@@ -10,7 +10,7 @@ export const POST_WHERE_INPUT: Prisma.PostWhereInput = {
 
 /** 文章查询 */
 export const getPosts = async (page: number, where: Prisma.PostWhereInput = {}) => {
-  return await prisma.post.paginate(
+  return prisma.post.paginate(
     {
       orderBy: [{ sticky: 'desc' }, { updatedAt: 'desc' }],
       select: {

@@ -21,17 +21,17 @@ const Core = async (promise: () => Promise<Response>, retry: number) => {
     if (!res.ok) throw new Error(`error code ${res.status}`)
 
     // text
-    if (contentType?.includes('text')) return res.text()
+    if (contentType?.includes('text')) return await res.text()
 
     // CustomResponse.encrypt 加密
     const ivJwk = res.headers.get(HEADER.AES_GCM_IVJWK)
     if (ivJwk && contentType?.includes('application/octet-stream')) {
       const buffer = await res.arrayBuffer()
-      return AesGcm.decrypt(buffer, ivJwk)
+      return await AesGcm.decrypt(buffer, ivJwk)
     }
 
     // blob
-    return res.blob()
+    return await res.blob()
   } catch (error) {
     if (retry > 0) {
       await delay(200)
@@ -71,5 +71,5 @@ export const CustomFetch = async <T = any>(input: RequestInfo | URL, { body, hea
     }
   }
 
-  return Core(async () => await fetch(input, { body, headers, ...init }), 3)
+  return Core(async () => fetch(input, { body, headers, ...init }), 3)
 }

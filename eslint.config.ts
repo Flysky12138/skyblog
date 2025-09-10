@@ -37,7 +37,8 @@ const tseslintRules: Rules = {
       destructuredArrayIgnorePattern: '.',
       vars: 'all'
     }
-  ]
+  ],
+  '@typescript-eslint/return-await': 'error'
 }
 
 const sortRulesEntry: RuleEntry = [
@@ -103,7 +104,7 @@ const unusedImportsRules: Rules = {
 
 export default tseslint.config(
   {
-    ignores: ['public/', '.next/', 'src/components/ui/', 'next-env.d.ts']
+    ignores: ['public/', '.next/', 'src/components/ui/', 'next-env.d.ts', '*.cjs']
   },
   // https://typescript-eslint.io/users/configs/#projects-without-type-checking
   tseslint.configs.recommended,
@@ -139,6 +140,9 @@ export default tseslint.config(
   {
     languageOptions: {
       ecmaVersion: 'latest',
+      parserOptions: {
+        projectService: true
+      },
       sourceType: 'module'
     },
     plugins: {
@@ -152,6 +156,11 @@ export default tseslint.config(
       ...reactRules,
       ...reactHooksRules,
       ...unusedImportsRules
+    },
+    settings: {
+      react: {
+        version: 'detect'
+      }
     }
   }
 )

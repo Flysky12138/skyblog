@@ -13,7 +13,7 @@ const include = Prisma.validator<Prisma.ClashInclude>()({
 })
 
 const dbGet = async () => {
-  return await prisma.clash.findMany({
+  return prisma.clash.findMany({
     include,
     orderBy: { createdAt: 'desc' }
   })
@@ -26,14 +26,14 @@ export type GET = RouteHandlerType<{
 export const GET = async () => {
   try {
     const res = await dbGet()
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
 }
 
 const dbPost = async (data: POST['body']) => {
-  return await prisma.clash.create({ data, include })
+  return prisma.clash.create({ data, include })
 }
 
 export type POST = RouteHandlerType<{
@@ -48,14 +48,14 @@ export const POST = async (request: NextRequest) => {
     const data = await request.json()
     const res = await dbPost(data)
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
 }
 
 const dbPut = async (id: string, data: PUT['body']) => {
-  return await prisma.clash.update({
+  return prisma.clash.update({
     data: {
       ...data,
       updatedAt: new Date().toISOString()
@@ -78,19 +78,19 @@ export type PUT = RouteHandlerType<{
 export const PUT = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const data = await request.json()
     const res = await dbPut(id, data)
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
 }
 
 const dbPatch = async (id: string, data: PATCH['body']) => {
-  return await prisma.clash.update({
+  return prisma.clash.update({
     data,
     include,
     where: { id }
@@ -108,19 +108,19 @@ export type PATCH = RouteHandlerType<{
 export const PATCH = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const data = await request.json()
     const res = await dbPatch(id, data)
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
 }
 
 const dbDelete = async (id: string) => {
-  return await prisma.clash.delete({ include, where: { id } })
+  return prisma.clash.delete({ include, where: { id } })
 }
 
 export type DELETE = RouteHandlerType<{
@@ -133,11 +133,11 @@ export type DELETE = RouteHandlerType<{
 export const DELETE = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const res = await dbDelete(id)
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }

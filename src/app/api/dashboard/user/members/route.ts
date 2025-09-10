@@ -4,7 +4,7 @@ import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
 
 const dbGet = async () => {
-  return await prisma.user.findMany({
+  return prisma.user.findMany({
     orderBy: {
       createdAt: 'asc'
     }
@@ -18,7 +18,7 @@ export type GET = RouteHandlerType<{
 export const GET = async () => {
   try {
     const res = await dbGet()
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }

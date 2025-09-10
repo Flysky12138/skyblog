@@ -37,7 +37,7 @@ export const generateMetadata = async ({ params }: PageProps<'/posts/[id]'>): Pr
 }
 
 const getPost = async (id: string) => {
-  return await prisma.post.findUnique({
+  return prisma.post.findUnique({
     include: {
       author: true,
       categories: true,

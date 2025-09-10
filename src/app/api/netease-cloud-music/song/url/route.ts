@@ -43,7 +43,7 @@ export const GET = async (request: NextRequest) => {
     const id = request.nextUrl.searchParams.get('id')
     const level = (request.nextUrl.searchParams.get('level') || 'jymaster') as SoundQualityType
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const data = await song_url_v1({
       cookie: await get(VERCEL_EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE),
@@ -53,7 +53,7 @@ export const GET = async (request: NextRequest) => {
       .then((res: any) => res.body.data)
       .catch(error => Promise.reject(error.body.message))
 
-    return CustomResponse.encrypt(data)
+    return await CustomResponse.encrypt(data)
   } catch (error) {
     return CustomResponse.error(error)
   }

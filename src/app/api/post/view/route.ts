@@ -5,7 +5,7 @@ import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
 
 const dbPost = async (id: string) => {
-  return await prisma.post.update({
+  return prisma.post.update({
     data: {
       views: {
         increment: 1
@@ -28,10 +28,10 @@ export type POST = RouteHandlerType<{
 export const POST = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const res = await dbPost(id)
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }

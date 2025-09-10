@@ -16,7 +16,7 @@ export class R2 {
    * 删除
    */
   static async delete(Keys: string[]) {
-    return await S3.send(
+    return S3.send(
       new DeleteObjectsCommand({
         Bucket,
         Delete: {

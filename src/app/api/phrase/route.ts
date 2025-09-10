@@ -15,7 +15,7 @@ export type GET = RouteHandlerType<{
 export const GET = async (request: NextRequest) => {
   try {
     const data = await CustomFetch('https://v1.hitokoto.cn')
-    return CustomResponse.encrypt(data)
+    return await CustomResponse.encrypt(data)
   } catch (error) {
     return CustomResponse.error(error)
   }

@@ -17,7 +17,7 @@ export const GET = async (request: NextRequest) => {
       cookie: await get(VERCEL_EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
     }).catch(error => Promise.reject(error.body.message))
 
-    return CustomResponse.encrypt(body)
+    return await CustomResponse.encrypt(body)
   } catch (error) {
     return CustomResponse.error(error)
   }

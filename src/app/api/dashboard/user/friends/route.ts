@@ -6,7 +6,7 @@ import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
 
 const dbGet = async () => {
-  return await prisma.friend.findMany()
+  return prisma.friend.findMany()
 }
 
 export type GET = RouteHandlerType<{
@@ -16,14 +16,14 @@ export type GET = RouteHandlerType<{
 export const GET = async () => {
   try {
     const res = await dbGet()
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
 }
 
 const dbPost = async (data: POST['body']) => {
-  return await prisma.friend.create({
+  return prisma.friend.create({
     data
   })
 }
@@ -40,7 +40,7 @@ export const POST = async (request: NextRequest) => {
 
     CacheClear.friends()
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }

@@ -21,7 +21,7 @@ export const GET = async (request: NextRequest) => {
         revalidate: 2592000
       }
     })
-    return CustomResponse.encrypt(data)
+    return await CustomResponse.encrypt(data)
   } catch (error) {
     return CustomResponse.encrypt({ ip, ...geolocation(request) })
   }

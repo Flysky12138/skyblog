@@ -6,7 +6,7 @@ import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
 
 const dbPut = async (id: string, data: PUT['body']) => {
-  return await prisma.friend.update({ data, where: { id } })
+  return prisma.friend.update({ data, where: { id } })
 }
 
 export type PUT = RouteHandlerType<{
@@ -18,21 +18,21 @@ export const PUT = async (request: NextRequest, { params }: RouteContext<'/api/d
   try {
     const { id } = await params
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const data = await request.json()
     const res = await dbPut(id, data)
 
     CacheClear.friends()
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
 }
 
 const dbDelete = async (id: string) => {
-  return await prisma.friend.delete({
+  return prisma.friend.delete({
     where: { id }
   })
 }
@@ -45,13 +45,13 @@ export const DELETE = async (request: NextRequest, { params }: RouteContext<'/ap
   try {
     const { id } = await params
 
-    if (!id) return CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
 
     const res = await dbDelete(id)
 
     CacheClear.friends()
 
-    return CustomResponse.encrypt(res)
+    return await CustomResponse.encrypt(res)
   } catch (error) {
     return CustomResponse.error(error)
   }
