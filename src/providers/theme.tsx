@@ -6,7 +6,7 @@ import React from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useIsClient } from '@/hooks/use-is-client'
+import { useMounted } from '@/hooks/use-mounted'
 import { useTheme } from '@/hooks/use-theme'
 
 /**
@@ -20,8 +20,8 @@ export const ThemeProvider = (props: React.PropsWithChildren) => {
 export const ThemeToggleButton = () => {
   const { isDark, toggleTheme } = useTheme()
 
-  const isClient = useIsClient()
-  if (!isClient) return <Skeleton className="size-9" />
+  const mounted = useMounted()
+  if (!mounted) return <Skeleton className="size-9" />
 
   return (
     <Button aria-label="theme toggle" size="icon" variant="outline" onClick={toggleTheme}>
