@@ -48,6 +48,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
             <SWRProvider>
               <ImageViewerProvider>{children}</ImageViewerProvider>
               <Toaster />
+              <Toaster expand id="expand" visibleToasts={5} />
               <Report />
             </SWRProvider>
           </SessionProvider>

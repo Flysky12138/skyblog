@@ -1,3 +1,5 @@
+'use client'
+
 import { CirclePause, CirclePlay } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import React from 'react'

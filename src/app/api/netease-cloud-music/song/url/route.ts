@@ -31,6 +31,8 @@ export type GET = RouteHandlerType<{
      * `jyeffect` => 高清环绕声 \
      * `sky`      => 沉浸环绕声 \
      * `jymaster` => 超清母带
+     *
+     * @default 'jymaster'
      */
     level?: 'exhigh' | 'higher' | 'hires' | 'jyeffect' | 'jymaster' | 'lossless' | 'sky' | 'standard'
   }

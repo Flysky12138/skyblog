@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { useAudio } from 'react-use'
 import { toast } from 'sonner'
@@ -5,7 +7,6 @@ import useSWR from 'swr'
 
 import { Portal } from '@/components/layout/portal'
 import { CustomRequest } from '@/lib/http/request'
-import { isDev } from '@/lib/utils'
 
 export interface AudioProps {
   id?: number
@@ -32,7 +33,7 @@ export const Audio = ({ id, ref, onPausedChange }: AudioProps) => {
   )
 
   const [audio, { paused }, controls] = useAudio({
-    src: isDev() ? src : src.replace('http:', 'https:'),
+    src,
     onCanPlay: () => {
       controls.play()
     }

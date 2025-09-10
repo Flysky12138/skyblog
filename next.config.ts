@@ -8,20 +8,23 @@ import { mdxOptions } from './src/components/mdx/options'
  * 内容安全策略 (CSP)
  * @see https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
  */
-const cspSrc = [process.env.NEXT_PUBLIC_R2_URL, process.env.NEXT_PUBLIC_S3_API.replace('//', `//${process.env.NEXT_PUBLIC_R2_BUCKET_NAME}.`)]
+const cspSrc = [
+  process.env.NEXT_PUBLIC_R2_URL,
+  process.env.NEXT_PUBLIC_S3_API.replace('//', `//${process.env.NEXT_PUBLIC_R2_BUCKET_NAME}.`),
+  '*.music.126.net'
+]
   .filter(Boolean)
   .join(' ')
 const cspHeader = [
   "default-src 'self'",
-  `img-src 'self' blob: data: ${cspSrc} *.music.126.net`,
-  `media-src 'self' ${cspSrc} *.music.126.net`,
+  `img-src 'self' blob: data: ${cspSrc}`,
+  `media-src 'self' ${cspSrc}`,
   `connect-src 'self' blob: data: ${cspSrc}`,
   "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
   "style-src 'self' 'unsafe-inline'",
   "worker-src 'self' blob:",
   "object-src 'none'",
-  "frame-ancestors 'none'",
-  'block-all-mixed-content'
+  "frame-ancestors 'none'"
 ]
 
 const headers: NextConfig['headers'] = async () => [

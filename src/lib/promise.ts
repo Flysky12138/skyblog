@@ -4,7 +4,7 @@
  * @default max = 3
  */
 export const promisePool = async (promises: (() => Promise<any>)[], max = 3) => {
-  return await Promise.allSettled(
+  return Promise.allSettled(
     Array.from({ length: max }).map(async () => {
       while (promises.length) {
         await promises.shift()?.()
