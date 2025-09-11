@@ -6,7 +6,7 @@ import { DisplayByConditional } from '@/components/display/display-by-conditiona
 import { Card } from '@/components/layout/card'
 import { MonacoEditor } from '@/components/monaco-editor'
 import { yamlClashConfig } from '@/components/monaco-editor/languages/yaml-clash'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-custom/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'

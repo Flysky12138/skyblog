@@ -7,7 +7,7 @@ import { useImmer } from 'use-immer'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/layout/card'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui-custom/dialog'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Alert, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'

@@ -6,7 +6,7 @@ import { useAsyncFn, useBeforeUnload, useSet } from 'react-use'
 import { FixedSizeList } from 'react-window'
 
 import { Portal } from '@/components/layout/portal'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui-custom/dialog'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'

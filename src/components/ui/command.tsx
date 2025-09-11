@@ -11,7 +11,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui-custom/dialog"
+} from "@/components/ui-overwrite/dialog"
 
 function Command({
   className,
