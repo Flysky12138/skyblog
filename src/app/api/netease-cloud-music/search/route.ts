@@ -32,7 +32,7 @@ export type GET = RouteHandlerType<{
   search: {
     keywords: string
     /**
-     * @default 50
+     * @default 100
      */
     limit?: number
     /**
@@ -60,7 +60,7 @@ export type GET = RouteHandlerType<{
 export const GET = async (request: NextRequest) => {
   try {
     const keywords = request.nextUrl.searchParams.get('keywords')
-    const limit = Number.parseInt(request.nextUrl.searchParams.get('limit') || '50')
+    const limit = Number.parseInt(request.nextUrl.searchParams.get('limit') || '100')
     const page = Number.parseInt(request.nextUrl.searchParams.get('page') || '0')
     const type = Number.parseInt(request.nextUrl.searchParams.get('type') || '1') as 1
 

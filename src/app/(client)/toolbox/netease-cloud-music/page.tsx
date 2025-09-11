@@ -1,7 +1,10 @@
 'use client'
 
+import { CirclePause, CirclePlay } from 'lucide-react'
+import dynamic from 'next/dynamic'
 import React from 'react'
 import useSWRInfinite from 'swr/infinite'
+import { useImmer } from 'use-immer'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/layout/card'
@@ -9,8 +12,11 @@ import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
 import { CustomRequest } from '@/lib/http/request'
 
+import { AudioProps } from './_components/audio'
 import { DownloadList } from './_components/download-list'
 import { SongList } from './_components/song-list'
+
+const Audio = dynamic(() => import('./_components/audio').then(module => module.Audio), { ssr: false })
 
 export default function Page() {
   const [search, setSearch] = React.useState('')
@@ -37,6 +43,11 @@ export default function Page() {
   )
   const songs = React.useMemo(() => data.flatMap(item => item.songs), [data])
   const hasMore = data.at(-1)?.hasMore
+
+  // 播放器
+  const audioRef = React.useRef<NonNullable<AudioProps['ref']>['current']>(null)
+  const [player, setPlayer] = useImmer<(typeof data)[number]['songs'][number] | null>(null)
+  const [paused, setPaused] = useImmer(false)
 
   React.useEffect(() => {
     const _search = decodeURIComponent(new URLSearchParams(window.location.search).get('search') || '')
@@ -84,10 +95,27 @@ export default function Page() {
           loadMoreRows={() => {
             setSize(size + 1)
           }}
+          playerIcon={song => {
+            if (player?.id != song.id) return null
+            return (
+              <div className="pointer-events-none ml-auto opacity-60" onClick={event => event.stopPropagation()}>
+                {paused ? <CirclePlay /> : <CirclePause />}
+              </div>
+            )
+          }}
           songs={songs}
+          onRowClick={song => {
+            if (player?.id == song.id) {
+              audioRef.current?.controls[paused ? 'play' : 'pause']()
+            } else {
+              audioRef.current?.controls.pause()
+              setPlayer(song)
+            }
+          }}
         />
       </DisplayByConditional>
       <DownloadList songs={songs} />
+      <Audio ref={audioRef} id={player?.id} onPausedChange={setPaused} />
     </div>
   )
 }

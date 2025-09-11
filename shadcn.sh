@@ -11,6 +11,7 @@ pnpm dlx shadcn@latest add -y -o \
     checkbox \
     command \
     dialog \
+    drawer \
     dropdown-menu \
     input \
     label \
