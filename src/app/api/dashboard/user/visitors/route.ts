@@ -1,4 +1,4 @@
-import { Prisma, VisitorLog } from '@prisma/client'
+import { VisitorLog } from '@prisma/client'
 import { NextRequest } from 'next/server'
 import { PaginationArgs } from 'prisma-paginate'
 
@@ -17,7 +17,7 @@ const dbGet = async (payload: GET['search']) => {
 }
 
 export type GET = RouteHandlerType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
+  return: Awaited<ReturnType<typeof dbGet>>
   search: PaginationArgs
 }>
 
@@ -47,7 +47,7 @@ export type DELETE = RouteHandlerType<{
   body: {
     ids: VisitorLog['id'][]
   }
-  return: Prisma.PromiseReturnType<typeof dbDelete>
+  return: Awaited<ReturnType<typeof dbDelete>>
 }>
 
 export const DELETE = async (request: NextRequest) => {

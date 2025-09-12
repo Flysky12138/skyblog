@@ -11,7 +11,7 @@ const dbPut = async (id: string, data: PUT['body']) => {
 
 export type PUT = RouteHandlerType<{
   body: Prisma.FriendCreateInput
-  return: Prisma.PromiseReturnType<typeof dbPut>
+  return: Awaited<ReturnType<typeof dbPut>>
 }>
 
 export const PUT = async (request: NextRequest, { params }: RouteContext<'/api/dashboard/user/friends/[id]'>) => {
@@ -38,7 +38,7 @@ const dbDelete = async (id: string) => {
 }
 
 export type DELETE = RouteHandlerType<{
-  return: Prisma.PromiseReturnType<typeof dbDelete>
+  return: Awaited<ReturnType<typeof dbDelete>>
 }>
 
 export const DELETE = async (request: NextRequest, { params }: RouteContext<'/api/dashboard/user/friends/[id]'>) => {

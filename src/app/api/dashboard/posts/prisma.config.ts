@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client'
 
-export const include = Prisma.validator<Prisma.PostInclude>()({
+export const include = {
   categories: {
     select: {
       id: true,
@@ -13,4 +13,4 @@ export const include = Prisma.validator<Prisma.PostInclude>()({
       name: true
     }
   }
-})
+} satisfies Prisma.PostInclude

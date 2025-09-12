@@ -13,7 +13,7 @@ export type PostSearchParams = Record<Extract<keyof Prisma.PostWhereInput, 'cate
 
 interface PostListProps {
   pagination: PostListPaginationProps
-  posts: Prisma.PromiseReturnType<typeof getPosts>['result']
+  posts: Awaited<ReturnType<typeof getPosts>>['result']
 }
 
 export const PostList = ({ pagination, posts }: PostListProps) => {

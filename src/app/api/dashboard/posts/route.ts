@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 import { PaginationArgs } from 'prisma-paginate'
 
@@ -28,7 +27,7 @@ const dbGet = async (payload: NonNullable<GET['search']>) => {
 }
 
 export type GET = RouteHandlerType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
+  return: Awaited<ReturnType<typeof dbGet>>
   search?: PaginationArgs
 }>
 

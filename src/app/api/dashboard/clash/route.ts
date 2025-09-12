@@ -4,13 +4,13 @@ import { NextRequest } from 'next/server'
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
 
-const include = Prisma.validator<Prisma.ClashInclude>()({
+const include = {
   visitorInfos: {
     orderBy: {
       createdAt: 'desc'
     }
   }
-})
+} satisfies Prisma.ClashInclude
 
 const dbGet = async () => {
   return prisma.clash.findMany({
@@ -20,7 +20,7 @@ const dbGet = async () => {
 }
 
 export type GET = RouteHandlerType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
+  return: Awaited<ReturnType<typeof dbGet>>
 }>
 
 export const GET = async () => {
@@ -40,7 +40,7 @@ export type POST = RouteHandlerType<{
   body: Omit<Prisma.ClashUncheckedCreateInput, 'variables'> & {
     variables: Record<string, null | string | undefined>
   }
-  return: Prisma.PromiseReturnType<typeof dbPost>
+  return: Awaited<ReturnType<typeof dbPost>>
 }>
 
 export const POST = async (request: NextRequest) => {
@@ -69,7 +69,7 @@ export type PUT = RouteHandlerType<{
   body: Pick<Prisma.ClashUncheckedCreateInput, 'clashTemplateId' | 'content' | 'name' | 'subtitle'> & {
     variables: object
   }
-  return: Prisma.PromiseReturnType<typeof dbPut>
+  return: Awaited<ReturnType<typeof dbPut>>
   search: {
     id: string
   }
@@ -99,7 +99,7 @@ const dbPatch = async (id: string, data: PATCH['body']) => {
 
 export type PATCH = RouteHandlerType<{
   body: Pick<Prisma.ClashUncheckedCreateInput, 'enabled'>
-  return: Prisma.PromiseReturnType<typeof dbPatch>
+  return: Awaited<ReturnType<typeof dbPatch>>
   search: {
     id: string
   }
@@ -124,7 +124,7 @@ const dbDelete = async (id: string) => {
 }
 
 export type DELETE = RouteHandlerType<{
-  return: Prisma.PromiseReturnType<typeof dbDelete>
+  return: Awaited<ReturnType<typeof dbDelete>>
   search: {
     id: string
   }

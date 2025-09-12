@@ -4,7 +4,7 @@ import { NextRequest } from 'next/server'
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
 
-const select = Prisma.validator<Prisma.ClashTemplateSelect>()({
+const select = {
   _count: {
     select: {
       clashs: true
@@ -15,7 +15,7 @@ const select = Prisma.validator<Prisma.ClashTemplateSelect>()({
   id: true,
   name: true,
   updatedAt: true
-})
+} satisfies Prisma.ClashTemplateSelect
 
 const dbGet = async () => {
   return prisma.clashTemplate.findMany({
@@ -25,7 +25,7 @@ const dbGet = async () => {
 }
 
 export type GET = RouteHandlerType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
+  return: Awaited<ReturnType<typeof dbGet>>
 }>
 
 export const GET = async () => {
@@ -43,7 +43,7 @@ const dbPost = async (data: POST['body']) => {
 
 export type POST = RouteHandlerType<{
   body: Prisma.ClashTemplateCreateInput
-  return: Prisma.PromiseReturnType<typeof dbPost>
+  return: Awaited<ReturnType<typeof dbPost>>
 }>
 
 export const POST = async (request: NextRequest) => {
@@ -67,7 +67,7 @@ const dbPut = async (id: string, data: PUT['body']) => {
 
 export type PUT = RouteHandlerType<{
   body: Pick<Prisma.ClashTemplateUpdateInput, 'content' | 'name'>
-  return: Prisma.PromiseReturnType<typeof dbPut>
+  return: Awaited<ReturnType<typeof dbPut>>
   search: {
     id: string
   }
@@ -92,7 +92,7 @@ const dbDelete = async (id: string) => {
 }
 
 export type DELETE = RouteHandlerType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
+  return: Awaited<ReturnType<typeof dbGet>>
   search: {
     id: string
   }

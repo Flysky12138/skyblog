@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
 import { CustomResponse } from '@/lib/http/response'
@@ -21,7 +20,7 @@ const dbGet = async (id: string) => {
 }
 
 export type GET = RouteHandlerType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
+  return: Awaited<ReturnType<typeof dbGet>>
   search: {
     id: string
   }

@@ -1,5 +1,3 @@
-import { Prisma } from '@prisma/client'
-
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
 
@@ -8,7 +6,7 @@ const dbGet = async () => {
 }
 
 export type GET = RouteHandlerType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
+  return: Awaited<ReturnType<typeof dbGet>>
 }>
 
 export const GET = async () => {

@@ -30,13 +30,14 @@ export class CustomResponse {
 
   /**
    * 统一的错误响应
-   * @param message 错误消息
+   * @param error 错误消息
    * @param status 状态码
    * @returns 响应数据
    * @default
    * status = 500
    */
-  static async error(message: unknown, status = 500) {
+  static async error(error: unknown, status = 500) {
+    const message = error instanceof Error ? error.message : error
     return Response.json({ message } as ResponseError, { status })
   }
 }

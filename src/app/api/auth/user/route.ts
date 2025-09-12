@@ -17,7 +17,7 @@ const dbPost = async (data: POST['body']) => {
 
 export type POST = RouteHandlerType<{
   body: Prisma.UserCreateInput
-  return: Prisma.PromiseReturnType<typeof dbPost>
+  return: Awaited<ReturnType<typeof dbPost>>
 }>
 
 export const POST = async (request: NextRequest) => {

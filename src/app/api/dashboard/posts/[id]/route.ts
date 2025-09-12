@@ -1,4 +1,4 @@
-import { Category, Post, Prisma, Tag } from '@prisma/client'
+import { Category, Post, Tag } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
 import { CacheClear } from '@/lib/cache'
@@ -15,7 +15,7 @@ const dbGet = async (id: string) => {
 }
 
 export type GET = RouteHandlerType<{
-  return: Prisma.PromiseReturnType<typeof dbGet>
+  return: Awaited<ReturnType<typeof dbGet>>
 }>
 
 export const GET = async (request: NextRequest, { params }: RouteContext<'/api/dashboard/posts/[id]'>) => {
@@ -67,7 +67,7 @@ export type POST = RouteHandlerType<{
     categories: Category['name'][]
     tags: Tag['name'][]
   }
-  return: Prisma.PromiseReturnType<typeof dbPost>
+  return: Awaited<ReturnType<typeof dbPost>>
 }>
 
 export const POST = async (request: NextRequest, { params }: RouteContext<'/api/dashboard/posts/[id]'>) => {
@@ -124,7 +124,7 @@ const dbPut = async (id: string, data: PUT['body']) => {
 
 export type PUT = RouteHandlerType<{
   body: Omit<POST['body'], 'authorId'> & Partial<Pick<Post, 'updatedAt'>>
-  return: Prisma.PromiseReturnType<typeof dbPut>
+  return: Awaited<ReturnType<typeof dbPut>>
 }>
 
 export const PUT = async (request: NextRequest, { params }: RouteContext<'/api/dashboard/posts/[id]'>) => {
@@ -154,7 +154,7 @@ const dbPatch = async (id: string, data: PATCH['body']) => {
 
 export type PATCH = RouteHandlerType<{
   body: Pick<Post, 'published'>
-  return: Prisma.PromiseReturnType<typeof dbPatch>
+  return: Awaited<ReturnType<typeof dbPatch>>
 }>
 
 export const PATCH = async (request: NextRequest, { params }: RouteContext<'/api/dashboard/posts/[id]'>) => {
@@ -181,7 +181,7 @@ const dbDelete = async (id: string) => {
 }
 
 export type DELETE = RouteHandlerType<{
-  return: Prisma.PromiseReturnType<typeof dbDelete>
+  return: Awaited<ReturnType<typeof dbDelete>>
 }>
 
 export const DELETE = async (request: NextRequest, { params }: RouteContext<'/api/dashboard/posts/[id]'>) => {
