@@ -33,7 +33,13 @@ export default function Page() {
       if (previousPageData && !previousPageData?.hasMore) return null
       return [pageIndex, keywords, '0198f59d-bdf5-72dd-a3e1-1cba5681d3b7']
     },
-    ([page]) => CustomRequest('GET /api/netease-cloud-music/search', { search: { keywords, page } }),
+    async ([page, keywords]) => {
+      if (keywords.trim().startsWith('pl:')) {
+        const id = keywords.trim().replace('pl:', '')
+        return CustomRequest('GET /api/netease-cloud-music/playlist/detail', { search: { id } })
+      }
+      return CustomRequest('GET /api/netease-cloud-music/search', { search: { keywords, page } })
+    },
     {
       fallbackData: [{ hasMore: false, songCount: 0, songs: [] }],
       revalidateFirstPage: false,
@@ -58,7 +64,7 @@ export default function Page() {
   return (
     <div className="mx-auto flex h-[calc(var(--height-main)-2*var(--py))] max-w-xl flex-col gap-4">
       <Input
-        placeholder="搜索"
+        placeholder="搜索 / 歌单 pl:id"
         value={search}
         onChange={event => {
           setSearch(event.target.value)
@@ -80,7 +86,7 @@ export default function Page() {
             fallback={
               <p className="text-muted-foreground py-10 text-center text-sm leading-6">
                 站长贡献 <span className="italic">VIP</span> 账号，以实现会员歌曲使用 <br />
-                部分歌曲是需要直接购买才可使用的，若我云盘中存在时可使用
+                部分歌曲需要直接购买，若我云盘中存在时才可使用
               </p>
             }
           >

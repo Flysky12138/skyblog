@@ -20,14 +20,14 @@ import { cn } from '@/lib/utils'
 type LevelType = AppRouteHandlerMethodMap['GET /api/netease-cloud-music/song/url']['return'][number]['level']
 
 const LEVEL_OPTIONS: { label: string; value: LevelType }[] = [
-  { label: '超清母带', value: 'jymaster' },
-  { label: '沉浸环绕声', value: 'sky' },
-  { label: '高清环绕声', value: 'jyeffect' },
-  { label: 'Hi-Res', value: 'hires' },
-  { label: '无损', value: 'lossless' },
-  { label: '极高', value: 'exhigh' },
-  { label: '较高', value: 'higher' },
-  { label: '标准', value: 'standard' }
+  { label: '超清母带 20M~180M', value: 'jymaster' },
+  { label: '沉浸环绕声 20M~80M', value: 'sky' },
+  { label: '高清臻音 20M~100M', value: 'jyeffect' },
+  { label: '高解析度无损 30M', value: 'hires' },
+  { label: '无损 10~30M', value: 'lossless' },
+  { label: '极高 5~10M', value: 'exhigh' },
+  // { label: '较高', value: 'higher' },
+  { label: '标准 2~5M', value: 'standard' }
 ]
 
 interface DownloadListProps {
@@ -92,7 +92,7 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
               setLevel(value as LevelType)
             }}
           >
-            <SelectTrigger className="ml-auto w-32" size="sm">
+            <SelectTrigger className="ml-auto" size="sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
