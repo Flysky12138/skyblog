@@ -19,7 +19,6 @@ export type GET = RouteHandlerType<{
         name: string
         picUrl: string
       }
-      alias: string[]
       ar: {
         id: number
         name: string
@@ -50,7 +49,6 @@ export type GET = RouteHandlerType<{
      * 1009: 电台\
      * 1014: 视频\
      * 1018: 综合
-     *
      * @default 1
      */
     type?: 1 | 10 | 100 | 1000 | 1002 | 1004 | 1006 | 1009 | 1014 | 1018
@@ -60,11 +58,11 @@ export type GET = RouteHandlerType<{
 export const GET = async (request: NextRequest) => {
   try {
     const keywords = request.nextUrl.searchParams.get('keywords')
+    if (!keywords) return await CustomResponse.error('{keywords} 值缺失', 400)
+
     const limit = Number.parseInt(request.nextUrl.searchParams.get('limit') || '100')
     const page = Number.parseInt(request.nextUrl.searchParams.get('page') || '0')
     const type = Number.parseInt(request.nextUrl.searchParams.get('type') || '1') as 1
-
-    if (!keywords) return await CustomResponse.error('{keywords} 值缺失', 400)
 
     const data = await cloudsearch({
       cookie: await get(VERCEL_EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE),
@@ -73,7 +71,13 @@ export const GET = async (request: NextRequest) => {
       offset: page * limit,
       type
     })
-      .then((res: any) => ({ hasMore: res.body.result.songCount > (page + 1) * limit, ...res.body.result }))
+      .then((res: any) => {
+        return {
+          hasMore: res.body.result.songCount > (page + 1) * limit,
+          songCount: res.body.result.songCount,
+          songs: res.body.result.songs
+        } satisfies GET['return']
+      })
       .catch(error => Promise.reject(error.body.message))
 
     return await CustomResponse.encrypt(data)

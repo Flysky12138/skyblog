@@ -5,10 +5,17 @@ import React from 'react'
 import { useAsyncFn, useBeforeUnload, useMap, useSet } from 'react-use'
 import { FixedSizeList } from 'react-window'
 
+import {
+  DialogDrawer,
+  DialogDrawerContent,
+  DialogDrawerDescription,
+  DialogDrawerHeader,
+  DialogDrawerTitle,
+  DialogDrawerTrigger
+} from '@/components/dialog-drawer'
 import { Portal } from '@/components/layout/portal'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
 import { ATTRIBUTE } from '@/lib/constants'
@@ -20,14 +27,14 @@ import { cn } from '@/lib/utils'
 type LevelType = AppRouteHandlerMethodMap['GET /api/netease-cloud-music/song/url']['return'][number]['level']
 
 const LEVEL_OPTIONS: { label: string; value: LevelType }[] = [
-  { label: '超清母带', value: 'jymaster' },
-  { label: '沉浸环绕声', value: 'sky' },
-  { label: '高清环绕声', value: 'jyeffect' },
-  { label: 'Hi-Res', value: 'hires' },
-  { label: '无损', value: 'lossless' },
-  { label: '极高', value: 'exhigh' },
-  { label: '较高', value: 'higher' },
-  { label: '标准', value: 'standard' }
+  { label: '超清母带 20M~180M', value: 'jymaster' },
+  { label: '沉浸环绕声 20M~80M', value: 'sky' },
+  { label: '高清臻音 20M~100M', value: 'jyeffect' },
+  { label: '高解析度无损 30M', value: 'hires' },
+  { label: '无损 10~30M', value: 'lossless' },
+  { label: '极高 5~10M', value: 'exhigh' },
+  // { label: '较高', value: 'higher' },
+  { label: '标准 2~5M', value: 'standard' }
 ]
 
 interface DownloadListProps {
@@ -61,16 +68,20 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
   if (!songs.length) return null
 
   return (
-    <Drawer>
+    <DialogDrawer>
       <Portal selector={`#${ATTRIBUTE.ID.NAV_CONTAINER}`}>
-        <DrawerTrigger asChild>
+        <DialogDrawerTrigger asChild>
           <Button size="icon">
             <Download />
           </Button>
-        </DrawerTrigger>
+        </DialogDrawerTrigger>
       </Portal>
-      <DrawerContent className="mx-auto max-w-3xl border outline-none">
-        <div className="border-divide mt-2 flex gap-2 border-b px-2 py-3 shadow-xs">
+      <DialogDrawerContent className="gap-0 border p-0 outline-none" showCloseButton={false}>
+        <DialogDrawerHeader aria-hidden="true" className="hidden">
+          <DialogDrawerTitle />
+          <DialogDrawerDescription />
+        </DialogDrawerHeader>
+        <div className="border-divide mt-2 flex gap-2 border-b px-2 py-3 shadow-xs md:mt-0">
           <Button
             disabled={isDownloading}
             size="sm"
@@ -92,7 +103,7 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
               setLevel(value as LevelType)
             }}
           >
-            <SelectTrigger className="ml-auto w-32" size="sm">
+            <SelectTrigger className="ml-auto" size="sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -109,7 +120,7 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
         </div>
         <FixedSizeList
           className="scrollbar-hidden"
-          height={480}
+          height={48 * 10}
           itemCount={isDownloading ? selected.size : songs.length}
           itemData={isDownloading ? Array.from(selected) : songs}
           itemSize={48}
@@ -151,7 +162,7 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
             )
           }}
         </FixedSizeList>
-      </DrawerContent>
-    </Drawer>
+      </DialogDrawerContent>
+    </DialogDrawer>
   )
 }

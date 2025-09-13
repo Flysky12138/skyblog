@@ -3,6 +3,7 @@
 import { CirclePause, CirclePlay } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import React from 'react'
+import { toast } from 'sonner'
 import useSWRInfinite from 'swr/infinite'
 import { useImmer } from 'use-immer'
 
@@ -33,12 +34,33 @@ export default function Page() {
       if (previousPageData && !previousPageData?.hasMore) return null
       return [pageIndex, keywords, '0198f59d-bdf5-72dd-a3e1-1cba5681d3b7']
     },
-    ([page]) => CustomRequest('GET /api/netease-cloud-music/search', { search: { keywords, page } }),
+    async ([page, keywords]) => {
+      // 歌单
+      if (/^p\d+$/.test(keywords.trim())) {
+        const id = keywords.trim().replace('p', '')
+        return CustomRequest('GET /api/netease-cloud-music/playlist/detail', { search: { id } })
+      }
+      // 专辑
+      if (/^a\d+$/.test(keywords.trim())) {
+        const id = keywords.trim().replace('a', '')
+        return CustomRequest('GET /api/netease-cloud-music/album', { search: { id } })
+      }
+      // https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=%e6%90%9c%e7%b4%a2
+      return CustomRequest('GET /api/netease-cloud-music/search', { search: { keywords, page } })
+    },
     {
       fallbackData: [{ hasMore: false, songCount: 0, songs: [] }],
       revalidateFirstPage: false,
       revalidateOnFocus: false,
-      revalidateOnReconnect: false
+      revalidateOnReconnect: false,
+      onError: err => {
+        toast.error(err)
+      },
+      onSuccess: () => {
+        const url = new URL(window.location.href)
+        url.searchParams.set('search', encodeURIComponent(search))
+        window.history.replaceState({}, '', url.toString())
+      }
     }
   )
   const songs = React.useMemo(() => data.flatMap(item => item.songs), [data])
@@ -58,17 +80,29 @@ export default function Page() {
   return (
     <div className="mx-auto flex h-[calc(var(--height-main)-2*var(--py))] max-w-xl flex-col gap-4">
       <Input
-        placeholder="搜索"
+        placeholder="搜索 / 粘贴歌单或专辑分享链接"
         value={search}
         onChange={event => {
           setSearch(event.target.value)
-          const url = new URL(window.location.href)
-          url.searchParams.set('search', encodeURIComponent(event.target.value))
-          window.history.replaceState({}, '', url.toString())
         }}
         onKeyDown={event => {
-          if (event.key == 'Enter') {
-            setKeywords(search)
+          if (event.key != 'Enter') return
+          setKeywords(search.trim())
+        }}
+        onPaste={async event => {
+          const text = await event.clipboardData.getData('text')
+          const playlistId = text.match(/playlist\?id=(\d+)/)?.[1]
+          if (playlistId) {
+            event.preventDefault()
+            setSearch(`p${playlistId}`)
+            toast.success('已自动将歌单 ID 填入搜索框', { position: 'top-center' })
+            return
+          }
+          const albumId = text.match(/album\?id=(\d+)/)?.[1]
+          if (albumId) {
+            event.preventDefault()
+            setSearch(`a${albumId}`)
+            toast.success('已自动将专辑 ID 填入搜索框', { position: 'top-center' })
           }
         }}
       />
@@ -80,7 +114,7 @@ export default function Page() {
             fallback={
               <p className="text-muted-foreground py-10 text-center text-sm leading-6">
                 站长贡献 <span className="italic">VIP</span> 账号，以实现会员歌曲使用 <br />
-                部分歌曲是需要直接购买才可使用的，若我云盘中存在时可使用
+                部分歌曲需要直接购买，若我云盘中存在时才可使用
               </p>
             }
           >
