@@ -6,7 +6,7 @@ import { Route } from 'next'
 import Link from 'next/link'
 import useSWR from 'swr'
 
-import { Card } from '@/components/layout/card'
+import { Card } from '@/components/static/card'
 import {
   AlertDialog,
   AlertDialogAction,

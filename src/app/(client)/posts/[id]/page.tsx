@@ -5,11 +5,11 @@ import { notFound } from 'next/navigation'
 
 import { DisplayByAuth } from '@/components/display/display-by-auth'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
-import { Card } from '@/components/layout/card'
 import { MDXPickHeading } from '@/components/mdx/pick-heading'
 import { MDXServer } from '@/components/mdx/server'
-import { SelectionCopy } from '@/components/selection-copy'
+import { Card } from '@/components/static/card'
 import { Button } from '@/components/ui/button'
+import { SelectionCopy } from '@/components/utils/selection-copy'
 import { ATTRIBUTE, POST_CARD_DISPLAY } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
 

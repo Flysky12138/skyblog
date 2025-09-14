@@ -5,7 +5,7 @@ import { useMeasure } from 'react-use'
 import { FixedSizeList } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 
-import { Card } from '@/components/layout/card'
+import { Card } from '@/components/static/card'
 import { Spinner } from '@/components/ui/spinner'
 
 interface SongListProps {

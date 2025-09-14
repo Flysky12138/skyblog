@@ -1,7 +1,7 @@
 import { Route } from 'next'
 import Link from 'next/link'
 
-import { Card } from '@/components/layout/card'
+import { Card } from '@/components/static/card'
 import { prisma } from '@/lib/prisma'
 
 export default async function Page() {

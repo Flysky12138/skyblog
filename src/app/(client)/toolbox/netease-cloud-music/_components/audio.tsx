@@ -5,7 +5,7 @@ import { useAudio } from 'react-use'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 
-import { Portal } from '@/components/layout/portal'
+import { Portal } from '@/components/utils/portal'
 import { CustomRequest } from '@/lib/http/request'
 
 export interface AudioProps {

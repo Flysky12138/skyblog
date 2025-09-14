@@ -4,7 +4,7 @@ import { ErrorComponent as ErrorComponentType } from 'next/dist/client/component
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-import { Card } from './layout/card'
+import { Card } from './card'
 
 export interface ErrorComponentProps extends React.ComponentProps<ErrorComponentType> {
   className?: string

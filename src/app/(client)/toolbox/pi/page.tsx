@@ -6,7 +6,7 @@ import { useToggle } from 'react-use'
 import { useImmer } from 'use-immer'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
-import { Card } from '@/components/layout/card'
+import { Card } from '@/components/static/card'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Alert, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'

@@ -1,4 +1,4 @@
-import { Card } from '@/components/layout/card'
+import { Card } from '@/components/static/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export default function Loading() {

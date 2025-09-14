@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Card } from '@/components/layout/card'
+import { Card } from '@/components/static/card'
 
 import { CardButtons } from './_components/card/card-buttons'
 import { CardDeveloper } from './_components/card/card-developer'

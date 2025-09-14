@@ -4,8 +4,8 @@ import React from 'react'
 import { useEvent, useMount } from 'react-use'
 
 import { DefaultPostType, MessageEventDataMounted, MessageEventDataRefresh } from '@/app/dashboard/posts/[id]/page'
-import { Card } from '@/components/layout/card'
 import { MDXClient } from '@/components/mdx/client'
+import { Card } from '@/components/static/card'
 
 export default function Page() {
   const [post, setPost] = React.useState<DefaultPostType>()

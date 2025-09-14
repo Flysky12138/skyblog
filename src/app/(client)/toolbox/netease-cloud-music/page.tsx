@@ -8,7 +8,7 @@ import useSWRInfinite from 'swr/infinite'
 import { useImmer } from 'use-immer'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
-import { Card } from '@/components/layout/card'
+import { Card } from '@/components/static/card'
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
 import { CustomRequest } from '@/lib/http/request'

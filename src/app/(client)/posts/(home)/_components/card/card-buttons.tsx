@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import packageJson from '@/../package.json'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
-import { Card } from '@/components/layout/card'
+import { Card } from '@/components/static/card'
 import { Button } from '@/components/ui/button'
 import { prisma } from '@/lib/prisma'
 

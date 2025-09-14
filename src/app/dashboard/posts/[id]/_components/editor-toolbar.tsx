@@ -6,7 +6,7 @@ import { Updater } from 'use-immer'
 
 import { R2Upload } from '@/app/dashboard/r2/[[...slug]]/_components/r2-upload'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
-import { Card } from '@/components/layout/card'
+import { Card } from '@/components/static/card'
 import {
   AlertDialog,
   AlertDialogAction,

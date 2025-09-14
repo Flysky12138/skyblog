@@ -3,7 +3,7 @@ import { Award, CalendarDays, LucideIcon, Shapes, Tag } from 'lucide-react'
 import Link from 'next/link'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
-import { Card } from '@/components/layout/card'
+import { Card } from '@/components/static/card'
 
 import { getPosts } from '../../../utils'
 import { PostListPagination, PostListPaginationProps } from './post-list-pagination'
