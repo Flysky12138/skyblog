@@ -3,6 +3,7 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import eslintPluginReact from 'eslint-plugin-react'
 import eslintPluginReactHooks from 'eslint-plugin-react-hooks'
 import eslintPluginUnusedImports from 'eslint-plugin-unused-imports'
+import { defineConfig } from 'eslint/config'
 import tseslint from 'typescript-eslint'
 
 type ExtractConfig<T> = T extends unknown[] ? never : T
@@ -102,7 +103,7 @@ const unusedImportsRules: Rules = {
   'unused-imports/no-unused-imports': 'error'
 }
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: ['public/', '.next/', 'src/components/ui/', 'next-env.d.ts', '*.cjs']
   },
