@@ -5,10 +5,9 @@ import React from 'react'
 import { useAsync } from 'react-use'
 import { useImmer } from 'use-immer'
 
-import Loading from '@/assets/svg/loading.svg'
-
-import { components } from './components'
+import { Spinner } from '../ui/spinner'
 import './css'
+import { components } from './components'
 import { mdxOptions } from './options'
 
 interface MDXClientProps {
@@ -28,7 +27,7 @@ export const MDXClient = React.memo(({ source = '' }: MDXClientProps) => {
   if (loading && isFirstRender.current) {
     return (
       <div className="flex items-center justify-center">
-        <Loading />
+        <Spinner size={32} variant="infinite" />
       </div>
     )
   }

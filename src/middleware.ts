@@ -3,7 +3,11 @@ import { MiddlewareConfig, NextMiddleware, NextResponse, userAgent } from 'next/
 import { auth } from '@/lib/auth'
 
 export const config: MiddlewareConfig = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)']
+  matcher: [
+    '/((?!_next/static|_next/image|icons/icon).*)',
+    '/((?!apple-icon.png|favicon.ico|icon.svg|manifest.webmanifest|robots.txt|sitemap.xml))',
+    '/((?!.*\.min.js).*)'
+  ]
 }
 
 export const middleware: NextMiddleware = async (request, event) => {

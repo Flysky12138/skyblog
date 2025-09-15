@@ -5,7 +5,7 @@ import { uuidv7 } from 'uuidv7'
 import { MultiSelect } from '@/components/form/multi-select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Textarea } from '@/components/ui/textarea'
 import { Toggle } from '@/components/ui/toggle'
 import { POST_CARD_DISPLAY } from '@/lib/constants'
@@ -39,6 +39,7 @@ export const PostDetail = ({ children, value: post, onChange: setPost }: PostDet
       >
         <SheetHeader>
           <SheetTitle>文章信息</SheetTitle>
+          <SheetDescription className="hidden" />
         </SheetHeader>
         <div className="scrollbar-hidden flex h-full flex-col gap-4 overflow-y-auto p-4 pt-0">
           <div className="flex flex-col gap-2">

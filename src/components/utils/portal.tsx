@@ -25,7 +25,7 @@ interface PortalProps extends React.PropsWithChildren {
    */
   disabled?: boolean
   /**
-   * 在容器开头插入（默认是 `append` 到末尾）
+   * 在 `document.body` 开头插入（默认是 `append` 到末尾）
    * @default false
    */
   prepend?: boolean

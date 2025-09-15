@@ -19,7 +19,7 @@ const envSchema = z.object({
   NEXT_PUBLIC_R2_URL: Url,
   NEXT_PUBLIC_S3_ACCESS_ID: z.string().length(32),
   NEXT_PUBLIC_S3_ACCESS_KEY: z.string().length(64),
-  NEXT_PUBLIC_S3_API: z.url().endsWith('.r2.cloudflarestorage.com'),
+  NEXT_PUBLIC_S3_API: z.httpUrl().endsWith('.r2.cloudflarestorage.com'),
   NEXT_PUBLIC_TITLE: z.string(),
   NEXT_PUBLIC_WEBSITE_URL: Url,
   TOKEN_BROWSERLESS: z.uuidv4(),
@@ -30,6 +30,6 @@ const envSchema = z.object({
 const { error, success } = envSchema.safeParse(process.env)
 
 if (!success) {
-  console.log('\x1b[31m%s\x1b[0m', JSON.stringify(error, null, 2))
+  console.log('\x1b[31m%s\x1b[0m', JSON.stringify(error.issues, null, 2))
   process.exit(1)
 }

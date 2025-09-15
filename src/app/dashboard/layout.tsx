@@ -8,7 +8,10 @@ export const metadata: Metadata = {
     follow: false,
     index: false
   },
-  title: 'Dashboard'
+  title: {
+    default: 'Dashboard',
+    template: '%s | Dashboard'
+  }
 }
 
 export default function Layout({ children }: React.PropsWithChildren) {

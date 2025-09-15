@@ -121,7 +121,11 @@ export default defineConfig(
   eslintPluginReact.configs.flat['jsx-runtime'],
   // 自定义规则
   {
-    ignores: ['**/*.d.ts', '*.config.ts', 'src/app/**/{layout,page,loading,not-found,global-error,error,robots,sitemap,manifest}.{js,ts,tsx}'],
+    ignores: [
+      '**/*.d.ts',
+      '*.config.ts',
+      'src/app/**/{layout,page,loading,not-found,global-error,error,robots,sitemap,manifest,opengraph-image}.{js,ts,tsx}'
+    ],
     rules: {
       // 禁止默认导出
       'no-restricted-exports': [

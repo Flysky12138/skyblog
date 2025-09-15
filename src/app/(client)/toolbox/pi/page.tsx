@@ -5,9 +5,16 @@ import React from 'react'
 import { useToggle } from 'react-use'
 import { useImmer } from 'use-immer'
 
+import {
+  DialogDrawer,
+  DialogDrawerContent,
+  DialogDrawerDescription,
+  DialogDrawerHeader,
+  DialogDrawerTitle,
+  DialogDrawerTrigger
+} from '@/components/dialog-drawer'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/static/card'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Alert, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -17,9 +24,10 @@ import Arctan_ from './arctan.mdx'
 import ChudnovskyBsCode_ from './chudnovsky-bs-code.mdx'
 import ChudnovskyBs_ from './chudnovsky-bs.mdx'
 import ChudnovskyCode_ from './chudnovsky-code.mdx'
+import '@/components/mdx/css/index'
+
 import Chudnovsky_ from './chudnovsky.mdx'
 import { Print } from './print'
-import '@/components/mdx/css/index'
 
 const Arctan = React.memo(Arctan_)
 const ChudnovskyBsCode = React.memo(ChudnovskyBsCode_)
@@ -101,15 +109,24 @@ export default function Page() {
               ))}
             </SelectContent>
           </Select>
-          <Dialog>
-            <DialogTrigger asChild>
+          <DialogDrawer>
+            <DialogDrawerTrigger asChild>
               <Button>源码</Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl p-0 text-sm [&>figure]:m-0" showCloseButton={false}>
+            </DialogDrawerTrigger>
+            <DialogDrawerContent
+              className="text-sm [&>figure]:m-0"
+              dialogClassName="max-w-2xl border-0 p-0!"
+              drawerClassName="**:data-[slot=scroll-area]:h-[70vh] **:[figure]:rounded-b-none! **:[figure]:mt-4!"
+              showCloseButton={false}
+            >
+              <DialogDrawerHeader className="hidden">
+                <DialogDrawerTitle />
+                <DialogDrawerDescription />
+              </DialogDrawerHeader>
               {form.mode == 'chudnovsky' && <ChudnovskyCode />}
               {form.mode == 'chudnovsky-bs' && <ChudnovskyBsCode />}
-            </DialogContent>
-          </Dialog>
+            </DialogDrawerContent>
+          </DialogDrawer>
           <Button
             className="grow"
             disabled={loading}

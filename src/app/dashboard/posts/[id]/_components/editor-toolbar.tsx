@@ -76,11 +76,11 @@ const EditorToolbar = ({
       >
         <TooltipProvider>
           <Button
-            className="cursor-grab border"
+            className="cursor-grab touch-none border"
             size="icon"
             variant="secondary"
             onPointerDown={event => {
-              dragControls.start(event, { snapToCursor: true })
+              dragControls.start(event)
             }}
           >
             <Hand />

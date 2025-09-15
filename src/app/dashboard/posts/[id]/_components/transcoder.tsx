@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Textarea } from '@/components/ui/textarea'
 
 interface TranscoderProps extends React.PropsWithChildren {}
@@ -20,6 +20,7 @@ export const Transcoder = ({ children }: TranscoderProps) => {
       >
         <DialogHeader>
           <DialogTitle>转码器</DialogTitle>
+          <DialogDescription className="hidden" />
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4">
           <Textarea

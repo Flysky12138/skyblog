@@ -6,7 +6,7 @@ import { SessionProvider } from 'next-auth/react'
 import { Cascadia_Code, ZCOOL_KuaiLe } from 'next/font/google'
 import NextTopLoader from 'nextjs-toploader'
 
-import { Toaster } from '@/components/ui/sonner'
+import { Toaster } from '@/components/ui-overwrite/sonner'
 import { Report } from '@/components/utils/report'
 import { cn } from '@/lib/utils'
 import { ImageViewerProvider } from '@/providers/image-viewer'
@@ -14,9 +14,26 @@ import { SWRProvider } from '@/providers/swr'
 import { ThemeProvider } from '@/providers/theme'
 
 export const metadata: Metadata = {
+  authors: [{ name: 'flysky12138', url: 'https://github.com/Flysky12138' }],
   description: process.env.NEXT_PUBLIC_DESCRIPTION,
   generator: 'Next.js',
-  title: process.env.NEXT_PUBLIC_TITLE
+  keywords: ['blog', 'flysky', 'flysky12138', process.env.NEXT_PUBLIC_TITLE],
+  openGraph: {
+    description: process.env.NEXT_PUBLIC_DESCRIPTION,
+    siteName: process.env.NEXT_PUBLIC_TITLE,
+    title: process.env.NEXT_PUBLIC_TITLE,
+    type: 'website',
+    url: process.env.NEXT_PUBLIC_WEBSITE_URL
+  },
+  title: {
+    default: process.env.NEXT_PUBLIC_TITLE,
+    template: `%s | ${process.env.NEXT_PUBLIC_TITLE}`
+  },
+  twitter: {
+    card: 'summary_large_image',
+    description: process.env.NEXT_PUBLIC_DESCRIPTION,
+    title: process.env.NEXT_PUBLIC_TITLE
+  }
 }
 
 export const viewport: Viewport = {

@@ -15,8 +15,7 @@ export const { auth, handlers } = NextAuth({
       }
       return token
     },
-    session: async ({ session, ...params }) => {
-      const { token } = params
+    session: async ({ session, token }) => {
       session.id = token.id
       session.role = token.role
       return session
