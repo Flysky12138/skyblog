@@ -73,9 +73,7 @@ export const SongList = ({ hasMore, loadMoreRows, playerIcon, songs, onRowClick 
                     />
                     <div className="truncate">
                       <p className="truncate text-sm">{song.name}</p>
-                      <p className="text-muted-foreground text-xs">
-                        {song.ar[0].name} - {song.al.name}
-                      </p>
+                      <p className="text-muted-foreground text-xs">{[song.ar[0].name, song.al.name].filter(Boolean).join(' - ')}</p>
                     </div>
                     {playerIcon?.(song)}
                   </div>

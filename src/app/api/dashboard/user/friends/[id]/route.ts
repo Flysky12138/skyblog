@@ -18,7 +18,7 @@ export const PUT = async (request: NextRequest, { params }: RouteContext<'/api/d
   try {
     const { id } = await params
 
-    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
 
     const data = await request.json()
     const res = await dbPut(id, data)
@@ -45,7 +45,7 @@ export const DELETE = async (request: NextRequest, { params }: RouteContext<'/ap
   try {
     const { id } = await params
 
-    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
 
     const res = await dbDelete(id)
 

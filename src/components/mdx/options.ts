@@ -12,6 +12,7 @@ import remarkMath from 'remark-math'
 import { PluggableList } from 'unified'
 
 import { rehypeCode } from './rehype/rehype-code'
+import { rehypeRemoveExtraTags } from './rehype/rehype-remove-extra-tags'
 
 /**
  * Latex options
@@ -55,7 +56,8 @@ export const rehypePlugins: PluggableList = [
   [rehypeMathjax, rehypeMathjaxOptions],
   [rehypePrettyCode, rehypePrettyCodeOptions],
   rehypeSlug,
-  rehypeCode
+  rehypeCode,
+  rehypeRemoveExtraTags
 ]
 
 /**

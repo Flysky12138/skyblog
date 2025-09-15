@@ -10,10 +10,10 @@
 
 @plugin '@tailwindcss/typography';
 
-@import './shadcn.css';
-@import './assets/css/utility.css';
-@import './assets/css/base.css' layer(base);
-@import './assets/css/components.css' layer(components);
+@import './styles/shadcn.css';
+@import './styles/utility.css';
+@import './styles/base.css' layer(base);
+@import './styles/components.css' layer(components);
 
 :root {
   --root: oklch(0.98 0 0);

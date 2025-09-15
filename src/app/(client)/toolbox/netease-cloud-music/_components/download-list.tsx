@@ -4,6 +4,7 @@ import { Download } from 'lucide-react'
 import React from 'react'
 import { useAsyncFn, useBeforeUnload, useMap, useSet } from 'react-use'
 import { FixedSizeList } from 'react-window'
+import { toast } from 'sonner'
 
 import {
   DialogDrawer,
@@ -22,7 +23,7 @@ import { ATTRIBUTE } from '@/lib/constants'
 import { ProgressProps, readResponseProgress } from '@/lib/http/progress'
 import { CustomRequest } from '@/lib/http/request'
 import { promisePool } from '@/lib/promise'
-import { cn } from '@/lib/utils'
+import { cn, tw } from '@/lib/utils'
 
 type LevelType = AppRouteHandlerMethodMap['GET /api/netease-cloud-music/song/url']['return'][number]['level']
 
@@ -36,12 +37,15 @@ const LEVEL_OPTIONS: { label: string; value: LevelType }[] = [
   // { label: '较高', value: 'higher' },
   { label: '标准 2~5M', value: 'standard' }
 ]
+const REMOVE_ARTIST_NAMES = ['杰伦', '杰倫', '蔡健雅', '曲婉婷']
 
 interface DownloadListProps {
   songs: AppRouteHandlerMethodMap['GET /api/netease-cloud-music/search']['return']['songs']
 }
 
 export const DownloadList = ({ songs }: DownloadListProps) => {
+  songs = songs.filter(song => !song.ar.some(ar => REMOVE_ARTIST_NAMES.some(name => ar.name.includes(name))))
+
   const [level, setLevel] = React.useState<LevelType>('jymaster')
   const [selected, { add: selectedAdd, clear: selectedClear, has: selectedhas, toggle: selectedToggle }] =
     useSet<DownloadListProps['songs'][number]>()
@@ -51,14 +55,22 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
     const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' })
     return promisePool(
       Array.from(selected).map(song => async () => {
-        const [{ md5, type, url }] = await CustomRequest('GET /api/netease-cloud-music/song/url', { search: { id: song.id, level } })
-        const blob = await fetch(url.replace('http:', 'https:')).then(res => readResponseProgress(res, payload => progressSet(song.id, payload)))
-        const fileHandle = await dirHandle.getFileHandle(`${song?.name || md5}.${type}`, { create: true })
-        const writable = await fileHandle.createWritable()
-        await writable.write(blob)
-        await writable.close()
-        selectedToggle(song)
-        progressRemove(song.id)
+        try {
+          const [{ md5, type, url }] = await CustomRequest('GET /api/netease-cloud-music/song/url', { search: { id: song.id, level } })
+          if (!url) throw new Error([song.ar[0].name, song.al.name].filter(Boolean).join(' - '))
+          const blob = await fetch(url.replace('http:', 'https:')).then(res => readResponseProgress(res, payload => progressSet(song.id, payload)))
+          const fileHandle = await dirHandle.getFileHandle(`${song?.name || md5}.${type}`, { create: true })
+          const writable = await fileHandle.createWritable()
+          await writable.write(blob)
+          await writable.close()
+          selectedToggle(song)
+          progressRemove(song.id)
+        } catch (error) {
+          toast.error('下载歌曲失败', {
+            description: error instanceof Error ? error.message : (error as string),
+            richColors: true
+          })
+        }
       })
     )
   }, [selected, level])
@@ -76,16 +88,15 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
           </Button>
         </DialogDrawerTrigger>
       </Portal>
-      <DialogDrawerContent className="gap-0 border p-0 outline-none" showCloseButton={false}>
-        <DialogDrawerHeader aria-hidden="true" className="hidden">
+      <DialogDrawerContent classNameDialog={tw`max-w-xl p-0! gap-0`} classNameDrawer={tw`border`} showCloseButton={false}>
+        <DialogDrawerHeader className="hidden">
           <DialogDrawerTitle />
           <DialogDrawerDescription />
         </DialogDrawerHeader>
-        <div className="border-divide mt-2 flex gap-2 border-b px-2 py-3 shadow-xs md:mt-0">
-          <Button
+        <div className="border-divide flex items-center gap-2 border-b px-2.5 pt-4 pb-3 shadow-xs md:mt-0">
+          <Checkbox
+            checked={selected.size == songs.length ? true : selected.size == 0 ? false : 'indeterminate'}
             disabled={isDownloading}
-            size="sm"
-            variant="outline"
             onClick={() => {
               if (selected.size == songs.length) {
                 selectedClear()
@@ -93,9 +104,7 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
                 songs.forEach(selectedAdd)
               }
             }}
-          >
-            {selected.size == songs.length ? '取消全选' : '全选'}
-          </Button>
+          />
           <Select
             defaultValue={level}
             disabled={isDownloading}
@@ -154,9 +163,7 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
                 />
                 <div className="truncate">
                   <p className="truncate text-sm">{song.name}</p>
-                  <p className="text-muted-foreground text-xs">
-                    {song.ar[0].name} - {song.al.name}
-                  </p>
+                  <p className="text-muted-foreground text-xs">{[song.ar[0].name, song.al.name].filter(Boolean).join(' - ')}</p>
                 </div>
               </div>
             )

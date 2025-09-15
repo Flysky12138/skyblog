@@ -6,7 +6,7 @@ import { SessionProvider } from 'next-auth/react'
 import { Cascadia_Code, ZCOOL_KuaiLe } from 'next/font/google'
 import NextTopLoader from 'nextjs-toploader'
 
-import { Toaster } from '@/components/ui/sonner'
+import { Toaster } from '@/components/ui-overwrite/sonner'
 import { Report } from '@/components/utils/report'
 import { cn } from '@/lib/utils'
 import { ImageViewerProvider } from '@/providers/image-viewer'

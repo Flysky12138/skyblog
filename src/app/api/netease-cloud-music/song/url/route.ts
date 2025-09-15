@@ -6,6 +6,8 @@ import { NextRequest } from 'next/server'
 import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
 import { CustomResponse } from '@/lib/http/response'
 
+export const revalidate = 2592000
+
 const require = createRequire(import.meta.url)
 const { song_url_v1 } = require('NeteaseCloudMusicApi') as typeof NeteaseCloudMusicApi
 
@@ -43,7 +45,7 @@ export const GET = async (request: NextRequest) => {
     const id = request.nextUrl.searchParams.get('id')
     const level = (request.nextUrl.searchParams.get('level') || 'jymaster') as SoundQualityType
 
-    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
 
     const data = await song_url_v1({
       cookie: await get(VERCEL_EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE),
