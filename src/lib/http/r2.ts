@@ -51,13 +51,7 @@ export class R2 {
    * 获取目录结构
    */
   static async list<T>(Prefix: T extends StartsWith<'/'> ? never : T extends '' | EndsWith<'/'> ? T : never) {
-    const { CommonPrefixes, Contents } = await S3.send(
-      new ListObjectsV2Command({
-        Bucket,
-        Delimiter: '/',
-        Prefix
-      })
-    )
+    const { CommonPrefixes, Contents } = await S3.send(new ListObjectsV2Command({ Bucket, Delimiter: '/', Prefix }))
     return {
       files: Contents ? await Promise.all(Contents.filter(it => it.Key).map(async file => this.info(file.Key!))) : [],
       folders: CommonPrefixes?.map(it => it.Prefix!) || []
@@ -80,15 +74,7 @@ export class R2 {
     Key: string
     Metadata: R2.Metadata
   }): Promise<R2.FileInfo> {
-    await S3.send(
-      new PutObjectCommand({
-        Body,
-        Bucket,
-        ContentType,
-        Key,
-        Metadata: Metadata as Record<string, string>
-      })
-    )
+    await S3.send(new PutObjectCommand({ Body, Bucket, ContentType, Key, Metadata: Metadata as Record<string, string> }))
     return {
       contentType: ContentType,
       key: Key,

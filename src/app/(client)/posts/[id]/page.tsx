@@ -32,7 +32,16 @@ export const generateMetadata = async ({ params }: PageProps<'/posts/[id]'>): Pr
     creator: post.author.name,
     description: post.description,
     keywords: post.tags.map(({ name }) => name),
-    title: post.title
+    openGraph: {
+      description: post.description || undefined,
+      title: post.title,
+      url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${id}`
+    },
+    title: post.title,
+    twitter: {
+      description: post.description || undefined,
+      title: post.title
+    }
   }
 }
 

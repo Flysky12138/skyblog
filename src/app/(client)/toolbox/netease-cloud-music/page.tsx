@@ -95,19 +95,19 @@ export default function Page() {
           if (playlistId) {
             event.preventDefault()
             setSearch(`p${playlistId}`)
-            toast.success('已自动将歌单 ID 填入搜索框', { position: 'top-center' })
+            toast.success('已自动将歌单 ID 填入搜索框')
             return
           }
           const albumId = text.match(/album\?id=(\d+)/)?.[1]
           if (albumId) {
             event.preventDefault()
             setSearch(`a${albumId}`)
-            toast.success('已自动将专辑 ID 填入搜索框', { position: 'top-center' })
+            toast.success('已自动将专辑 ID 填入搜索框')
           }
         }}
       />
       <DisplayByConditional
-        condition={songs.length > 0}
+        condition={songs.length > 0 && !!search}
         fallback={
           <DisplayByConditional
             condition={isLoading}

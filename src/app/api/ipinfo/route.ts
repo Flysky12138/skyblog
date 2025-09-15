@@ -12,7 +12,7 @@ export type GET = RouteHandlerType<{
 
 export const GET = async (request: NextRequest) => {
   const ip = process.env.NODE_ENV == 'development' ? '0.0.0.0' : ipAddress(request)
-  if (!ip) return CustomResponse.error('未知访问', 400)
+  if (!ip) return CustomResponse.error('未知访问', { status: 400 })
 
   try {
     if (!process.env.TOKEN_IPINFO) throw new Error()

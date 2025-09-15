@@ -154,7 +154,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   }
 
   return (
-    <div ref={dragConstraintsRef} className="relative flex h-screen overflow-hidden">
+    <div ref={dragConstraintsRef} className="relative flex h-full max-h-screen overflow-hidden">
       <style>{`main { padding: 0 !important }`}</style>
       <EditorToolbar
         className="absolute bottom-2 left-1/2 z-50 -translate-x-1/2"

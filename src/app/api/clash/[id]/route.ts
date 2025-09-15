@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client'
 import { ipAddress } from '@vercel/functions'
-import { NextRequest, NextResponse, userAgent } from 'next/server'
+import { NextRequest, userAgent } from 'next/server'
 
 import { CustomResponse } from '@/lib/http/response'
 import { replaceVariables } from '@/lib/parser/string'
@@ -34,20 +34,25 @@ const dbGet = async (id: string, data: Prisma.VisitorLogCreateInput) => {
 export const GET = async (request: NextRequest, { params }: RouteContext<'/api/clash/[id]'>) => {
   try {
     const { id } = await params
-
-    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
 
     const ip = isDev() ? '0.0.0.0' : ipAddress(request)
-    if (!ip) return await CustomResponse.error('未知访问', 400)
+    if (!ip) return await CustomResponse.error('未知访问', { status: 401 })
 
     if (!request.headers.get('user-agent')?.toLowerCase().includes('clash')) {
-      return NextResponse.redirect(new URL('/', request.url))
+      const html = (await import('./index.html?raw')).default
+      return new Response(
+        html.replace(/<%=\s*(\w+)\s*%>/g, (substring, key) => process.env[key] ?? substring),
+        {
+          headers: {
+            'Content-Type': 'text/html; charset=utf-8'
+          }
+        }
+      )
     }
 
     const agent = userAgent(request)
-
     const res = await dbGet(id, { agent, ip })
-
     const yaml = res.clashTemplateId ? replaceVariables(res.clashTemplates?.content, res.variables) : res.content
 
     return new Response(yaml, {

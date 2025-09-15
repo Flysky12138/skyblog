@@ -14,5 +14,6 @@
     "editor.defaultFormatter": "Prisma.prisma"
   },
   "tailwindCSS.classFunctions": ["tw"],
+  "tailwindCSS.classAttributes": ["class", "className", "ngClass", "class:list", "\\w+ClassName"],
   "typescript.tsdk": "node_modules/typescript/lib"
 }

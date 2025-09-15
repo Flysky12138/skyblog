@@ -6,6 +6,8 @@ import { NextRequest } from 'next/server'
 import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
 import { CustomResponse } from '@/lib/http/response'
 
+export const revalidate = 43200
+
 const require = createRequire(import.meta.url)
 const { playlist_detail } = require('NeteaseCloudMusicApi') as typeof NeteaseCloudMusicApi
 
@@ -36,7 +38,7 @@ export type GET = RouteHandlerType<{
 export const GET = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return await CustomResponse.error('{id} 值缺失', 400)
+    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
 
     const data = await playlist_detail({
       cookie: await get(VERCEL_EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE),

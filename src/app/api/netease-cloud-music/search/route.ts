@@ -6,6 +6,8 @@ import { NextRequest } from 'next/server'
 import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
 import { CustomResponse } from '@/lib/http/response'
 
+export const revalidate = 43200
+
 const require = createRequire(import.meta.url)
 const { cloudsearch } = require('NeteaseCloudMusicApi') as typeof NeteaseCloudMusicApi
 
@@ -58,7 +60,7 @@ export type GET = RouteHandlerType<{
 export const GET = async (request: NextRequest) => {
   try {
     const keywords = request.nextUrl.searchParams.get('keywords')
-    if (!keywords) return await CustomResponse.error('{keywords} 值缺失', 400)
+    if (!keywords) return await CustomResponse.error('{keywords} 值缺失', { status: 400 })
 
     const limit = Number.parseInt(request.nextUrl.searchParams.get('limit') || '100')
     const page = Number.parseInt(request.nextUrl.searchParams.get('page') || '0')

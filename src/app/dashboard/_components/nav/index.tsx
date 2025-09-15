@@ -29,7 +29,7 @@ export const Nav = () => {
 
 export const NavProvider = async ({ className, ...props }: React.ComponentProps<typeof SidebarProvider>) => {
   const cookieStore = await cookies()
-  const defaultOpen = cookieStore.get('sidebar_state')?.value == 'true'
+  const defaultOpen = cookieStore.has('sidebar_state') ? cookieStore.get('sidebar_state')?.value == 'true' : true
 
   return <SidebarProvider className={cn('w-auto', className)} defaultOpen={defaultOpen} {...props} />
 }

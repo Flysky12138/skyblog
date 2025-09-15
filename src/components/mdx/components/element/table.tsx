@@ -6,16 +6,16 @@ export const table = ({ className, ...props }: React.ComponentProps<'table'>) =>
   return <table className={cn('block overflow-auto', className)} {...props} />
 }
 
-export const thead = ({ className, ...props }: React.ComponentProps<'thead'>) => {
-  return <thead className={className} {...props} />
+export const thead = (props: React.ComponentProps<'thead'>) => {
+  return <thead {...props} />
 }
 
-export const tbody = ({ className, ...props }: React.ComponentProps<'tbody'>) => {
-  return <tbody className={className} {...props} />
+export const tbody = (props: React.ComponentProps<'tbody'>) => {
+  return <tbody {...props} />
 }
 
-export const tfoot = ({ className, ...props }: React.ComponentProps<'tfoot'>) => {
-  return <tfoot className={className} {...props} />
+export const tfoot = (props: React.ComponentProps<'tfoot'>) => {
+  return <tfoot {...props} />
 }
 
 export const tr = ({ className, ...props }: React.ComponentProps<'tr'>) => {
