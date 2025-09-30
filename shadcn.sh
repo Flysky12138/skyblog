@@ -24,6 +24,7 @@ pnpm dlx shadcn@latest add -y -o \
     sheet \
     sidebar \
     skeleton \
+    slider \
     sonner \
     switch \
     tabs \

@@ -1,6 +1,5 @@
 'use client'
 
-import { CirclePause, CirclePlay } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import React from 'react'
 import { toast } from 'sonner'
@@ -69,7 +68,6 @@ export default function Page() {
   // 播放器
   const audioRef = React.useRef<NonNullable<AudioProps['ref']>['current']>(null)
   const [player, setPlayer] = useImmer<(typeof data)[number]['songs'][number] | null>(null)
-  const [paused, setPaused] = useImmer(false)
 
   React.useEffect(() => {
     const _search = decodeURIComponent(new URLSearchParams(window.location.search).get('search') || '')
@@ -129,27 +127,17 @@ export default function Page() {
           loadMoreRows={() => {
             setSize(size + 1)
           }}
-          playerIcon={song => {
-            if (player?.id != song.id) return null
-            return (
-              <div className="pointer-events-none ml-auto opacity-60" onClick={event => event.stopPropagation()}>
-                {paused ? <CirclePlay /> : <CirclePause />}
-              </div>
-            )
-          }}
           songs={songs}
           onRowClick={song => {
-            if (player?.id == song.id) {
-              audioRef.current?.controls[paused ? 'play' : 'pause']()
-            } else {
-              audioRef.current?.controls.pause()
+            if (player?.id != song.id) {
               setPlayer(song)
             }
+            audioRef.current?.setOpen(true)
           }}
         />
       </DisplayByConditional>
       <DownloadList songs={songs} />
-      <Audio ref={audioRef} id={player?.id} onPausedChange={setPaused} />
+      <Audio ref={audioRef} song={player} />
     </div>
   )
 }

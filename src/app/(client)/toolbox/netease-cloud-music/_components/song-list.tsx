@@ -1,6 +1,5 @@
 'use client'
 
-import React from 'react'
 import { useMeasure } from 'react-use'
 import { FixedSizeList } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
@@ -13,10 +12,9 @@ interface SongListProps {
   songs: AppRouteHandlerMethodMap['GET /api/netease-cloud-music/search']['return']['songs']
   loadMoreRows: () => void
   onRowClick?: (song: SongListProps['songs'][number]) => void
-  playerIcon?: (song: SongListProps['songs'][number]) => React.ReactNode
 }
 
-export const SongList = ({ hasMore, loadMoreRows, playerIcon, songs, onRowClick }: SongListProps) => {
+export const SongList = ({ hasMore, loadMoreRows, songs, onRowClick }: SongListProps) => {
   const [divRef, { height }] = useMeasure<HTMLDivElement>()
 
   const itemCount = hasMore ? songs.length + 1 : songs.length
@@ -57,7 +55,7 @@ export const SongList = ({ hasMore, loadMoreRows, playerIcon, songs, onRowClick 
                 const song = data[index]
                 return (
                   <div
-                    className="flex cursor-pointer items-center gap-2 border-b px-1.5 last:border-b-0"
+                    className="relative flex cursor-pointer items-center gap-2 border-b px-1.5 last:border-b-0"
                     style={style}
                     onClick={() => {
                       onRowClick?.(song)
@@ -75,7 +73,6 @@ export const SongList = ({ hasMore, loadMoreRows, playerIcon, songs, onRowClick 
                       <p className="truncate text-sm">{song.name}</p>
                       <p className="text-muted-foreground text-xs">{[song.ar[0].name, song.al.name].filter(Boolean).join(' - ')}</p>
                     </div>
-                    {playerIcon?.(song)}
                   </div>
                 )
               }}

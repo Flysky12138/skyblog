@@ -30,7 +30,7 @@ export const DialogContent = ({
 }) => {
   return (
     <DialogPortal data-slot="dialog-portal">
-      <DialogOverlay className="flex justify-center overflow-y-auto p-4 sm:p-6">
+      <DialogOverlay className="flex justify-center overflow-y-auto p-4 backdrop-blur-sm sm:p-6">
         <DialogPrimitive.Content
           className={cn(
             'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200',
@@ -49,6 +49,7 @@ export const DialogContent = ({
                 'focus:ring-ring hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden',
                 "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
               )}
+              data-slot="dialog-close"
             >
               <XIcon />
               <span className="sr-only">Close</span>
