@@ -17,9 +17,9 @@ export const monacoEditorDefaultOptions: editor.IStandaloneEditorConstructionOpt
   lineDecorationsWidth: 12,
   lineNumbersMinChars: 4,
   quickSuggestions: {
-    comments: true,
-    other: true,
-    strings: true
+    comments: 'on',
+    other: 'on',
+    strings: 'on'
   },
   renderLineHighlight: 'all',
   roundedSelection: true,

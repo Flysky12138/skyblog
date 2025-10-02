@@ -35,6 +35,8 @@ import {
   TableRow,
   TableRowLoading
 } from '@/components/table'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { getFileType } from '@/lib/file/info'
 import { R2 } from '@/lib/http/r2'
 import { formatFileSize } from '@/lib/parser/size'
 import { formatISOTime } from '@/lib/parser/time'
@@ -63,19 +65,24 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
   const isEmpty = data?.files.length == 0 && data?.folders.length == 0
 
   const { openViewer } = useImageViewerContext()
-  /** 文件点击 */
-  const handleFileRowClick = React.useCallback(
+  /** 文件预览 */
+  const handleFileReview = React.useCallback(
     (file: R2.FileInfo) => {
       if (!data) return
-      if (file.contentType?.startsWith('image')) {
-        const images = data.files.filter(file => file.contentType?.startsWith('image'))
-        openViewer({
-          images: images.map(image => ({ key: image.key, src: R2.get(image.key) })),
-          index: Math.max(
-            0,
-            images.findIndex(image => image.key == file.key)
-          )
-        })
+      switch (getFileType(file.contentType)) {
+        case 'image':
+          const images = data.files.filter(file => file.contentType?.startsWith('image'))
+          openViewer({
+            images: images.map(image => ({ key: image.key, src: R2.get(image.key) })),
+            index: Math.max(
+              0,
+              images.findIndex(image => image.key == file.key)
+            )
+          })
+          break
+        case 'pdf':
+          window.open(R2.get(file.key), '_blank')
+          break
       }
     },
     [data, openViewer]
@@ -150,19 +157,32 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
               <div className="flex items-center justify-end gap-2">
                 <TableActionButton
                   onClick={() => {
-                    handleFileRowClick(file)
+                    handleFileReview(file)
                   }}
                 >
                   <Eye />
                 </TableActionButton>
-                <TableActionButton
-                  onClick={() => {
-                    copy(R2.get(file.key))
-                    toast.success('复制成功')
-                  }}
-                >
-                  <Link />
-                </TableActionButton>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <TableActionButton>
+                      <Link />
+                    </TableActionButton>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="max-w-md">
+                    {getFileLinks(file).map(link => (
+                      <DropdownMenuItem
+                        key={link}
+                        className="cursor-pointer break-all"
+                        onSelect={() => {
+                          copy(link)
+                          toast.success('复制成功')
+                        }}
+                      >
+                        {link}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <TableDeleteButton
                   description="这将永久删除文件。"
                   title={file.key.slice(file.key.lastIndexOf('/') + 1)}
@@ -190,19 +210,48 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
   )
 }
 
-/** 文件图标 */
+/**
+ * 文件图标
+ */
 const FileIconMap = ({
   type = '',
   ...props
 }: LucideProps & {
   type?: string
 }) => {
-  if (type.startsWith('image')) return <FileImage {...props} />
-  if (type.startsWith('audio')) return <FileAudio2 {...props} />
-  if (type.startsWith('video')) return <FileVideo2 {...props} />
-  if (type.startsWith('font')) return <FileType2 {...props} />
-  if (type.startsWith('text')) return <FileText {...props} />
-  if (type.startsWith('application/json')) return <FileJson2 {...props} />
-  if (type.startsWith('application/zip')) return <FileArchive {...props} />
-  return <File {...props} />
+  switch (getFileType(type)) {
+    case 'audio':
+      return <FileAudio2 {...props} />
+    case 'font':
+      return <FileType2 {...props} />
+    case 'image':
+      return <FileImage {...props} />
+    case 'json':
+      return <FileJson2 {...props} />
+    case 'text':
+      return <FileText {...props} />
+    case 'video':
+      return <FileVideo2 {...props} />
+    case 'zip':
+      return <FileArchive {...props} />
+    default:
+      return <File {...props} />
+  }
+}
+
+/**
+ * 获取文件链接列表
+ */
+const getFileLinks = (file: R2.FileInfo) => {
+  const links = [R2.get(file.key)]
+  switch (getFileType(file.contentType)) {
+    case 'image':
+      const alt = file.key.split('/').at(-1)?.split('.')[0]
+      const height = file.metadata.height
+      const src = R2.get(file.key)
+      const width = file.metadata.width
+      links.push(`![${alt}](${src})`, `::img{alt="${alt}" src="${src}" width="${width}" height="${height}"}`)
+      break
+  }
+  return links
 }

@@ -52,7 +52,7 @@ export const Portal = ({
   tagName = 'div',
   onMount
 }: PortalProps) => {
-  const mounted = useMounted()
+  const isMounted = useMounted()
   const createdRef = React.useRef<HTMLElement | null>(null)
 
   const targetEl = React.useMemo(() => {
@@ -88,7 +88,7 @@ export const Portal = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetEl])
 
-  if (!mounted) {
+  if (!isMounted) {
     return null
   }
 

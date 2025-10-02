@@ -1,7 +1,7 @@
 'use client'
 
 import * as echarts from 'echarts'
-import { ECharts, EChartsCoreOption } from 'echarts'
+import { EChartsCoreOption } from 'echarts'
 import React from 'react'
 import { useDebounce, useWindowSize } from 'react-use'
 import { ModuleKind, ScriptTarget, transpile } from 'typescript'
@@ -9,43 +9,28 @@ import { ModuleKind, ScriptTarget, transpile } from 'typescript'
 import { MonacoEditor } from '@/components/monaco-editor'
 import { tsEchartsConfig } from '@/components/monaco-editor/languages/ts-echarts'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
+import { useEcharts } from '@/hooks/use-echarts'
+
+import { FullMain } from '../_components/full-main'
 
 export default function Page() {
-  const id = React.useId()
-  const { width } = useWindowSize()
-
   const [code, setCode] = React.useState(DEFAULT_OPTION)
 
-  const echartsRef = React.useRef<ECharts>(null)
+  const { width } = useWindowSize()
+  const [divRef, { echarts }] = useEcharts<HTMLDivElement>()
+
+  useDebounce(() => echarts.current?.setOption(getOptions(code), true, true), 800, [code, echarts])
 
   React.useEffect(() => {
-    echartsRef.current = echarts.init(document.getElementById(id))
-    return () => {
-      echartsRef.current?.dispose()
-    }
-  }, [id])
-
-  useDebounce(() => echartsRef.current?.setOption(getOptions(code), true, true), 800, [code])
-
-  React.useEffect(() => {
-    echartsRef.current?.resize()
-  }, [width])
+    echarts.current?.resize()
+  }, [echarts, width])
 
   return (
-    <div className="h-main bg-card">
-      <style>{`
-        header {
-          z-index: calc(var(--z-index-main) - 1px);
-        }
-        main [data-slot="container"] { 
-          padding: 0;
-          max-width: none;
-        }
-      `}</style>
+    <FullMain>
       <ResizablePanelGroup
         direction={width < 1024 ? 'vertical' : 'horizontal'}
         onLayout={() => {
-          echartsRef.current?.resize()
+          echarts.current?.resize()
         }}
       >
         <ResizablePanel>
@@ -64,10 +49,10 @@ export default function Page() {
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel>
-          <div className="size-full" id={id} />
+          <div ref={divRef} className="size-full" />
         </ResizablePanel>
       </ResizablePanelGroup>
-    </div>
+    </FullMain>
   )
 }
 

@@ -2,7 +2,6 @@
 
 import { AlertCircle } from 'lucide-react'
 import React from 'react'
-import { useToggle } from 'react-use'
 import { useImmer } from 'use-immer'
 
 import {
@@ -50,20 +49,20 @@ export default function Page() {
   })
 
   const [result, setResult] = React.useState<null | { error: Error; pi: string; time: number }>(null)
-  const [loading, loadingToggle] = useToggle(false)
+  const [loading, setLoading] = React.useState(false)
 
   const workerRef = React.useRef<Worker>(null)
   React.useEffect(() => {
     const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' })
     worker.onmessage = ({ data }) => {
       setResult(data)
-      loadingToggle(false)
+      setLoading(false)
     }
     workerRef.current = worker
     return () => {
       workerRef.current?.terminate()
     }
-  }, [loadingToggle])
+  }, [])
 
   return (
     <Card className="p-card flex flex-col gap-3">
@@ -133,7 +132,7 @@ export default function Page() {
             onClick={() => {
               setResult(null)
               workerRef.current?.postMessage(form)
-              loadingToggle(true)
+              setLoading(true)
             }}
           >
             {loading && <Spinner />}

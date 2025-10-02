@@ -42,6 +42,6 @@ const chudnovsky_bs = digits => {
   const [P, Q, T] = bs(0n, BigInt(N))
   const [x, y] = pell_sqrt_10005(digits)
   const pi = (Q * 426880n * x * 10n ** BigInt(digits)) / (T * y)
-  return `3.${String(pi).slice(1, digits)}`
+  return `3.${pi.toString().slice(1, digits)}`
 }
 ```

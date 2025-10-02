@@ -6,9 +6,9 @@
   "author": "xhp443@gmail.com",
   "type": "module",
   "scripts": {
-    "prebuild": "npm run prisma:generate && npm run script:api:runtime edge && npm run script:api:type",
+    "prebuild": "npm run prisma:generate && npm run script:api:type",
     "build": "next build",
-    "predev": "npm run prisma:generate && npm run script:api:runtime nodejs && npm run script:api:type",
+    "predev": "npm run prisma:generate && npm run script:api:type",
     "dev": "next dev -H 0.0.0.0",
     "format": "prettier --write . && prisma format",
     "lint": "eslint .",

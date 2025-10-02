@@ -5,7 +5,7 @@ import { ChevronUp } from 'lucide-react'
 import React from 'react'
 
 import { Button } from '@/components/ui/button'
-import { useWindowScroll } from '@/hooks/use-window-scroll'
+import { useWindowScrollState } from '@/hooks/use-window-scroll-state'
 import { cn } from '@/lib/utils'
 
 interface ScrollToTopProps extends React.ComponentProps<typeof Button> {
@@ -19,7 +19,7 @@ interface ScrollToTopProps extends React.ComponentProps<typeof Button> {
 export const ScrollToTop = ({ className, showOnScrollYOverflow = 200, ...props }: ScrollToTopProps) => {
   const [showProgress, setShowProgress] = React.useState(false)
 
-  const { y, yProgress } = useWindowScroll()
+  const { y, yProgress } = useWindowScrollState()
 
   const timer = React.useRef<NodeJS.Timeout>(undefined)
   React.useEffect(() => {

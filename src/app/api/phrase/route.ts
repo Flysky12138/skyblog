@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server'
 import { CustomFetch } from '@/lib/http/fetch'
 import { CustomResponse } from '@/lib/http/response'
 
-export const runtime = 'nodejs'
+export const runtime = 'edge'
 
 export type GET = RouteHandlerType<{
   return: {

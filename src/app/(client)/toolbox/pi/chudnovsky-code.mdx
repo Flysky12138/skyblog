@@ -29,6 +29,6 @@ const chudnovsky = digits => {
   const total = 13591409n * a_sum + 545140134n * b_sum
   const [x, y] = pell_sqrt_10005(digits)
   const pi = (426880n * x * PI_PRECISION ** 2n) / (total * y)
-  return `3.${String(pi).slice(1, digits)}`
+  return `3.${pi.toString().slice(1, digits)}`
 }
 ```

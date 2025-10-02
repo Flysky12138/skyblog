@@ -39,7 +39,11 @@ export const Audio = ({ ref, song }: AudioProps) => {
   const [isMoving, setIsMoving] = React.useState(false)
   const [sliderValue, setSliderValue] = React.useState(0)
 
-  const { data: src, isLoading } = useSWR(
+  const {
+    data: src,
+    isLoading,
+    mutate: mutateSrc
+  } = useSWR(
     song?.id ? ['0198f641-f60c-720d-98c2-69a4f880a373', 'standard', song.id] : null,
     async () => {
       const [{ url }] = await CustomRequest('GET /api/netease-cloud-music/song/url', { search: { id: song?.id || -1, level: 'standard' } })
@@ -84,6 +88,7 @@ export const Audio = ({ ref, song }: AudioProps) => {
   React.useEffect(() => {
     controls.pause()
     controls.seek(0)
+    mutateSrc('', { revalidate: false })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [song?.id])
 

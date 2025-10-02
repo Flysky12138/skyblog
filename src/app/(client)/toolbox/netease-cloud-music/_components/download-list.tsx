@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Spinner } from '@/components/ui/spinner'
 import { Portal } from '@/components/utils/portal'
 import { ATTRIBUTE } from '@/lib/constants'
+import { DirectoryHelper } from '@/lib/file/directory-helper'
 import { ProgressProps, readResponseProgress } from '@/lib/http/progress'
 import { CustomRequest } from '@/lib/http/request'
 import { promisePool } from '@/lib/promise'
@@ -46,32 +47,21 @@ interface DownloadListProps {
 export const DownloadList = ({ songs }: DownloadListProps) => {
   songs = songs.filter(song => !song.ar.some(ar => REMOVE_ARTIST_NAMES.some(name => ar.name.includes(name))))
 
-  const [level, setLevel] = React.useState<LevelType>('jymaster')
+  const [level, setLevel] = React.useState<LevelType>('lossless')
   const [selected, { add: selectedAdd, clear: selectedClear, has: selectedhas, toggle: selectedToggle }] =
     useSet<DownloadListProps['songs'][number]>()
   const [progress, { get: progressGet, remove: progressRemove, set: progressSet }] = useMap<Record<number, ProgressProps | undefined>>()
 
   const [{ loading: isDownloading }, handleDownload] = useAsyncFn(async () => {
-    const now = Date.now()
-    let dirHandle: FileSystemDirectoryHandle | null = null
-    try {
-      dirHandle = await window.showDirectoryPicker({ mode: 'readwrite', startIn: 'music' })
-    } catch (error) {
-      if (Date.now() - now < 200) {
-        toast.warning('当前浏览器不支持选择目录', { richColors: true })
-      }
-      return
-    }
+    const helper = new DirectoryHelper()
+    await helper.openDirectory({ mode: 'readwrite', startIn: 'music' })
     return promisePool(
       Array.from(selected).map(song => async () => {
         try {
           const [{ md5, type, url }] = await CustomRequest('GET /api/netease-cloud-music/song/url', { search: { id: song.id, level } })
           if (!url) throw new Error([song.ar[0].name, song.al.name].filter(Boolean).join(' - '))
           const blob = await fetch(url.replace('http:', 'https:')).then(res => readResponseProgress(res, payload => progressSet(song.id, payload)))
-          const fileHandle = await dirHandle.getFileHandle(`${song?.name || md5}.${type}`, { create: true })
-          const writable = await fileHandle.createWritable()
-          await writable.write(blob)
-          await writable.close()
+          await helper.writeFile(`${song?.name || md5}.${type}`, blob)
           selectedToggle(song)
           progressRemove(song.id)
         } catch (error) {
@@ -92,15 +82,7 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
     <DialogDrawer>
       <Portal selector={`#${ATTRIBUTE.ID.NAV_CONTAINER}`}>
         <DialogDrawerTrigger asChild>
-          <Button
-            size="icon"
-            onClick={event => {
-              if (!window.showDirectoryPicker) {
-                toast.error('当前浏览器不支持选择目录', { richColors: true })
-                event.preventDefault()
-              }
-            }}
-          >
+          <Button size="icon">
             <Download />
           </Button>
         </DialogDrawerTrigger>

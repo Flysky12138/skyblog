@@ -81,31 +81,28 @@ export default function Page() {
         placeholder="搜索 / 粘贴歌单或专辑分享链接"
         value={search}
         onChange={event => {
-          setSearch(event.target.value)
+          const text = event.target.value
+          const playlistId = text.match(/playlist(?:\?id=|\/)(\d+)/)?.[1]
+          if (playlistId) {
+            setSearch(`p${playlistId}`)
+            toast.success('识别到歌单，已自动转换')
+            return
+          }
+          const albumId = text.match(/album(?:\?id=|\/)(\d+)/)?.[1]
+          if (albumId) {
+            setSearch(`a${albumId}`)
+            toast.success('识别到专辑，已自动转换')
+            return
+          }
+          setSearch(text)
         }}
         onKeyDown={event => {
           if (event.key != 'Enter') return
           setKeywords(search.trim())
         }}
-        onPaste={async event => {
-          const text = await event.clipboardData.getData('text')
-          const playlistId = text.match(/playlist\?id=(\d+)/)?.[1]
-          if (playlistId) {
-            event.preventDefault()
-            setSearch(`p${playlistId}`)
-            toast.success('已自动将歌单 ID 填入搜索框')
-            return
-          }
-          const albumId = text.match(/album\?id=(\d+)/)?.[1]
-          if (albumId) {
-            event.preventDefault()
-            setSearch(`a${albumId}`)
-            toast.success('已自动将专辑 ID 填入搜索框')
-          }
-        }}
       />
       <DisplayByConditional
-        condition={songs.length > 0 && !!search}
+        condition={songs.length > 0}
         fallback={
           <DisplayByConditional
             condition={isLoading}
