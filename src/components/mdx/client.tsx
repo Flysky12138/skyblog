@@ -26,7 +26,7 @@ export const MDXClient = React.memo(({ source = '' }: MDXClientProps) => {
 
   if (loading && isFirstRender.current) {
     return (
-      <div className="flex items-center justify-center">
+      <div className="flex h-48 items-center justify-center">
         <Spinner size={32} variant="infinite" />
       </div>
     )

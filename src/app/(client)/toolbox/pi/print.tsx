@@ -18,13 +18,13 @@ interface PrintProps {
 
 export const Print = React.memo(({ pi, size, time, onClose }: PrintProps) => {
   const [divRef, { width }] = useMeasure<HTMLDivElement>()
-  const [fontRef, { width: fontWidth }] = useMeasure<HTMLElement>()
+  const [fontRef, { width: fontWidth }] = useMeasure<HTMLSpanElement>()
 
   const [piChunk, setPiChunk] = React.useState<string[][]>([])
 
   React.useEffect(() => {
     if ([width, fontWidth].some(it => it <= 0)) return
-    setPiChunk(Reflect.apply(chunk, null, [pi, Math.floor((width - 26) / fontWidth)]))
+    setPiChunk(chunk(Array.from(pi), Math.floor((width - 26) / fontWidth)))
   }, [fontWidth, pi, width])
 
   return (

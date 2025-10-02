@@ -1,6 +1,6 @@
 'use client'
 
-import { debounce } from 'es-toolkit'
+import { debounce, inRange } from 'es-toolkit'
 import { Route } from 'next'
 import Link, { LinkProps } from 'next/link'
 import React from 'react'
@@ -8,7 +8,6 @@ import { useEvent } from 'react-use'
 
 import { HEADING_ATTRIBUTE } from '@/components/mdx/rehype/rehype-heading-level'
 import { ATTRIBUTE } from '@/lib/constants'
-import { isBetween } from '@/lib/parser/number'
 import { cn } from '@/lib/utils'
 
 interface PostCatalogueProps extends React.ComponentProps<'section'> {
@@ -26,7 +25,7 @@ export const PostCatalogue = ({ className, ref, ...props }: PostCatalogueProps) 
       if (activeIndex != i) return
       const { offsetHeight: parentHeight, scrollTop } = container
       const { offsetHeight, offsetTop } = el as HTMLElement
-      if (!isBetween(offsetTop - scrollTop, offsetHeight + 20, parentHeight - offsetHeight - 20)) {
+      if (!inRange(offsetTop - scrollTop, offsetHeight + 20, parentHeight - offsetHeight - 20)) {
         container.scroll({ behavior: 'smooth', top: offsetTop - parentHeight * 0.5 })
       }
     })
@@ -42,7 +41,7 @@ export const PostCatalogue = ({ className, ref, ...props }: PostCatalogueProps) 
         // 第一个标题大于最大范围
         (i == 0 && rects[i].top > max) ||
         // 范围内
-        isBetween(rects[i].top, min, max) ||
+        inRange(rects[i].top, min, max) ||
         // 指定的范围在两标题之间
         (i + 1 < rects.length && rects[i].top < min && rects[i + 1].top > max) ||
         // 最后一个标题小于最小范围

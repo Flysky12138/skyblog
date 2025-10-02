@@ -11,8 +11,8 @@ import { useTheme } from '@/hooks/use-theme'
 export const NavTheme = () => {
   const { isDark, toggleTheme } = useTheme()
 
-  const mounted = useMounted()
-  if (!mounted) return <Skeleton className="h-8" />
+  const isMounted = useMounted()
+  if (!isMounted) return <Skeleton className="h-8" />
 
   return (
     <SidebarMenu>

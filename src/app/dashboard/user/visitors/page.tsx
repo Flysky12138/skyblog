@@ -11,7 +11,7 @@ import { AlertDelete } from '@/components/alert-delete'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Pagination } from '@/components/pagination'
 import { Table, TableActionButton } from '@/components/table'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { CustomRequest } from '@/lib/http/request'
@@ -20,7 +20,7 @@ import { Toast } from '@/lib/toast'
 
 const MDXClient = dynamic(() => import('@/components/mdx/client').then(it => it.MDXClient), {
   ssr: false,
-  loading: () => <Skeleton className="h-50" />
+  loading: () => <Skeleton className="h-48" />
 })
 
 export default function Page() {
@@ -67,6 +67,7 @@ export default function Page() {
                   <DialogContent className="max-w-3xl">
                     <DialogHeader>
                       <DialogTitle>访客信息</DialogTitle>
+                      <DialogDescription className="hidden" />
                     </DialogHeader>
                     <div className="text-sm *:m-0 [&_span[data-line]]:whitespace-pre-wrap">
                       <MDXClient source={['```json', JSON.stringify(record, null, 2), '```'].join('\n')} />

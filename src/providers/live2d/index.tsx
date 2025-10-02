@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils'
 import { get } from '@/server/edge-config'
 
 import styles from './index.module.css'
-import { initGlobalScript, loadModelSync, PADDING } from './utils'
+import { initGlobalScript, loadModel, PADDING } from './utils'
 
 interface Live2DContextProps {
   /** 开关 */
@@ -88,16 +88,7 @@ export const Live2DProvider = (props: React.PropsWithChildren) => {
   }, 1000 * 30)
 
   const contextValue = React.useMemo(
-    () => ({
-      enable,
-      loading,
-      message: messageDetail.content,
-      setEnable,
-      setLoading,
-      setMessage,
-      setSrc,
-      src
-    }),
+    () => ({ enable, loading, message: messageDetail.content, setEnable, setLoading, setMessage, setSrc, src }),
     [enable, loading, messageDetail.content, setEnable, setLoading, setMessage, setSrc, src]
   )
 
@@ -136,7 +127,7 @@ const Live2D = () => {
     try {
       setLoading(true)
       await initGlobalScript()
-      const _model = await loadModelSync(src)
+      const _model = await loadModel(src)
       setModel(_model)
       _model?.on('hit', hitAreas => {
         if (hitAreas.includes('breast_l')) _model.textures.push(_model.textures.shift()!)

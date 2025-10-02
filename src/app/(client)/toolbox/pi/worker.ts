@@ -73,7 +73,7 @@ self.onmessage = ({ data }) => {
         break
     }
     self.postMessage({
-      pi: `3.${String(ans).slice(1, data.size)}`,
+      pi: `3.${ans.toString().slice(1, data.size)}`,
       time: performance.now() - time
     })
   } catch (error) {

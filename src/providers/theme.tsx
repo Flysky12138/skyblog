@@ -20,8 +20,8 @@ export const ThemeProvider = (props: React.PropsWithChildren) => {
 export const ThemeToggleButton = () => {
   const { isDark, toggleTheme } = useTheme()
 
-  const mounted = useMounted()
-  if (!mounted) return <Skeleton className="size-9" />
+  const isMounted = useMounted()
+  if (!isMounted) return <Skeleton className="size-9" />
 
   return (
     <Button aria-label="theme toggle" size="icon" variant="outline" onClick={toggleTheme}>
