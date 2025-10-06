@@ -21,6 +21,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { Portal } from '@/components/utils/portal'
 import { ATTRIBUTE } from '@/lib/constants'
 import { DirectoryHelper } from '@/lib/file/directory-helper'
+import { FFmpeg } from '@/lib/file/ffmpeg'
 import { ProgressProps, readResponseProgress } from '@/lib/http/progress'
 import { CustomRequest } from '@/lib/http/request'
 import { promisePool } from '@/lib/promise'
@@ -55,13 +56,29 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
   const [{ loading: isDownloading }, handleDownload] = useAsyncFn(async () => {
     const helper = new DirectoryHelper()
     await helper.openDirectory({ mode: 'readwrite', startIn: 'music' })
+
+    const ffmpeg = new FFmpeg()
+    await ffmpeg.init()
+
     return promisePool(
       Array.from(selected).map(song => async () => {
         try {
           const [{ md5, type, url }] = await CustomRequest('GET /api/netease-cloud-music/song/url', { search: { id: song.id, level } })
           if (!url) throw new Error([song.ar[0].name, song.al.name].filter(Boolean).join(' - '))
-          const blob = await fetch(url.replace('http:', 'https:')).then(res => readResponseProgress(res, payload => progressSet(song.id, payload)))
-          await helper.writeFile(`${song?.name || md5}.${type}`, blob)
+
+          const audioBlob = await fetch(url.replace('http:', 'https:')).then(async res => {
+            return readResponseProgress(res, payload => progressSet(song.id, payload))
+          })
+          const coverBlob = await fetch(song.al.picUrl.replace('http:', 'https:') + '?param=1200y1200').then(res => res.blob())
+
+          const audio = await ffmpeg.updateAudioMetadata({
+            audio: { content: audioBlob, ext: type },
+            cover: { content: coverBlob, ext: 'jpg' },
+            metadata: { album: song.al.name, artist: song.ar.map(ar => ar.name).join(', '), title: song.name }
+          })
+
+          await helper.writeFile(`${song?.name || md5}.${type}`, audio)
+
           selectedToggle(song)
           progressRemove(song.id)
         } catch (error) {

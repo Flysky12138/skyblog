@@ -26,6 +26,12 @@ declare namespace NodeJS {
      * "ecfg_7bhjqwklveuyz9ix4n2tr3mfa5gd8sp"
      */
     EDGE_ID: string
+    /**
+     * ffmpeg cdn
+     * @example
+     * "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/"
+     */
+    NEXT_PUBLIC_CDN_FFMPEG: string
     /** 博客描述 */
     NEXT_PUBLIC_DESCRIPTION: string
     /** 加密响应内容 */
