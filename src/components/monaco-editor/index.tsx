@@ -107,7 +107,7 @@ export const MonacoEditor = ({
 
 loader.config({
   paths: {
-    vs: '/cdn/cdn.jsdelivr.net/npm/monaco-editor@0.51.0/min/vs'
+    vs: process.env.NEXT_PUBLIC_CDN_MONACO_EDITOR + 'min/vs'
   },
   'vs/nls': {
     availableLanguages: {

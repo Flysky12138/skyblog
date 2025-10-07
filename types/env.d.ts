@@ -32,6 +32,12 @@ declare namespace NodeJS {
      * "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/"
      */
     NEXT_PUBLIC_CDN_FFMPEG: string
+    /**
+     * monaco editor cdn
+     * @example
+     * "/cdn/cdn.jsdelivr.net/npm/monaco-editor@0.51.0/"
+     */
+    NEXT_PUBLIC_CDN_MONACO_EDITOR: string
     /** 博客描述 */
     NEXT_PUBLIC_DESCRIPTION: string
     /** 加密响应内容 */

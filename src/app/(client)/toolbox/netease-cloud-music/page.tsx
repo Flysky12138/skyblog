@@ -52,8 +52,8 @@ export default function Page() {
       revalidateFirstPage: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      onError: err => {
-        toast.error(err)
+      onError: error => {
+        toast.error(error)
       },
       onSuccess: () => {
         const url = new URL(window.location.href)

@@ -9,6 +9,7 @@ const envSchema = z.object({
   AUTH_URL: Url,
   EDGE_ID: z.templateLiteral([z.string().length(4), '_', z.string()]),
   NEXT_PUBLIC_CDN_FFMPEG: z.httpUrl().endsWith('/'),
+  NEXT_PUBLIC_CDN_MONACO_EDITOR: z.string().endsWith('/'),
   NEXT_PUBLIC_DESCRIPTION: z.string(),
   NEXT_PUBLIC_ENCRYPT_API: z.stringbool({
     falsy: ['false'],
