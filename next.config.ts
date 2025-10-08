@@ -97,9 +97,6 @@ const webpack: NextConfig['webpack'] = config => {
 }
 
 const nextConfig: NextConfig = {
-  experimental: {
-    useCache: true
-  },
   headers,
   images,
   pageExtensions: ['mdx', 'ts', 'tsx'],

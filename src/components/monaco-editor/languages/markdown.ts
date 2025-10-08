@@ -1,4 +1,4 @@
-import { toMerged } from 'es-toolkit'
+import { isUndefined, toMerged } from 'es-toolkit'
 import { Options } from 'prettier'
 import babelPlugins from 'prettier/plugins/babel'
 import estreePlugins from 'prettier/plugins/estree'
@@ -81,7 +81,7 @@ export const markdownConfig: LanguageConfig = {
         const suggestProperty = (payload: (XOR<{ value?: string }, { values?: string[] }> & { key: string })[]) => ({
           suggestions: payload.map(({ key, value, values }) => {
             let insertText = key
-            if (typeof value != 'undefined') insertText += `="${value || '$0'}"`
+            if (!isUndefined(value)) insertText += `="${value || '$0'}"`
             else if (values && values.length > 0) insertText += `="\${1|${values.join(',')}|}"`
             return {
               insertText,

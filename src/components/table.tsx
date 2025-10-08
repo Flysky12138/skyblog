@@ -1,6 +1,8 @@
 'use client'
 
 import { ClassValue } from 'clsx'
+import { isFunction } from 'es-toolkit'
+import { isObjectLike } from 'es-toolkit/compat'
 import { Trash } from 'lucide-react'
 import React from 'react'
 
@@ -101,33 +103,33 @@ export const Table = <T,>({
         <TableRow>
           {columns.map(column => (
             <TableHead key={(column.dataIndex || column.key) as string} className={cn(column.headerClassName, cellAlign(column.align))}>
-              {typeof column.title == 'function' ? column.title() : column.title}
+              {isFunction(column.title) ? column.title() : column.title}
             </TableHead>
           ))}
         </TableRow>
       </TableHeader>
       <TableBody>
         <DisplayByConditional
-          condition={!loading && !!dataSource.length}
+          condition={!loading || !!dataSource.length}
           fallback={<TableRowLoading colSpan={columns.length}>{loading ? 'Loading...' : '内容为空'}</TableRowLoading>}
         >
           {dataSource.map((record, index) => (
             <TableRow
-              key={typeof rowKey == 'function' ? rowKey(record, index) : cellContentRender(record[rowKey])}
-              className={typeof rowClassName == 'function' ? rowClassName(record, index) : rowClassName}
+              key={isFunction(rowKey) ? rowKey(record, index) : cellContentRender(record[rowKey])}
+              className={isFunction(rowClassName) ? rowClassName(record, index) : rowClassName}
               {...onRow?.(record, index)}
             >
               {columns.map(column => (
                 <TableCell
                   key={(column.dataIndex || column.key) as string}
                   className={cn(
-                    typeof column.className == 'function'
+                    isFunction(column.className)
                       ? Reflect.apply(column.className, null, column.dataIndex ? [record[column.dataIndex], record, index] : [record, index])
                       : column.className,
                     cellAlign(column.align)
                   )}
                 >
-                  {typeof column.render == 'function'
+                  {isFunction(column.render)
                     ? Reflect.apply(column.render, null, column.dataIndex ? [record[column.dataIndex], record, index] : [record, index])
                     : cellContentRender(column.dataIndex && record[column.dataIndex])}
                 </TableCell>
@@ -224,7 +226,7 @@ export const TableDeleteButton = ({ disabled, ...props }: AlertDeleteProps & { d
  */
 const cellContentRender = (text: any): string => {
   if (!text) return ''
-  if (typeof text == 'object') return JSON.stringify(text, null, 4)
+  if (isObjectLike(text)) return JSON.stringify(text, null, 4)
   return text
 }
 
