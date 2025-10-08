@@ -21,10 +21,6 @@ export default function Page() {
 
   useDebounce(() => echarts.current?.setOption(getOptions(code), true, true), 800, [code, echarts])
 
-  React.useEffect(() => {
-    echarts.current?.resize()
-  }, [echarts, width])
-
   return (
     <FullMain>
       <ResizablePanelGroup
