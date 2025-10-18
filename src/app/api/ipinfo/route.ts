@@ -1,8 +1,10 @@
-import { geolocation, ipAddress } from '@vercel/functions'
+import { geolocation } from '@vercel/functions'
 import { NextRequest } from 'next/server'
 
 import { CustomFetch } from '@/lib/http/fetch'
+import { getRealIp } from '@/lib/http/headers'
 import { CustomResponse } from '@/lib/http/response'
+import { isDev } from '@/lib/utils'
 
 export const runtime = 'edge'
 
@@ -11,7 +13,7 @@ export type GET = RouteHandlerType<{
 }>
 
 export const GET = async (request: NextRequest) => {
-  const ip = process.env.NODE_ENV == 'development' ? '0.0.0.0' : ipAddress(request)
+  const ip = isDev() ? '0.0.0.0' : getRealIp(request)
   if (!ip) return CustomResponse.error('未知访问', { status: 400 })
 
   try {

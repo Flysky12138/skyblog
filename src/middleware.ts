@@ -1,6 +1,7 @@
 import { MiddlewareConfig, NextMiddleware, NextResponse, userAgent } from 'next/server'
 
 import { auth } from '@/lib/auth'
+import { isDev } from '@/lib/utils'
 
 export const config: MiddlewareConfig = {
   matcher: [
@@ -11,7 +12,7 @@ export const config: MiddlewareConfig = {
 }
 
 export const middleware: NextMiddleware = async (request, event) => {
-  if (process.env.NODE_ENV == 'development') return
+  if (isDev()) return
 
   const agent = userAgent(request)
 

@@ -1,7 +1,8 @@
 import { Prisma } from '@prisma/client'
-import { geolocation, ipAddress } from '@vercel/functions'
+import { geolocation } from '@vercel/functions'
 import { after, NextRequest, userAgent } from 'next/server'
 
+import { getRealIp } from '@/lib/http/headers'
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
 
@@ -20,7 +21,7 @@ export const POST = async (request: NextRequest) => {
       await dbPost({
         agent: userAgent(request),
         geo: geolocation(request),
-        ip: ipAddress(request) || '',
+        ip: getRealIp(request),
         referer: request.headers.get('referer')
       })
     })

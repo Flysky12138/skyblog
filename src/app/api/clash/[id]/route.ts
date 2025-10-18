@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client'
-import { ipAddress } from '@vercel/functions'
 import { NextRequest, userAgent } from 'next/server'
 
+import { getRealIp } from '@/lib/http/headers'
 import { CustomResponse } from '@/lib/http/response'
 import { replaceVariables } from '@/lib/parser/string'
 import { prisma } from '@/lib/prisma'
@@ -36,7 +36,7 @@ export const GET = async (request: NextRequest, { params }: RouteContext<'/api/c
     const { id } = await params
     if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
 
-    const ip = isDev() ? '0.0.0.0' : ipAddress(request)
+    const ip = isDev() ? '0.0.0.0' : getRealIp(request)
     if (!ip) return await CustomResponse.error('未知访问', { status: 401 })
 
     if (!request.headers.get('user-agent')?.toLowerCase().includes('clash')) {
