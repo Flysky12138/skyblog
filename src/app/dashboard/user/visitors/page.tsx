@@ -70,7 +70,10 @@ export default function Page() {
                       <DialogDescription className="hidden" />
                     </DialogHeader>
                     <div className="text-sm *:m-0 [&_span[data-line]]:whitespace-pre-wrap">
-                      <MDXClient source={['```json', JSON.stringify(record, null, 2), '```'].join('\n')} />
+                      <MDXClient
+                        loadingRender={<Skeleton className="h-48" />}
+                        source={['```json', JSON.stringify(record, null, 2), '```'].join('\n')}
+                      />
                     </div>
                   </DialogContent>
                 </Dialog>
