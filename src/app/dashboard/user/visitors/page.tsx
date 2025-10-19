@@ -40,7 +40,7 @@ export default function Page() {
     <div className="space-y-4">
       <Table
         columns={[
-          { key: 'checkbox' },
+          { key: 'section' },
           { key: 'index' },
           { dataIndex: 'ip', title: 'Ip' },
           {

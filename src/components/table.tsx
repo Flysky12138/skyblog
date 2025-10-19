@@ -13,6 +13,7 @@ import { cn, tw } from '@/lib/utils'
 
 import { AlertDelete, AlertDeleteProps } from './alert-delete'
 import { DisplayByConditional } from './display/display-by-conditional'
+import { Spinner } from './ui/spinner'
 
 type AlignType = 'center' | 'left' | 'right'
 
@@ -28,7 +29,7 @@ type ColumnItemType<T> = {
 interface ColumnSlotType<T> {
   className?: ((record: T, index: number) => ClassValue) | ClassValue
   dataIndex?: never
-  key: 'checkbox' | 'index' | (string & {})
+  key: 'index' | 'section' | (string & {})
   render?: (record: T, index: number) => React.ReactNode
 }
 
@@ -88,14 +89,16 @@ export const Table = <T,>({
   className,
   columns,
   dataSource = [],
-  loading,
+  loading = false,
   rowClassName,
   // @ts-ignore
   rowKey = 'id',
   rowSelection,
   onRow
 }: TableProps<T>) => {
-  columns = modifyColumns(columns, { dataSource, loading, rowSelection })
+  const isValidating = loading && !!dataSource.length
+
+  columns = modifyColumns(columns, { dataSource, isValidating, loading, rowSelection })
 
   return (
     <TablePrimitive className={className}>
@@ -113,6 +116,11 @@ export const Table = <T,>({
           condition={!loading || !!dataSource.length}
           fallback={<TableRowLoading colSpan={columns.length}>{loading ? 'Loading...' : '内容为空'}</TableRowLoading>}
         >
+          {isValidating && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center backdrop-blur-xs">
+              <Spinner size="40" variant="bars" />
+            </div>
+          )}
           {dataSource.map((record, index) => (
             <TableRow
               key={isFunction(rowKey) ? rowKey(record, index) : cellContentRender(record[rowKey])}
@@ -143,7 +151,7 @@ export const Table = <T,>({
 }
 
 export const TablePrimitive = ({ className, ...props }: React.ComponentProps<'table'>) => (
-  <div className="relative w-full overflow-auto rounded-sm shadow-sm backdrop-brightness-130 dark:shadow-black" data-slot="table">
+  <div className="bg-card relative w-full overflow-auto rounded-sm shadow-sm dark:shadow-black" data-slot="table">
     <table className={cn('w-full table-auto caption-bottom text-sm', className)} {...props} />
   </div>
 )
@@ -153,7 +161,7 @@ export const TableHeader = ({ className, ...props }: React.ComponentProps<'thead
 )
 
 export const TableBody = ({ className, ...props }: React.ComponentProps<'tbody'>) => (
-  <tbody className={cn('[&_tr:last-child]:border-0', className)} {...props} />
+  <tbody className={cn('relative [&_tr:last-child]:border-0', className)} {...props} />
 )
 
 export const TableFooter = ({ className, ...props }: React.ComponentProps<'tfoot'>) => (
@@ -247,22 +255,31 @@ const cellAlign = (align: AlignType = 'left') => {
 /**
  * 修改 `columns`
  */
-const modifyColumns = <T,>(columns: ColumnType<T>[], options: Pick<TableProps<T>, 'dataSource' | 'loading' | 'rowSelection'>): ColumnType<T>[] => {
-  const { dataSource = [], loading, rowSelection } = options
+const modifyColumns = <T,>(
+  columns: ColumnType<T>[],
+  options: Pick<TableProps<T>, 'dataSource' | 'loading' | 'rowSelection'> & {
+    isValidating: boolean
+  }
+): ColumnType<T>[] => {
+  const { dataSource = [], isValidating, loading, rowSelection } = options
+
+  const selectedRows = new Set<T>(rowSelection?.selectedRows)
+  const isSelectedAll = dataSource.every(record => selectedRows.has(record))
 
   return columns.map(column => {
     switch (column.key) {
-      case 'checkbox':
-        const selectedRows = new Set<T>(rowSelection?.selectedRows)
-        const isSelectedAll = selectedRows.size == dataSource.length
+      case 'index':
+        return Object.assign({ headerClassName: tw`w-9`, title: '#', render: (_, index: number) => index + 1 } as ColumnType<T>, column)
+      case 'section':
         return Object.assign(
           {
             className: tw`leading-0`,
             headerClassName: tw`w-9 leading-0`,
-            key: 'checkbox',
+            key: 'section',
             render: record => (
               <Checkbox
                 checked={selectedRows.has(record)}
+                disabled={loading || isValidating}
                 onCheckedChange={() => {
                   selectedRows.has(record) ? selectedRows.delete(record) : selectedRows.add(record)
                   rowSelection?.onChange?.(Array.from(selectedRows))
@@ -272,7 +289,7 @@ const modifyColumns = <T,>(columns: ColumnType<T>[], options: Pick<TableProps<T>
             title: () => (
               <Checkbox
                 checked={!loading && isSelectedAll}
-                disabled={loading && dataSource.length == 0}
+                disabled={loading || isValidating}
                 onCheckedChange={() => {
                   isSelectedAll ? selectedRows.clear() : dataSource.forEach(it => selectedRows.add(it))
                   rowSelection?.onChange?.(Array.from(selectedRows))
@@ -282,8 +299,6 @@ const modifyColumns = <T,>(columns: ColumnType<T>[], options: Pick<TableProps<T>
           } as ColumnType<T>,
           column
         )
-      case 'index':
-        return Object.assign({ headerClassName: tw`w-9`, title: '#', render: (_, index: number) => index + 1 } as ColumnType<T>, column)
       default:
         return column
     }
