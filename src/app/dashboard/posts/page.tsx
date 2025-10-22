@@ -3,6 +3,7 @@
 import { produce } from 'immer'
 import { Eye, Pencil } from 'lucide-react'
 import Link from 'next/link'
+import React from 'react'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
 
@@ -24,6 +25,10 @@ export default function Page() {
       keepPreviousData: true
     }
   )
+
+  React.useEffect(() => {
+    window.scrollTo({ behavior: 'smooth', top: 0 })
+  }, [data?.page])
 
   return (
     <div className="space-y-4">

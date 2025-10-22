@@ -17,7 +17,12 @@ export const Tabs = ({ children, ...props }: TabsProps) => {
     switch (node.type) {
       case 'tabscontent':
         tabsContent.push(
-          <TabsPrimitive.TabsContent key={tabsContent.length} className={cn('', className)} value={String(tabsContent.length)} {...nodeProps} />
+          <TabsPrimitive.TabsContent
+            key={tabsContent.length}
+            className={cn('*:first:mt-0 *:last:mb-0', className)}
+            value={String(tabsContent.length)}
+            {...nodeProps}
+          />
         )
         break
       case 'tabtrigger':
@@ -35,7 +40,7 @@ export const Tabs = ({ children, ...props }: TabsProps) => {
 
   return (
     <TabsPrimitive.Tabs asChild defaultValue="0" {...props}>
-      <figure className="my-4">
+      <figure>
         <TabsPrimitive.TabsList>{tabsTrigger}</TabsPrimitive.TabsList>
         {tabsContent}
       </figure>

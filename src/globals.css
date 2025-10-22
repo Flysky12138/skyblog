@@ -3,7 +3,6 @@
 
 @custom-variant dark (&:is(.dark, .dark *));
 @custom-variant light (&:is(.light, .light *));
-@custom-variant post-full-page (&:is(.post-full-page *));
 
 @import 'tailwindcss';
 @import 'tw-animate-css';
@@ -24,8 +23,6 @@
   --link-foreground: var(--color-sky-500);
   --subtitle-foreground: oklch(0.48 0.02 251.08);
   --sheet: --alpha(var(--color-slate-200) / 30%);
-  --code: --alpha(var(--color-teal-100) / 30%);
-  --code-foreground: var(--color-teal-600);
 }
 
 .dark {
@@ -37,8 +34,6 @@
   --link-foreground: var(--color-sky-500);
   --subtitle-foreground: oklch(0.72 0.01 248.12);
   --sheet: --alpha(var(--color-zinc-700) / 30%);
-  --code: --alpha(var(--color-teal-800) / 30%);
-  --code-foreground: var(--color-teal-300);
 }
 
 @theme inline {
@@ -66,6 +61,4 @@
   --color-link-foreground: var(--link-foreground);
   --color-subtitle-foreground: var(--subtitle-foreground);
   --color-sheet: var(--sheet);
-  --color-code: var(--code);
-  --color-code-foreground: var(--code-foreground);
 }

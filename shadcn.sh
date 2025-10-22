@@ -14,6 +14,7 @@ pnpm dlx shadcn@latest add -y -o \
     drawer \
     dropdown-menu \
     input \
+    item \
     label \
     pagination \
     popover \

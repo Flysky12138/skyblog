@@ -30,12 +30,7 @@ const CodeBlock = ({
 
 const CodeInline = ({ className, ...props }: React.ComponentProps<'code'>) => (
   <code
-    className={cn(
-      'text-code-foreground bg-code',
-      'rounded-sm px-1.5 py-1 font-semibold break-all',
-      'before:content-none after:content-none',
-      className
-    )}
+    className={cn('bg-muted rounded-sm border px-1.5 py-1 font-semibold break-all', 'before:content-none after:content-none', className)}
     {...props}
   />
 )

@@ -20,7 +20,7 @@ export const Img = ({ alt = '', src, ...props }: ImgProps) => {
       <DisplayByConditional condition={!isError} fallback={<PictureError className="inline-block" height={80} width={80} />}>
         <img
           alt={alt}
-          className="inline-block w-full max-w-3xl rounded-lg"
+          className="inline-block w-full max-w-3xl rounded-sm"
           decoding="async"
           loading="lazy"
           role="button"

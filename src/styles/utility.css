@@ -6,6 +6,10 @@
   -ms-overflow-style: none;
 }
 
+@utility gap-card-small {
+  @apply gap-2 sm:gap-3 md:gap-5;
+}
+
 @utility gap-card {
   @apply gap-3 sm:gap-4 md:gap-6;
 }

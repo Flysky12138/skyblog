@@ -47,7 +47,8 @@ export const Pre = ({ children, className, tabIndex, ...props }: React.Component
       >
         <Button
           aria-label="copy code"
-          className="size-8 p-2 text-[initial] dark:bg-stone-800 hover:dark:bg-stone-900"
+          className="p-2 text-[initial] dark:bg-stone-800 hover:dark:bg-stone-900"
+          size="icon-sm"
           variant="outline"
           onClick={handleCopyClick}
         >

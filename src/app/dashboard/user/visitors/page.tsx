@@ -36,6 +36,10 @@ export default function Page() {
     }
   )
 
+  React.useEffect(() => {
+    window.scrollTo({ behavior: 'smooth', top: 0 })
+  }, [data?.page])
+
   return (
     <div className="space-y-4">
       <Table

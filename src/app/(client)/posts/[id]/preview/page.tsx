@@ -19,7 +19,7 @@ export default function Page() {
     setPost(data.value)
   })
 
-  if (!post || !post.content) return null
+  if (!post?.content) return null
 
   return (
     <Card asChild>
