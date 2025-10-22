@@ -7,7 +7,7 @@
 
 /* 代码块 */
 figure[data-rehype-pretty-code-figure] {
-  @apply border-card-border overflow-hidden rounded-md border;
+  @apply overflow-hidden rounded-sm border;
   [data-rehype-pretty-code-title] {
     @apply border-divide font-title m-0 border-b px-3 py-1 shadow-sm;
   }

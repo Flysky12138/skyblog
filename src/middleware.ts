@@ -7,7 +7,7 @@ export const config: MiddlewareConfig = {
   matcher: [
     '/((?!_next/static|_next/image|icons/icon).*)',
     '/((?!apple-icon.png|favicon.ico|icon.svg|manifest.webmanifest|robots.txt|sitemap.xml))',
-    '/((?!.*\.min.js).*)'
+    '/((?!.*\.min\.js).*)'
   ]
 }
 
