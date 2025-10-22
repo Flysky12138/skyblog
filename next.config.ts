@@ -74,6 +74,14 @@ const rewrites: NextConfig['rewrites'] = async () => [
   {
     destination: 'https://cdn.jsdelivr.net/npm/:package/:path*',
     source: '/cdn/cdn.jsdelivr.net/npm/:package((?:monaco-editor)[@.\\d]*)/:path*'
+  },
+  {
+    destination: 'https://app.rybbit.io/api/script.js',
+    source: '/api/script.js'
+  },
+  {
+    destination: 'https://app.rybbit.io/api/track',
+    source: '/api/track'
   }
 ]
 

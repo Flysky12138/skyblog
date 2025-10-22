@@ -19,6 +19,7 @@ const envSchema = z.object({
   NEXT_PUBLIC_PAGE_POSTCARD_COUNT: z.coerce.number().min(3).max(20),
   NEXT_PUBLIC_R2_BUCKET_NAME: z.string(),
   NEXT_PUBLIC_R2_URL: Url,
+  NEXT_PUBLIC_RYBBIT_ID: z.string().length(12).optional(),
   NEXT_PUBLIC_S3_ACCESS_ID: z.string().length(32),
   NEXT_PUBLIC_S3_ACCESS_KEY: z.string().length(64),
   NEXT_PUBLIC_S3_API: z.httpUrl().endsWith('.r2.cloudflarestorage.com'),

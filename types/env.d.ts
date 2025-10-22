@@ -63,6 +63,11 @@ declare namespace NodeJS {
      */
     NEXT_PUBLIC_R2_URL: StartsWith<Protocol>
     /**
+     * rybbit id
+     * @see https://www.rybbit.io/
+     */
+    NEXT_PUBLIC_RYBBIT_ID?: string
+    /**
      * cloudflare r2 api id
      * @see https://dash.cloudflare.com/?to=/:account/r2/api-tokens
      * @example
