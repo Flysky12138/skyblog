@@ -48,7 +48,7 @@ export const SongList = ({ hasMore, loadMoreRows, songs, onRowClick }: SongListP
                 if (!isItemLoaded(index)) {
                   return (
                     <div className="flex items-center justify-center" style={style}>
-                      <Spinner variant="bars" />
+                      <Spinner />
                     </div>
                   )
                 }

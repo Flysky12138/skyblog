@@ -32,7 +32,7 @@ export const MDXClient = React.memo(({ loadingRender: fallback, source = '' }: M
         condition={!!fallback}
         fallback={
           <div className="flex h-48 items-center justify-center">
-            <Spinner size={40} variant="ellipsis" />
+            <Spinner className="size-10" />
           </div>
         }
       >

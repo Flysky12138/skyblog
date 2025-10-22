@@ -118,7 +118,7 @@ export const Table = <T,>({
         >
           {isValidating && (
             <div className="absolute inset-0 z-10 flex items-center justify-center backdrop-blur-xs">
-              <Spinner size="40" variant="bars" />
+              <Spinner className="size-10" />
             </div>
           )}
           {dataSource.map((record, index) => (
