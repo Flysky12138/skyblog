@@ -26,6 +26,7 @@ export const MDXClient = React.memo(({ loadingRender: fallback, source = '' }: M
     isFirstRender.current = false
   }, [source])
 
+  // eslint-disable-next-line react-hooks/refs
   if (loading && isFirstRender.current) {
     return (
       <DisplayByConditional

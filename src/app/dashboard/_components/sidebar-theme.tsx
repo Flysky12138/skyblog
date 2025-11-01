@@ -8,7 +8,7 @@ import { Switch } from '@/components/ui/switch'
 import { useMounted } from '@/hooks/use-mounted'
 import { useTheme } from '@/hooks/use-theme'
 
-export const NavTheme = () => {
+export const SidebarTheme = () => {
   const { isDark, toggleTheme } = useTheme()
 
   const isMounted = useMounted()

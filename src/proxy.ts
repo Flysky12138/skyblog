@@ -1,17 +1,9 @@
-import { MiddlewareConfig, NextMiddleware, NextResponse, userAgent } from 'next/server'
+import { NextProxy, NextResponse, userAgent } from 'next/server'
 
 import { auth } from '@/lib/auth'
 import { isDev } from '@/lib/utils'
 
-export const config: MiddlewareConfig = {
-  matcher: [
-    '/((?!_next/static|_next/image|icons/icon).*)',
-    '/((?!apple-icon.png|favicon.ico|icon.svg|manifest.webmanifest|robots.txt|sitemap.xml))',
-    '/((?!.*\.min\.js).*)'
-  ]
-}
-
-export const middleware: NextMiddleware = async (request, event) => {
+export const proxy: NextProxy = async request => {
   if (isDev()) return
 
   const agent = userAgent(request)
@@ -21,10 +13,9 @@ export const middleware: NextMiddleware = async (request, event) => {
     return NextResponse.redirect(new URL('/ban', request.url))
   }
 
-  const session = await auth()
-
   // 权限管理
   if (['/dashboard', '/api/dashboard'].some(url => request.nextUrl.pathname.startsWith(url))) {
+    const session = await auth()
     if (session?.role != 'ADMIN') {
       const url = new URL('/auth/login', request.url)
       url.searchParams.set('to', request.nextUrl.pathname)

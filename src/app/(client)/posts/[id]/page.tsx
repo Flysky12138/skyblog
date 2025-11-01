@@ -1,5 +1,8 @@
+'use cache'
+
 import { ChevronLeftIcon, ChevronRightIcon, PencilLine } from 'lucide-react'
 import { Metadata } from 'next'
+import { cacheLife } from 'next/cache'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -9,19 +12,21 @@ import { MDXPickHeading } from '@/components/mdx/pick-heading'
 import { MDXServer } from '@/components/mdx/server'
 import { Card } from '@/components/static/card'
 import { Button } from '@/components/ui/button'
-import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item'
+import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { ATTRIBUTE, POST_CARD_DISPLAY } from '@/lib/constants'
-import { prisma } from '@/lib/prisma'
 
-import { POST_WHERE_INPUT } from '../utils'
+import { getPosts } from '../../utils'
 import { PostCatalogue, PostCatalogueHeading } from './_components/post-catalogue'
 import { PostInfo } from './_components/post-info'
 import { ResizeButton } from './_components/resize-button'
 import { getPost, getPostsRecommend } from './utils'
 
 export const generateStaticParams = async (): Promise<Awaited<PageProps<'/posts/[id]'>['params']>[]> => {
-  const posts = await prisma.post.findMany({ select: { id: true }, where: POST_WHERE_INPUT })
-  return posts.map(post => ({ id: post.id }))
+  // 只预渲染第一页文章
+  const posts = await getPosts(1)
+  return posts.result.map(post => ({ id: post.id }))
+  // const posts = await prisma.post.findMany({ select: { id: true }, where: POST_WHERE_INPUT })
+  // return posts.map(post => ({ id: post.id }))
 }
 
 export const generateMetadata = async ({ params }: PageProps<'/posts/[id]'>): Promise<Metadata> => {
@@ -47,6 +52,8 @@ export const generateMetadata = async ({ params }: PageProps<'/posts/[id]'>): Pr
 }
 
 export default async function Page({ params }: PageProps<'/posts/[id]'>) {
+  cacheLife('max')
+
   const { id } = await params
 
   const post = await getPost(id)
@@ -86,12 +93,12 @@ export default async function Page({ params }: PageProps<'/posts/[id]'>) {
                   <Card asChild aria-label="Previous Post">
                     <Item asChild variant="muted">
                       <Link href={`/posts/${prev.id}`}>
-                        <ItemActions>
-                          <ChevronLeftIcon size={26} />
-                        </ItemActions>
+                        <ItemMedia>
+                          <ChevronLeftIcon size={24} />
+                        </ItemMedia>
                         <ItemContent>
-                          <ItemTitle className="text-base">{prev.title}</ItemTitle>
-                          {prev.description && <ItemDescription className="text-wrap">{prev.description}</ItemDescription>}
+                          <ItemTitle className="text-base">Previous</ItemTitle>
+                          <ItemDescription>{prev.title}</ItemDescription>
                         </ItemContent>
                       </Link>
                     </Item>
@@ -102,12 +109,12 @@ export default async function Page({ params }: PageProps<'/posts/[id]'>) {
                     <Item asChild variant="muted">
                       <Link href={`/posts/${next.id}`}>
                         <ItemContent className="items-end">
-                          <ItemTitle className="text-base">{next.title}</ItemTitle>
-                          {next.description && <ItemDescription className="text-end text-wrap">{next.description}</ItemDescription>}
+                          <ItemTitle className="text-base">Next</ItemTitle>
+                          <ItemDescription>{next.title}</ItemDescription>
                         </ItemContent>
-                        <ItemActions>
-                          <ChevronRightIcon size={26} />
-                        </ItemActions>
+                        <ItemMedia>
+                          <ChevronRightIcon size={24} />
+                        </ItemMedia>
                       </Link>
                     </Item>
                   </Card>

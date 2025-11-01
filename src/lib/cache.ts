@@ -1,13 +1,27 @@
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 
+/**
+ * 缓存标签
+ */
+export const CacheTag = {
+  EDGE_CONFIG: {
+    NETEASE_CLOUD_MUSIC_COOKIE: 'netease-cloud-music-cookie'
+  },
+  FRIEND: 'friend',
+  POST: 'post'
+}
+
+/**
+ * 缓存清除
+ */
 export const CacheClear = {
-  friends: () => {
-    revalidatePath('/friends')
+  friend: () => {
+    revalidateTag(CacheTag.FRIEND, 'max')
   },
   post: (id?: string) => {
     if (id) {
       revalidatePath(`/posts/${id}`)
     }
-    revalidatePath('/posts/page')
+    revalidateTag(CacheTag.POST, 'max')
   }
 }

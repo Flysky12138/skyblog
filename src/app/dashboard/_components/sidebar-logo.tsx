@@ -4,7 +4,7 @@ import Icon from '@/app/icon.svg'
 import { Logo } from '@/components/static/logo'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 
-export const NavLogo = () => {
+export const SidebarLogo = () => {
   return (
     <SidebarMenu>
       <SidebarMenuItem>

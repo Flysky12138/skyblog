@@ -76,7 +76,7 @@ export const ClashDetail = ({ children, value, onSubmit }: ClashDetailProps) => 
       <DialogContent className="h-[calc(100vh-40px)] max-w-7xl">
         <DialogHeader>
           <DialogTitle>共享配置</DialogTitle>
-          <DialogDescription>自定义 Clash 客户端订阅内容。</DialogDescription>
+          <DialogDescription>自定义 Clash 客户端订阅内容</DialogDescription>
         </DialogHeader>
         <div className="grid h-full grid-cols-[1fr_400px] gap-6">
           <Card className="overflow-hidden">

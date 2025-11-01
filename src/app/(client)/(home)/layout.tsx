@@ -1,11 +1,12 @@
 import React from 'react'
 
 import { Card } from '@/components/static/card'
+import { Skeleton } from '@/components/ui/skeleton'
 
-import { CardButtons } from './_components/card/card-buttons'
-import { CardDeveloper } from './_components/card/card-developer'
-import { CardGuestInfo } from './_components/card/card-guest-info'
-import { CardReactUwU } from './_components/card/card-react-uwu'
+import { CardButtons } from './_components/card-buttons'
+import { CardDeveloper } from './_components/card-developer'
+import { CardGuestInfo } from './_components/card-guest-info'
+import { CardReactUwU } from './_components/card-react-uwu'
 
 export default function Layout({ children }: React.PropsWithChildren) {
   return (
@@ -17,7 +18,15 @@ export default function Layout({ children }: React.PropsWithChildren) {
       <div className="gap-card flex shrink-0 flex-col sm:w-56 md:w-64">
         <CardDeveloper />
         <CardReactUwU />
-        <CardButtons />
+        <React.Suspense
+          fallback={
+            <Card asChild>
+              <Skeleton className="h-16" />
+            </Card>
+          }
+        >
+          <CardButtons />
+        </React.Suspense>
         <div className="sticky top-[calc(var(--height-header)+--spacing(9))] empty:hidden">
           <CardGuestInfo />
         </div>

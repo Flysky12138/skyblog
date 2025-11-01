@@ -18,7 +18,6 @@ import {
   Undo2
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import React from 'react'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
 import useSWR from 'swr'
@@ -36,6 +35,7 @@ import {
   TableRowLoading
 } from '@/components/table'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Item, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item'
 import { getFileType } from '@/lib/file/info'
 import { R2 } from '@/lib/http/r2'
 import { formatFileSize } from '@/lib/parser/size'
@@ -54,7 +54,6 @@ interface R2TableProps {
 
 export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButton, paths }: R2TableProps) => {
   const router = useRouter()
-  const [{}, copy] = useCopyToClipboard()
 
   const path = decodeURIComponent(paths?.length ? `/${paths.join('/')}/` : '/') as FilePathType
 
@@ -63,30 +62,6 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
   )
 
   const isEmpty = data?.files.length == 0 && data?.folders.length == 0
-
-  const { openViewer } = useImageViewerContext()
-  /** 文件预览 */
-  const handleFileReview = React.useCallback(
-    (file: R2.FileInfo) => {
-      if (!data) return
-      switch (getFileType(file.contentType)) {
-        case 'image':
-          const images = data.files.filter(file => file.contentType?.startsWith('image'))
-          openViewer({
-            images: images.map(image => ({ key: image.key, src: R2.get(image.key) })),
-            index: Math.max(
-              0,
-              images.findIndex(image => image.key == file.key)
-            )
-          })
-          break
-        case 'pdf':
-          window.open(R2.get(file.key), '_blank')
-          break
-      }
-    },
-    [data, openViewer]
-  )
 
   return (
     <TablePrimitive className={className}>
@@ -155,34 +130,8 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
             <TableCell>{formatISOTime(file.lastModified)}</TableCell>
             <TableCell>
               <div className="flex items-center justify-end gap-2">
-                <TableActionButton
-                  onClick={() => {
-                    handleFileReview(file)
-                  }}
-                >
-                  <Eye />
-                </TableActionButton>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <TableActionButton>
-                      <Link />
-                    </TableActionButton>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="max-w-md">
-                    {getFileLinks(file).map(link => (
-                      <DropdownMenuItem
-                        key={link}
-                        className="cursor-pointer break-all"
-                        onSelect={() => {
-                          copy(link)
-                          toast.success('复制成功')
-                        }}
-                      >
-                        {link}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <FileViewButton file={file} />
+                <FileLinkCopyButton file={file} />
                 <TableDeleteButton
                   description="这将永久删除文件。"
                   title={file.key.slice(file.key.lastIndexOf('/') + 1)}
@@ -213,12 +162,7 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
 /**
  * 文件图标
  */
-const FileIconMap = ({
-  type = '',
-  ...props
-}: LucideProps & {
-  type?: string
-}) => {
+const FileIconMap = ({ type = '', ...props }: LucideProps & { type?: string }) => {
   switch (getFileType(type)) {
     case 'audio':
       return <FileAudio2 {...props} />
@@ -240,18 +184,80 @@ const FileIconMap = ({
 }
 
 /**
- * 获取文件链接列表
+ * 文件预览
  */
-const getFileLinks = (file: R2.FileInfo) => {
-  const links = [R2.get(file.key)]
+const FileViewButton = ({ file }: { file: R2.FileInfo }) => {
+  const { openViewer } = useImageViewerContext()
+
+  const types: ReturnType<typeof getFileType>[] = ['image', 'pdf']
+
+  if (!types.includes(getFileType(file.contentType))) return null
+
+  return (
+    <TableActionButton
+      onClick={() => {
+        switch (getFileType(file.contentType)) {
+          case 'image':
+            openViewer({ images: [{ key: file.key, src: R2.get(file.key) }] })
+            break
+          case 'pdf':
+            window.open(R2.get(file.key), '_blank')
+            break
+        }
+      }}
+    >
+      <Eye />
+    </TableActionButton>
+  )
+}
+
+/**
+ * 文件链接复制
+ */
+const FileLinkCopyButton = ({ file }: { file: R2.FileInfo }) => {
+  const [{}, copy] = useCopyToClipboard()
+
+  const links = [{ label: '直链', value: R2.get(file.key) }]
+
   switch (getFileType(file.contentType)) {
     case 'image':
-      const alt = file.key.split('/').at(-1)?.split('.')[0]
-      const height = file.metadata.height
-      const src = R2.get(file.key)
       const width = file.metadata.width
-      links.push(`![${alt}](${src})`, `::img{alt="${alt}" src="${src}" width="${width}" height="${height}"}`)
+      const height = file.metadata.height
+      const alt = file.key.split('/').at(-1)?.split('.')[0]
+      const src = R2.get(file.key)
+      links.push(
+        { label: 'Markdown', value: `![${alt}](${src})` },
+        { label: 'HTML', value: `::img{alt="${alt}" src="${src}" width="${width}" height="${height}"}` }
+      )
       break
   }
-  return links
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <TableActionButton>
+          <Link />
+        </TableActionButton>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="max-w-xs md:max-w-md">
+        {links.map(link => (
+          <DropdownMenuItem
+            key={link.label}
+            className="cursor-pointer"
+            onSelect={() => {
+              copy(link.value)
+              toast.success('复制成功')
+            }}
+          >
+            <Item className="p-1">
+              <ItemContent>
+                <ItemTitle>{link.label}</ItemTitle>
+                <ItemDescription className="text-wrap break-all">{link.value}</ItemDescription>
+              </ItemContent>
+            </Item>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
 }

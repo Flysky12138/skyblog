@@ -36,7 +36,7 @@ export const FriendDetail = ({ children, value, onSubmit }: FriendDetailProps) =
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>友链</DialogTitle>
-          <DialogDescription>友链表单。</DialogDescription>
+          <DialogDescription>友链表单</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">

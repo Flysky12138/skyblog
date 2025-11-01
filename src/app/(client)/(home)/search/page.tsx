@@ -1,7 +1,7 @@
 import { getPosts } from '../../utils'
-import { PostList, PostSearchParams } from '../_components/post/post-list'
+import { PostList, PostSearchParams } from '../_components/post-list'
 
-export default async function Page({ searchParams }: PageProps<'/posts/search'>) {
+export default async function Page({ searchParams }: PageProps<'/search'>) {
   const { categories, page, tags } = (await searchParams) as PostSearchParams & { page: string }
 
   const pageNumber = Number.parseInt(page || '1')

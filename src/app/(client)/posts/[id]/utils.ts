@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client'
 
 import { prisma } from '@/lib/prisma'
 
-import { POST_ORDER_BY_ASC_INPUT, POST_ORDER_BY_DESC_INPUT, POST_WHERE_INPUT } from '../utils'
+import { POST_ORDER_BY_ASC_INPUT, POST_ORDER_BY_DESC_INPUT, POST_WHERE_INPUT } from '../../utils'
 
 /**
  * 获取文章

@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   description: process.env.NEXT_PUBLIC_DESCRIPTION,
   generator: 'Next.js',
   keywords: ['blog', 'flysky', 'flysky12138', process.env.NEXT_PUBLIC_TITLE],
+  metadataBase: new URL(process.env.NEXT_PUBLIC_WEBSITE_URL),
   openGraph: {
     description: process.env.NEXT_PUBLIC_DESCRIPTION,
     siteName: process.env.NEXT_PUBLIC_TITLE,
@@ -51,6 +52,8 @@ const title = ZCOOL_KuaiLe({
   weight: '400'
 })
 const code = Cascadia_Code({
+  adjustFontFallback: false,
+  display: 'swap',
   subsets: ['latin'],
   variable: '--font-code',
   weight: '400'

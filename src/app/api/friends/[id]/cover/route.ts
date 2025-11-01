@@ -4,8 +4,6 @@ import puppeteer, { Browser } from 'puppeteer-core'
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
 
-export const revalidate = 43200
-
 export const GET = async (request: NextRequest, { params }: RouteContext<'/api/friends/[id]/cover'>) => {
   let browser: Browser | null = null
   try {
@@ -23,7 +21,7 @@ export const GET = async (request: NextRequest, { params }: RouteContext<'/api/f
     })
     const page = await browser.newPage()
     await page.goto(friend.url)
-    const uint8Array = await page.screenshot({ type: 'webp' }).then(buffer => Buffer.from(buffer))
+    const uint8Array = await page.screenshot({ type: 'webp' }).then(Buffer.from)
 
     return new NextResponse(uint8Array, {
       headers: {

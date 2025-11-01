@@ -38,7 +38,7 @@ export const POST = async (request: NextRequest) => {
     const data = await request.json()
     const res = await dbPost(data)
 
-    CacheClear.friends()
+    CacheClear.friend()
 
     return await CustomResponse.encrypt(res)
   } catch (error) {

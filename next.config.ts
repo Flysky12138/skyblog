@@ -17,7 +17,7 @@ const cspSrc = [
   .join(' ')
 const cspHeader = [
   "default-src 'self'",
-  `img-src 'self' blob: data: ${cspSrc}`,
+  `img-src 'self' blob: data: https://avatars.githubusercontent.com/u/ ${cspSrc}`,
   `media-src 'self' ${cspSrc}`,
   `connect-src 'self' blob: data: ${process.env.NEXT_PUBLIC_CDN_FFMPEG} ${cspSrc}`,
   `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${process.env.NEXT_PUBLIC_CDN_FFMPEG}`,
@@ -60,17 +60,13 @@ const images: NextConfig['images'] = {
 
 const redirects: NextConfig['redirects'] = async () => [
   {
-    destination: '/posts/page/1',
+    destination: '/page/1',
     permanent: true,
     source: '/'
   }
 ]
 
 const rewrites: NextConfig['rewrites'] = async () => [
-  {
-    destination: 'https://avatars.githubusercontent.com/u/:path*',
-    source: '/cdn/avatars.githubusercontent.com/u/:path*'
-  },
   {
     destination: 'https://cdn.jsdelivr.net/npm/:package/:path*',
     source: '/cdn/cdn.jsdelivr.net/npm/:package((?:monaco-editor)[@.\\d]*)/:path*'
@@ -105,6 +101,7 @@ const webpack: NextConfig['webpack'] = config => {
 }
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
   headers,
   images,
   pageExtensions: ['mdx', 'ts', 'tsx'],

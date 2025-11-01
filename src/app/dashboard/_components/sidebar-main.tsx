@@ -68,7 +68,7 @@ const menus: Menu[] = [
   }
 ]
 
-export const NavMain = () => {
+export const SidebarMain = () => {
   const pathname = usePathname()
   const { open } = useSidebar()
 

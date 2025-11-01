@@ -78,7 +78,7 @@ export default function Page() {
             })
           }}
         >
-          <SelectTrigger className="w-44">
+          <SelectTrigger className="w-44 grow sm:grow-0">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

@@ -1,3 +1,6 @@
+'use cache'
+
+import { cacheLife } from 'next/cache'
 import Link, { LinkProps } from 'next/link'
 
 interface OuterLinkProps extends LinkProps<never>, React.PropsWithChildren {}
@@ -16,7 +19,9 @@ const OuterLink = ({ children, ...props }: OuterLinkProps) => {
   )
 }
 
-export const About = () => {
+export const About = async () => {
+  cacheLife('max')
+
   return (
     <div className="flex flex-col items-center gap-2 text-sm text-slate-700/50 select-none dark:text-slate-300/50">
       <span>©2020 - {new Date().getFullYear()} By Flysky</span>

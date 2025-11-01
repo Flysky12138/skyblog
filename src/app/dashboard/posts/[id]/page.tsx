@@ -160,6 +160,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
         className="absolute bottom-2 left-1/2 z-50 -translate-x-1/2"
         disabled={{
           format: isCompare,
+          // eslint-disable-next-line react-hooks/refs
           save: isCreate ? !post.content : isEqual(post, oldPost.current)
         }}
         dragConstraints={dragConstraintsRef}
@@ -184,6 +185,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
             ref={editorRef}
             code={post.content || ''}
             diffMode={isCompare}
+            // eslint-disable-next-line react-hooks/refs
             oldCode={oldCode.current}
             onChange={value => {
               setPost(state => {

@@ -3,8 +3,6 @@ import { NextRequest } from 'next/server'
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
 
-export const revalidate = 15
-
 const dbGet = async (id: string) => {
   return prisma.post.findUnique({
     select: {

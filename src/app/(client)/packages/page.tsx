@@ -1,8 +1,13 @@
+'use cache'
+
 import { makeBadge } from 'badge-maker'
+import { cacheLife } from 'next/cache'
 
 import packageJson from '@/../package.json'
 
 export default async function Page() {
+  cacheLife('max')
+
   const dataSource = [
     { label: 'dependencies', value: await getPackagesInfo(packageJson.dependencies) },
     { label: 'devDependencies', value: await getPackagesInfo(packageJson.devDependencies) }

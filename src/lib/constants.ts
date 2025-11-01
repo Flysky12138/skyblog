@@ -1,9 +1,13 @@
-/** 请求头 */
+/**
+ * 请求头
+ */
 export const HEADER = {
   AES_GCM_IVJWK: 'X-Aes'
 } as const
 
-/** edge 对象 key */
+/**
+ * edge 对象 key
+ */
 export const VERCEL_EDGE_CONFIG = {
   /** live2d 直链 */
   LIVE2D_SRC: 'live2d-src',
@@ -11,7 +15,9 @@ export const VERCEL_EDGE_CONFIG = {
   NETEASE_CLOUD_MUSIC_COOKIE: 'netease-cloud-music-cookie'
 } as const
 
-/** 元素 attribute */
+/**
+ * 元素 attribute
+ */
 export const ATTRIBUTE = {
   ID: {
     NAV_CONTAINER: 'nav-container',
@@ -19,12 +25,16 @@ export const ATTRIBUTE = {
   }
 } as const
 
-/** `window.sessionStorage` key */
+/**
+ * `window.sessionStorage` key
+ */
 export const SESSIONSTORAGE = {
   POST_VIEW_SUBMITTED: (id: string) => `post-view-submitted-${id}`
 } as const
 
-/** post card display */
+/**
+ * post card display
+ */
 export enum POST_CARD_DISPLAY {
   HEADER = 1 << 0,
   ISSUES = 1 << 2,

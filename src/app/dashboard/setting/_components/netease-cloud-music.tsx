@@ -23,7 +23,7 @@ export const NeteaseCloudMusic = () => {
   })
 
   const [{ loading }, handleUpdate] = useAsyncFn(async cookie => {
-    await Toast(patch([{ key: VERCEL_EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE, operation: 'upsert', value: cookie }]), {
+    await Toast(patch([{ key: VERCEL_EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE, operation: 'upsert', value: cookie }], ['NETEASE_CLOUD_MUSIC_COOKIE']), {
       success: '修改成功'
     })
   }, [])

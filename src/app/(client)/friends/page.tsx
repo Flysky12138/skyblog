@@ -1,10 +1,17 @@
+'use cache'
+
 import { Route } from 'next'
+import { cacheLife, cacheTag } from 'next/cache'
 import Link from 'next/link'
 
 import { Card } from '@/components/static/card'
+import { CacheTag } from '@/lib/cache'
 import { prisma } from '@/lib/prisma'
 
 export default async function Page() {
+  cacheLife('max')
+  cacheTag(CacheTag.FRIEND)
+
   const friends = await prisma.friend.findMany()
 
   return friends.map(friend => (

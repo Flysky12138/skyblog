@@ -1,15 +1,32 @@
-import { get } from '@vercel/edge-config'
 import { createRequire } from 'module'
 import NeteaseCloudMusicApi from 'NeteaseCloudMusicApi'
+import { cacheLife, cacheTag } from 'next/cache'
 import { NextRequest } from 'next/server'
 
-import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
+import { CacheTag } from '@/lib/cache'
 import { CustomResponse } from '@/lib/http/response'
 
-export const revalidate = 43200
+import { getNeteaseCloudMusicCookie } from '../utils'
 
 const require = createRequire(import.meta.url)
 const { cloudsearch } = require('NeteaseCloudMusicApi') as typeof NeteaseCloudMusicApi
+
+const getCloudsearch = async ({ keywords, limit, page, type }: Required<GET['search']>) => {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CacheTag.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
+
+  try {
+    const res: any = await cloudsearch({ cookie: await getNeteaseCloudMusicCookie(), keywords, limit, offset: page * limit, type })
+    return {
+      hasMore: res.body.result.songCount > (page + 1) * limit,
+      songCount: res.body.result.songCount,
+      songs: res.body.result.songs
+    } satisfies GET['return']
+  } catch (error) {
+    throw new Error((error as any).body.message)
+  }
+}
 
 export type GET = RouteHandlerType<{
   return: {
@@ -66,21 +83,7 @@ export const GET = async (request: NextRequest) => {
     const page = Number.parseInt(request.nextUrl.searchParams.get('page') || '0')
     const type = Number.parseInt(request.nextUrl.searchParams.get('type') || '1') as 1
 
-    const data = await cloudsearch({
-      cookie: await get(VERCEL_EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE),
-      keywords,
-      limit,
-      offset: page * limit,
-      type
-    })
-      .then((res: any) => {
-        return {
-          hasMore: res.body.result.songCount > (page + 1) * limit,
-          songCount: res.body.result.songCount,
-          songs: res.body.result.songs
-        } satisfies GET['return']
-      })
-      .catch(error => Promise.reject(error.body.message))
+    const data = await getCloudsearch({ keywords, limit, page, type })
 
     return await CustomResponse.encrypt(data)
   } catch (error) {

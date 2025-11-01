@@ -113,7 +113,7 @@ export const Table = <T,>({
       </TableHeader>
       <TableBody>
         <DisplayByConditional
-          condition={!loading || !!dataSource.length}
+          condition={!loading && !!dataSource.length}
           fallback={<TableRowLoading colSpan={columns.length}>{loading ? 'Loading...' : '内容为空'}</TableRowLoading>}
         >
           {isValidating && (

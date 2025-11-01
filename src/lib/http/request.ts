@@ -1,4 +1,4 @@
-import { ParamMap } from '.next/types/routes'
+import { ParamMap } from '.next/dev/types/routes'
 
 import { CustomFetch } from './fetch'
 

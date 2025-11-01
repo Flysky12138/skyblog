@@ -119,6 +119,7 @@ export default defineConfig(
   // https://github.com/jsx-eslint/eslint-plugin-react?tab=readme-ov-file#flat-configs
   eslintPluginReact.configs.flat.recommended,
   eslintPluginReact.configs.flat['jsx-runtime'],
+  eslintPluginReactHooks.configs.flat.recommended,
   // 自定义规则
   {
     ignores: [
@@ -151,7 +152,6 @@ export default defineConfig(
       sourceType: 'module'
     },
     plugins: {
-      'react-hooks': eslintPluginReactHooks,
       'unused-imports': eslintPluginUnusedImports
     },
     rules: {

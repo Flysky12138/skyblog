@@ -6,8 +6,6 @@ import { getRealIp } from '@/lib/http/headers'
 import { CustomResponse } from '@/lib/http/response'
 import { isDev } from '@/lib/utils'
 
-export const runtime = 'edge'
-
 export type GET = RouteHandlerType<{
   return: Record<string, boolean | number | string>
 }>

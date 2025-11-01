@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/static/card'
 
-import { getPosts } from '../../../utils'
+import { getPosts } from '../../utils'
 import { PostListPagination, PostListPaginationProps } from './post-list-pagination'
 import { PostUpdateAt } from './post-update-at'
 
@@ -46,7 +46,7 @@ export const PostList = ({ pagination, posts }: PostListProps) => {
                 <item.icon size={12} />
                 {post[item.key].map((it, index) => (
                   <span key={it.id}>
-                    <Link className="hover:text-link-foreground focus-visible:text-link-foreground" href={`/posts/search?${item.key}=${it.name}`}>
+                    <Link className="hover:text-link-foreground focus-visible:text-link-foreground" href={`/search?${item.key}=${it.name}`}>
                       {it.name}
                     </Link>
                     {index < post[item.key].length - 1 ? ',' : null}

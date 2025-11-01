@@ -15,7 +15,7 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export const NavUser = () => {
+export const SidebarUser = () => {
   const { isMobile, open } = useSidebar()
   const session = useSession()
 
@@ -24,7 +24,9 @@ export const NavUser = () => {
   }
 
   const { email, image, name } = session.data.user
-  const imgUrl = image?.replace('https://', '/cdn/')
+
+  const alt = name || undefined
+  const src = image || undefined
 
   return (
     <SidebarMenu>
@@ -34,15 +36,15 @@ export const NavUser = () => {
             <SidebarMenuButton
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               size="lg"
-              tooltip={name || ''}
+              tooltip={alt}
             >
               <Avatar className="size-8 rounded-lg">
-                <AvatarImage alt={name || ''} src={imgUrl} />
+                <AvatarImage alt={alt} src={src} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{name}</span>
-                <span className="truncate text-xs">{email}</span>
+                <span className="text-muted-foreground truncate text-xs">{email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -56,12 +58,12 @@ export const NavUser = () => {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="size-8 rounded-lg">
-                  <AvatarImage alt={name || ''} src={imgUrl} />
+                  <AvatarImage alt={alt} src={src} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{name}</span>
-                  <span className="truncate text-xs">{email}</span>
+                  <span className="text-muted-foreground truncate text-xs">{email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

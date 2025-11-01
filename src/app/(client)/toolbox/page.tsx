@@ -60,7 +60,7 @@ export default function Page() {
                     <Avatar border shadow size={55} style="shape" value={child.label} />
                     <div className="space-y-1">
                       <h3 className="text-lg">{child.label}</h3>
-                      <h4 className="text-subtitle-foreground text-sm">{child.description}</h4>
+                      <h4 className="text-muted-foreground text-sm">{child.description}</h4>
                     </div>
                   </Link>
                 </Card>

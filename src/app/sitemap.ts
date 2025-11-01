@@ -1,10 +1,17 @@
-import { MetadataRoute } from 'next'
+'use cache'
 
+import { MetadataRoute } from 'next'
+import { cacheLife, cacheTag } from 'next/cache'
+
+import { CacheTag } from '@/lib/cache'
 import { prisma } from '@/lib/prisma'
 
-import { POST_WHERE_INPUT } from './(client)/posts/utils'
+import { POST_WHERE_INPUT } from './(client)/utils'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  cacheLife('max')
+  cacheTag(CacheTag.FRIEND, CacheTag.POST)
+
   const posts = await prisma.post.findMany({
     select: { id: true, updatedAt: true },
     where: POST_WHERE_INPUT

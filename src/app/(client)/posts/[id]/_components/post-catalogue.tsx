@@ -17,7 +17,7 @@ interface PostCatalogueProps extends React.ComponentProps<'section'> {
 export const PostCatalogue = ({ className, ref, ...props }: PostCatalogueProps) => {
   const ulRef = React.useRef<HTMLUListElement>(null)
 
-  const setActiveItemStyle = (activeIndex: number) => {
+  const setActiveItemStyle = React.useEffectEvent((activeIndex: number) => {
     const container = ulRef.current
     if (!container) return
     Array.from(container.querySelectorAll('a[href^="#"]')).forEach((el, i) => {
@@ -29,7 +29,7 @@ export const PostCatalogue = ({ className, ref, ...props }: PostCatalogueProps) 
         container.scroll({ behavior: 'smooth', top: offsetTop - parentHeight * 0.5 })
       }
     })
-  }
+  })
 
   const handleFindActiveItem = debounce(() => {
     const article = document.getElementById(ATTRIBUTE.ID.POST_CONTAINER)
@@ -71,9 +71,7 @@ export const PostCatalogue = ({ className, ref, ...props }: PostCatalogueProps) 
   )
 }
 
-interface PostCatalogueHeadingProps extends Omit<LinkProps<never>, 'href'> {}
-
-export const PostCatalogueHeading = ({ children, className, id, ...props }: PostCatalogueHeadingProps) => {
+export const PostCatalogueHeading = ({ children, className, id, ...props }: Omit<LinkProps<never>, 'href'>) => {
   const depth = Reflect.get(props, HEADING_ATTRIBUTE).split('.').length - 1
 
   return (

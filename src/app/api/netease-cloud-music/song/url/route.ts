@@ -1,15 +1,28 @@
-import { get } from '@vercel/edge-config'
 import { createRequire } from 'module'
 import NeteaseCloudMusicApi, { SoundQualityType } from 'NeteaseCloudMusicApi'
+import { cacheLife, cacheTag } from 'next/cache'
 import { NextRequest } from 'next/server'
 
-import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
+import { CacheTag } from '@/lib/cache'
 import { CustomResponse } from '@/lib/http/response'
 
-export const revalidate = 2592000
+import { getNeteaseCloudMusicCookie } from '../../utils'
 
 const require = createRequire(import.meta.url)
 const { song_url_v1 } = require('NeteaseCloudMusicApi') as typeof NeteaseCloudMusicApi
+
+const getSongUrl = async (id: string, level: SoundQualityType) => {
+  'use cache'
+  cacheLife('max')
+  cacheTag(CacheTag.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
+
+  try {
+    const res: any = await song_url_v1({ cookie: await getNeteaseCloudMusicCookie(), id, level })
+    return res.body.data
+  } catch (error) {
+    throw new Error((error as any).body.message)
+  }
+}
 
 export type GET = RouteHandlerType<{
   return: {
@@ -47,13 +60,7 @@ export const GET = async (request: NextRequest) => {
 
     if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
 
-    const data = await song_url_v1({
-      cookie: await get(VERCEL_EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE),
-      id,
-      level
-    })
-      .then((res: any) => res.body.data)
-      .catch(error => Promise.reject(error.body.message))
+    const data = await getSongUrl(id, level)
 
     return await CustomResponse.encrypt(data)
   } catch (error) {

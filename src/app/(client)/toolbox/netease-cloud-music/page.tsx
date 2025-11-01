@@ -114,7 +114,7 @@ export default function Page() {
             }
           >
             <Card className="flex items-center justify-center rounded-md py-10">
-              <Spinner />
+              <Spinner className="size-8" />
             </Card>
           </DisplayByConditional>
         }

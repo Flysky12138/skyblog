@@ -1,13 +1,20 @@
+'use cache'
+
 import { Handshake, Package } from 'lucide-react'
+import { cacheLife, cacheTag } from 'next/cache'
 import Link from 'next/link'
 
 import packageJson from '@/../package.json'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/static/card'
 import { Button } from '@/components/ui/button'
+import { CacheTag } from '@/lib/cache'
 import { prisma } from '@/lib/prisma'
 
 export const CardButtons = async () => {
+  cacheLife('max')
+  cacheTag(CacheTag.FRIEND)
+
   const friendCount = await prisma.friend.count()
 
   const pkgCount = Object.keys(packageJson.dependencies).length + Object.keys(packageJson.devDependencies).length

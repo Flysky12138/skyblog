@@ -5,6 +5,7 @@ import React from 'react'
 import { useEvent, useToggle } from 'react-use'
 
 import { Button } from '@/components/ui/button'
+import { ATTRIBUTE } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
 interface ResizeButtonProps extends React.ComponentProps<typeof Button> {}
@@ -16,7 +17,7 @@ export const ResizeButton = ({ className, ...props }: ResizeButtonProps) => {
   const scrollTop = React.useRef(0)
 
   const handleClick = () => {
-    const article = document.getElementById('post-container')
+    const article = document.getElementById(ATTRIBUTE.ID.POST_CONTAINER)
     if (!article) return
 
     if (isFullPage) {
@@ -52,7 +53,7 @@ export const ResizeButton = ({ className, ...props }: ResizeButtonProps) => {
             height: 100vh;
             z-index: 9999;
           }
-          body>*:not(#post-container) {
+          body>*:not(#${ATTRIBUTE.ID.POST_CONTAINER}) {
             display: none;
           }
         `}</style>
