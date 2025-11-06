@@ -1,3 +1,5 @@
+'use client'
+
 import { isBrowser } from 'es-toolkit'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -28,7 +30,7 @@ export const Portal = ({ children, container, disabled = false, selector, onMoun
       const found = document.querySelector(selector)
       if (found) return found
     }
-    return null
+    return document.body
   }, [container, selector])
 
   React.useEffect(() => {

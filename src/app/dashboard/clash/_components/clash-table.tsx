@@ -11,6 +11,7 @@ import { Switch } from '@/components/ui/switch'
 import { CustomRequest } from '@/lib/http/request'
 import { formatISOTime } from '@/lib/parser/time'
 import { Toast } from '@/lib/toast'
+import { tw } from '@/lib/utils'
 
 import { ClashDetail } from './clash-detail'
 
@@ -28,12 +29,12 @@ export const ClashTable = () => {
         { key: 'index' },
         { dataIndex: 'name', title: '名称' },
         { dataIndex: 'subtitle', title: '描述' },
-        { dataIndex: 'visitorInfos', title: '次数', render: text => text.length },
+        { align: 'center', dataIndex: 'visitorInfos', headerClassName: tw`w-20`, title: '次数', render: text => text.length },
         { dataIndex: 'subscribeLastAt', title: '最近订阅时间', render: text => (text ? formatISOTime(text) : null) },
         { dataIndex: 'updatedAt', render: formatISOTime, title: '更新时间' },
         {
           dataIndex: 'enabled',
-          headerClassName: 'w-12',
+          headerClassName: tw`w-12`,
           title: '启用',
           render: (text, { id }, index) => (
             <Switch
@@ -62,7 +63,7 @@ export const ClashTable = () => {
         },
         {
           align: 'right',
-          headerClassName: 'w-36',
+          headerClassName: tw`w-36`,
           key: 'action',
           render: (record, index) => (
             <div className="flex justify-end gap-2">

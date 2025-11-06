@@ -8,6 +8,7 @@ import { Table, TableActionButton, TableDeleteButton } from '@/components/table'
 import { CustomRequest } from '@/lib/http/request'
 import { formatISOTime } from '@/lib/parser/time'
 import { Toast } from '@/lib/toast'
+import { tw } from '@/lib/utils'
 
 import { ClashTemplateDetail } from './clash-template-detail'
 
@@ -23,12 +24,12 @@ export const ClashTemplateTable = () => {
       columns={[
         { key: 'index' },
         { dataIndex: 'name', title: '名称' },
-        { dataIndex: '_count', title: '引用', render: text => text.clashs },
-        { dataIndex: 'createdAt', headerClassName: 'w-48', render: formatISOTime, title: '创建时间' },
-        { dataIndex: 'updatedAt', headerClassName: 'w-48', render: formatISOTime, title: '更新时间' },
+        { align: 'center', dataIndex: '_count', headerClassName: tw`w-20`, title: '引用', render: text => text.clashs },
+        { dataIndex: 'createdAt', headerClassName: tw`w-48`, render: formatISOTime, title: '创建时间' },
+        { dataIndex: 'updatedAt', headerClassName: tw`w-48`, render: formatISOTime, title: '更新时间' },
         {
           align: 'right',
-          headerClassName: 'w-24',
+          headerClassName: tw`w-24`,
           key: 'action',
           render: (record, index) => (
             <div className="flex justify-end gap-2">

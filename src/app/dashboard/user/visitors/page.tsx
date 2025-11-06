@@ -17,6 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { CustomRequest } from '@/lib/http/request'
 import { formatISOTime } from '@/lib/parser/time'
 import { Toast } from '@/lib/toast'
+import { tw } from '@/lib/utils'
 
 const MDXClient = dynamic(() => import('@/components/mdx/client').then(it => it.MDXClient), {
   ssr: false,
@@ -54,10 +55,10 @@ export default function Page() {
           },
           { key: 'lon/lat', title: 'Lon/Lat', render: ({ geo }) => [geo.longitude, geo.latitude].filter(Boolean).join('/') },
           { key: 'device', title: 'Device', render: ({ agent }) => agent.device.vendor },
-          { dataIndex: 'createdAt', headerClassName: 'w-44', render: formatISOTime, title: '创建时间' },
+          { dataIndex: 'createdAt', headerClassName: tw`w-44`, render: formatISOTime, title: '创建时间' },
           {
             align: 'right',
-            headerClassName: 'w-16',
+            headerClassName: tw`w-16`,
             key: 'detail',
             title: '详情',
             render: record => (

@@ -7,9 +7,9 @@ import { CardDeveloper } from './_components/card-developer'
 import { CardGuestInfo } from './_components/card-guest-info'
 import { CardReactUwU } from './_components/card-react-uwu'
 
-export default function Layout({ children }: React.PropsWithChildren) {
+export default function Layout({ children }: LayoutProps<'/'>) {
   return (
-    <div className="gap-card-large flex flex-col sm:flex-row">
+    <div className="gap-card-large flex flex-col gap-y-(--py) sm:flex-row">
       <div className="gap-card relative flex grow flex-col">
         <Card className="font-title p-5 text-center text-base">开发中</Card>
         {children}

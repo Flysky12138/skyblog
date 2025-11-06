@@ -3,6 +3,10 @@ import { NextProxy, NextResponse, userAgent } from 'next/server'
 import { auth } from '@/lib/auth'
 import { isDev } from '@/lib/utils'
 
+export const config = {
+  matcher: '/((?!_next/data|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)'
+}
+
 export const proxy: NextProxy = async request => {
   if (isDev()) return
 

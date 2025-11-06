@@ -1,7 +1,6 @@
 import { ToolCase } from 'lucide-react'
 import Link from 'next/link'
 import Script from 'next/script'
-import React from 'react'
 
 import { DisplayByAuth } from '@/components/display/display-by-auth'
 import { DisplayByBreakPoint } from '@/components/display/display-by-breakpoint'
@@ -19,7 +18,7 @@ import { ThemeToggleButton } from '@/providers/theme'
 
 import { AuthButton } from './_components/auth-button'
 
-export default function Layout({ children }: React.PropsWithChildren) {
+export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <>
       <DisplayByAuth role="USER">
@@ -30,6 +29,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
       <Live2DProvider>
         <Header>
           <Container className="flex h-full items-center gap-4">
+            <h1 className="hidden">{process.env.NEXT_PUBLIC_TITLE}</h1>
             <Link aria-label="to home page" href="/">
               <Logo />
             </Link>
@@ -58,9 +58,6 @@ export default function Layout({ children }: React.PropsWithChildren) {
           data-vaul-drawer-wrapper="true"
         >
           <Container className="py-(--py) [--py:1.25rem] sm:[--py:1.75rem] md:[--py:2.25rem]">{children}</Container>
-          {/* <DisplayByBreakPoint min="md">
-          <RibbonCanvas />
-        </DisplayByBreakPoint> */}
         </main>
         <nav className="z-nav fixed inset-x-0 bottom-[calc(var(--height-footer)+--spacing(12))]">
           <Container className="flex h-0 flex-col items-end justify-end gap-3" id={ATTRIBUTE.ID.NAV_CONTAINER} variant="nav">
@@ -71,9 +68,6 @@ export default function Layout({ children }: React.PropsWithChildren) {
         </nav>
         <footer className="z-footer dark:bg-root/80 h-footer fixed inset-x-0 bottom-0 flex items-center justify-center bg-white/70">
           <About />
-          {/* <DisplayByBreakPoint min="md">
-          <FishCanvas />
-        </DisplayByBreakPoint> */}
         </footer>
         <aside>
           <Live2DContent />

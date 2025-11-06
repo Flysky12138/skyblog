@@ -14,6 +14,7 @@ import { Table, TableActionButton, TableDeleteButton } from '@/components/table'
 import { Switch } from '@/components/ui/switch'
 import { CustomRequest } from '@/lib/http/request'
 import { Toast } from '@/lib/toast'
+import { tw } from '@/lib/utils'
 
 export default function Page() {
   const [search, setSearch] = useImmer<GET['search']>({ limit: 20, page: 1 })
@@ -41,7 +42,7 @@ export default function Page() {
           { dataIndex: 'tags', title: '标签', render: value => value.map(category => category.name).join('、') },
           {
             dataIndex: 'published',
-            headerClassName: 'w-12',
+            headerClassName: tw`w-12`,
             title: '公开',
             render: (text, record, index) => (
               <Switch
@@ -70,7 +71,7 @@ export default function Page() {
           },
           {
             align: 'right',
-            headerClassName: 'w-36',
+            headerClassName: tw`w-36`,
             key: 'edit',
             title: '操作',
             render: (record, index) => (

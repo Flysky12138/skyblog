@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma'
 
 import { getPosts, POST_WHERE_INPUT } from '../../../utils'
 import { PostList } from '../../_components/post-list'
+import { PostListPagination } from '../../_components/post-list-pagination'
 
 export const generateStaticParams = async (): Promise<Awaited<PageProps<'/page/[page]'>['params']>[]> => {
   const posts = await prisma.post.paginate(
@@ -22,21 +23,18 @@ export const generateStaticParams = async (): Promise<Awaited<PageProps<'/page/[
 
 export default async function Page({ params }: PageProps<'/page/[page]'>) {
   cacheLife('max')
-  cacheTag(CacheTag.FRIEND)
+  cacheTag(CacheTag.POSTS)
 
   const { page } = await params
 
   const pageNumber = Number.parseInt(page)
 
-  const { result: posts, ...pagination } = await getPosts(pageNumber)
+  const { count, result, totalPages } = await getPosts(pageNumber)
 
   return (
-    <PostList
-      pagination={{
-        ...pagination,
-        path: '/page/[page]'
-      }}
-      posts={posts}
-    />
+    <>
+      <PostList count={count} posts={result} />
+      <PostListPagination page={pageNumber} path="/page/[page]" totalPages={totalPages} />
+    </>
   )
 }

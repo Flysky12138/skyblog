@@ -23,7 +23,8 @@ export const PUT = async (request: NextRequest, { params }: RouteContext<'/api/d
     const data = await request.json()
     const res = await dbPut(id, data)
 
-    CacheClear.friend()
+    CacheClear.friend(id)
+    CacheClear.friends()
 
     return await CustomResponse.encrypt(res)
   } catch (error) {
@@ -49,7 +50,8 @@ export const DELETE = async (request: NextRequest, { params }: RouteContext<'/ap
 
     const res = await dbDelete(id)
 
-    CacheClear.friend()
+    CacheClear.friend(id)
+    CacheClear.friends()
 
     return await CustomResponse.encrypt(res)
   } catch (error) {

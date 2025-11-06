@@ -12,6 +12,10 @@ export default function robots(): MetadataRoute.Robots {
       disallow: disallow.sort((a, b) => a.localeCompare(b)),
       userAgent: '*'
     },
-    sitemap: new URL('/sitemap.xml', process.env.NEXT_PUBLIC_WEBSITE_URL).href
+    sitemap: [
+      new URL('/sitemap.xml', process.env.NEXT_PUBLIC_WEBSITE_URL).href,
+      new URL('/posts/sitemap.xml', process.env.NEXT_PUBLIC_WEBSITE_URL).href,
+      new URL('/friends/sitemap.xml', process.env.NEXT_PUBLIC_WEBSITE_URL).href
+    ]
   }
 }

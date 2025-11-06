@@ -5,8 +5,8 @@ import { Updater } from 'use-immer'
 import { uuidv7 } from 'uuidv7'
 
 import { MultiSelect } from '@/components/form/multi-select'
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Textarea } from '@/components/ui/textarea'
 import { Toggle } from '@/components/ui/toggle'
@@ -43,10 +43,14 @@ export const PostDetail = ({ children, value: post, onChange: setPost }: PostDet
           <SheetTitle>文章信息</SheetTitle>
           <SheetDescription className="hidden" />
         </SheetHeader>
-        <div className="scrollbar-hidden flex h-full flex-col gap-4 overflow-y-auto p-4 pt-0">
-          <div className="flex flex-col gap-2">
-            <Label aria-required="true">标题</Label>
+        <FieldGroup className="scrollbar-hidden overflow-y-auto p-4 pt-0">
+          <Field>
+            <FieldLabel aria-required="true" htmlFor="title">
+              标题
+            </FieldLabel>
             <Input
+              autoComplete="off"
+              id="title"
               value={post.title}
               onChange={event => {
                 setPost(state => {
@@ -54,11 +58,12 @@ export const PostDetail = ({ children, value: post, onChange: setPost }: PostDet
                 })
               }}
             />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label>描述</Label>
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="description">描述</FieldLabel>
             <Textarea
               className="min-h-24"
+              id="description"
               value={post.description || ''}
               onChange={event => {
                 setPost(state => {
@@ -66,9 +71,9 @@ export const PostDetail = ({ children, value: post, onChange: setPost }: PostDet
                 })
               }}
             />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label>分类</Label>
+          </Field>
+          <Field>
+            <FieldLabel>分类</FieldLabel>
             <MultiSelect
               multiple
               fieldNames={{ label: 'name', value: 'id' }}
@@ -81,9 +86,9 @@ export const PostDetail = ({ children, value: post, onChange: setPost }: PostDet
                 })
               }}
             />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label>标签</Label>
+          </Field>
+          <Field>
+            <FieldLabel>标签</FieldLabel>
             <MultiSelect
               multiple
               fieldNames={{ label: 'name', value: 'id' }}
@@ -96,9 +101,9 @@ export const PostDetail = ({ children, value: post, onChange: setPost }: PostDet
                 })
               }}
             />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label className="col-span-full">区块显示</Label>
+          </Field>
+          <Field>
+            <FieldLabel className="col-span-full">区块显示</FieldLabel>
             <div className="grid grid-cols-10 gap-3">
               <ShowAreaRadioButton
                 className="col-span-full h-10"
@@ -137,8 +142,8 @@ export const PostDetail = ({ children, value: post, onChange: setPost }: PostDet
                 评论
               </ShowAreaRadioButton>
             </div>
-          </div>
-        </div>
+          </Field>
+        </FieldGroup>
       </SheetContent>
     </Sheet>
   )

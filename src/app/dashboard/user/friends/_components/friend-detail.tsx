@@ -6,8 +6,9 @@ import { useImmer } from 'use-immer'
 import { POST } from '@/app/api/dashboard/user/friends/route'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Button } from '@/components/ui/button'
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 
 interface FriendDetailProps extends React.PropsWithChildren {
   value?: POST['body']
@@ -38,12 +39,16 @@ export const FriendDetail = ({ children, value, onSubmit }: FriendDetailProps) =
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>友链</DialogTitle>
-          <DialogDescription>友链表单</DialogDescription>
+          <DialogDescription className="hidden" />
         </DialogHeader>
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <Label aria-required>名字</Label>
+        <FieldGroup>
+          <Field>
+            <FieldLabel aria-required htmlFor="name">
+              名字
+            </FieldLabel>
             <Input
+              autoComplete="off"
+              id="name"
               value={form.name}
               onChange={event => {
                 setForm(state => {
@@ -51,10 +56,14 @@ export const FriendDetail = ({ children, value, onSubmit }: FriendDetailProps) =
                 })
               }}
             />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label aria-required>链接</Label>
+          </Field>
+          <Field>
+            <FieldLabel aria-required htmlFor="url">
+              链接
+            </FieldLabel>
             <Input
+              autoComplete="off"
+              id="url"
               type="url"
               value={form.url}
               onChange={event => {
@@ -63,10 +72,13 @@ export const FriendDetail = ({ children, value, onSubmit }: FriendDetailProps) =
                 })
               }}
             />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label>描述</Label>
-            <Input
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="subtitle">描述</FieldLabel>
+            <Textarea
+              autoComplete="off"
+              className="min-h-24"
+              id="subtitle"
               value={form.subtitle || ''}
               onChange={event => {
                 setForm(state => {
@@ -74,9 +86,8 @@ export const FriendDetail = ({ children, value, onSubmit }: FriendDetailProps) =
                 })
               }}
             />
-          </div>
+          </Field>
           <Button
-            className="mt-3"
             disabled={!form.name || !form.url}
             onClick={async () => {
               await onSubmit(form)
@@ -85,7 +96,7 @@ export const FriendDetail = ({ children, value, onSubmit }: FriendDetailProps) =
           >
             {value ? '保存' : '更新'}
           </Button>
-        </div>
+        </FieldGroup>
       </DialogContent>
     </Dialog>
   )

@@ -13,8 +13,9 @@ import { yamlClashConfig } from '@/components/monaco-editor/languages/yaml-clash
 import { Card } from '@/components/static/card'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { CustomRequest } from '@/lib/http/request'
 import { getVariablesNames, replaceVariables } from '@/lib/parser/string'
@@ -75,13 +76,13 @@ export const ClashDetail = ({ children, value, onSubmit }: ClashDetailProps) => 
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="h-[calc(100vh-40px)] max-w-7xl">
+      <DialogContent className="h-[calc(100vh-120px)] max-h-200 max-w-7xl">
         <DialogHeader>
           <DialogTitle>共享配置</DialogTitle>
           <DialogDescription>自定义 Clash 客户端订阅内容</DialogDescription>
         </DialogHeader>
         <div className="grid h-full grid-cols-[1fr_400px] gap-6">
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden rounded-sm">
             <MonacoEditor
               code={isUseTemplate ? realTemplateContent : form.content}
               diffMode={isUseTemplate}
@@ -97,11 +98,15 @@ export const ClashDetail = ({ children, value, onSubmit }: ClashDetailProps) => 
               {...yamlClashConfig}
             />
           </Card>
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <Label aria-required>名称</Label>
-              <div className="flex gap-2">
+          <FieldGroup>
+            <Field>
+              <FieldLabel aria-required htmlFor="name">
+                名称
+              </FieldLabel>
+              <ButtonGroup>
                 <Input
+                  autoComplete="off"
+                  id="name"
                   value={form.name}
                   onChange={event => {
                     setForm(state => {
@@ -110,6 +115,7 @@ export const ClashDetail = ({ children, value, onSubmit }: ClashDetailProps) => 
                   }}
                 />
                 <Button
+                  variant="outline"
                   onClick={() => {
                     setForm(state => {
                       state.name = dayjs().format('YYYYMMDDHHmmss')
@@ -118,11 +124,13 @@ export const ClashDetail = ({ children, value, onSubmit }: ClashDetailProps) => 
                 >
                   随机
                 </Button>
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label>描述</Label>
+              </ButtonGroup>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="subtitle">描述</FieldLabel>
               <Input
+                autoComplete="off"
+                id="subtitle"
                 value={form.subtitle || ''}
                 onChange={event => {
                   setForm(state => {
@@ -130,9 +138,9 @@ export const ClashDetail = ({ children, value, onSubmit }: ClashDetailProps) => 
                   })
                 }}
               />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label>模板</Label>
+            </Field>
+            <Field>
+              <FieldLabel>模板</FieldLabel>
               <Select
                 disabled={clashTemplates?.length == 0 || isLoading}
                 value={form.clashTemplateId || 'null'}
@@ -155,10 +163,10 @@ export const ClashDetail = ({ children, value, onSubmit }: ClashDetailProps) => 
                   ))}
                 </SelectContent>
               </Select>
-            </div>
+            </Field>
             <DisplayByConditional condition={selectedClashTemplateVariables.length > 0}>
-              <div className="flex flex-col gap-2">
-                <Label aria-required>变量</Label>
+              <Field>
+                <FieldLabel aria-required>变量</FieldLabel>
                 <div className="grid grid-cols-2 gap-3">
                   {selectedClashTemplateVariables.map((key, index) => (
                     <Input
@@ -174,10 +182,9 @@ export const ClashDetail = ({ children, value, onSubmit }: ClashDetailProps) => 
                     />
                   ))}
                 </div>
-              </div>
+              </Field>
             </DisplayByConditional>
             <Button
-              className="mt-3"
               disabled={!canSubmit}
               onClick={async () => {
                 await onSubmit(form)
@@ -186,7 +193,7 @@ export const ClashDetail = ({ children, value, onSubmit }: ClashDetailProps) => 
             >
               {value ? '更新' : '保存'}
             </Button>
-          </div>
+          </FieldGroup>
         </div>
       </DialogContent>
     </Dialog>

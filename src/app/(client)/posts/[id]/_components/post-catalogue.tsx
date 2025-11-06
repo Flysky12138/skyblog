@@ -80,9 +80,9 @@ export const PostCatalogueHeading = ({ children, className, id, ...props }: Omit
         replace
         className={cn(
           'relative block rounded-md py-1 pr-2',
-          'data-active:text-link-foreground data-active:bg-link',
-          'data-active:before:bg-link-foreground/60 data-active:before:absolute data-active:before:inset-y-1 data-active:before:-left-2 data-active:before:w-1 data-active:before:rounded-md',
-          'hover:text-link-foreground hover:bg-link/30',
+          'data-active:text-link-foreground data-active:bg-link/60',
+          'data-active:before:bg-link-foreground/50 data-active:before:absolute data-active:before:inset-y-1 data-active:before:-left-2 data-active:before:w-1 data-active:before:rounded-md',
+          'hover:text-link-foreground hover:bg-link/40',
           className
         )}
         href={`#${id}` as Route}

@@ -8,13 +8,16 @@ import NextTopLoader from 'nextjs-toploader'
 import { prefetchDNS } from 'react-dom'
 
 import { Toaster } from '@/components/ui-overwrite/sonner'
+import { FancyboxRegister } from '@/components/utils/fancybox'
 import { Report } from '@/components/utils/report'
 import { cn } from '@/lib/utils'
-import { ImageViewerProvider } from '@/providers/image-viewer'
 import { SWRProvider } from '@/providers/swr'
 import { ThemeProvider } from '@/providers/theme'
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: process.env.NEXT_PUBLIC_WEBSITE_URL
+  },
   authors: [{ name: 'flysky12138', url: 'https://github.com/Flysky12138' }],
   description: process.env.NEXT_PUBLIC_DESCRIPTION,
   generator: 'Next.js',
@@ -33,6 +36,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
+    creator: process.env.NEXT_PUBLIC_GITHUB_NAME,
     description: process.env.NEXT_PUBLIC_DESCRIPTION,
     title: process.env.NEXT_PUBLIC_TITLE
   }
@@ -59,21 +63,22 @@ const code = Cascadia_Code({
   weight: '400'
 })
 
-export default function Layout({ children }: React.PropsWithChildren) {
+export default function Layout({ children }: LayoutProps<'/'>) {
   prefetchDNS('https://cdn.jsdelivr.net')
 
   return (
     <html suppressHydrationWarning lang="zh-CN">
       <body className={cn(title.variable, code.variable)}>
         <ThemeProvider>
-          <NextTopLoader showSpinner={false} />
           <SessionProvider>
             <SWRProvider>
-              <ImageViewerProvider>{children}</ImageViewerProvider>
-              <Toaster />
+              {children}
               <Report />
             </SWRProvider>
           </SessionProvider>
+          <NextTopLoader showSpinner={false} />
+          <Toaster />
+          <FancyboxRegister />
         </ThemeProvider>
       </body>
     </html>

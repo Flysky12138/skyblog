@@ -42,7 +42,7 @@ export const PostInfo = ({ defaultValue, id }: PostInfoProps) => {
   }
 
   return (
-    <p className="text-subtitle-foreground text-sm break-all">
+    <p className="text-muted-foreground text-sm break-all">
       这篇文章发布于 {formatISOTime2(post.createdAt)}
       {post.categories.length > 0 ? (
         <>

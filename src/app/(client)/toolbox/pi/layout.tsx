@@ -13,6 +13,6 @@ export const metadata: Metadata = {
   }
 }
 
-export default function Layout({ children }: React.PropsWithChildren) {
+export default function Layout({ children }: LayoutProps<'/toolbox/pi'>) {
   return children
 }

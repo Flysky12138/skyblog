@@ -80,6 +80,7 @@ export const Audio = ({ ref, song }: AudioProps) => {
   })
 
   const lyric = React.useMemo(() => {
+    if (!lyrics.lrc) return null
     const index = lyrics.lrc.findLastIndex(item => item.time <= time)
     return lyrics.lrc[clamp(index, 0, lyrics.lrc.length - 1)]?.lyric
   }, [lyrics.lrc, time])
@@ -98,7 +99,7 @@ export const Audio = ({ ref, song }: AudioProps) => {
 
   return (
     <>
-      <Portal container={document.body}>{audio}</Portal>
+      <Portal>{audio}</Portal>
       <DialogDrawer open={open} onOpenChange={setOpen}>
         <Portal selector={`#${ATTRIBUTE.ID.NAV_CONTAINER}`}>
           <DialogDrawerTrigger asChild>

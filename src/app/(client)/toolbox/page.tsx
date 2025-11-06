@@ -1,8 +1,10 @@
+import { ExternalLinkIcon } from 'lucide-react'
 import { Route } from 'next'
 import Link from 'next/link'
 
-import { Avatar } from '@/components/avatar'
 import { Card } from '@/components/static/card'
+import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 interface ToolGroup {
   children: {
@@ -13,62 +15,50 @@ interface ToolGroup {
   title: string
 }
 
-const ToolGroup: ToolGroup[] = [
+const toolGroup: ToolGroup[] = [
   {
-    children: [
-      {
-        description: '共享会员，下载网易云音乐歌曲',
-        href: '/toolbox/netease-cloud-music',
-        label: '网易云音乐'
-      }
-    ],
+    children: [{ description: '共享会员，下载网易云音乐歌曲', href: '/toolbox/netease-cloud-music', label: '网易云音乐' }],
     title: '工具'
   },
   {
-    children: [
-      {
-        description: 'ECharts 在线编辑预览，带类型提示',
-        href: '/toolbox/echarts',
-        label: 'ECharts'
-      }
-    ],
+    children: [{ description: 'ECharts 在线编辑预览，带类型提示', href: '/toolbox/echarts', label: 'ECharts' }],
     title: '开发'
   },
   {
-    children: [
-      {
-        description: '在线计算圆周率数值',
-        href: '/toolbox/pi',
-        label: 'Pi'
-      }
-    ],
+    children: [{ description: '在线计算圆周率数值', href: '/toolbox/pi', label: 'Pi' }],
     title: '其他'
   }
 ]
 
 export default function Page() {
   return (
-    <div className="space-y-8">
-      {ToolGroup.map(group => (
-        <div key={group.title}>
-          <h2 className="font-title text-xl font-medium">{group.title}</h2>
-          <ul className="gap-card mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-            {group.children.map(child => (
-              <li key={child.label}>
-                <Card asChild className="p-card flex gap-4">
-                  <Link href={child.href as Route}>
-                    <Avatar border shadow size={55} style="shape" value={child.label} />
-                    <div className="space-y-1">
-                      <h3 className="text-lg">{child.label}</h3>
-                      <h4 className="text-muted-foreground text-sm">{child.description}</h4>
-                    </div>
-                  </Link>
-                </Card>
-              </li>
-            ))}
-          </ul>
-        </div>
+    <Tabs className="gap-3" defaultValue={toolGroup[0].title}>
+      <TabsList>
+        {toolGroup.map(item => (
+          <TabsTrigger key={item.title} className="w-20 sm:w-32" value={item.title}>
+            {item.title}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+      {toolGroup.map(item => (
+        <TabsContent key={item.title} className="space-y-3" value={item.title}>
+          {item.children.map(child => (
+            <Card key={child.label} asChild>
+              <Item asChild>
+                <Link href={child.href as Route}>
+                  <ItemContent>
+                    <ItemTitle>{child.label}</ItemTitle>
+                    <ItemDescription>{child.description}</ItemDescription>
+                  </ItemContent>
+                  <ItemActions>
+                    <ExternalLinkIcon className="size-4" />
+                  </ItemActions>
+                </Link>
+              </Item>
+            </Card>
+          ))}
+        </TabsContent>
       ))}
-    </div>
+    </Tabs>
   )
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { Fancybox } from '@fancyapps/ui'
 import { produce } from 'immer'
 import {
   CloudUpload,
@@ -42,7 +43,6 @@ import { R2 } from '@/lib/http/r2'
 import { formatFileSize } from '@/lib/parser/size'
 import { formatISOTime } from '@/lib/parser/time'
 import { Toast } from '@/lib/toast'
-import { useImageViewerContext } from '@/providers/image-viewer'
 
 import { R2Upload } from './r2-upload'
 
@@ -188,8 +188,6 @@ const FileIconMap = ({ type = '', ...props }: LucideProps & { type?: string }) =
  * 文件预览
  */
 const FileViewButton = ({ file }: { file: R2.FileInfo }) => {
-  const { openViewer } = useImageViewerContext()
-
   const types: ReturnType<typeof getFileType>[] = ['image', 'pdf']
 
   if (!types.includes(getFileType(file.contentType))) return null
@@ -199,7 +197,7 @@ const FileViewButton = ({ file }: { file: R2.FileInfo }) => {
       onClick={() => {
         switch (getFileType(file.contentType)) {
           case 'image':
-            openViewer({ images: [{ key: file.key, src: R2.get(file.key) }] })
+            Fancybox.show([{ src: R2.get(file.key) }])
             break
           case 'pdf':
             window.open(R2.get(file.key), '_blank')
@@ -255,7 +253,7 @@ const FileLinkCopyButton = ({ file }: { file: R2.FileInfo }) => {
                 <ItemTitle>
                   <Badge className="rounded-sm">{link.label}</Badge>
                 </ItemTitle>
-                <ItemDescription className="text-wrap break-all">{link.value}</ItemDescription>
+                <ItemDescription className="line-clamp-none text-wrap break-all">{link.value}</ItemDescription>
               </ItemContent>
             </Item>
           </DropdownMenuItem>

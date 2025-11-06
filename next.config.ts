@@ -23,9 +23,10 @@ const cspHeader = [
   `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${process.env.NEXT_PUBLIC_CDN_FFMPEG}`,
   "style-src 'self' 'unsafe-inline'",
   "worker-src 'self' blob:",
+  "font-src 'self' data:",
   "object-src 'none'",
   "frame-ancestors 'none'"
-]
+].join('; ')
 
 const headers: NextConfig['headers'] = async () => [
   {
@@ -34,7 +35,7 @@ const headers: NextConfig['headers'] = async () => [
   },
   {
     headers: [
-      { key: 'Content-Security-Policy', value: cspHeader.join('; ') },
+      { key: 'Content-Security-Policy', value: cspHeader },
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       { key: 'Permissions-Policy', value: 'geolocation=(self),camera=(),microphone=()' },
       { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' },

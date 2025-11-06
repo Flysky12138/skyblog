@@ -13,7 +13,7 @@ import { prisma } from '@/lib/prisma'
 
 export const CardButtons = async () => {
   cacheLife('max')
-  cacheTag(CacheTag.FRIEND)
+  cacheTag(CacheTag.FRIENDS)
 
   const friendCount = await prisma.friend.count()
 

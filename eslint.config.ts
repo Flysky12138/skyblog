@@ -1,7 +1,7 @@
+// @ts-ignore
+import nextVitals from 'eslint-config-next/core-web-vitals'
 import eslintPluginPerfectionist from 'eslint-plugin-perfectionist'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
-import eslintPluginReact from 'eslint-plugin-react'
-import eslintPluginReactHooks from 'eslint-plugin-react-hooks'
 import eslintPluginUnusedImports from 'eslint-plugin-unused-imports'
 import { defineConfig } from 'eslint/config'
 import tseslint from 'typescript-eslint'
@@ -89,18 +89,15 @@ const reactRules: Rules = {
 }
 
 /**
- * @see https://www.npmjs.com/package/eslint-plugin-react-hooks
- */
-const reactHooksRules: Rules = {
-  'react-hooks/exhaustive-deps': 'error',
-  'react-hooks/rules-of-hooks': 'error'
-}
-
-/**
  * @see https://github.com/sweepline/eslint-plugin-unused-imports?tab=readme-ov-file#usage
  */
 const unusedImportsRules: Rules = {
   'unused-imports/no-unused-imports': 'error'
+}
+
+// next
+const nextRules: Rules = {
+  '@next/next/no-img-element': 'off'
 }
 
 export default defineConfig(
@@ -116,10 +113,8 @@ export default defineConfig(
   // 对各种数据结构进行排序
   // https://perfectionist.dev/configs/recommended-natural
   eslintPluginPerfectionist.configs['recommended-natural'],
-  // https://github.com/jsx-eslint/eslint-plugin-react?tab=readme-ov-file#flat-configs
-  eslintPluginReact.configs.flat.recommended,
-  eslintPluginReact.configs.flat['jsx-runtime'],
-  eslintPluginReactHooks.configs.flat.recommended,
+  // https://nextjs.org/docs/app/api-reference/config/eslint
+  nextVitals,
   // 自定义规则
   {
     ignores: [
@@ -159,8 +154,8 @@ export default defineConfig(
       ...tseslintRules,
       ...perfectionistRules,
       ...reactRules,
-      ...reactHooksRules,
-      ...unusedImportsRules
+      ...unusedImportsRules,
+      ...nextRules
     },
     settings: {
       react: {

@@ -1,8 +1,5 @@
-'use cache: private'
-
 import { Metadata } from 'next'
 import { cookies } from 'next/headers'
-import React from 'react'
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarProvider, SidebarRail } from '@/components/ui/sidebar'
 
@@ -20,7 +17,7 @@ export const metadata: Metadata = {
   title: 'Dashboard'
 }
 
-export default async function Layout({ children }: React.PropsWithChildren) {
+export default async function Layout({ children }: LayoutProps<'/dashboard'>) {
   const cookieStore = await cookies()
   const defaultOpen = cookieStore.has('sidebar_state') ? cookieStore.get('sidebar_state')?.value == 'true' : true
 
