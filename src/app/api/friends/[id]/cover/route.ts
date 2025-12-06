@@ -8,7 +8,6 @@ export const GET = async (request: NextRequest, { params }: RouteContext<'/api/f
   let browser: Browser | null = null
   try {
     const { id } = await params
-
     if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
 
     const friend = await prisma.friend.findUnique({ where: { id } })
@@ -20,7 +19,7 @@ export const GET = async (request: NextRequest, { params }: RouteContext<'/api/f
       slowMo: 100
     })
     const page = await browser.newPage()
-    await page.goto(friend.url)
+    await page.goto(friend.siteUrl)
     const uint8Array = await page.screenshot({ type: 'webp' }).then(Buffer.from)
 
     return new NextResponse(uint8Array, {

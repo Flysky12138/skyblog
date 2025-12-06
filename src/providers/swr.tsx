@@ -2,7 +2,7 @@
 
 import { SWRConfig } from 'swr'
 
-import { CustomFetch } from '@/lib/http/fetch'
+import { ifetch } from '@/lib/http/fetch'
 
 /**
  * 极速、轻量、可重用的 数据请求
@@ -17,11 +17,11 @@ import { CustomFetch } from '@/lib/http/fetch'
  *
  * @see https://github.com/vercel/swr
  */
-export const SWRProvider = (props: React.ComponentProps<typeof SWRConfig>) => {
+export function SWRProvider(props: React.ComponentProps<typeof SWRConfig>) {
   return (
     <SWRConfig
       value={{
-        fetcher: url => CustomFetch(url)
+        fetcher: url => ifetch(url)
       }}
       {...props}
     />

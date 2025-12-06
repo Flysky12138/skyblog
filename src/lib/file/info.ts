@@ -1,4 +1,9 @@
 /**
+ * 获取文件名
+ */
+export const getFileName = (file: File) => file.webkitRelativePath || file.name
+
+/**
  * 获取图片宽高
  */
 export const getImageSize = async (blob: Blob) => {
@@ -23,15 +28,37 @@ export const getImageSize = async (blob: Blob) => {
 /**
  * 获取文件类型
  */
-export const getFileType = (file: File | string = '') => {
-  const type = file instanceof File ? file.type : file
-  if (type.startsWith('image')) return 'image'
-  if (type.startsWith('audio')) return 'audio'
-  if (type.startsWith('video')) return 'video'
-  if (type.startsWith('font')) return 'font'
-  if (type.startsWith('text')) return 'text'
+export const getFileType = (mimeType?: string) => {
+  if (!mimeType) return 'unknown'
 
-  if (type == 'application/pdf') return 'pdf'
-  if (type == 'application/json') return 'json'
-  if (type == 'application/zip') return 'zip'
+  if (mimeType.startsWith('image')) return 'image'
+  if (mimeType.startsWith('audio')) return 'audio'
+  if (mimeType.startsWith('video')) return 'video'
+  if (mimeType.startsWith('font')) return 'font'
+  if (mimeType.startsWith('text')) return 'text'
+
+  if (mimeType == 'application/pdf') return 'pdf'
+  if (mimeType == 'application/json') return 'json'
+  if (mimeType == 'application/zip') return 'zip'
+
+  return 'unknown'
+}
+
+/**
+ * 获取文件名和后缀
+ */
+export const parseFileName = (filename: string) => {
+  const idx = filename.lastIndexOf('.')
+
+  if (idx == -1) {
+    return {
+      ext: '',
+      name: filename
+    }
+  }
+
+  return {
+    ext: filename.slice(idx + 1).toLowerCase(),
+    name: filename.slice(0, idx)
+  }
 }

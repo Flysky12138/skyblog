@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger
-} from '@/components/ui-overwrite/alert-dialog'
+} from '@/components/ui/alert-dialog'
 
 export interface AlertDeleteProps extends React.PropsWithChildren {
   description: string
@@ -19,7 +19,7 @@ export interface AlertDeleteProps extends React.PropsWithChildren {
   onConfirm: React.MouseEventHandler<HTMLButtonElement>
 }
 
-export const AlertDelete = ({ children, description, title, onCancel, onConfirm }: AlertDeleteProps) => {
+export function AlertDelete({ children, description, title, onCancel, onConfirm }: AlertDeleteProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
@@ -30,7 +30,9 @@ export const AlertDelete = ({ children, description, title, onCancel, onConfirm 
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel}>取消</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>确定</AlertDialogAction>
+          <AlertDialogAction className="min-w-32" onClick={onConfirm}>
+            确定
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

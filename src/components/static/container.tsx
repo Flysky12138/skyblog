@@ -9,8 +9,8 @@ const toggleVariants = cva('', {
   },
   variants: {
     variant: {
-      default: tw`px-3 sm:px-5 xl:px-20`,
-      nav: tw`px-8 sm:px-10 xl:px-6`
+      aside: tw`px-8 sm:px-10 xl:px-6`,
+      default: tw`px-3 sm:px-5 xl:px-20`
     }
   }
 })
@@ -20,7 +20,7 @@ interface ContainerProps extends SlotProps, VariantProps<typeof toggleVariants> 
   className?: string
 }
 
-export const Container = ({ asChild, className, variant, ...props }: ContainerProps) => {
+export function Container({ asChild, className, variant, ...props }: ContainerProps) {
   const Comp = asChild ? Root : 'section'
 
   return (

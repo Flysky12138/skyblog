@@ -17,7 +17,13 @@ export const tsEchartsConfig: LanguageConfig = {
      * @file https://echarts.apache.org/zh/js/vendors/echarts/types/dist/echarts.d.ts
      */
     void (async () => {
-      const dtyps = await fetch('/echarts.d.ts').then(res => res.text())
+      const url = new URL('/node_modules/echarts/types/dist/echarts.d.ts', import.meta.url)
+      const dtyps = await fetch(url).then(res => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch echarts.d.ts')
+        }
+        return res.text()
+      })
       monaco.languages.typescript.typescriptDefaults.addExtraLib(
         `
           declare module 'echarts' { ${dtyps} };
@@ -32,7 +38,7 @@ export const tsEchartsConfig: LanguageConfig = {
       // 格式化
       monaco.languages.registerDocumentFormattingEditProvider(tsEchartsConfig.language, {
         provideDocumentFormattingEdits: async model => {
-          const options = toMerged<Options, Options>(require('/.prettierrc.cjs'), {
+          const options = toMerged<Options, Options>(require('/.prettierrc.mjs'), {
             parser: tsEchartsConfig.language,
             plugins: [estreePlugins, babelPlugins, typescriptPlugins]
           })

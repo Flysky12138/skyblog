@@ -13,11 +13,11 @@ import { useTheme } from '@/hooks/use-theme'
  * Adding dark mode to your next app.
  * @see https://www.shadcn.com.cn/docs/dark-mode/next
  */
-export const ThemeProvider = (props: React.PropsWithChildren) => {
+export function ThemeProvider(props: React.PropsWithChildren) {
   return <NextThemesProvider disableTransitionOnChange enableSystem attribute="class" defaultTheme="system" {...props} />
 }
 
-export const ThemeToggleButton = () => {
+export function ThemeToggleButton() {
   const { isDark, toggleTheme } = useTheme()
 
   const isMounted = useMounted()

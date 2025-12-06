@@ -1,0 +1,17 @@
+ignoredBuiltDependencies:
+  - better-sqlite3
+  - core-js
+  - esbuild
+  - koffi
+  - prisma-zod-generator
+  - protobufjs
+  - sharp
+  - unrs-resolver
+
+onlyBuiltDependencies:
+  - '@prisma/engines'
+  - cn-font-split
+  - prisma
+
+patchedDependencies:
+  '@neondatabase/auth': patches/@neondatabase__auth.patch

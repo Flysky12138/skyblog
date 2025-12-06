@@ -10,25 +10,19 @@ import Spotify from '@/assets/svg/spotify.svg'
 import { Card } from '@/components/static/card'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { file2base64 } from '@/lib/parser/transcode'
 
-export const CardDeveloper = async () => {
+export async function CardDeveloper() {
   cacheLife('max')
 
   const octokit = new Octokit()
   const { data } = await octokit.users.getByUsername({ username: process.env.NEXT_PUBLIC_GITHUB_NAME })
 
-  const avatar = await fetch(data.avatar_url)
-    .then(res => res.blob())
-    .then(file2base64)
-
   return (
     <Card className="p-card flex flex-col items-center">
       <div className="bg-secondary size-28 rounded-full transition-transform duration-500 hover:rotate-360 focus:rotate-360">
-        <img alt={data.login} src={avatar} />
+        <img alt={data.login} crossOrigin="anonymous" fetchPriority="high" height={460} src={data.avatar_url} width={460} />
       </div>
-      <p className="font-title mt-3 text-2xl">Flysky</p>
-      <p className="font-title text-subtitle-foreground mt-1 text-sm">{process.env.NEXT_PUBLIC_DESCRIPTION}</p>
+      <p className="font-title text-muted-foreground mt-2 text-center text-sm whitespace-pre-line">{process.env.NEXT_PUBLIC_DESCRIPTION}</p>
       <Button asChild className="mt-4 w-full max-w-56 font-bold">
         <a href={data.html_url} rel="noreferrer nofollow" target="_blank">
           <Github /> {data.login}

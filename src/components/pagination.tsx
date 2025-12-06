@@ -1,12 +1,12 @@
 'use client'
 
 import { isFunction, isNull } from 'es-toolkit'
-import { PaginationResult } from 'prisma-paginate'
+import { PageNumberPaginationMeta } from 'prisma-extension-pagination'
 import React from 'react'
 
-import * as PaginationPrimitive from '@/components/ui-overwrite/pagination'
+import * as ShadcnPagination from '@/components/ui-overwrite/pagination'
 
-export interface PaginationProps extends Partial<Pick<PaginationResult<unknown[]>, 'count' | 'limit' | 'page'>> {
+interface PaginationProps extends Partial<PageNumberPaginationMeta<true>> {
   /**
    * 开头和结尾始终可见的页数
    * @default 1
@@ -15,6 +15,8 @@ export interface PaginationProps extends Partial<Pick<PaginationResult<unknown[]
   className?: string
   /** 只有一页时是否隐藏分页器 */
   hideOnSinglePage?: boolean
+  /** 一页的数据量 */
+  limit: number
   /**
    * 用于显示数据总量和当前数据范围，默认显示
    * @example
@@ -30,31 +32,31 @@ export interface PaginationProps extends Partial<Pick<PaginationResult<unknown[]
    * 获取跳转链接
    * @description 默认使用 `button` 标签，当有返回值时使用 `next/link` 标签
    */
-  getHref?: (payload: Pick<PaginationResult<unknown[]>, 'count' | 'limit' | 'page' | 'totalPages'>) => string
-  onChange?: (payload: Pick<PaginationResult<unknown[]>, 'count' | 'limit' | 'page' | 'totalPages'>) => void
+  getHref?: (payload: { limit: number; page: number }) => string
+  onChange?: (payload: { limit: number; page: number }) => void
 }
 
-export const Pagination = ({
+export function Pagination({
   boundaryCount = 1,
   className,
-  count = 1,
+  currentPage = 1,
   getHref,
   hideOnSinglePage,
-  limit = 1,
-  page = 1,
+  limit,
   showTotal,
   siblingCount = 2,
+  totalCount = 1,
   onChange
-}: PaginationProps) => {
+}: PaginationProps) {
   /** 总页数 */
-  const totalPages = Math.ceil(count / limit)
+  const totalPages = Math.ceil(totalCount / limit)
 
   if (hideOnSinglePage && totalPages <= 1) return null
 
   const range = (start: number, end: number) => Array.from({ length: end - start + 1 }, (_, i) => start + i)
 
-  const siblingsStart = Math.max(Math.min(page - siblingCount, totalPages - boundaryCount - siblingCount * 2 - 1), boundaryCount + 2)
-  const siblingsEnd = Math.min(Math.max(page + siblingCount, boundaryCount + siblingCount * 2 + 2), totalPages - boundaryCount - 1)
+  const siblingsStart = Math.max(Math.min(currentPage - siblingCount, totalPages - boundaryCount - siblingCount * 2 - 1), boundaryCount + 2)
+  const siblingsEnd = Math.min(Math.max(currentPage + siblingCount, boundaryCount + siblingCount * 2 + 2), totalPages - boundaryCount - 1)
 
   /**
    * 计算分页组件的页码
@@ -73,51 +75,51 @@ export const Pagination = ({
   ] satisfies ('end-ellipsis' | 'start-ellipsis' | number)[]
 
   return (
-    <PaginationPrimitive.Pagination className={className}>
-      <PaginationPrimitive.PaginationContent>
+    <ShadcnPagination.Pagination className={className}>
+      <ShadcnPagination.PaginationContent>
         <span className="mr-4 pb-0.5 text-sm opacity-75 empty:hidden">
           {isFunction(showTotal)
-            ? showTotal(count, [(page - 1) * limit + 1, page * limit])
+            ? showTotal(totalCount, [(currentPage - 1) * limit + 1, currentPage * limit])
             : isNull(showTotal)
               ? null
-              : `${(page - 1) * limit + 1}-${page * limit} of ${count} rows`}
+              : `${(currentPage - 1) * limit + 1}-${currentPage * limit} of ${totalCount} rows`}
         </span>
-        <PaginationPrimitive.PaginationItem>
-          <PaginationPrimitive.PaginationPrevious
-            disabled={page <= 1}
-            href={getHref?.({ count, limit, page: page - 1, totalPages })}
+        <ShadcnPagination.PaginationItem>
+          <ShadcnPagination.PaginationPrevious
+            disabled={currentPage <= 1}
+            href={getHref?.({ limit, page: currentPage - 1 })}
             onClick={() => {
-              onChange?.({ count, limit, page: page - 1, totalPages })
+              onChange?.({ limit, page: currentPage - 1 })
             }}
           />
-        </PaginationPrimitive.PaginationItem>
+        </ShadcnPagination.PaginationItem>
         {itemList.map(item => (
-          <PaginationPrimitive.PaginationItem key={item}>
+          <ShadcnPagination.PaginationItem key={item}>
             {typeof item == 'number' ? (
-              <PaginationPrimitive.PaginationLink
-                href={getHref?.({ count, limit, page: item, totalPages })}
-                isActive={item == page}
+              <ShadcnPagination.PaginationLink
+                href={getHref?.({ limit, page: item })}
+                isActive={item == currentPage}
                 onClick={() => {
-                  onChange?.({ count, limit, page: item, totalPages })
+                  onChange?.({ limit, page: item })
                 }}
               >
                 {item}
-              </PaginationPrimitive.PaginationLink>
+              </ShadcnPagination.PaginationLink>
             ) : (
-              <PaginationPrimitive.PaginationEllipsis />
+              <ShadcnPagination.PaginationEllipsis />
             )}
-          </PaginationPrimitive.PaginationItem>
+          </ShadcnPagination.PaginationItem>
         ))}
-        <PaginationPrimitive.PaginationItem>
-          <PaginationPrimitive.PaginationNext
-            disabled={page >= totalPages}
-            href={getHref?.({ count, limit, page: page + 1, totalPages })}
+        <ShadcnPagination.PaginationItem>
+          <ShadcnPagination.PaginationNext
+            disabled={currentPage >= totalPages}
+            href={getHref?.({ limit, page: currentPage + 1 })}
             onClick={() => {
-              onChange?.({ count, limit, page: page + 1, totalPages })
+              onChange?.({ limit, page: currentPage + 1 })
             }}
           />
-        </PaginationPrimitive.PaginationItem>
-      </PaginationPrimitive.PaginationContent>
-    </PaginationPrimitive.Pagination>
+        </ShadcnPagination.PaginationItem>
+      </ShadcnPagination.PaginationContent>
+    </ShadcnPagination.Pagination>
   )
 }

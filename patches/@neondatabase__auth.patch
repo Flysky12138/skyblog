@@ -1,0 +1,62 @@
+diff --git a/dist/ui-Cg1EZzGG.mjs b/dist/ui-Cg1EZzGG.mjs
+index d9fde23badc9a31ac84e07897ac211de4d849e41..4bc2f9f5c280086930ca7fd3aeaa039c54dceeee 100644
+--- a/dist/ui-Cg1EZzGG.mjs
++++ b/dist/ui-Cg1EZzGG.mjs
+@@ -3,7 +3,7 @@ import { a as getLocalizedError, c as getViewByPath, i as cn, l as isValidEmail,
+ import * as z$1 from "zod";
+ import * as React from "react";
+ import { Fragment, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+-import { Toaster, toast } from "sonner";
++import { toast } from "sonner";
+ import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "@wojtekmaj/react-recaptcha-v3";
+ import { Fragment as Fragment$1, jsx, jsxs } from "react/jsx-runtime";
+ import { Archive, ArrowLeftIcon, BuildingIcon, CheckIcon, ChevronDownIcon, ChevronUpIcon, ChevronsUpDown, CopyIcon, Edit, EllipsisIcon, EyeIcon, EyeOffIcon, FingerprintIcon, KeyRoundIcon, LaptopIcon, Loader2, LockIcon, LogInIcon, LogOutIcon, MailIcon, MenuIcon, MinusIcon, PlusCircleIcon, QrCodeIcon, RepeatIcon, SendIcon, SettingsIcon, SmartphoneIcon, Trash2Icon, UploadCloudIcon, UserCogIcon, UserRoundIcon, UserRoundPlus, UserX2Icon, UserXIcon, UsersIcon, XIcon } from "lucide-react";
+@@ -26,7 +26,7 @@ import ReCAPTCHA from "react-google-recaptcha";
+ import { OTPInput, OTPInputContext } from "input-otp";
+ import QRCode from "react-qr-code";
+ import * as SeparatorPrimitive from "@radix-ui/react-separator";
+-import { ThemeProvider, useTheme } from "next-themes";
++import { useTheme } from "next-themes";
+ 
+ //#region ../auth-ui/dist/index.mjs
+ var AuthDataCache = class {
+@@ -12079,25 +12079,20 @@ function getReactClient(client) {
+ 	return client;
+ }
+ function NeonAuthUIProvider({ authClient: authClient$1, children, ...props }) {
+-	return /* @__PURE__ */ jsx(ThemeProvider, {
+-		attribute: "class",
+-		defaultTheme: "system",
+-		enableSystem: true,
+-		children: /* @__PURE__ */ jsxs(AuthUIProvider, {
+-			authClient: useMemo(() => {
+-				return "getBetterAuthInstance" in authClient$1 ? getReactClient(authClient$1.getBetterAuthInstance()) : getReactClient(authClient$1);
+-			}, [authClient$1]),
+-			...props,
+-			multiSession: false,
+-			apiKey: false,
+-			magicLink: false,
+-			passkey: false,
+-			oneTap: false,
+-			genericOAuth: void 0,
+-			twoFactor: void 0,
+-			children: [children, /* @__PURE__ */ jsx(Toaster, {})]
+-		})
+-	});
++	return jsxs(AuthUIProvider, {
++		authClient: useMemo(() => {
++			return "getBetterAuthInstance" in authClient$1 ? getReactClient(authClient$1.getBetterAuthInstance()) : getReactClient(authClient$1);
++		}, [authClient$1]),
++		...props,
++		multiSession: false,
++		apiKey: false,
++		magicLink: false,
++		passkey: false,
++		oneTap: false,
++		genericOAuth: void 0,
++		twoFactor: void 0,
++		children: [children]
++	})
+ }
+ 
+ //#endregion

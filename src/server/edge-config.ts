@@ -1,44 +1,53 @@
 'use server'
 
-import { digest, EdgeConfigValue, get, getAll, has } from '@vercel/edge-config'
+import { EdgeConfigValue, get, has } from '@vercel/edge-config'
 import { updateTag } from 'next/cache'
 
-import { CacheTag } from '@/lib/cache'
-import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
+import { assertAdminRole } from '@/lib/auth/server'
+import { CACHE_TAG, VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
 
 interface PatchOption {
-  key: ValueOf<typeof VERCEL_EDGE_CONFIG>
+  key: ValueOf<typeof VERCEL_EDGE_CONFIG_KEY>
   operation: 'create' | 'delete' | 'update' | 'upsert'
   value?: EdgeConfigValue
+}
+
+export const GET = async <T>(key: ValueOf<typeof VERCEL_EDGE_CONFIG_KEY>) => {
+  return get<T>(key)
+}
+
+export const HAS = async (key: ValueOf<typeof VERCEL_EDGE_CONFIG_KEY>) => {
+  return has(key)
 }
 
 /**
  * vercel edge config's `create` | `update` | `upsert` | `delete` function
  * @see https://vercel.com/docs/storage/edge-config/vercel-api
  */
-const patch = async (items: PatchOption[], cacheTags: (keyof typeof CacheTag.EDGE_CONFIG)[] = []) => {
-  try {
-    const res = await fetch(`https://api.vercel.com/v1/edge-config/${process.env.EDGE_ID}/items`, {
-      body: JSON.stringify({ items }),
-      headers: {
-        Authorization: `Bearer ${process.env.TOKEN_VERCEL}`,
-        'Content-Type': 'application/json'
-      },
-      method: 'PATCH'
-    })
-    const data = await res.json()
+export const PATCH = async (items: PatchOption[], cacheTags: ValueOf<typeof CACHE_TAG.EDGE_CONFIG>[] = []) => {
+  await assertAdminRole()
 
-    // https://vercel.com/docs/edge-config/vercel-api#failing-edge-config-patch-requests
-    if ('error' in data) throw new Error(data.error.message)
-
-    for (const cahceTag of cacheTags) {
-      updateTag(cahceTag)
-    }
-
-    return data
-  } catch (error) {
-    return Promise.reject(error)
+  const res = await fetch(`https://api.vercel.com/v1/edge-config/${process.env.EDGE_ID}/items`, {
+    body: JSON.stringify({ items }),
+    headers: {
+      Authorization: `Bearer ${process.env.TOKEN_VERCEL}`,
+      'Content-Type': 'application/json'
+    },
+    method: 'PATCH'
+  })
+  if (!res.ok) {
+    throw new Error('Failed to patch edge config')
   }
-}
+  const data = await res.json()
 
-export { digest, get, getAll, has, patch }
+  // https://vercel.com/docs/edge-config/vercel-api#failing-edge-config-patch-requests
+  if ('error' in data) {
+    throw new Error(data.error.message)
+  }
+
+  for (const cahceTag of cacheTags) {
+    updateTag(cahceTag)
+  }
+
+  return data
+}

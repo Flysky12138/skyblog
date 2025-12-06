@@ -6,6 +6,7 @@
 
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import '@neondatabase/auth/ui/tailwind';
 
 @plugin '@tailwindcss/typography';
 
@@ -21,7 +22,6 @@
   --card-border: var(--color-slate-100);
   --link: var(--color-slate-200);
   --link-foreground: var(--color-sky-500);
-  --subtitle-foreground: oklch(0.48 0.02 251.08);
   --sheet: --alpha(var(--color-slate-200) / 30%);
 }
 
@@ -32,7 +32,6 @@
   --card-border: var(--color-zinc-700);
   --link: var(--color-slate-700);
   --link-foreground: var(--color-sky-500);
-  --subtitle-foreground: oklch(0.72 0.01 248.12);
   --sheet: --alpha(var(--color-zinc-700) / 30%);
 }
 
@@ -48,10 +47,6 @@
   --height-header: 3.125rem;
   --height-main: calc(100dvh - var(--height-header));
   --height-footer: 9.375rem;
-  --z-index-footer: 20;
-  --z-index-header: 50;
-  --z-index-main: 30;
-  --z-index-nav: 40;
   /* dark & light variables */
   --color-root: var(--root);
   --color-divide: var(--divide);
@@ -59,6 +54,5 @@
   --color-card-border: var(--card-border);
   --color-link: var(--link);
   --color-link-foreground: var(--link-foreground);
-  --color-subtitle-foreground: var(--subtitle-foreground);
   --color-sheet: var(--sheet);
 }
