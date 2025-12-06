@@ -1,24 +1,24 @@
 'use client'
 
-import { LayoutDashboard, LogIn, LogOut } from 'lucide-react'
-import { useSession } from 'next-auth/react'
+import { LayoutDashboard, LogIn, UserRoundCog } from 'lucide-react'
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { authClient } from '@/lib/auth/client'
 
-export const AuthButton = () => {
-  const session = useSession()
+export function AuthButton() {
+  const { data: session, isPending } = authClient.useSession()
 
-  if (session.status == 'loading') return <Skeleton className="size-9" />
+  if (isPending) return <Skeleton className="size-9" />
 
-  if (session.status != 'authenticated') {
+  if (!session) {
     return (
       <Tooltip>
         <TooltipTrigger asChild>
           <Button asChild aria-label="login" size="icon" variant="outline">
-            <Link href="/auth/login">
+            <Link href="/auth/sign-in">
               <LogIn />
             </Link>
           </Button>
@@ -28,7 +28,7 @@ export const AuthButton = () => {
     )
   }
 
-  if (session.data.role == 'ADMIN') {
+  if (session.user.role == 'admin') {
     return (
       <Button asChild aria-label="dashboard" size="icon" variant="outline">
         <Link href="/dashboard">
@@ -42,12 +42,12 @@ export const AuthButton = () => {
     <Tooltip>
       <TooltipTrigger asChild>
         <Button asChild aria-label="logout" size="icon" variant="outline">
-          <Link href="/auth/logout">
-            <LogOut />
+          <Link href="/account/settings">
+            <UserRoundCog />
           </Link>
         </Button>
       </TooltipTrigger>
-      <TooltipContent>注销</TooltipContent>
+      <TooltipContent>个人资料</TooltipContent>
     </Tooltip>
   )
 }

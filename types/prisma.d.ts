@@ -5,6 +5,7 @@ declare global {
   namespace PrismaJson {
     type Agent = ReturnType<typeof userAgent>
     type ClashVariables = Record<string, any>
+    type FileMetadata = Record<string, any>
     type Geo = GeoPrimitive
   }
 }

@@ -1,7 +1,4 @@
-import dotenv from 'dotenv'
 import puppeteer from 'puppeteer-core'
-
-dotenv.config({ path: '.env.local' })
 
 void (async () => {
   try {

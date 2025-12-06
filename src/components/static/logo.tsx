@@ -1,6 +1,6 @@
-import { GradientText } from '@/components/ui/gradient-text'
+import { GradientText } from '@/components/static/gradient-text'
 
-export const Logo = () => {
+export function Logo() {
   return (
     <GradientText
       animationSpeed={2}

@@ -1,10 +1,11 @@
 'use client'
 
 import { isUndefined } from 'es-toolkit'
-import { Archive, House, LibraryBig, NotebookPen, Plus, Settings, User, UserRoundSearch, Users } from 'lucide-react'
+import { Archive, HeartHandshake, House, LibraryBig, NotebookPen, Plus, Settings, User, UserRoundSearch } from 'lucide-react'
 import { Route } from 'next'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import React from 'react'
 
 import Clash from '@/assets/svg/clash.svg'
 import {
@@ -17,81 +18,88 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/components/ui/sidebar'
+import { STORAGE } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
 interface Menu {
+  label: string
   group: {
-    action?: {
-      href: StartsWith<'/'>
-      icon: React.ReactElement
-    }
     href: StartsWith<'/'>
     icon: React.ReactElement
     name: string
     onlyShow?: 'collapsed' | 'expanded'
+    action?: {
+      href: StartsWith<'/'>
+      icon: React.ReactElement
+    }
   }[]
-  label: string
 }
 
 const menus: Menu[] = [
   {
+    label: 'Post',
     group: [
       { href: '/dashboard', icon: <House />, name: '面板' },
       {
-        action: {
-          href: '/dashboard/posts/new',
-          icon: <Plus />
-        },
         href: '/dashboard/posts',
         icon: <LibraryBig />,
-        name: '文章'
+        name: '文章',
+        action: {
+          href: '/dashboard/posts/create',
+          icon: <Plus />
+        }
       },
-      { href: '/dashboard/posts/new', icon: <NotebookPen />, name: '新建文章', onlyShow: 'collapsed' },
-      { href: '/dashboard/r2', icon: <Archive />, name: '仓库' }
-    ],
-    label: 'Post'
+      { href: '/dashboard/posts/create', icon: <NotebookPen />, name: '新建文章', onlyShow: 'collapsed' },
+      { href: `/dashboard/storage?id=${STORAGE.ROOT_DIRECTORY_ID}`, icon: <Archive />, name: '仓库' }
+    ]
   },
   {
+    label: 'User',
     group: [
-      { href: '/dashboard/user/members', icon: <User />, name: '成员' },
-      { href: '/dashboard/user/visitors', icon: <UserRoundSearch />, name: '访客' },
-      { href: '/dashboard/user/friends', icon: <Users />, name: '友链' }
-    ],
-    label: 'User'
+      { href: '/dashboard/users/members', icon: <User />, name: '成员' },
+      { href: '/dashboard/users/visits', icon: <UserRoundSearch />, name: '访客' }
+    ]
   },
   {
+    label: 'Other',
     group: [
-      { href: '/dashboard/clash', icon: <Clash />, name: 'Clash 共享' },
+      { href: '/dashboard/friends', icon: <HeartHandshake />, name: '友链' },
+      { href: '/dashboard/clashes', icon: <Clash />, name: 'Clash 共享' },
       { href: '/dashboard/setting', icon: <Settings />, name: '设置' }
-    ],
-    label: 'Other'
+    ]
   }
 ]
 
 export const SidebarMain = () => {
   const pathname = usePathname()
-  const { open } = useSidebar()
+  const { open, setOpenMobile } = useSidebar()
+
+  const handleCloseSidebarMobile = React.useEffectEvent(() => {
+    setOpenMobile(false)
+  })
 
   return menus.map((menu, index) => (
     <SidebarGroup key={index}>
       <SidebarGroupLabel>{menu.label}</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
-          {menu.group.map(it => (
+          {menu.group.map(item => (
             <SidebarMenuItem
-              key={it.href}
+              key={item.href}
               className={cn({
-                hidden: !isUndefined(it.onlyShow) && { collapsed: true, expanded: false }[it.onlyShow] == open
+                hidden: !isUndefined(item.onlyShow) && { collapsed: true, expanded: false }[item.onlyShow] == open
               })}
             >
-              <SidebarMenuButton asChild isActive={it.href == pathname} tooltip={it.name}>
-                <Link href={it.href as Route}>
-                  {it.icon} {it.name}
+              <SidebarMenuButton asChild isActive={item.href == pathname} tooltip={item.name}>
+                <Link href={item.href as Route} onNavigate={handleCloseSidebarMobile}>
+                  {item.icon} {item.name}
                 </Link>
               </SidebarMenuButton>
-              {it.action && (
+              {item.action && (
                 <SidebarMenuAction asChild>
-                  <Link href={it.action.href as Route}>{it.action.icon}</Link>
+                  <Link href={item.action.href as Route} onNavigate={handleCloseSidebarMobile}>
+                    {item.action.icon}
+                  </Link>
                 </SidebarMenuAction>
               )}
             </SidebarMenuItem>

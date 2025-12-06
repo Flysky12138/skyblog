@@ -25,11 +25,11 @@ const getState = (): State => {
 export const useWindowScrollState = () => {
   const [state, setState] = React.useState(getState)
 
-  const handler = () => {
+  const handler = React.useEffectEvent(() => {
     const { x, xProgress, y, yProgress } = getState()
     if (state.x == x && state.y == y) return
     setState({ x, xProgress, y, yProgress })
-  }
+  })
 
   React.useEffect(() => {
     handler()
@@ -40,7 +40,7 @@ export const useWindowScrollState = () => {
     return () => {
       window.removeEventListener('scroll', handler)
     }
-  })
+  }, [])
 
   return state
 }

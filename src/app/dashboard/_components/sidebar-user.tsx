@@ -1,7 +1,8 @@
 'use client'
 
-import { ChevronsUpDown, LogOut } from 'lucide-react'
-import { signOut, useSession } from 'next-auth/react'
+import { ChevronsUpDown, LogOut, UserRoundCog } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'nextjs-toploader/app'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -14,18 +15,18 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
+import { authClient } from '@/lib/auth/client'
 
-export const SidebarUser = () => {
+export function SidebarUser() {
+  const router = useRouter()
   const { isMobile, open } = useSidebar()
-  const session = useSession()
+  const { data: session, isPending } = authClient.useSession()
 
-  if (session.status == 'loading' || !session.data?.user) {
+  if (isPending || !session) {
     return <Skeleton className={open ? 'h-12' : 'h-8'} />
   }
 
-  const { email, image, name } = session.data.user
-
-  const alt = name || undefined
+  const { email, image, name } = session.user
   const src = image || undefined
 
   return (
@@ -36,11 +37,11 @@ export const SidebarUser = () => {
             <SidebarMenuButton
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               size="lg"
-              tooltip={alt}
+              tooltip={name}
             >
               <Avatar className="size-8 rounded-lg">
-                <AvatarImage alt={alt} src={src} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarImage alt={name} crossOrigin="anonymous" decoding="async" loading="lazy" src={src} />
+                <AvatarFallback className="rounded-lg">{name.slice(0, 3)}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{name}</span>
@@ -58,8 +59,8 @@ export const SidebarUser = () => {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="size-8 rounded-lg">
-                  <AvatarImage alt={alt} src={src} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarImage alt={name} crossOrigin="anonymous" decoding="async" loading="lazy" src={src} />
+                  <AvatarFallback className="rounded-lg">{name}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{name}</span>
@@ -68,10 +69,16 @@ export const SidebarUser = () => {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Link href="/account/settings">
+                <UserRoundCog /> 个人资料
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem
               className="text-destructive! cursor-pointer"
-              onClick={() => {
-                signOut()
+              onClick={async () => {
+                await authClient.signOut()
+                router.replace('/auth/sign-in')
               }}
             >
               <LogOut /> 注销

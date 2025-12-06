@@ -35,7 +35,9 @@ export const initGlobalScript = async () => {
  */
 export const loadModel = async (source: JSONObject | ModelSettings | string) => {
   try {
-    if (!window.PIXI?.live2d) throw new Error('Live2D is not loaded')
+    if (!window.PIXI?.live2d) {
+      throw new Error('Live2D is not loaded')
+    }
     const model = await window.PIXI.live2d.Live2DModel.from(source)
     // 设置模型样式
     model.x = PADDING.x

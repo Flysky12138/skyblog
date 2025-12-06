@@ -1,25 +1,38 @@
 import { NextProxy, NextResponse, userAgent } from 'next/server'
 
-import { auth } from '@/lib/auth'
-import { isDev } from '@/lib/utils'
+import { authServer } from '@/lib/auth/server'
+
+import { isDev } from './lib/utils'
+
+export const config = {
+  matcher: '/((?!_next/data|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)'
+}
 
 export const proxy: NextProxy = async request => {
-  if (isDev()) return
+  if (isDev()) {
+    return NextResponse.next()
+  }
+
+  const auth = await authServer()
+  const session = await auth.getSession()
 
   const agent = userAgent(request)
 
-  // 封禁华为
-  if (['huawei', 'honor', 'harmonyos'].some(device => agent.ua.toLowerCase().includes(device)) || agent.device.vendor?.toLowerCase() == 'huawei') {
+  if (
+    session.data?.user.banned ||
+    // 封禁华为
+    ['huawei', 'honor', 'harmonyos'].some(device => agent.ua.toLowerCase().includes(device)) ||
+    agent.device.vendor?.toLowerCase() == 'huawei'
+  ) {
     return NextResponse.redirect(new URL('/ban', request.url))
   }
 
   // 权限管理
   if (['/dashboard', '/api/dashboard'].some(url => request.nextUrl.pathname.startsWith(url))) {
-    const session = await auth()
-    if (session?.role != 'ADMIN') {
-      const url = new URL('/auth/login', request.url)
-      url.searchParams.set('to', request.nextUrl.pathname)
-      return NextResponse.redirect(url)
+    if (session.data?.user.role != 'admin') {
+      return NextResponse.redirect(new URL('/', request.url))
     }
   }
+
+  return NextResponse.next()
 }

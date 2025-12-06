@@ -5,10 +5,10 @@ interface HeaderProps {
   className?: string
 }
 
-export const Header = ({ className }: HeaderProps) => {
+export function Header({ className }: HeaderProps) {
   return (
     <header className={cn('border-divide border-b px-4 py-2', className)}>
-      <SidebarTrigger />
+      <SidebarTrigger variant="outline" />
     </header>
   )
 }

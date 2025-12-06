@@ -2,19 +2,22 @@
 
 ## 数据存储
 
-- [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres): 存储博客几乎所有的文本内容
-- [Vercel Edge Config](https://vercel.com/docs/storage/edge-config): 存储一些配置文件，如：Live2D直链等
-- [Cloudflare R2](https://www.cloudflare.com/zh-cn/developer-platform/r2/): 存储文件
+- [Neon Postgres](https://console.neon.tech): 存储博客几乎所有的文本内容
+- [Vercel Edge Config](https://vercel.com/docs/storage/edge-config): 存储一些配置文件，如：Live2D 直链等
+- [Cloudflare R2](https://www.cloudflare.com/zh-cn/developer-platform/r2): 存储文件
 
   Cloudflare R2 CORS 策略
 
   ```js
-  ;[
+  [
     {
-      AllowedOrigins: ['http://localhost:3000', 'https://blog.flysky.xyz'],
-      AllowedMethods: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD'],
-      AllowedHeaders: ['*'],
-      ExposeHeaders: ['*']
+      "AllowedOrigins": [
+        "http://localhost:3000",
+        "https://blog.flysky.xyz"
+      ],
+      "AllowedMethods": ["GET", "PUT"],
+      "AllowedHeaders": ["*"],
+      "ExposeHeaders": ["*"]
     }
   ]
   ```
@@ -25,37 +28,39 @@
 
 ```ini
 # https://ipinfo.io
-TOKEN_IPINFO=7f4c6f9e0a32d8c
+TOKEN_IPINFO="7f4c6f9e0a32d8c"
 
 # https://cloud.browserless.io
-TOKEN_BROWSERLESS=3d0f06ec-ff26-4b05-8937-80fb1269f60d
+TOKEN_BROWSERLESS="3d0f06ec-ff26-4b05-8937-80fb1269f60d"
 
 # edge config edit
-EDGE_ID=ecfg_7bhjqwklveuyz9ix4n2tr3mfa5gd8sp
+EDGE_ID="ecfg_7bhjqwklveuyz9ix4n2tr3mfa5gd8sp"
 ## https://vercel.com/account/tokens
-TOKEN_VERCEL=Z6Wn8v7YkAf5Ml0DxJzI1gBp
+TOKEN_VERCEL="Z6Wn8v7YkAf5Ml0DxJzI1gBp"
 
 # cloudflare r2
 ## https://dash.cloudflare.com/?to=/:account/r2/api-tokens
-NEXT_PUBLIC_R2_BUCKET_NAME=skyblog
-NEXT_PUBLIC_R2_URL=https://r2.flysky.xyz
-NEXT_PUBLIC_S3_API=https://1e7c6cead9e4b1aa143fb3c5aef8cead.r2.cloudflarestorage.com
-NEXT_PUBLIC_S3_ACCESS_ID=e44e40ebab57c6e45fc8daffc43b8aac
-NEXT_PUBLIC_S3_ACCESS_KEY=05e34ea2c231c6baa4d84591bb65df7eb7c2a7989c2d3d6e8638135c526aa65a
+R2_BUCKET_NAME="skyblog"
+R2_S3_API="https://1e7c6cead9e4b1aa143fb3c5aef8cead.r2.cloudflarestorage.com"
+R2_ACCESS_KEY_ID="e44e40ebab57c6e45fc8daffc43b8aac"
+R2_SECRET_ACCESS_KEY="05e34ea2c231c6baa4d84591bb65df7eb7c2a7989c2d3d6e8638135c526aa65a"
+NEXT_PUBLIC_R2_URL="https://r2.flysky.xyz"
 
-# 登录
+# auth
+## https://console.neon.tech
 ## https://github.com/settings/developers
-## Authorization callback URL example: https://blog.flysky.xyz/api/auth/callback/github
-AUTH_GITHUB_ID=p2j1w7l0i4e9t5k8u3y6c
-AUTH_GITHUB_SECRET=5c8e2b4f7a3d9b1e6c0g2a5h9j1k4l6m7n0o
-## 库用来加密令牌和电子邮件验证哈希的随机字符串
-## 访问 https://generate-secret.vercel.app/32 可获取一个随机值
-AUTH_SECRET=8j1a9s2d0f5g4h7j6k8l3m4n5b0v
+DATABASE_URL="postgresql://neondb_owner:xxxxx@ep-ancient-river-xxxxx-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+NEON_AUTH_BASE_URL="https://ep-wispy-silence-xxxxx.neonauth.ap-southeast-1.aws.neon.tech/neondb/auth"
+NEON_AUTH_COOKIE_SECRET="lFljjfMX9Uxl47JksllrbPg9wTIHXYnUI/vI6d3qE84="
 ```
+
+## 部署流程概述
+
+1. 创建一个 [Neon Postgres](https://console.neon.tech/) 数据库，并且开启 Neon Auth，得到两个环境变量值 `DATABASE_URL` 和 `NEON_AUTH_BASE_URL`。还需手动生成一个 `NEON_AUTH_COOKIE_SECRET` 值（`openssl rand -base64 32`）
+2. 前往 [Vercel](https://vercel.com/) 创建项目，填入各种环境变量，并部署
+3. 回到 Neon 控制台，将指定用户设置为管理员。页面顶部才会出现管理页面按钮
 
 ### 规范
 
 1. 为了减少客户端包的大小并充分利用服务器，请尽可能将状态 `'use client'` 移动到组件树的较低位置 [参考 ↗](https://nextjs.org/docs/getting-started/react-essentials#moving-client-components-to-the-leaves)
-2. `/src/app/**/_components` 是对应路由用的非通用组建
-3. 接口类型导出 `export type POST = RouteHandlerType<{}>`
-4. 对数据库的 CRUD 方法提取到外层，并命名为 `db<Get|Post...>`，以便使用 `Awaited<ReturnType<typeof dbGet>>` 获取返回类型
+2. `/src/app/**/_components` 是对应路由用的非通用组件

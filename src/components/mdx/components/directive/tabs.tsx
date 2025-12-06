@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'
 
 interface TabsProps extends React.ComponentProps<(typeof TabsPrimitive)['Tabs']> {}
 
-export const Tabs = ({ children, ...props }: TabsProps) => {
+export function Tabs({ children, ...props }: TabsProps) {
   const tabsTrigger: React.ReactNode[] = []
   const tabsContent: React.ReactNode[] = []
 

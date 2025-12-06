@@ -16,11 +16,11 @@ interface DialogDrawerContextProps {
 const DialogDrawerContext = React.createContext<DialogDrawerContextProps>(null!)
 const useDialogDrawerContext = () => React.useContext(DialogDrawerContext)
 
-export const DialogDrawer = ({ ...props }: React.ComponentProps<typeof Dialog | typeof Drawer>) => {
+export function DialogDrawer(props: React.ComponentProps<typeof Dialog | typeof Drawer>) {
   const breakpoint = useBreakpoint()
   const breakpointMatchedValue = breakpoints[breakpoint]
 
-  const isMobile = breakpointMatchedValue <= breakpoints.base
+  const isMobile = breakpointMatchedValue <= breakpoints.zero
 
   return (
     <DialogDrawerContext value={{ isMobile }}>
@@ -31,31 +31,7 @@ export const DialogDrawer = ({ ...props }: React.ComponentProps<typeof Dialog | 
   )
 }
 
-export const DialogDrawerTrigger = ({ ...props }: React.ComponentProps<typeof DialogTrigger | typeof DrawerTrigger>) => {
-  const { isMobile } = useDialogDrawerContext()
-  const Comp = isMobile ? DrawerTrigger : DialogTrigger
-  return <Comp {...props} />
-}
-
-export const DialogDrawerHeader = ({ ...props }: React.ComponentProps<typeof DialogHeader | typeof DrawerHeader>) => {
-  const { isMobile } = useDialogDrawerContext()
-  const Comp = isMobile ? DrawerHeader : DialogHeader
-  return <Comp {...props} />
-}
-
-export const DialogDrawerTitle = ({ ...props }: React.ComponentProps<typeof DialogTitle | typeof DrawerTitle>) => {
-  const { isMobile } = useDialogDrawerContext()
-  const Comp = isMobile ? DrawerTitle : DialogTitle
-  return <Comp {...props} />
-}
-
-export const DialogDrawerDescription = ({ ...props }: React.ComponentProps<typeof DialogDescription | typeof DrawerDescription>) => {
-  const { isMobile } = useDialogDrawerContext()
-  const Comp = isMobile ? DrawerDescription : DialogDescription
-  return <Comp {...props} />
-}
-
-export const DialogDrawerContent = ({
+export function DialogDrawerContent({
   className,
   dialogClassName,
   drawerClassName,
@@ -65,14 +41,40 @@ export const DialogDrawerContent = ({
   React.ComponentProps<typeof DrawerContent> & {
     dialogClassName?: string
     drawerClassName?: string
-  }) => {
+  }) {
   const { isMobile } = useDialogDrawerContext()
-  if (isMobile) return <DrawerContent className={cn('*:first:mb-1', className, drawerClassName)} {...props} />
+  if (isMobile) {
+    return <DrawerContent className={cn(className, drawerClassName)} {...props} />
+  }
   return <DialogContent className={cn(className, dialogClassName)} showCloseButton={showCloseButton} {...props} />
 }
 
-export const DialogDrawerFooter = ({ ...props }: React.ComponentProps<typeof DialogFooter | typeof DrawerFooter>) => {
+export function DialogDrawerDescription(props: React.ComponentProps<typeof DialogDescription | typeof DrawerDescription>) {
+  const { isMobile } = useDialogDrawerContext()
+  const Comp = isMobile ? DrawerDescription : DialogDescription
+  return <Comp {...props} />
+}
+
+export function DialogDrawerFooter(props: React.ComponentProps<typeof DialogFooter | typeof DrawerFooter>) {
   const { isMobile } = useDialogDrawerContext()
   const Comp = isMobile ? DrawerFooter : DialogFooter
   return <Comp {...props} />
+}
+
+export function DialogDrawerHeader(props: React.ComponentProps<typeof DialogHeader | typeof DrawerHeader>) {
+  const { isMobile } = useDialogDrawerContext()
+  const Comp = isMobile ? DrawerHeader : DialogHeader
+  return <Comp {...props} />
+}
+
+export function DialogDrawerTitle(props: React.ComponentProps<typeof DialogTitle | typeof DrawerTitle>) {
+  const { isMobile } = useDialogDrawerContext()
+  const Comp = isMobile ? DrawerTitle : DialogTitle
+  return <Comp {...props} />
+}
+
+export function DialogDrawerTrigger(props: React.ComponentProps<typeof DialogTrigger | typeof DrawerTrigger>) {
+  const { isMobile } = useDialogDrawerContext()
+  const Comp = isMobile ? DrawerTrigger : DialogTrigger
+  return <Comp suppressHydrationWarning {...props} />
 }

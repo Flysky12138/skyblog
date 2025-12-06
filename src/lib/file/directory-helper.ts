@@ -6,29 +6,54 @@ export class DirectoryHelper {
   /**
    * 新建子文件夹
    */
-  async createDirectory(dirName: string) {
-    if (!this.#dirHandle) throw new Error('请先调用 openDirectory()')
-    return this.#dirHandle.getDirectoryHandle(dirName, { create: true })
+  async createDirectory(dirPath: string) {
+    return this.#getDirHandleByPath(dirPath, true)
   }
-
   /**
    * 删除文件
    */
-  async deleteFile(fileName: string) {
-    if (!this.#dirHandle) throw new Error('请先调用 openDirectory()')
-    await this.#dirHandle.removeEntry(fileName)
+  async deleteFile(filePath: string) {
+    const { dirHandle, name } = await this.#resolveParent(filePath, false)
+    await dirHandle.removeEntry(name)
+  }
+
+  /**
+   * 判断文件是否存在
+   */
+  async fileExists(filePath: string) {
+    try {
+      const { dirHandle, name } = await this.#resolveParent(filePath, false)
+      await dirHandle.getFileHandle(name)
+      return true
+    } catch (error) {
+      return false
+    }
   }
 
   /**
    * 获取目录中的文件列表
    */
-  async listFiles() {
-    if (!this.#dirHandle) throw new Error('请先调用 openDirectory()')
-    const files = []
-    for await (const [name, handle] of this.#dirHandle.entries()) {
-      files.push({ kind: handle.kind, name })
+  async listFiles(dirPath?: string) {
+    if (!this.#dirHandle) {
+      throw new Error('请先调用 openDirectory()')
     }
-    return files
+
+    const results: { kind: string; name: string; path: string }[] = []
+
+    const walk = async (dir: FileSystemDirectoryHandle, basePath = '') => {
+      for await (const [name, handle] of dir.entries()) {
+        const relPath = basePath ? `${basePath}/${name}` : name
+        results.push({ kind: handle.kind, name, path: relPath })
+        if (handle.kind == 'directory') {
+          await walk(handle, relPath)
+        }
+      }
+    }
+
+    const startDir = dirPath ? await this.#getDirHandleByPath(dirPath, false) : this.#dirHandle
+    await walk(startDir, dirPath ? dirPath.split('/').filter(Boolean).join('/') : '')
+
+    return results
   }
 
   /**
@@ -46,7 +71,7 @@ export class DirectoryHelper {
           richColors: true
         })
       }
-      throw new Error('当前浏览器不支持选择目录')
+      throw new Error('已取消文件夹选择操作')
     }
     return this.#dirHandle
   }
@@ -54,9 +79,9 @@ export class DirectoryHelper {
   /**
    * 读取文件内容（文本）
    */
-  async readFile(fileName: string) {
-    if (!this.#dirHandle) throw new Error('请先调用 openDirectory()')
-    const fileHandle = await this.#dirHandle.getFileHandle(fileName)
+  async readFile(filePath: string) {
+    const { dirHandle, name } = await this.#resolveParent(filePath, false)
+    const fileHandle = await dirHandle.getFileHandle(name)
     const file = await fileHandle.getFile()
     return file.text()
   }
@@ -64,11 +89,50 @@ export class DirectoryHelper {
   /**
    * 写入文件（会覆盖）
    */
-  async writeFile(fileName: string, content: FileSystemWriteChunkType) {
-    if (!this.#dirHandle) throw new Error('请先调用 openDirectory()')
-    const fileHandle = await this.#dirHandle.getFileHandle(fileName, { create: true })
+  async writeFile(filePath: string, content: FileSystemWriteChunkType) {
+    const { dirHandle, name } = await this.#resolveParent(filePath, true)
+    const fileHandle = await dirHandle.getFileHandle(name, { create: true })
     const writable = await fileHandle.createWritable()
     await writable.write(content)
     await writable.close()
+  }
+
+  /**
+   * 根据路径获取目录 handle
+   */
+  async #getDirHandleByPath(dirPath: string, create = false) {
+    if (!this.#dirHandle) {
+      throw new Error('请先调用 openDirectory()')
+    }
+
+    const parts = dirPath.split('/').filter(Boolean)
+
+    let handle = this.#dirHandle
+
+    for (const part of parts) {
+      handle = await handle.getDirectoryHandle(part, { create })
+    }
+
+    return handle
+  }
+
+  /**
+   * 根据路径解析父目录 handle 和文件名
+   */
+  async #resolveParent(filePath: string, create = false) {
+    if (!this.#dirHandle) {
+      throw new Error('请先调用 openDirectory()')
+    }
+
+    const parts = filePath.split('/').filter(Boolean)
+    const name = parts.pop()
+
+    if (!name) {
+      throw new Error('无效的文件路径')
+    }
+
+    const dirHandle = parts.length ? await this.#getDirHandleByPath(parts.join('/'), create) : this.#dirHandle
+
+    return { dirHandle, name }
   }
 }

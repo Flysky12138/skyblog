@@ -1,7 +1,7 @@
 'use client'
 
-import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { XIcon } from 'lucide-react'
+import { Dialog as DialogPrimitive } from 'radix-ui'
 import React from 'react'
 
 import { cn } from '@/lib/utils'
@@ -20,14 +20,17 @@ export {
   DialogTrigger
 } from '../ui/dialog'
 
-export const DialogContent = ({
+/**
+ * 让整个内容块可滚动
+ */
+export function DialogContent({
   children,
   className,
   showCloseButton = true,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean
-}) => {
+}) {
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay className="flex justify-center overflow-y-auto p-4 backdrop-blur-sm sm:p-6">

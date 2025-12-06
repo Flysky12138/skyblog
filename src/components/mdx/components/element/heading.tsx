@@ -8,9 +8,9 @@ interface HeadingProps extends React.ComponentProps<'h1'> {
   component: React.ElementType
 }
 
-const Heading = ({ children, className, component: Component, ...props }: HeadingProps) => {
+function Heading({ children, className, component: Component, ...props }: HeadingProps) {
   return (
-    <Component className={cn('group/heading relative block border-slate-300 dark:border-slate-600 [&_code]:py-0', className)} {...props}>
+    <Component className={cn('group/heading relative block [&_code]:py-0', className)} {...props}>
       {children}
       <Link replace className="invisible absolute ml-1 -translate-y-0.5 group-hover/heading:visible" href={`#${props.id}`}>
         <Hash className="inline-block size-[1em]" />

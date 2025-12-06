@@ -1,40 +1,71 @@
 model Post {
-  id          String     @id @default(uuid(7))
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @default(now())
-  title       String
-  description String?
-  content     String?
-  published   Boolean    @default(false)
-  authorId    String
-  views       Int        @default(0)
-  links       Int        @default(0)
-  sticky      Int        @default(0)
-  display     Int        @default(7) // 0b111
-  categories  Category[]
-  tags        Tag[]
-  author      User       @relation(fields: [authorId], references: [id])
+  id        String   @id @default(uuid(7)) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6) // 有个悄悄更新的需求，所以不能用 @updatedAt
 
-  @@index([updatedAt(sort: Desc)])
+  title          String
+  summary        String?
+  content        String?
+  cover          String?
+  slug           String? @unique
+  isPublished    Boolean @default(false) @map("is_published")
+  viewCount      Int     @default(0) @map("view_count")
+  pinOrder       Int     @default(0) @map("pin_order")
+  visibilityMask Int     @default(dbgenerated("B'111'::int")) @map("visibility_mask")
+  commentCount   Int     @default(0) @map("comment_count")
+  authorId       String  @map("author_id") @db.Uuid
+
+  comments   Comment[]
+  categories PostCategory[]
+  tags       PostTag[]
+
   @@map("posts")
 }
 
 model Category {
-  id        String   @id @default(uuid(7))
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String   @unique
-  posts     Post[]
+  id        String   @id @default(uuid(7)) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  name String @unique
+
+  posts PostCategory[]
 
   @@map("categories")
 }
 
 model Tag {
-  id        String   @id @default(uuid(7))
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String   @unique
-  posts     Post[]
+  id        String   @id @default(uuid(7)) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  name String @unique
+
+  posts PostTag[]
 
   @@map("tags")
+}
+
+// 显式中间表：Post ↔ Category
+model PostCategory {
+  postId     String @map("post_id") @db.Uuid
+  categoryId String @map("category_id") @db.Uuid
+
+  post     Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([postId, categoryId])
+  @@map("post_categories")
+}
+
+// 显式中间表：Post ↔ Tag
+model PostTag {
+  postId String @map("post_id") @db.Uuid
+  tagId  String @map("tag_id") @db.Uuid
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@map("post_tags")
 }

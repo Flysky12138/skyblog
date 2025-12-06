@@ -1,0 +1,27 @@
+model ActivityLog {
+  id        BigInt   @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  ip           String       @db.Inet
+  countryCode  String?      @map("country_code")
+  browser      String?
+  os           String?
+  referer      String?
+  activityType ActivityType @default(REPORT) @map("activity_type")
+  /// [Geo]
+  geo          Json         @default("{}") @db.JsonB
+  /// [Agent]
+  agent        Json         @default("{}") @db.JsonB
+  clashId      String?      @map("clash_id") @db.Uuid
+
+  clash    Clash?    @relation(fields: [clashId], references: [id])
+  comments Comment[]
+
+  @@map("activity_logs")
+}
+
+enum ActivityType {
+  REPORT
+  COMMENT
+  CLASH
+}

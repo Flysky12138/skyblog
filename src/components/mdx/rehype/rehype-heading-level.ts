@@ -34,8 +34,12 @@ class Stack {
     }
 
     const order = top.order.slice()
-    if (top.h == h) order.push(order.pop()! + 1)
-    if (top.h < h) order.push(1)
+    if (top.h == h) {
+      order.push(order.pop()! + 1)
+    }
+    if (top.h < h) {
+      order.push(1)
+    }
     this.#tags.push({ h, order })
     return order.join('.')
   }

@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/internal"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["neon_auth"]
+}
+
+model account {
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  accountId             String
+  providerId            String
+  userId                String    @db.Uuid
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime? @db.Timestamptz(6)
+  refreshTokenExpiresAt DateTime? @db.Timestamptz(6)
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt             DateTime  @db.Timestamptz(6)
+  user                  user      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId])
+  @@schema("neon_auth")
+}
+
+model invitation {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String       @db.Uuid
+  email          String
+  role           String?
+  status         String
+  expiresAt      DateTime     @db.Timestamptz(6)
+  createdAt      DateTime     @default(now()) @db.Timestamptz(6)
+  inviterId      String       @db.Uuid
+  user           user         @relation(fields: [inviterId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  organization   organization @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([email])
+  @@index([organizationId])
+  @@schema("neon_auth")
+}
+
+model jwks {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  publicKey  String
+  privateKey String
+  createdAt  DateTime  @db.Timestamptz(6)
+  expiresAt  DateTime? @db.Timestamptz(6)
+
+  @@schema("neon_auth")
+}
+
+model member {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String       @db.Uuid
+  userId         String       @db.Uuid
+  role           String
+  createdAt      DateTime     @db.Timestamptz(6)
+  organization   organization @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user           user         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([organizationId])
+  @@index([userId])
+  @@schema("neon_auth")
+}
+
+model organization {
+  id         String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  slug       String       @unique
+  logo       String?
+  createdAt  DateTime     @db.Timestamptz(6)
+  metadata   String?
+  invitation invitation[]
+  member     member[]
+
+  @@schema("neon_auth")
+}
+
+model project_config {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name               String
+  endpoint_id        String   @unique
+  created_at         DateTime @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime @default(now()) @db.Timestamptz(6)
+  trusted_origins    Json
+  social_providers   Json
+  email_provider     Json?
+  email_and_password Json?
+  allow_localhost    Boolean
+
+  @@schema("neon_auth")
+}
+
+model session {
+  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  expiresAt            DateTime @db.Timestamptz(6)
+  token                String   @unique
+  createdAt            DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt            DateTime @db.Timestamptz(6)
+  ipAddress            String?
+  userAgent            String?
+  userId               String   @db.Uuid
+  impersonatedBy       String?
+  activeOrganizationId String?
+  user                 user     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId])
+  @@schema("neon_auth")
+}
+
+model user {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  email         String       @unique
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime     @default(now()) @db.Timestamptz(6)
+  role          String?
+  banned        Boolean?
+  banReason     String?
+  banExpires    DateTime?    @db.Timestamptz(6)
+  account       account[]
+  invitation    invitation[]
+  member        member[]
+  session       session[]
+
+  @@schema("neon_auth")
+}
+
+model verification {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  identifier String
+  value      String
+  expiresAt  DateTime @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([identifier])
+  @@schema("neon_auth")
+}

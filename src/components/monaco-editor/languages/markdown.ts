@@ -14,14 +14,13 @@ export const markdownConfig: LanguageConfig = {
     // 格式化
     monaco.languages.registerDocumentFormattingEditProvider(markdownConfig.language, {
       provideDocumentFormattingEdits: async model => {
-        const source = model.getValue().replace(/^[^\S\n]+(?=:+)/gm, '') // 移除 : 符号前面的空格
-        const options = toMerged<Options, Options>(require('/.prettierrc.cjs'), {
+        const options = toMerged<Options, Options>(require('/.prettierrc.mjs'), {
           jsxSingleQuote: true,
           parser: markdownConfig.language,
           plugins: [estreePlugins, babelPlugins, markdownPlugins],
           requirePragma: false
         })
-        const text = await format(source, options)
+        const text = await format(model.getValue(), options)
         return [{ range: model.getFullModelRange(), text }]
       }
     }),
@@ -81,8 +80,11 @@ export const markdownConfig: LanguageConfig = {
         const suggestProperty = (payload: (XOR<{ value?: string }, { values?: string[] }> & { key: string })[]) => ({
           suggestions: payload.map(({ key, value, values }) => {
             let insertText = key
-            if (!isUndefined(value)) insertText += `="${value || '$0'}"`
-            else if (values && values.length > 0) insertText += `="\${1|${values.join(',')}|}"`
+            if (!isUndefined(value)) {
+              insertText += `="${value || '$0'}"`
+            } else if (values && values.length > 0) {
+              insertText += `="\${1|${values.join(',')}|}"`
+            }
             return {
               insertText,
               insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,

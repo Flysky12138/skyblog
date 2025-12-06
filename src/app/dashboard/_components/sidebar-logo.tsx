@@ -4,12 +4,12 @@ import Icon from '@/app/icon.svg'
 import { Logo } from '@/components/static/logo'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 
-export const SidebarLogo = () => {
+export function SidebarLogo() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
         <SidebarMenuButton asChild tooltip={process.env.NEXT_PUBLIC_TITLE}>
-          <Link href="/">
+          <Link aria-label="to home page" className="focus-visible:ring-3" href="/">
             <Icon className="size-5" />
             <Logo />
           </Link>

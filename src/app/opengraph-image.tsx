@@ -8,23 +8,21 @@ export const contentType = 'image/png'
 
 export default async function OpengraphImage() {
   return new ImageResponse(
-    (
-      <div
-        style={{
-          alignItems: 'center',
-          background: 'white',
-          display: 'flex',
-          fontSize: 48,
-          gap: 20,
-          height: '100%',
-          justifyContent: 'center',
-          width: '100%'
-        }}
-      >
-        <LogoIcon hanging={60} width={60} />
-        {process.env.NEXT_PUBLIC_TITLE}
-      </div>
-    ),
+    <div
+      style={{
+        alignItems: 'center',
+        background: 'white',
+        display: 'flex',
+        fontSize: 48,
+        gap: 20,
+        height: '100%',
+        justifyContent: 'center',
+        width: '100%'
+      }}
+    >
+      <LogoIcon hanging={60} width={60} />
+      {process.env.NEXT_PUBLIC_TITLE}
+    </div>,
     {
       ...size
     }

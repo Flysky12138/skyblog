@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="{{theme}}" />
+    <title>Echarts Preview</title>
+    <script src="{{runtime}}"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        border: 0 solid;
+      }
+      html,
+      body,
+      #root {
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        overflow: hidden;
+      }
+      #error-message {
+        text-align: center;
+        margin-top: 20px;
+      }
+      #error-message:empty {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="error-message"></p>
+    <div id="root"></div>
+
+    <script>
+      if (window.self == window.top) {
+        throw new Error('Sandbox is not allowed to access the parent window.')
+      }
+
+      if (!window.__SANDBOX_DEPS__) {
+        throw new Error('__SANDBOX_DEPS__ is not defined')
+      }
+
+      const root = document.getElementById('root')
+      const errorMessage = document.getElementById('error-message')
+
+      const deps = window.__SANDBOX_DEPS__
+      const { echarts } = deps
+
+      let chartRef = null
+
+      window.addEventListener('message', event => {
+        const option = new Function(...Object.keys(deps), `try { let option = {}; ${event.data}; return option } catch {}`)(...Object.values(deps))
+        try {
+          if (!chartRef) {
+            chartRef = echarts.init(root)
+          }
+          chartRef?.setOption(option)
+          errorMessage.textContent = ''
+        } catch (error) {
+          chartRef?.dispose()
+          chartRef = null
+          errorMessage.textContent = error.message
+        }
+      })
+
+      window.parent.postMessage({ type: 'echarts-mounted' }, '*')
+
+      window.addEventListener('resize', () => {
+        chartRef?.resize()
+      })
+    </script>
+  </body>
+</html>

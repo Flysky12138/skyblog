@@ -1,0 +1,55 @@
+// Directory ← File → S3Object
+
+model Directory {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  name     String
+  parentId String @map("parent_id") @db.Uuid
+
+  parent   Directory   @relation("DirTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children Directory[] @relation("DirTree")
+  file     File[]
+
+  @@unique([parentId, name])
+  @@map("directories")
+}
+
+model File {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  /// 不含扩展名
+  name        String
+  /// 扩展名，不含点号
+  ext         String
+  size        BigInt
+  mimeType    String @map("mime_type")
+  /// [FileMetadata]
+  metadata    Json   @default("{}") @db.JsonB
+  s3ObjectId  String @map("s3_object_id") @db.Uuid
+  directoryId String @map("directory_id") @db.Uuid
+
+  s3Object  S3Object  @relation(fields: [s3ObjectId], references: [id], onDelete: Cascade)
+  directory Directory @relation(fields: [directoryId], references: [id], onDelete: Cascade)
+
+  @@unique([directoryId, name, ext])
+  @@map("files")
+}
+
+model S3Object {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  bucket    String
+  objectKey String  @map("object_key")
+  region    String?
+
+  file File[]
+
+  @@unique([bucket, objectKey])
+  @@map("s3_objects")
+}

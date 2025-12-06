@@ -5,6 +5,11 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: '#000000',
     description: process.env.NEXT_PUBLIC_DESCRIPTION,
     display: 'standalone',
+    name: process.env.NEXT_PUBLIC_TITLE,
+    orientation: 'portrait',
+    short_name: process.env.NEXT_PUBLIC_TITLE,
+    start_url: '/',
+    theme_color: '#000000',
     icons: [
       { sizes: '48x48', src: 'icons/icon-48x48.png', type: 'image/png' },
       { sizes: '72x72', src: 'icons/icon-72x72.png', type: 'image/png' },
@@ -16,11 +21,6 @@ export default function manifest(): MetadataRoute.Manifest {
       { sizes: '256x256', src: 'icons/icon-256x256.png', type: 'image/png' },
       { sizes: '384x384', src: 'icons/icon-384x384.png', type: 'image/png' },
       { sizes: '512x512', src: 'icons/icon-512x512.png', type: 'image/png' }
-    ],
-    name: process.env.NEXT_PUBLIC_TITLE,
-    orientation: 'portrait',
-    short_name: process.env.NEXT_PUBLIC_TITLE,
-    start_url: '/',
-    theme_color: '#000000'
+    ]
   }
 }

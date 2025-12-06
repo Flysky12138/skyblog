@@ -1,4 +1,4 @@
-@utility scrollbar-hidden {
+@utility no-scrollbar {
   &::-webkit-scrollbar {
     @apply hidden;
   }

@@ -1,19 +1,25 @@
 * {
   -webkit-tap-highlight-color: transparent;
-  @apply border-border outline-ring/50;
+  @apply border-border ring-ring/50 outline-none;
 }
+
 html {
   @apply font-root antialiased;
 }
+
 body {
   @apply bg-root text-foreground overscroll-none;
 }
+
 img {
   @apply dark:brightness-80;
 }
+
 article {
+  @apply @container;
   @apply font-article overflow-hidden;
   @apply prose prose-sm prose-sky dark:prose-invert md:prose-base;
+  @apply prose-ul:ps-[1em];
   @apply *:first:mt-0! *:last:mb-0!;
   ul {
     @apply list-disc;
@@ -28,14 +34,21 @@ article {
     }
   }
 }
+
 pre,
 code {
   @apply font-code;
 }
+
 a {
   @apply break-all;
 }
+
 button:not(:disabled),
 [role='button']:not(:disabled) {
   @apply cursor-pointer;
+}
+
+[aria-disabled='true'] {
+  @apply pointer-events-none opacity-50;
 }

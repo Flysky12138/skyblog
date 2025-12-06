@@ -1,12 +1,14 @@
-import dotenv from 'dotenv'
+import fs from 'node:fs'
 
 import { prisma } from '@/lib/prisma'
 
-dotenv.config({ path: '.env.local' })
-
 const main = async () => {
-  const posts = await prisma.visitorLog.deleteMany()
-  console.log(posts)
+  const data = fs.readFileSync(new URL('./post.json', import.meta.url), 'utf-8')
+  const json = JSON.parse(data)
+
+  await prisma.post.createMany({
+    data: json
+  })
 }
 
 main()

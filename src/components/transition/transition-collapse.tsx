@@ -9,15 +9,11 @@ interface TransitionCollapseProps extends Omit<MotionProps, 'animate' | 'initial
   orientation?: 'horizontal' | 'vertical'
 }
 
-export const TransitionCollapse = ({ orientation = 'vertical', ...props }: TransitionCollapseProps) => {
+export function TransitionCollapse({ orientation = 'vertical', ...props }: TransitionCollapseProps) {
   return (
     <motion.div
       animate={`${orientation}-animate`}
-      className="flex items-center justify-center overflow-hidden"
       initial={`${orientation}-initial`}
-      transition={{
-        type: 'tween'
-      }}
       variants={{
         'horizontal-animate': {
           opacity: 1,

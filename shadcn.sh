@@ -1,5 +1,5 @@
-# pnpm dlx shadcn@latest add -y -o "https://21st.dev/r/davidhzdev/gradient-text"
-# pnpm dlx shadcn@latest add "https://21st.dev/r/haydenbleasel/spinner"
+#!/usr/bin/env bash
+set -euo pipefail
 
 pnpm dlx shadcn@latest add -y -o \
     alert-dialog \
@@ -7,12 +7,16 @@ pnpm dlx shadcn@latest add -y -o \
     avatar \
     badge \
     breadcrumb \
+    button-group \
     button \
     checkbox \
     command \
     dialog \
     drawer \
     dropdown-menu \
+    empty \
+    field \
+    input-group \
     input \
     item \
     label \
@@ -27,7 +31,9 @@ pnpm dlx shadcn@latest add -y -o \
     skeleton \
     slider \
     sonner \
+    spinner \
     switch \
+    table \
     tabs \
     textarea \
     toggle \

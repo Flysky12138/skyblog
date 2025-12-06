@@ -5,7 +5,7 @@ import { ErrorComponent, ErrorComponentProps } from '@/components/static/error-c
 export default function Error(props: ErrorComponentProps) {
   return (
     <div className="flex size-full items-center justify-center">
-      <ErrorComponent className="relative mx-6 w-full max-w-lg py-10" {...props} />
+      <ErrorComponent {...props} />
     </div>
   )
 }

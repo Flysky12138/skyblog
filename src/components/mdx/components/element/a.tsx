@@ -5,7 +5,7 @@ import React from 'react'
 
 import { cn } from '@/lib/utils'
 
-export const A = ({ children, className, ...props }: React.ComponentProps<'a'>) => {
+export function A({ children, className, ...props }: React.ComponentProps<'a'>) {
   if (!props.href) return null
 
   className = cn('no-underline underline-offset-2 hover:underline', className)

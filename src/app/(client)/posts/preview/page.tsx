@@ -1,29 +1,38 @@
 'use client'
 
 import React from 'react'
-import { useEvent, useMount } from 'react-use'
+import { useMount } from 'react-use'
 
-import { DefaultPostType, MessageEventDataMounted, MessageEventDataRefresh } from '@/app/dashboard/posts/[id]/page'
+import {
+  DefaultPostType,
+  MessageEventDataPostPreviewMounted,
+  MessageEventDataPostUpdate,
+  POST_PREVIEW_BROADCAST_CHANNEL_ID
+} from '@/app/dashboard/posts/[id]/utils'
 import { MDXClient } from '@/components/mdx/client'
 import { Card } from '@/components/static/card'
+import { useBroadcastChannel } from '@/hooks/use-broadcast-channel'
 
 export default function Page() {
   const [post, setPost] = React.useState<DefaultPostType>()
 
-  useMount(() => {
-    window.opener.postMessage({ type: 'post-preview-mounted' } satisfies MessageEventDataMounted, window.origin)
-  })
+  const { postMessage } = useBroadcastChannel<MessageEventDataPostUpdate, MessageEventDataPostPreviewMounted>(
+    POST_PREVIEW_BROADCAST_CHANNEL_ID,
+    ({ type, value }) => {
+      if (type != 'post-update') return
+      setPost(value)
+    }
+  )
 
-  useEvent('message', ({ data, origin }: MessageEvent<MessageEventDataRefresh>) => {
-    if (origin != window.origin || data.type != 'post-refresh') return
-    setPost(data.value)
+  useMount(() => {
+    postMessage({ type: 'post-preview-mounted' })
   })
 
   if (!post?.content) return null
 
   return (
     <Card asChild>
-      <article className="max-w-none p-5">
+      <article className="p-card max-w-none">
         <MDXClient source={post.content} />
       </article>
     </Card>

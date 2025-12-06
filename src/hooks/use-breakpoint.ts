@@ -7,18 +7,18 @@ export const breakpoints = {
   '2xl': 1536,
   '3xl': 1920,
   '4xl': 2560,
-  base: 0,
   lg: 1024,
   md: 768,
   sm: 640,
   xl: 1280,
-  xs: 425
+  xs: 425,
+  zero: 0
 } as const
 
 /**
  * ```json
  * {
- *   base: 0,
+ *   zero: 0,
  *   xs: 425,
  *   sm: 640,
  *   md: 768,

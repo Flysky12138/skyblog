@@ -8,10 +8,10 @@ import { Switch } from '@/components/ui/switch'
 import { useMounted } from '@/hooks/use-mounted'
 import { useTheme } from '@/hooks/use-theme'
 
-export const SidebarTheme = () => {
+export function SidebarTheme() {
   const { isDark, toggleTheme } = useTheme()
-
   const isMounted = useMounted()
+
   if (!isMounted) return <Skeleton className="h-8" />
 
   return (
@@ -20,7 +20,7 @@ export const SidebarTheme = () => {
         <SidebarMenuButton tooltip="深色模式">{isDark ? <MoonStar /> : <Sun />} 深色模式</SidebarMenuButton>
         <SidebarMenuAction asChild>
           <div className="pointer-events-none justify-end!">
-            <Switch checked={isDark} />
+            <Switch checked={isDark} tabIndex={-1} />
           </div>
         </SidebarMenuAction>
       </SidebarMenuItem>

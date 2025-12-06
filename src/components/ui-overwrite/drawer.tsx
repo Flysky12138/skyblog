@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Drawer as DrawerPrimitive } from 'vaul'
+import { Drawer } from 'vaul'
 
 import { cn } from '@/lib/utils'
 
@@ -19,11 +19,14 @@ export {
   DrawerTrigger
 } from '../ui/drawer'
 
-export const DrawerContent = ({ children, className, ...props }: React.ComponentProps<typeof DrawerPrimitive.Content>) => {
+/**
+ * 修改样式
+ */
+export function DrawerContent({ children, className, ...props }: React.ComponentProps<typeof Drawer.Content>) {
   return (
     <DrawerPortal data-slot="drawer-portal">
       <DrawerOverlay className="backdrop-blur-xs" />
-      <DrawerPrimitive.Content
+      <Drawer.Content
         className={cn(
           'group/drawer-content bg-background fixed z-50 flex h-auto flex-col outline-none',
           'data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:top-0 data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:max-h-[80vh] data-[vaul-drawer-direction=top]:rounded-b-lg data-[vaul-drawer-direction=top]:border-b',
@@ -37,7 +40,7 @@ export const DrawerContent = ({ children, className, ...props }: React.Component
       >
         <div className="bg-muted mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
         {children}
-      </DrawerPrimitive.Content>
+      </Drawer.Content>
     </DrawerPortal>
   )
 }

@@ -1,5 +1,14 @@
-/** 深度美化对象的显示 */
-type DeepPrettify<T> = { [K in keyof T]: T[K] extends object ? Prettify<T[K]> : T[K] }
+/** “不可展开”的类型 */
+type Builtin =
+  | Date
+  | Error
+  | Function
+  | Map<unknown, unknown>
+  | React.ReactNode
+  | RegExp
+  | Set<unknown>
+  | WeakMap<unknown, unknown>
+  | WeakSet<unknown>
 
 /** 以 `T` 结尾的字符串 */
 type EndsWith<T extends string> = `${string}${T}`
@@ -13,12 +22,7 @@ type PickStartsWith<T, D extends string> = {
 type PratialPick<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 /** 美化对象的显示 */
-type Prettify<T> = NonNullable<{ [K in keyof T]: T[K] }>
-
-/** 移除值为空对象的键 */
-type RemoveKeysByEmptyValue<T extends Record<string, object>> = {
-  [K in keyof T as keyof T[K] extends never ? never : K]: T[K]
-}
+type Prettify<T> = T extends Builtin ? T : T extends object ? { [K in keyof T]: Prettify<T[K]> } : T
 
 /** 将选中的键设置为必选 */
 type RequiredPick<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>

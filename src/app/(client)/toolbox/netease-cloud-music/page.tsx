@@ -1,6 +1,6 @@
 'use client'
 
-import dynamic from 'next/dynamic'
+import { SearchIcon } from 'lucide-react'
 import React from 'react'
 import { toast } from 'sonner'
 import useSWRInfinite from 'swr/infinite'
@@ -8,15 +8,13 @@ import { useImmer } from 'use-immer'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/static/card'
-import { Input } from '@/components/ui/input'
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { Spinner } from '@/components/ui/spinner'
-import { CustomRequest } from '@/lib/http/request'
+import { rpc, unwrap } from '@/lib/http/rpc'
 
-import { AudioProps } from './_components/audio'
-import { DownloadList } from './_components/download-list'
+import { AudioPlayerModal, AudioPlayerModalRef } from './_components/audio-player-modal'
+import { DownloadModal } from './_components/download-modal'
 import { SongList } from './_components/song-list'
-
-const Audio = dynamic(() => import('./_components/audio').then(module => module.Audio), { ssr: false })
 
 export default function Page() {
   const [search, setSearch] = React.useState('')
@@ -25,8 +23,7 @@ export default function Page() {
   const {
     data = [],
     isLoading,
-    setSize,
-    size
+    setSize
   } = useSWRInfinite(
     (pageIndex, previousPageData) => {
       if (!keywords) return null
@@ -37,15 +34,10 @@ export default function Page() {
       // 歌单
       if (/^p\d+$/.test(keywords.trim())) {
         const id = keywords.trim().replace('p', '')
-        return CustomRequest('GET /api/netease-cloud-music/playlist/detail', { search: { id } })
-      }
-      // 专辑
-      if (/^a\d+$/.test(keywords.trim())) {
-        const id = keywords.trim().replace('a', '')
-        return CustomRequest('GET /api/netease-cloud-music/album', { search: { id } })
+        return rpc['netease-cloud-music'].playlist({ id }).get().then(unwrap)
       }
       // https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=%e6%90%9c%e7%b4%a2
-      return CustomRequest('GET /api/netease-cloud-music/search', { search: { keywords, page } })
+      return rpc['netease-cloud-music'].search.get({ query: { keywords, page } }).then(unwrap)
     },
     {
       fallbackData: [{ hasMore: false, songCount: 0, songs: [] }],
@@ -66,8 +58,8 @@ export default function Page() {
   const hasMore = data.at(-1)?.hasMore
 
   // 播放器
-  const audioRef = React.useRef<NonNullable<AudioProps['ref']>['current']>(null)
-  const [player, setPlayer] = useImmer<(typeof data)[number]['songs'][number] | null>(null)
+  const audioPlayerModalRef = React.useRef<AudioPlayerModalRef>(null)
+  const [player, setPlayer] = useImmer<(typeof songs)[number] | null>(null)
 
   React.useEffect(() => {
     const _search = decodeURIComponent(new URLSearchParams(window.location.search).get('search') || '')
@@ -76,31 +68,38 @@ export default function Page() {
   }, [])
 
   return (
-    <div className="mx-auto flex h-[calc(var(--height-main)-2*var(--py))] max-w-xl flex-col gap-4">
-      <Input
-        placeholder="搜索 / 粘贴歌单或专辑分享链接"
-        value={search}
-        onChange={event => {
-          const text = event.target.value
-          const playlistId = text.match(/playlist(?:\?id=|\/)(\d+)/)?.[1]
-          if (playlistId) {
-            setSearch(`p${playlistId}`)
-            toast.success('识别到歌单，已自动转换')
-            return
-          }
-          const albumId = text.match(/album(?:\?id=|\/)(\d+)/)?.[1]
-          if (albumId) {
-            setSearch(`a${albumId}`)
-            toast.success('识别到专辑，已自动转换')
-            return
-          }
-          setSearch(text)
-        }}
-        onKeyDown={event => {
-          if (event.key != 'Enter') return
-          setKeywords(search.trim())
-        }}
-      />
+    <>
+      <InputGroup>
+        <InputGroupInput
+          autoComplete="off"
+          placeholder="搜索 / 粘贴歌单或专辑分享链接"
+          value={search}
+          onChange={event => {
+            const text = event.target.value
+            const playlistId = text.match(/playlist(?:\?id=|\/)(\d+)/)?.[1]
+            if (playlistId) {
+              setSearch(`p${playlistId}`)
+              toast.success('识别到歌单，已自动转换')
+              return
+            }
+            const albumId = text.match(/album(?:\?id=|\/)(\d+)/)?.[1]
+            if (albumId) {
+              setSearch(`a${albumId}`)
+              toast.success('识别到专辑，已自动转换')
+              return
+            }
+            setSearch(text)
+          }}
+          onKeyDown={event => {
+            if (event.key != 'Enter') return
+            setKeywords(search.trim())
+          }}
+        />
+        <InputGroupAddon>
+          <SearchIcon />
+        </InputGroupAddon>
+      </InputGroup>
+
       <DisplayByConditional
         condition={songs.length > 0}
         fallback={
@@ -121,20 +120,21 @@ export default function Page() {
       >
         <SongList
           hasMore={hasMore}
-          loadMoreRows={() => {
-            setSize(size + 1)
+          loadMoreRows={async () => {
+            await setSize(size => size + 1)
           }}
           songs={songs}
           onRowClick={song => {
             if (player?.id != song.id) {
               setPlayer(song)
             }
-            audioRef.current?.setOpen(true)
+            audioPlayerModalRef.current?.setOpen(true)
           }}
         />
       </DisplayByConditional>
-      <DownloadList songs={songs} />
-      <Audio ref={audioRef} song={player} />
-    </div>
+
+      <DownloadModal songs={songs} />
+      <AudioPlayerModal ref={audioPlayerModalRef} song={player} />
+    </>
   )
 }

@@ -1,8 +1,5 @@
-'use cache: private'
-
 import { Metadata } from 'next'
 import { cookies } from 'next/headers'
-import React from 'react'
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarProvider, SidebarRail } from '@/components/ui/sidebar'
 
@@ -17,16 +14,19 @@ export const metadata: Metadata = {
     follow: false,
     index: false
   },
-  title: 'Dashboard'
+  title: {
+    default: 'Dashboard',
+    template: '%s | Dashboard'
+  }
 }
 
-export default async function Layout({ children }: React.PropsWithChildren) {
+export default async function Layout({ children }: LayoutProps<'/dashboard'>) {
   const cookieStore = await cookies()
   const defaultOpen = cookieStore.has('sidebar_state') ? cookieStore.get('sidebar_state')?.value == 'true' : true
 
   return (
-    <SidebarProvider className="w-auto" defaultOpen={defaultOpen}>
-      <Sidebar className="border-divide whitespace-nowrap" collapsible="icon">
+    <SidebarProvider defaultOpen={defaultOpen}>
+      <Sidebar className="text-nowrap break-keep" collapsible="icon">
         <SidebarHeader>
           <SidebarLogo />
         </SidebarHeader>
@@ -39,9 +39,9 @@ export default async function Layout({ children }: React.PropsWithChildren) {
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
-      <div className="flex flex-1 flex-col overflow-auto">
+      <div className="flex grow flex-col overflow-auto">
         <Header className="md:hidden" />
-        <main className="bg-root flex-1 p-4 md:p-8">{children}</main>
+        <main className="bg-root h-full p-4 md:p-8">{children}</main>
       </div>
     </SidebarProvider>
   )

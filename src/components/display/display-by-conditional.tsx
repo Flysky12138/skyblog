@@ -10,6 +10,6 @@ export interface DisplayByConditionalProps extends React.PropsWithChildren {
   fallback?: React.ReactNode
 }
 
-export const DisplayByConditional = ({ children, condition = false, fallback = null }: DisplayByConditionalProps) => {
+export function DisplayByConditional({ children, condition = false, fallback = null }: DisplayByConditionalProps) {
   return condition ? children : fallback
 }

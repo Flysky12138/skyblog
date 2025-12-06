@@ -36,3 +36,11 @@ next-env.d.ts
 
 # types
 /routes.d.ts
+
+# serwist
+public/sw*
+public/swe-worker*
+
+# prisma
+src/generated/
+scripts/prisma/backups
