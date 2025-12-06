@@ -17,34 +17,57 @@ interface ScrollToTopProps extends React.ComponentProps<typeof Button> {
   showOnScrollYOverflow?: number
 }
 
-export const ScrollToTop = ({ className, showOnScrollYOverflow = 200, ...props }: ScrollToTopProps) => {
-  const isMounted = useMounted()
-
+export function ScrollToTop({ className, showOnScrollYOverflow = 200, ...props }: ScrollToTopProps) {
   const [showProgress, setShowProgress] = React.useState(false)
 
+  const isMounted = useMounted()
   const { y, yProgress } = useWindowScrollState()
 
-  const timer = React.useRef<NodeJS.Timeout>(undefined)
   React.useEffect(() => {
-    clearTimeout(timer.current)
     setShowProgress(true)
-    timer.current = setTimeout(setShowProgress, 500, false)
+    const timer = setTimeout(() => {
+      setShowProgress(false)
+    }, 500)
+    return () => clearTimeout(timer)
   }, [yProgress])
+
+  const handleClick = React.useEffectEvent(() => {
+    if (showProgress) return
+    const realStart = window.scrollY
+    const start = Math.min(realStart, 700)
+
+    const duration = 450
+    const startTime = performance.now()
+
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3)
+
+    const tick = (now: number) => {
+      const elapsed = now - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      const eased = easeOutCubic(progress)
+
+      const current = start * (1 - eased)
+      window.scrollTo(0, current)
+
+      if (progress < 1) {
+        requestAnimationFrame(tick)
+      }
+    }
+
+    requestAnimationFrame(tick)
+  })
 
   if (!isMounted) return null
   if (y <= showOnScrollYOverflow) return null
 
   return (
     <Button
-      aria-label="Scroll back to top"
+      aria-label="scroll back to top"
       className={cn('relative p-4 select-none', className, {
         'cursor-default': showProgress
       })}
       size="icon"
-      onClick={() => {
-        if (showProgress) return
-        window.scrollTo({ behavior: 'smooth', top: 0 })
-      }}
+      onClick={handleClick}
       {...props}
     >
       <AnimatePresence initial={false} mode="popLayout">

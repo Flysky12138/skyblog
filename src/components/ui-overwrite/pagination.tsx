@@ -9,7 +9,10 @@ import { cn } from '@/lib/utils'
 
 export { Pagination, PaginationContent, PaginationEllipsis, PaginationItem } from '../ui/pagination'
 
-export const PaginationLink = ({
+/**
+ * 根据传入参数，在 `a` 和 `button` 组件之间选择正确的组件
+ */
+export function PaginationLink({
   disabled,
   href,
   isActive,
@@ -22,30 +25,34 @@ export const PaginationLink = ({
   href?: Url
   isActive?: boolean
   onClick?: React.MouseEventHandler
-}) => {
+}) {
   props.className = cn(buttonVariants({ size, variant: isActive ? 'outline' : 'ghost' }), 'dark:border-input border', props.className)
 
-  if (!href || disabled) {
-    return <button data-slot="pagination-button" disabled={disabled} {...props} />
-  }
+  if (!href || disabled) return <button data-slot="pagination-button" disabled={disabled} {...props} />
 
   return <Link aria-current={isActive ? 'page' : undefined} data-active={isActive} data-slot="pagination-link" href={href as Route} {...props} />
 }
 
-export const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => {
+/**
+ * 修改样式
+ */
+export function PaginationNext({ className, ...props }: React.ComponentProps<typeof PaginationLink>) {
   return (
-    <PaginationLink aria-label="Go to previous page" {...props}>
-      <ChevronLeftIcon />
-      <span className="sr-only">Previous</span>
+    <PaginationLink aria-label="go to next page" {...props}>
+      <span className="sr-only">Next</span>
+      <ChevronRightIcon />
     </PaginationLink>
   )
 }
 
-export const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => {
+/**
+ * 修改样式
+ */
+export function PaginationPrevious({ className, ...props }: React.ComponentProps<typeof PaginationLink>) {
   return (
-    <PaginationLink aria-label="Go to next page" {...props}>
-      <span className="sr-only">Next</span>
-      <ChevronRightIcon />
+    <PaginationLink aria-label="go to previous page" {...props}>
+      <ChevronLeftIcon />
+      <span className="sr-only">Previous</span>
     </PaginationLink>
   )
 }

@@ -1,6 +1,7 @@
 import { FFmpeg as _FFmpeg } from '@ffmpeg/ffmpeg'
 import { fetchFile } from '@ffmpeg/util'
-import { toast } from 'sonner'
+
+import { toastPromiseDelay } from '../toast'
 
 interface UpdateAudioMetadataProps {
   audio: {
@@ -27,22 +28,17 @@ export class FFmpeg {
 
   async init() {
     if (!this.#ffmpeg.loaded) {
-      let id: number | string = 0
-      try {
-        const timer = setTimeout(() => {
-          id = toast.loading('Loading ffmpeg...')
-        }, 800)
-        await this.#ffmpeg.load({
+      await toastPromiseDelay(
+        this.#ffmpeg.load({
           coreURL: process.env.NEXT_PUBLIC_CDN_FFMPEG + 'dist/umd/ffmpeg-core.js',
           wasmURL: process.env.NEXT_PUBLIC_CDN_FFMPEG + 'dist/umd/ffmpeg-core.wasm'
-        })
-        clearTimeout(timer)
-      } catch (error) {
-        console.error(error)
-        throw new Error('FFmpeg 初始化失败')
-      } finally {
-        toast.dismiss(id)
-      }
+        }),
+        {
+          error: 'Failed to load ffmpeg',
+          loading: 'Loading ffmpeg...',
+          success: 'FFmpeg loaded successfully'
+        }
+      )
     }
   }
 

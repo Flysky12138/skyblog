@@ -1,4 +1,17 @@
 import { editor } from 'monaco-editor'
+import { BundledLanguage, BundledTheme } from 'shiki'
+
+/**
+ * 语言
+ */
+export const langs = ['javascript', 'typescript', 'markdown', 'yaml'] satisfies BundledLanguage[]
+
+/**
+ * 主题
+ * @example
+ * ['dark-plus', 'light-plus']
+ */
+export const themes = ['dark-plus', 'light-plus'] satisfies BundledTheme[]
 
 /**
  * `monaco-editor` 默认配置
@@ -11,21 +24,21 @@ export const monacoEditorDefaultOptions: editor.IStandaloneEditorConstructionOpt
   fontLigatures: false, // 连体字
   fontSize: 14,
   fontWeight: 'bold',
+  lineDecorationsWidth: 12,
+  lineNumbersMinChars: 4,
+  renderLineHighlight: 'all',
+  roundedSelection: true,
+  scrollBeyondLastLine: true,
+  smoothScrolling: true,
   hover: {
     above: true
   },
-  lineDecorationsWidth: 12,
-  lineNumbersMinChars: 4,
   quickSuggestions: {
     comments: 'on',
     other: 'on',
     strings: 'on'
   },
-  renderLineHighlight: 'all',
-  roundedSelection: true,
   scrollbar: {
     alwaysConsumeMouseWheel: true
-  },
-  scrollBeyondLastLine: true,
-  smoothScrolling: true
+  }
 }
