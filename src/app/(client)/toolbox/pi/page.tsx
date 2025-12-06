@@ -4,29 +4,21 @@ import { AlertCircle } from 'lucide-react'
 import React from 'react'
 import { useImmer } from 'use-immer'
 
-import {
-  DialogDrawer,
-  DialogDrawerContent,
-  DialogDrawerDescription,
-  DialogDrawerHeader,
-  DialogDrawerTitle,
-  DialogDrawerTrigger
-} from '@/components/dialog-drawer'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/static/card'
+import { Button } from '@/components/ui-overwrite/button'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Alert, AlertTitle } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Spinner } from '@/components/ui/spinner'
-
-import Arctan_ from './arctan.mdx'
-import ChudnovskyBsCode_ from './chudnovsky-bs-code.mdx'
-import ChudnovskyBs_ from './chudnovsky-bs.mdx'
-import ChudnovskyCode_ from './chudnovsky-code.mdx'
+import { ButtonGroup } from '@/components/ui/button-group'
 import '@/components/mdx/css/index'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-import Chudnovsky_ from './chudnovsky.mdx'
-import { Print } from './print'
+import Arctan_ from './_components/arctan.mdx'
+import ChudnovskyBsCode_ from './_components/chudnovsky-bs-code.mdx'
+import ChudnovskyBs_ from './_components/chudnovsky-bs.mdx'
+import ChudnovskyCode_ from './_components/chudnovsky-code.mdx'
+import Chudnovsky_ from './_components/chudnovsky.mdx'
+import { Print } from './_components/print'
 
 const Arctan = React.memo(Arctan_)
 const ChudnovskyBsCode = React.memo(ChudnovskyBsCode_)
@@ -67,85 +59,85 @@ export default function Page() {
   return (
     <Card className="p-card flex flex-col gap-3">
       <div className="flex flex-wrap gap-4">
-        <Select
-          defaultValue={form.mode}
-          onValueChange={(mode: ModeType) => {
-            setForm(state => {
-              state.mode = mode
-              if (!OPTIONS[mode].includes(state.size)) {
-                state.size = Math.min(...OPTIONS[mode])
-              }
-            })
-          }}
-        >
-          <SelectTrigger className="w-44 grow sm:grow-0">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="arctan">反正切</SelectItem>
-            <SelectItem value="chudnovsky">Chudnovsky</SelectItem>
-            <SelectItem value="chudnovsky-bs">Chudnovsky - BS</SelectItem>
-          </SelectContent>
-        </Select>
-        <DisplayByConditional condition={form.mode != 'arctan'}>
+        <ButtonGroup className="grow sm:grow-0">
           <Select
-            defaultValue={String(form.size)}
-            onValueChange={value => {
-              if (!value) return
-              setForm(state => {
-                state.size = Number(value)
+            defaultValue={form.mode}
+            onValueChange={(mode: ModeType) => {
+              setForm(draft => {
+                draft.mode = mode
+                if (!OPTIONS[mode].includes(draft.size)) {
+                  draft.size = Math.min(...OPTIONS[mode])
+                }
               })
             }}
           >
-            <SelectTrigger className="w-20">
+            <SelectTrigger className="w-48">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {OPTIONS[form.mode].map(option => (
-                <SelectItem key={option} value={String(option)}>
-                  {option.toExponential().replace('+', '')}
-                </SelectItem>
-              ))}
+              <SelectItem value="arctan">反正切</SelectItem>
+              <SelectItem value="chudnovsky">Chudnovsky</SelectItem>
+              <SelectItem value="chudnovsky-bs">Chudnovsky - BS</SelectItem>
             </SelectContent>
           </Select>
-          <DialogDrawer>
-            <DialogDrawerTrigger asChild>
-              <Button>源码</Button>
-            </DialogDrawerTrigger>
-            <DialogDrawerContent
-              className="text-sm [&>figure]:m-0"
-              dialogClassName="max-w-2xl border-0 p-0!"
-              drawerClassName="**:data-[slot=scroll-area]:h-[70vh] **:[figure]:rounded-b-none! **:[figure]:mt-4!"
-              showCloseButton={false}
-            >
-              <DialogDrawerHeader className="hidden">
-                <DialogDrawerTitle />
-                <DialogDrawerDescription />
-              </DialogDrawerHeader>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="min-w-28 grow">源码</Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl bg-transparent p-0! text-sm" showCloseButton={false}>
+              <DialogHeader className="hidden">
+                <DialogTitle />
+                <DialogDescription />
+              </DialogHeader>
               {form.mode == 'chudnovsky' && <ChudnovskyCode />}
               {form.mode == 'chudnovsky-bs' && <ChudnovskyBsCode />}
-            </DialogDrawerContent>
-          </DialogDrawer>
-          <Button
-            className="grow"
-            disabled={loading}
-            onClick={() => {
-              setResult(null)
-              workerRef.current?.postMessage(form)
-              setLoading(true)
-            }}
-          >
-            {loading && <Spinner />}
-            计算
-          </Button>
+            </DialogContent>
+          </Dialog>
+        </ButtonGroup>
+        <DisplayByConditional condition={form.mode != 'arctan'}>
+          <ButtonGroup className="grow">
+            <Select
+              defaultValue={String(form.size)}
+              onValueChange={value => {
+                if (!value) return
+                setForm(draft => {
+                  draft.size = Number(value)
+                })
+              }}
+            >
+              <SelectTrigger className="w-36">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {OPTIONS[form.mode].map(option => (
+                  <SelectItem key={option} value={String(option)}>
+                    {option.toLocaleString()}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button
+              className="grow"
+              loading={loading}
+              onClick={() => {
+                setResult(null)
+                workerRef.current?.postMessage(form)
+                setLoading(true)
+              }}
+            >
+              计算
+            </Button>
+          </ButtonGroup>
         </DisplayByConditional>
       </div>
+
       <DisplayByConditional condition={form.mode == 'arctan'}>
         <Alert variant="destructive">
           <AlertCircle />
           <AlertTitle>收敛速度太慢，不提供计算</AlertTitle>
         </Alert>
       </DisplayByConditional>
+
       {result && (
         <DisplayByConditional
           condition={!result.error}
@@ -166,6 +158,7 @@ export default function Page() {
           />
         </DisplayByConditional>
       )}
+
       <article className="mt-5 max-w-none">
         {form.mode == 'arctan' && <Arctan />}
         {form.mode == 'chudnovsky' && <Chudnovsky />}

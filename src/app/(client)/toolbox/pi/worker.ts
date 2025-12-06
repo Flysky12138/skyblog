@@ -6,7 +6,9 @@ const pell_sqrt_10005 = (digits: number): [bigint, bigint] => {
   while (true) {
     const [x, y] = [x1 * x2 + D * y1 * y2, x1 * y2 + y1 * x2]
     ;[x1, y1, x2, y2] = [x2, y2, x, y]
-    if (y > Y_MIN) break
+    if (y > Y_MIN) {
+      break
+    }
   }
   return [x2, y2]
 }
@@ -23,7 +25,9 @@ const chudnovsky = (digits: number) => {
     a_sum += a_k
     b_sum += k * a_k
     k += 1n
-    if (a_k == 0n) break
+    if (a_k == 0n) {
+      break
+    }
   }
   const total = 13591409n * a_sum + 545140134n * b_sum
   const [x, y] = pell_sqrt_10005(digits)
@@ -39,7 +43,9 @@ const bs = (a: bigint, b: bigint): [bigint, bigint, bigint] => {
       Qab = a ** 3n * C3_OVER_24
     }
     let Tab = Pab * (13591409n + 545140134n * a)
-    if (a & 1n) Tab = -Tab
+    if (a & 1n) {
+      Tab = -Tab
+    }
     return [Pab, Qab, Tab]
   } else {
     const m = (a + b) >> 1n

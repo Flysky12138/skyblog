@@ -1,85 +1,86 @@
 'use client'
 
-import { useMeasure } from 'react-use'
-import { FixedSizeList } from 'react-window'
-import InfiniteLoader from 'react-window-infinite-loader'
+import React from 'react'
+import { List, RowComponentProps } from 'react-window'
+import { useInfiniteLoader } from 'react-window-infinite-loader'
 
+import { AlbumResponseType } from '@/app/api/[[...elysia]]/client/netease-cloud-music/model'
 import { Card } from '@/components/static/card'
 import { Spinner } from '@/components/ui/spinner'
 
-interface SongListProps {
+interface RowProps {
   hasMore?: boolean
-  songs: AppRouteHandlerMethodMap['GET /api/netease-cloud-music/search']['return']['songs']
-  loadMoreRows: () => void
-  onRowClick?: (song: SongListProps['songs'][number]) => void
+  songs: AlbumResponseType['songs']
+  onRowClick?: (song: RowProps['songs'][number]) => void
 }
 
-export const SongList = ({ hasMore, loadMoreRows, songs, onRowClick }: SongListProps) => {
-  const [divRef, { height }] = useMeasure<HTMLDivElement>()
+interface SongListProps extends RowProps {
+  loadMoreRows: () => Promise<void>
+}
 
-  const itemCount = hasMore ? songs.length + 1 : songs.length
-  const isItemLoaded = (index: number) => !hasMore || index < songs.length
+export function SongList({ hasMore, loadMoreRows, songs, onRowClick }: SongListProps) {
+  const rowCount = hasMore ? songs.length + 1 : songs.length
+
+  const isLoadingMoreRef = React.useRef(false)
+
+  const onRowsRendered = useInfiniteLoader({
+    rowCount,
+    isRowLoaded: index => !hasMore || index < songs.length,
+    loadMoreRows: async () => {
+      if (!hasMore) return
+      if (isLoadingMoreRef.current) return
+      isLoadingMoreRef.current = true
+      await loadMoreRows()
+      isLoadingMoreRef.current = false
+    }
+  })
 
   return (
     <Card asChild>
-      <div ref={divRef} className="grow overflow-hidden rounded-md">
-        <InfiniteLoader
-          isItemLoaded={isItemLoaded}
-          itemCount={itemCount}
-          loadMoreItems={() => {
-            if (!hasMore) return
-            loadMoreRows()
-          }}
-          threshold={5}
-        >
-          {({ ref, onItemsRendered }) => (
-            <FixedSizeList
-              ref={ref}
-              className="scrollbar-hidden overscroll-y-none"
-              height={height}
-              itemCount={itemCount}
-              itemData={songs}
-              itemSize={48}
-              overscanCount={8}
-              width="100%"
-              onItemsRendered={onItemsRendered}
-            >
-              {({ data, index, style }) => {
-                if (!isItemLoaded(index)) {
-                  return (
-                    <div className="flex items-center justify-center" style={style}>
-                      <Spinner />
-                    </div>
-                  )
-                }
-                const song = data[index]
-                return (
-                  <div
-                    className="relative flex cursor-pointer items-center gap-2 border-b px-1.5 last:border-b-0"
-                    style={style}
-                    onClick={() => {
-                      onRowClick?.(song)
-                    }}
-                  >
-                    <img
-                      alt={song.al.name}
-                      decoding="async"
-                      height={36}
-                      loading="lazy"
-                      src={song.al.picUrl.replace('http:', 'https:') + '?param=72y72'}
-                      width={36}
-                    />
-                    <div className="truncate">
-                      <p className="truncate text-sm">{song.name}</p>
-                      <p className="text-muted-foreground text-xs">{[song.ar[0].name, song.al.name].filter(Boolean).join(' - ')}</p>
-                    </div>
-                  </div>
-                )
-              }}
-            </FixedSizeList>
-          )}
-        </InfiniteLoader>
-      </div>
+      <List
+        className="no-scrollbar overscroll-none"
+        overscanCount={8}
+        rowComponent={Row}
+        rowCount={rowCount}
+        rowHeight={48}
+        rowProps={{ hasMore, songs, onRowClick } satisfies RowProps}
+        onRowsRendered={onRowsRendered}
+      />
     </Card>
+  )
+}
+
+function Row({ ariaAttributes, hasMore, index, songs, style, onRowClick }: RowComponentProps & RowProps) {
+  if (hasMore && index >= songs.length) {
+    return (
+      <div className="flex items-center justify-center" style={style} {...ariaAttributes}>
+        <Spinner />
+      </div>
+    )
+  }
+  const song = songs[index]
+  return (
+    <div
+      className="relative flex cursor-pointer items-center gap-2 border-b px-1.5 last:border-b-0"
+      style={style}
+      {...ariaAttributes}
+      onClick={() => {
+        onRowClick?.(song)
+      }}
+    >
+      <img
+        alt={song.al.name}
+        crossOrigin="anonymous"
+        decoding="async"
+        height={36}
+        loading="lazy"
+        src={song.al.picUrl.replace('http:', 'https:') + '?param=72y72'}
+        width={36}
+      />
+      <div className="truncate">
+        <p className="truncate text-sm">{song.name}</p>
+        <p className="text-muted-foreground text-xs">{[song.ar.map(item => item.name).join('/'), song.al.name].filter(Boolean).join(' - ')}</p>
+      </div>
+    </div>
   )
 }

@@ -1,0 +1,12 @@
+ignoredBuiltDependencies:
+  - core-js
+  - koffi
+  - protobufjs
+  - unrs-resolver
+
+onlyBuiltDependencies:
+  - '@prisma/engines'
+  - cn-font-split
+  - esbuild
+  - prisma
+  - sharp

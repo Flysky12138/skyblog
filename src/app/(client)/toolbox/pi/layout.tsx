@@ -1,18 +1,7 @@
-import { Metadata } from 'next'
+import { getToolPageMetadata } from '../utils'
 
-export const metadata: Metadata = {
-  description: '在线计算圆周率数值',
-  openGraph: {
-    description: '在线计算圆周率数值',
-    title: 'Pi'
-  },
-  title: 'Pi',
-  twitter: {
-    description: '在线计算圆周率数值',
-    title: 'Pi'
-  }
-}
+export const metadata = getToolPageMetadata('other', 'pi')
 
-export default function Layout({ children }: React.PropsWithChildren) {
+export default function Layout({ children }: LayoutProps<'/toolbox/pi'>) {
   return children
 }
