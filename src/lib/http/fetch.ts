@@ -2,9 +2,9 @@ import { cloneDeep, delay, isBrowser } from 'es-toolkit'
 import { toast } from 'sonner'
 
 import { HEADER } from '../constants'
-import { AesGcm } from '../crypto/aes-gcm'
+import { AesGcm, sha256 } from '../crypto'
 
-const Core = async (promise: () => Promise<Response>, retry: number) => {
+const core = async (promise: () => Promise<Response>, retry: number) => {
   try {
     const res = await promise()
 
@@ -35,17 +35,18 @@ const Core = async (promise: () => Promise<Response>, retry: number) => {
   } catch (error) {
     if (retry > 0) {
       await delay(200)
-      return Core(promise, retry - 1)
+      return core(promise, retry - 1)
     }
     console.error(error)
-    const message = JSON.parse((error as Error).message)
-    const formatMessage = typeof message == 'string' ? message : JSON.stringify(message, null, 2)
+    const text = JSON.parse((error as Error).message)
+    const message = typeof text == 'string' ? text : JSON.stringify(text, null, 2)
     if (isBrowser()) {
       if (window.location.pathname.includes('/dashboard')) {
-        toast.error(formatMessage, { closeButton: true, richColors: true })
+        const id = await sha256(message)
+        toast.error(message, { closeButton: true, id, richColors: true })
       }
     }
-    return Promise.reject(formatMessage)
+    return Promise.reject(message)
   }
 }
 
@@ -71,5 +72,5 @@ export const CustomFetch = async <T = any>(input: RequestInfo | URL, { body, hea
     }
   }
 
-  return Core(async () => fetch(input, { body, headers, ...init }), 3)
+  return core(async () => fetch(input, { body, headers, ...init }), 3)
 }

@@ -20,7 +20,7 @@ const getLyric = async (id: string) => {
   try {
     const res: any = await lyric({ cookie: await getNeteaseCloudMusicCookie(), id })
     return {
-      lrc: parseLyric(res.body.lrc.lyric)!
+      lrc: parseLyric(res.body.lrc.lyric)
     } satisfies GET['return']
   } catch (error) {
     throw new Error((error as any).body.message)
@@ -29,10 +29,12 @@ const getLyric = async (id: string) => {
 
 export type GET = RouteHandlerType<{
   return: {
-    lrc: {
-      lyric: string
-      time: number
-    }[]
+    lrc:
+      | null
+      | {
+          lyric: string
+          time: number
+        }[]
   }
   search: {
     id: number | string

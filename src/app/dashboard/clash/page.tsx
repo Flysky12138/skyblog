@@ -5,7 +5,7 @@ import { ClashTemplateTable } from './_components/clash-template-table'
 
 export default function Page() {
   return (
-    <Tabs className="flex flex-col gap-3" defaultValue="1">
+    <Tabs className="gap-3" defaultValue="1">
       <TabsList className="grid w-60 grid-cols-2">
         <TabsTrigger value="1">共享列表</TabsTrigger>
         <TabsTrigger value="2">通用模板</TabsTrigger>

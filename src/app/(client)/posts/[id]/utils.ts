@@ -1,8 +1,8 @@
-import { Prisma } from '@prisma/client'
+import React from 'react'
 
 import { prisma } from '@/lib/prisma'
 
-import { POST_ORDER_BY_ASC_INPUT, POST_ORDER_BY_DESC_INPUT, POST_WHERE_INPUT } from '../../utils'
+import { POST_ORDER_BY_DESC_INPUT, POST_WHERE_INPUT } from '../../utils'
 
 /**
  * 获取文章
@@ -22,52 +22,32 @@ export const getPost = async (id: string) => {
 }
 
 /**
+ * 获取所有文章
+ */
+const getAllPost = React.cache(async () => {
+  return prisma.post.findMany({
+    orderBy: POST_ORDER_BY_DESC_INPUT,
+    select: {
+      description: true,
+      id: true,
+      title: true
+    },
+    where: POST_WHERE_INPUT
+  })
+})
+
+/**
  * 获取推荐文章
  */
-export const getPostsRecommend = async (post: NonNullable<Awaited<ReturnType<typeof getPost>>>) => {
-  const select = {
-    description: true,
-    id: true,
-    title: true
-  } satisfies Prisma.PostSelect
+export const getPostsRecommendByPostId = async (id: string) => {
+  const allPost = await getAllPost()
 
-  const [prev, next] = await Promise.all([
-    prisma.post.findFirst({
-      orderBy: POST_ORDER_BY_ASC_INPUT,
-      select,
-      where: {
-        ...POST_WHERE_INPUT,
-        OR: [
-          {
-            sticky: post.sticky,
-            updatedAt: { gt: post.updatedAt }
-          },
-          {
-            sticky: { gt: post.sticky }
-          }
-        ]
-      }
-    }),
-    prisma.post.findFirst({
-      orderBy: POST_ORDER_BY_DESC_INPUT,
-      select,
-      where: {
-        ...POST_WHERE_INPUT,
-        OR: [
-          {
-            sticky: post.sticky,
-            updatedAt: { lt: post.updatedAt }
-          },
-          {
-            sticky: { lt: post.sticky }
-          }
-        ]
-      }
-    })
-  ])
+  const index = allPost.findIndex(post => post.id == id)
 
-  return {
-    next,
-    prev
-  }
+  if (index == -1) return { next: null, prev: null }
+
+  const next = index == allPost.length - 1 ? null : allPost[index + 1]
+  const prev = index == 0 ? null : allPost[index - 1]
+
+  return { next, prev }
 }

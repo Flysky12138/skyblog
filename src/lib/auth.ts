@@ -1,40 +1,35 @@
-import NextAuth from 'next-auth'
-import GitHub from 'next-auth/providers/github'
+import NextAuth, { User } from 'next-auth'
+import GitHub, { GitHubProfile } from 'next-auth/providers/github'
 
 import { CustomRequest } from './http/request'
+
+// 注册，并返回必要数据
+const profile = async (params: GitHubProfile): Promise<User> => {
+  const { avatar_url, email, login } = params
+
+  if (!email) throw new Error('用户邮箱为空')
+
+  const { avatarUrl, id, name, role } = await CustomRequest('POST /api/auth/user', {
+    body: { avatarUrl: avatar_url, email, name: login }
+  })
+
+  return { email, id, image: avatarUrl, name, role }
+}
 
 /**
  * @see https://authjs.dev/getting-started/migrating-to-v5#configuration-file
  */
-export const { auth, handlers } = NextAuth({
+export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
-    jwt: async ({ account, token }) => {
-      if (account) {
-        token.id = account.id
-        token.role = account.role
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.role = user.role
       }
       return token
     },
     session: async ({ session, token }) => {
-      session.id = token.id
-      session.role = token.role
+      session.user.role = token.role
       return session
-    },
-    signIn: async ({ account, profile = {} }) => {
-      const { avatar_url, email, login } = profile
-      if (!email || !account) return false
-
-      const { id, role } = await CustomRequest('POST /api/auth/user', {
-        body: {
-          avatarUrl: avatar_url,
-          email: email,
-          name: login
-        }
-      })
-      account.id = id
-      account.role = role
-
-      return true
     }
   },
   pages: {
@@ -44,7 +39,8 @@ export const { auth, handlers } = NextAuth({
   providers: [
     GitHub({
       clientId: process.env.AUTH_GITHUB_ID,
-      clientSecret: process.env.AUTH_GITHUB_SECRET
+      clientSecret: process.env.AUTH_GITHUB_SECRET,
+      profile
     })
   ],
   secret: process.env.AUTH_SECRET,

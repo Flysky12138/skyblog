@@ -59,10 +59,10 @@ export const EditorToolbar = ({
   const dragControls = useDragControls()
 
   return (
-    <Card asChild className={cn('flex flex-wrap-reverse items-center gap-3 p-2 backdrop-blur-xs', className)}>
+    <Card asChild className={cn('flex w-max max-w-[calc(100%---spacing(8))] flex-wrap-reverse items-center gap-3 p-2 backdrop-blur-xs', className)}>
       <motion.section
         drag
-        aria-label="post editor toolbar"
+        aria-label="Monaco Editor Toolbar"
         dragConstraints={dragConstraints}
         dragControls={dragControls}
         dragElastic={0}

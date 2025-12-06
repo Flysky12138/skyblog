@@ -11,7 +11,7 @@ export default function Page() {
   const [post, setPost] = React.useState<DefaultPostType>()
 
   useMount(() => {
-    window.opener.postMessage({ type: 'post-preview-mounted' } satisfies MessageEventDataMounted, window.origin)
+    window.opener.postMessage({ type: 'post-preview-mounted' } satisfies MessageEventDataMounted, process.env.NEXT_PUBLIC_WEBSITE_URL)
   })
 
   useEvent('message', ({ data, origin }: MessageEvent<MessageEventDataRefresh>) => {

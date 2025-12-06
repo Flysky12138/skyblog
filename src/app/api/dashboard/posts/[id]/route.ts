@@ -1,9 +1,9 @@
-import { Category, Post, Tag } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
 import { CacheClear } from '@/lib/cache'
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
+import { Category, Post, Tag } from '@/prisma/client'
 
 import { include } from '../prisma.config'
 
@@ -80,6 +80,7 @@ export const POST = async (request: NextRequest, { params }: RouteContext<'/api/
     const res = await dbPost(data)
 
     CacheClear.post(res.id)
+    CacheClear.posts()
 
     return await CustomResponse.encrypt(res)
   } catch (error) {
@@ -193,6 +194,7 @@ export const DELETE = async (request: NextRequest, { params }: RouteContext<'/ap
     const res = await dbDelete(id)
 
     CacheClear.post(id)
+    CacheClear.posts()
 
     return await CustomResponse.encrypt(res)
   } catch (error) {

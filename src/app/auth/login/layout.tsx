@@ -4,6 +4,6 @@ export const metadata: Metadata = {
   title: '登录'
 }
 
-export default function Layout({ children }: React.PropsWithChildren) {
+export default function Layout({ children }: LayoutProps<'/auth/login'>) {
   return children
 }

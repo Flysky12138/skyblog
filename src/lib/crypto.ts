@@ -1,4 +1,9 @@
-import { xor } from './xor'
+/**
+ * 异或混淆字符串
+ * @default
+ * digit = 31
+ */
+const xor = (data: string, digit = 0x1f) => data.replace(/./g, char => String.fromCharCode(char.charCodeAt(0) ^ digit))
 
 interface IvJwk {
   iv: string
@@ -63,4 +68,14 @@ export class AesGcm {
    * 定义对称加解密算法
    */
   static #algorithm = (iv: Uint8Array<ArrayBuffer>): AesGcmParams => ({ iv, name: 'AES-GCM' })
+}
+
+/**
+ * SHA-256 加密
+ */
+export const sha256 = async (str: string) => {
+  const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str))
+  return Array.from(new Uint8Array(buffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('')
 }

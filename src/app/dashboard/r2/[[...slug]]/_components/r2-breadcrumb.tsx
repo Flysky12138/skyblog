@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import React from 'react'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
@@ -7,18 +6,23 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 
 interface R2BreadcrumbProps {
   paths?: string[]
+  onPathChange?: (paths: string[]) => void
 }
 
-export const R2Breadcrumb = ({ paths }: R2BreadcrumbProps) => {
+export const R2Breadcrumb = ({ paths, onPathChange }: R2BreadcrumbProps) => {
   return (
     <Card asChild className="rounded-sm px-3 py-2">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link replace href="/dashboard/r2/">
-                Home
-              </Link>
+            <BreadcrumbLink
+              asChild
+              className="cursor-pointer"
+              onClick={() => {
+                onPathChange?.([])
+              }}
+            >
+              <span>Home</span>
             </BreadcrumbLink>
           </BreadcrumbItem>
           {paths?.map((path, index) => (
@@ -27,14 +31,22 @@ export const R2Breadcrumb = ({ paths }: R2BreadcrumbProps) => {
               <DisplayByConditional
                 condition={index == paths.length - 1}
                 fallback={
-                  <BreadcrumbLink asChild>
-                    <Link replace href={`/dashboard/r2/${paths.slice(0, index + 1).join('/')}`}>
-                      {decodeURIComponent(path)}
-                    </Link>
-                  </BreadcrumbLink>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink
+                      asChild
+                      className="cursor-pointer"
+                      onClick={() => {
+                        onPathChange?.(paths.slice(0, index + 1))
+                      }}
+                    >
+                      <span>{decodeURIComponent(path)}</span>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
                 }
               >
-                <BreadcrumbPage className="break-all">{decodeURIComponent(path)}</BreadcrumbPage>
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="break-all">{decodeURIComponent(path)}</BreadcrumbPage>
+                </BreadcrumbItem>
               </DisplayByConditional>
             </React.Fragment>
           ))}

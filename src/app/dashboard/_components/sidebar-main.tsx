@@ -77,21 +77,21 @@ export const SidebarMain = () => {
       <SidebarGroupLabel>{menu.label}</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
-          {menu.group.map(it => (
+          {menu.group.map(item => (
             <SidebarMenuItem
-              key={it.href}
+              key={item.href}
               className={cn({
-                hidden: !isUndefined(it.onlyShow) && { collapsed: true, expanded: false }[it.onlyShow] == open
+                hidden: !isUndefined(item.onlyShow) && { collapsed: true, expanded: false }[item.onlyShow] == open
               })}
             >
-              <SidebarMenuButton asChild isActive={it.href == pathname} tooltip={it.name}>
-                <Link href={it.href as Route}>
-                  {it.icon} {it.name}
+              <SidebarMenuButton asChild isActive={item.href == pathname} tooltip={item.name}>
+                <Link href={item.href as Route}>
+                  {item.icon} {item.name}
                 </Link>
               </SidebarMenuButton>
-              {it.action && (
+              {item.action && (
                 <SidebarMenuAction asChild>
-                  <Link href={it.action.href as Route}>{it.action.icon}</Link>
+                  <Link href={item.action.href as Route}>{item.action.icon}</Link>
                 </SidebarMenuAction>
               )}
             </SidebarMenuItem>

@@ -4,6 +4,6 @@ export const metadata: Metadata = {
   title: '注销'
 }
 
-export default function Layout({ children }: React.PropsWithChildren) {
+export default function Layout({ children }: LayoutProps<'/auth/logout'>) {
   return children
 }

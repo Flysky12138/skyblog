@@ -13,5 +13,5 @@ interface DisplayByAuthProps extends Omit<DisplayByConditionalProps, 'condition'
 export const DisplayByAuth = ({ role, ...props }: DisplayByAuthProps) => {
   const session = useSession()
 
-  return <DisplayByConditional condition={session.data?.role == role} {...props} />
+  return <DisplayByConditional condition={session.data?.user?.role == role} {...props} />
 }

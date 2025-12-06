@@ -1,9 +1,9 @@
-import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
 import { CacheClear } from '@/lib/cache'
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@/prisma/client'
 
 const dbPut = async (id: string, data: PUT['body']) => {
   return prisma.friend.update({ data, where: { id } })
@@ -23,7 +23,8 @@ export const PUT = async (request: NextRequest, { params }: RouteContext<'/api/d
     const data = await request.json()
     const res = await dbPut(id, data)
 
-    CacheClear.friend()
+    CacheClear.friend(id)
+    CacheClear.friends()
 
     return await CustomResponse.encrypt(res)
   } catch (error) {
@@ -49,7 +50,8 @@ export const DELETE = async (request: NextRequest, { params }: RouteContext<'/ap
 
     const res = await dbDelete(id)
 
-    CacheClear.friend()
+    CacheClear.friend(id)
+    CacheClear.friends()
 
     return await CustomResponse.encrypt(res)
   } catch (error) {

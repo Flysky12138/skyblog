@@ -1,6 +1,6 @@
 'use client'
 
-import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog'
+import { Action } from '@radix-ui/react-alert-dialog'
 import { VariantProps } from 'class-variance-authority'
 import React from 'react'
 
@@ -24,6 +24,6 @@ export const AlertDialogAction = ({
   className,
   variant,
   ...props
-}: Pick<VariantProps<typeof buttonVariants>, 'variant'> & React.ComponentProps<typeof AlertDialogPrimitive.Action>) => {
-  return <AlertDialogPrimitive.Action className={cn(buttonVariants({ variant }), className)} {...props} />
+}: Pick<VariantProps<typeof buttonVariants>, 'variant'> & React.ComponentProps<typeof Action>) => {
+  return <Action className={cn(buttonVariants({ variant }), className)} {...props} />
 }

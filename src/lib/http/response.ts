@@ -1,7 +1,7 @@
 import { toMerged } from 'es-toolkit'
 
 import { HEADER } from '../constants'
-import { AesGcm } from '../crypto/aes-gcm'
+import { AesGcm } from '../crypto'
 
 export class CustomResponse {
   /**

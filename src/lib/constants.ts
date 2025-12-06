@@ -29,7 +29,7 @@ export const ATTRIBUTE = {
  * `window.sessionStorage` key
  */
 export const SESSIONSTORAGE = {
-  POST_VIEW_SUBMITTED: (id: string) => `post-view-submitted-${id}`
+  POST_VIEW_SUBMITTED: (id: string) => `post-view-submitted-${id}` as const
 } as const
 
 /**

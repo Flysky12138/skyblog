@@ -20,7 +20,7 @@ export const DialogDrawer = ({ ...props }: React.ComponentProps<typeof Dialog | 
   const breakpoint = useBreakpoint()
   const breakpointMatchedValue = breakpoints[breakpoint]
 
-  const isMobile = breakpointMatchedValue <= breakpoints.base
+  const isMobile = breakpointMatchedValue <= breakpoints.zero
 
   return (
     <DialogDrawerContext value={{ isMobile }}>

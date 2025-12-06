@@ -23,7 +23,7 @@ const generatePath = (path: string, params: object) => {
  */
 export const CustomRequest = async <T extends keyof AppRouteHandlerMethodMap>(
   input: T,
-  options: DeepPrettify<
+  options: Prettify<
     Omit<AppRouteHandlerMethodMap[T], 'return'> &
       RemoveKeysByEmptyValue<{
         params: T extends `${Method} ${infer R}` ? (R extends keyof ParamMap ? ParamMap[R] : never) : never
@@ -31,7 +31,7 @@ export const CustomRequest = async <T extends keyof AppRouteHandlerMethodMap>(
   >
 ) => {
   const [method, route] = input.split(' ') as [Method, string]
-  const { body, params = {}, search = {} } = options || {}
+  const { body, params = {}, search = {} } = options
 
   const url = new URL(generatePath(route, params), process.env.NEXT_PUBLIC_WEBSITE_URL)
   url.search = new URLSearchParams(search).toString()

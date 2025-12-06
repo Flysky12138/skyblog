@@ -9,7 +9,7 @@ export const Report = () => {
   const session = useSession()
 
   useAsync(async () => {
-    if (session.status == 'loading' || session.data?.role == 'ADMIN') return
+    if (session.status == 'loading' || session.data?.user?.role == 'ADMIN') return
     await CustomRequest('POST /api/visitor', {})
   }, [session])
 

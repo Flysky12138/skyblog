@@ -24,6 +24,7 @@ import { Portal } from '@/components/utils/portal'
 import { ATTRIBUTE } from '@/lib/constants'
 import { CustomRequest } from '@/lib/http/request'
 import { formatMillisecond } from '@/lib/parser/time'
+import { cn } from '@/lib/utils'
 
 export interface AudioProps {
   ref?: React.RefObject<null | {
@@ -80,6 +81,7 @@ export const Audio = ({ ref, song }: AudioProps) => {
   })
 
   const lyric = React.useMemo(() => {
+    if (!lyrics.lrc) return null
     const index = lyrics.lrc.findLastIndex(item => item.time <= time)
     return lyrics.lrc[clamp(index, 0, lyrics.lrc.length - 1)]?.lyric
   }, [lyrics.lrc, time])
@@ -98,7 +100,7 @@ export const Audio = ({ ref, song }: AudioProps) => {
 
   return (
     <>
-      <Portal container={document.body}>{audio}</Portal>
+      <Portal>{audio}</Portal>
       <DialogDrawer open={open} onOpenChange={setOpen}>
         <Portal selector={`#${ATTRIBUTE.ID.NAV_CONTAINER}`}>
           <DialogDrawerTrigger asChild>
@@ -137,7 +139,10 @@ export const Audio = ({ ref, song }: AudioProps) => {
               <span className="shrink-0 text-sm leading-0">{song.ar[0].name}</span>
             </p>
             <Slider
-              className="mt-5"
+              className={cn(
+                'mt-5',
+                '**:data-[slot=slider-range]:to-primary **:data-[slot=slider-range]:bg-transparent **:data-[slot=slider-range]:bg-linear-to-r **:data-[slot=slider-range]:from-transparent'
+              )}
               max={duration * 1000}
               min={0}
               value={isMoving ? [sliderValue] : [time * 1000]}

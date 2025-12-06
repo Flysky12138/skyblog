@@ -2,7 +2,7 @@
 
 import { debounce, inRange } from 'es-toolkit'
 import { Route } from 'next'
-import Link, { LinkProps } from 'next/link'
+import Link from 'next/link'
 import React from 'react'
 import { useEvent } from 'react-use'
 
@@ -18,15 +18,19 @@ export const PostCatalogue = ({ className, ref, ...props }: PostCatalogueProps) 
   const ulRef = React.useRef<HTMLUListElement>(null)
 
   const setActiveItemStyle = React.useEffectEvent((activeIndex: number) => {
-    const container = ulRef.current
-    if (!container) return
-    Array.from(container.querySelectorAll('a[href^="#"]')).forEach((el, i) => {
+    const ul = ulRef.current
+    if (!ul) return
+    Array.from(ul.querySelectorAll('a[href^="#"]')).forEach((el, i) => {
       activeIndex == i ? el.setAttribute('data-active', '') : el.removeAttribute('data-active')
       if (activeIndex != i) return
-      const { offsetHeight: parentHeight, scrollTop } = container
+      const { offsetHeight: parentHeight, scrollTop } = ul
       const { offsetHeight, offsetTop } = el as HTMLElement
-      if (!inRange(offsetTop - scrollTop, offsetHeight + 20, parentHeight - offsetHeight - 20)) {
-        container.scroll({ behavior: 'smooth', top: offsetTop - parentHeight * 0.5 })
+      const minimum = offsetHeight + 20
+      const maximum = parentHeight - minimum
+      if (minimum >= maximum) return
+      // 判断是否在可视范围内
+      if (!inRange(offsetTop - scrollTop, minimum, maximum)) {
+        ul.scroll({ behavior: 'smooth', top: offsetTop - parentHeight * 0.5 })
       }
     })
   })
@@ -71,7 +75,7 @@ export const PostCatalogue = ({ className, ref, ...props }: PostCatalogueProps) 
   )
 }
 
-export const PostCatalogueHeading = ({ children, className, id, ...props }: Omit<LinkProps<never>, 'href'>) => {
+export const PostCatalogueHeading = ({ children, className, id, ...props }: Omit<React.ComponentProps<typeof Link>, 'href'>) => {
   const depth = Reflect.get(props, HEADING_ATTRIBUTE).split('.').length - 1
 
   return (
@@ -80,9 +84,9 @@ export const PostCatalogueHeading = ({ children, className, id, ...props }: Omit
         replace
         className={cn(
           'relative block rounded-md py-1 pr-2',
-          'data-active:text-link-foreground data-active:bg-link',
-          'data-active:before:bg-link-foreground/60 data-active:before:absolute data-active:before:inset-y-1 data-active:before:-left-2 data-active:before:w-1 data-active:before:rounded-md',
-          'hover:text-link-foreground hover:bg-link/30',
+          'data-active:text-link-foreground data-active:bg-link/60',
+          'data-active:before:bg-link-foreground/50 data-active:before:absolute data-active:before:inset-y-1 data-active:before:-left-2 data-active:before:w-1 data-active:before:rounded-md',
+          'hover:text-link-foreground hover:bg-link/40',
           className
         )}
         href={`#${id}` as Route}

@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { PaginationArgs } from 'prisma-paginate'
+import { PageNumberPaginationOptions } from 'prisma-extension-pagination'
 
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
@@ -7,8 +7,8 @@ import { prisma } from '@/lib/prisma'
 import { include } from './prisma.config'
 
 const dbGet = async (payload: NonNullable<GET['search']>) => {
-  return prisma.post.paginate(
-    {
+  const [posts, pagination] = await prisma.post
+    .paginate({
       orderBy: {
         updatedAt: 'desc'
       },
@@ -21,14 +21,18 @@ const dbGet = async (payload: NonNullable<GET['search']>) => {
         updatedAt: true,
         ...include
       }
-    },
-    payload
-  )
+    })
+    .withPages(payload)
+
+  return {
+    pagination,
+    posts
+  }
 }
 
 export type GET = RouteHandlerType<{
   return: Awaited<ReturnType<typeof dbGet>>
-  search?: PaginationArgs
+  search?: PageNumberPaginationOptions
 }>
 
 export const GET = async (request: NextRequest) => {

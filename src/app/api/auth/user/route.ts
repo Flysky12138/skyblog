@@ -1,8 +1,8 @@
-import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@/prisma/client'
 
 const dbPost = async (data: POST['body']) => {
   const count = await prisma.user.count()

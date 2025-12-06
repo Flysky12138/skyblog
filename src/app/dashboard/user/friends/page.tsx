@@ -66,8 +66,8 @@ export default function Page() {
                   success: '更新成功'
                 })
                 setFriends(
-                  produce(state => {
-                    state.splice(index, 1, data)
+                  produce<typeof friends>(draft => {
+                    draft.splice(index, 1, data)
                   })
                 )
               }}
@@ -95,8 +95,8 @@ export default function Page() {
                         success: '删除成功'
                       })
                       setFriends(
-                        produce(state => {
-                          state.splice(index, 1)
+                        produce<typeof friends>(draft => {
+                          draft.splice(index, 1)
                         }),
                         {
                           revalidate: false
@@ -118,8 +118,8 @@ export default function Page() {
             success: '保存成功'
           })
           setFriends(
-            produce(state => {
-              state.push(data)
+            produce<typeof friends>(draft => {
+              draft.push(data)
             }),
             {
               revalidate: false

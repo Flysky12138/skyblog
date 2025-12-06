@@ -10,6 +10,7 @@ import { DisplayByConditional } from '@/components/display/display-by-conditiona
 import { Table, TableActionButton } from '@/components/table'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -47,8 +48,8 @@ export const R2Upload = ({ children, path, onFinished, onSubmit }: R2UploadProps
   const isUploadFinished = filelist.waiting.length == 0
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = event => {
-    setFilelist(state => {
-      state.waiting = unionBy(state.waiting, Array.from(event.target.files || []), getFileName)
+    setFilelist(draft => {
+      draft.waiting = unionBy(draft.waiting, Array.from(event.target.files || []), getFileName)
     })
     event.target.value = ''
   }
@@ -67,9 +68,9 @@ export const R2Upload = ({ children, path, onFinished, onSubmit }: R2UploadProps
           success: '上传成功',
           error: e => e.message
         })
-        setFilelist(state => {
-          state.uploaded.push(file)
-          remove(state.waiting, it => it == file)
+        setFilelist(draft => {
+          draft.uploaded.push(file)
+          remove(draft.waiting, it => it == file)
         })
         onSubmit?.(data)
       })
@@ -102,56 +103,56 @@ export const R2Upload = ({ children, path, onFinished, onSubmit }: R2UploadProps
           <DialogTitle>文件上传</DialogTitle>
           <DialogDescription>上传文件或文件夹内所有文件到 Cloudflare 的 R2 对象存储</DialogDescription>
         </DialogHeader>
-        <div className="flex gap-4">
-          <Input
-            aria-invalid={!basePathIsValid}
-            disabled={isUploading}
-            value={basePath}
-            onChange={event => {
-              setBasePath((event.target.value.replace(/\/{2,}/g, '/') as R2UploadProps['path']) || '/')
-            }}
-          />
-          <div className="flex">
-            <Button asChild className="rounded-r-none focus-visible:z-10">
+        <ButtonGroup className="w-full">
+          <ButtonGroup className="w-full">
+            <Input
+              aria-invalid={!basePathIsValid}
+              disabled={isUploading}
+              value={basePath}
+              onChange={event => {
+                setBasePath((event.target.value.replace(/\/{2,}/g, '/') as R2UploadProps['path']) || '/')
+              }}
+            />
+          </ButtonGroup>
+          <ButtonGroup>
+            <Button asChild>
               <label role="button" tabIndex={0}>
                 <FileUp strokeWidth={3} />
                 选择文件
                 <input hidden multiple type="file" onChange={onChange} />
               </label>
             </Button>
-            <span className="w-px" role="separator" />
-            <Button asChild className="rounded-l-none focus-visible:z-10">
+            <ButtonGroupSeparator />
+            <Button asChild>
               <label role="button" tabIndex={0}>
                 <FolderUp strokeWidth={3} />
                 选择文件夹
                 <input hidden multiple directory="true" type="file" webkitdirectory="true" onChange={onChange} />
               </label>
             </Button>
-          </div>
-        </div>
+          </ButtonGroup>
+        </ButtonGroup>
         <Tabs defaultValue="waiting">
           <div className="flex justify-between">
             <TabsList className="grid w-60 grid-cols-2">
               <TabsTrigger value="waiting">待上传</TabsTrigger>
               <TabsTrigger value="uploaded">已上传</TabsTrigger>
             </TabsList>
-            <TabsContent asChild value="waiting">
-              <Button
-                className={cn('grow-0', {
-                  hidden: isUploadFinished
-                })}
-                disabled={!basePathIsValid || isUploading}
-                onClick={async () => {
-                  await handleUpload()
-                  onFinished?.()
-                }}
-              >
-                <DisplayByConditional condition={isUploading} fallback={<Upload />}>
-                  <Spinner />
-                </DisplayByConditional>
-                上传
-              </Button>
-            </TabsContent>
+            <Button
+              className={cn({
+                hidden: isUploadFinished
+              })}
+              disabled={!basePathIsValid || isUploading}
+              onClick={async () => {
+                await handleUpload()
+                onFinished?.()
+              }}
+            >
+              <DisplayByConditional condition={isUploading} fallback={<Upload />}>
+                <Spinner />
+              </DisplayByConditional>
+              上传
+            </Button>
           </div>
           <TabsContent value="waiting">
             <Table
@@ -176,8 +177,8 @@ export const R2Upload = ({ children, path, onFinished, onSubmit }: R2UploadProps
                       disabled={isUploading}
                       variant="destructive"
                       onClick={() => {
-                        setFilelist(state => {
-                          state.waiting.splice(index, 1)
+                        setFilelist(draft => {
+                          draft.waiting.splice(index, 1)
                         })
                       }}
                     >

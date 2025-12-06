@@ -15,7 +15,7 @@ export default async function Page() {
     return (
       <div className="flex flex-col items-center justify-center gap-2">
         <Avatar className="bg-secondary size-28">
-          <AvatarImage alt={name || undefined} loading="lazy" src={image || undefined} />
+          <AvatarImage alt={name || undefined} crossOrigin="anonymous" decoding="async" loading="lazy" src={image || undefined} />
           <AvatarFallback />
         </Avatar>
         <p>{name}</p>
@@ -37,7 +37,7 @@ export default async function Page() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="grid gap-4">
       <OAuthSignInButton provider="github">
         <Github /> Continue With GitHub
       </OAuthSignInButton>

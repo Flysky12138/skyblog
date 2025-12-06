@@ -152,7 +152,7 @@ export const Table = <T,>({
 
 export const TablePrimitive = ({ className, ...props }: React.ComponentProps<'table'>) => (
   <div className="bg-card relative w-full overflow-auto rounded-sm shadow-sm dark:shadow-black" data-slot="table">
-    <table className={cn('w-full table-auto caption-bottom text-sm', className)} {...props} />
+    <table className={cn('w-full table-auto caption-bottom text-sm xl:table-fixed', className)} {...props} />
   </div>
 )
 

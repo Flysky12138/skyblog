@@ -13,11 +13,7 @@ export const TransitionCollapse = ({ orientation = 'vertical', ...props }: Trans
   return (
     <motion.div
       animate={`${orientation}-animate`}
-      className="flex items-center justify-center overflow-hidden"
       initial={`${orientation}-initial`}
-      transition={{
-        type: 'tween'
-      }}
       variants={{
         'horizontal-animate': {
           opacity: 1,

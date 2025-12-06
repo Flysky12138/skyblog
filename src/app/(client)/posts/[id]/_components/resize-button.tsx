@@ -5,6 +5,7 @@ import React from 'react'
 import { useEvent, useToggle } from 'react-use'
 
 import { Button } from '@/components/ui/button'
+import { Style } from '@/components/utils/style'
 import { ATTRIBUTE } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
@@ -45,7 +46,7 @@ export const ResizeButton = ({ className, ...props }: ResizeButtonProps) => {
   return (
     <>
       {isFullPage && (
-        <style>{`
+        <Style>{`
           article {
             border: 0;
             border-radius: 0;
@@ -56,7 +57,7 @@ export const ResizeButton = ({ className, ...props }: ResizeButtonProps) => {
           body>*:not(#${ATTRIBUTE.ID.POST_CONTAINER}) {
             display: none;
           }
-        `}</style>
+        `}</Style>
       )}
       <Button aria-label="resize toggle" className={cn('size-7', className)} size="icon" variant="ghost" onClick={handleClick} {...props}>
         {isFullPage ? <Shrink /> : <Expand />}

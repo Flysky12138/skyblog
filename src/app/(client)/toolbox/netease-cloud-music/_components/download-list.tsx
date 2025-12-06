@@ -48,7 +48,7 @@ interface DownloadListProps {
 export const DownloadList = ({ songs }: DownloadListProps) => {
   songs = songs.filter(song => !song.ar.some(ar => REMOVE_ARTIST_NAMES.some(name => ar.name.includes(name))))
 
-  const [level, setLevel] = React.useState<LevelType>('lossless')
+  const [level, setLevel] = React.useState<LevelType>('hires')
   const [selected, { add: selectedAdd, clear: selectedClear, has: selectedhas, toggle: selectedToggle }] =
     useSet<DownloadListProps['songs'][number]>()
   const [progress, { get: progressGet, remove: progressRemove, set: progressSet }] = useMap<Record<number, ProgressProps | undefined>>()

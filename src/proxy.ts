@@ -3,6 +3,10 @@ import { NextProxy, NextResponse, userAgent } from 'next/server'
 import { auth } from '@/lib/auth'
 import { isDev } from '@/lib/utils'
 
+export const config = {
+  matcher: '/((?!_next/data|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)'
+}
+
 export const proxy: NextProxy = async request => {
   if (isDev()) return
 
@@ -16,7 +20,7 @@ export const proxy: NextProxy = async request => {
   // 权限管理
   if (['/dashboard', '/api/dashboard'].some(url => request.nextUrl.pathname.startsWith(url))) {
     const session = await auth()
-    if (session?.role != 'ADMIN') {
+    if (session?.user?.role != 'ADMIN') {
       const url = new URL('/auth/login', request.url)
       url.searchParams.set('to', request.nextUrl.pathname)
       return NextResponse.redirect(url)

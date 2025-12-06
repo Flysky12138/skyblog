@@ -171,8 +171,8 @@ export const MultiSelect = <T extends Record<string, unknown>>({
                 event.preventDefault()
                 const option = onAddOption(search)
                 if (!mergeOptions.some(item => getLabel(item) == getLabel(option))) {
-                  setNewOptions(state => {
-                    state.unshift(option as Draft<T>)
+                  setNewOptions(draft => {
+                    draft.unshift(option as Draft<T>)
                   })
                 }
                 toggleOption(option)

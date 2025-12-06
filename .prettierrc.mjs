@@ -1,5 +1,5 @@
 /** @type {import("prettier").Options} */
-module.exports = {
+export default {
   arrowParens: 'avoid',
   endOfLine: 'lf',
   plugins: ['prettier-plugin-tailwindcss'],

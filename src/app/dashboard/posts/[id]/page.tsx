@@ -13,7 +13,6 @@ import { uuidv7 } from 'uuidv7'
 import { GET } from '@/app/api/dashboard/posts/[id]/route'
 import { MDXClient } from '@/components/mdx/client'
 import { MonacoEditor, MonacoEditorRef } from '@/components/monaco-editor'
-import { markdownConfig } from '@/components/monaco-editor/languages/markdown'
 import { ErrorComponent } from '@/components/static/error-component'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -54,8 +53,10 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
 
   // 文章数据
   const [post, setPost] = useImmer(DEFAULT_POST)
-  const oldPost = React.useRef(DEFAULT_POST)
-  const oldCode = React.useRef('')
+  const [oldValue, setOldValue] = useImmer({
+    code: '',
+    post: DEFAULT_POST
+  })
 
   // Diff 对比模式
   const [isCompare, setIsCompare] = React.useState(false)
@@ -73,8 +74,10 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   const initData = (data: DefaultPostType | null) => {
     if (!data) return
     setPost(data)
-    oldPost.current = data
-    oldCode.current = data.content || ''
+    setOldValue(draft => {
+      draft.code = data.content || ''
+      draft.post = data
+    })
   }
 
   // 请求数据
@@ -87,7 +90,10 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   // 预览数据更新
   const refreshPreviewWindow = () => {
     setPreviewContent(post.content)
-    previewWindowRef.current?.postMessage({ type: 'post-refresh', value: post } satisfies MessageEventDataRefresh, window.origin)
+    previewWindowRef.current?.postMessage(
+      { type: 'post-refresh', value: post } satisfies MessageEventDataRefresh,
+      process.env.NEXT_PUBLIC_WEBSITE_URL
+    )
   }
   useDebounce(refreshPreviewWindow, 1000, [post])
 
@@ -96,6 +102,15 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
     if (origin != window.origin || data.type != 'post-preview-mounted') return
     refreshPreviewWindow()
   })
+
+  // 禁用按钮
+  const disabled = React.useMemo(
+    () => ({
+      format: isCompare,
+      save: isCreate ? !post.content : isEqual(post, oldValue.post)
+    }),
+    [isCompare, isCreate, oldValue.post, post]
+  )
 
   // 创建
   const handleCreate = async () => {
@@ -106,7 +121,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
     const data = await Toast(
       CustomRequest('POST /api/dashboard/posts/[id]', {
         body: {
-          authorId: session.data?.id || uuidv7(),
+          authorId: session.data?.user?.id || uuidv7(),
           categories: post.categories.map(({ name }) => name),
           content: post.content,
           description: post.description,
@@ -155,14 +170,9 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
 
   return (
     <div ref={dragConstraintsRef} className="relative flex h-full max-h-screen overflow-hidden">
-      <style>{`main { padding: 0 !important }`}</style>
       <EditorToolbar
         className="absolute bottom-2 left-1/2 z-50 -translate-x-1/2"
-        disabled={{
-          format: isCompare,
-          // eslint-disable-next-line react-hooks/refs
-          save: isCreate ? !post.content : isEqual(post, oldPost.current)
-        }}
+        disabled={disabled}
         dragConstraints={dragConstraintsRef}
         isCreate={isCreate}
         post={post}
@@ -183,16 +193,15 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
         <ResizablePanel defaultSize={60}>
           <MonacoEditor
             ref={editorRef}
-            code={post.content || ''}
-            diffMode={isCompare}
-            // eslint-disable-next-line react-hooks/refs
-            oldCode={oldCode.current}
+            isDiffMode={isCompare}
+            language="markdown"
+            originalValue={oldValue.code}
+            value={post.content || ''}
             onChange={value => {
-              setPost(state => {
-                state.content = value || null
+              setPost(draft => {
+                draft.content = value || null
               })
             }}
-            {...markdownConfig}
           />
         </ResizablePanel>
         <ResizableHandle withHandle />

@@ -1,6 +1,6 @@
 import { toast } from 'sonner'
 
-type PromiseData = Prettify<NonNullable<Parameters<typeof toast.promise>[1]>>
+type PromiseData = Prettify<Parameters<typeof toast.promise>[1]>
 
 /**
  * 用于展示异步方法的状态

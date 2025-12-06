@@ -1,10 +1,10 @@
-import { Prisma } from '@prisma/client'
 import { geolocation } from '@vercel/functions'
 import { after, NextRequest, userAgent } from 'next/server'
 
 import { getRealIp } from '@/lib/http/headers'
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@/prisma/client'
 
 const dbPost = async (data: Prisma.VisitorLogCreateInput) => {
   return prisma.visitorLog.create({ data })

@@ -28,7 +28,7 @@ export const AuthButton = () => {
     )
   }
 
-  if (session.data.role == 'ADMIN') {
+  if (session.data.user?.role == 'ADMIN') {
     return (
       <Button asChild aria-label="dashboard" size="icon" variant="outline">
         <Link href="/dashboard">

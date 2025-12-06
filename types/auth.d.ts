@@ -3,16 +3,14 @@ import 'next-auth/jwt'
 import { GitHubProfile } from 'next-auth/providers/github'
 
 export interface Auth {
-  id: string
-  role: Role
+  role?: Role
 }
 
 declare module 'next-auth/jwt' {
-  interface JWT extends Partial<Auth> {}
+  interface JWT extends Auth {}
 }
 
 declare module 'next-auth' {
-  interface Account extends Auth {}
   interface Profile extends GitHubProfile {}
-  interface Session extends Partial<Auth> {}
+  interface User extends Auth {}
 }

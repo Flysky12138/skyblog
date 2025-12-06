@@ -14,9 +14,12 @@ import { Table, TableActionButton, TableDeleteButton } from '@/components/table'
 import { Switch } from '@/components/ui/switch'
 import { CustomRequest } from '@/lib/http/request'
 import { Toast } from '@/lib/toast'
+import { tw } from '@/lib/utils'
+
+const limit = 20
 
 export default function Page() {
-  const [search, setSearch] = useImmer<GET['search']>({ limit: 20, page: 1 })
+  const [search, setSearch] = useImmer<GET['search']>({ limit, page: 1 })
 
   const { data, isLoading, mutate } = useSWR(
     ['0198eb98-ec15-7335-a9d9-c34f3c3aa634', search],
@@ -28,7 +31,7 @@ export default function Page() {
 
   React.useEffect(() => {
     window.scrollTo({ behavior: 'smooth', top: 0 })
-  }, [data?.page])
+  }, [data?.pagination.currentPage])
 
   return (
     <div className="space-y-4">
@@ -41,13 +44,13 @@ export default function Page() {
           { dataIndex: 'tags', title: '标签', render: value => value.map(category => category.name).join('、') },
           {
             dataIndex: 'published',
-            headerClassName: 'w-12',
+            headerClassName: tw`w-12`,
             title: '公开',
             render: (text, record, index) => (
               <Switch
                 checked={text}
                 onCheckedChange={async () => {
-                  const data = await Toast(
+                  const post = await Toast(
                     CustomRequest('PATCH /api/dashboard/posts/[id]', {
                       body: { published: !text },
                       params: { id: record.id }
@@ -57,8 +60,8 @@ export default function Page() {
                     }
                   )
                   mutate(
-                    produce(state => {
-                      state.result.splice(index, 1, data)
+                    produce<typeof data>(draft => {
+                      draft?.posts.splice(index, 1, post)
                     }),
                     {
                       revalidate: false
@@ -70,7 +73,7 @@ export default function Page() {
           },
           {
             align: 'right',
-            headerClassName: 'w-36',
+            headerClassName: tw`w-36`,
             key: 'edit',
             title: '操作',
             render: (record, index) => (
@@ -93,11 +96,11 @@ export default function Page() {
                       success: '删除成功'
                     })
                     mutate(
-                      produce(state => {
-                        state.result.splice(index, 1)
+                      produce<typeof data>(draft => {
+                        draft?.posts.splice(index, 1)
                       }),
                       {
-                        revalidate: data!.result.length == 1
+                        revalidate: data?.posts.length == 1
                       }
                     )
                   }}
@@ -106,11 +109,11 @@ export default function Page() {
             )
           }
         ]}
-        dataSource={data?.result}
+        dataSource={data?.posts}
         loading={isLoading}
       />
-      <DisplayByConditional condition={(data?.totalPages || 0) > 1}>
-        <Pagination className="justify-end" onChange={setSearch} {...data} />
+      <DisplayByConditional condition={(data?.pagination.pageCount || 0) > 1}>
+        <Pagination className="justify-end" limit={limit} onChange={setSearch} {...data?.pagination} />
       </DisplayByConditional>
     </div>
   )

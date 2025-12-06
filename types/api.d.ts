@@ -6,7 +6,7 @@ interface FetchOptions extends Omit<RequestInit, 'body' | 'headers' | 'method'> 
 }
 
 /** 请求方法 */
-type Method = 'DELETE' | 'GET' | 'HEAD' | 'PATCH' | 'POST' | 'PUT'
+type Method = 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT'
 
 /** 协议 */
 type Protocol = 'http:' | 'https:'
@@ -15,3 +15,12 @@ type Protocol = 'http:' | 'https:'
 interface ResponseError {
   message: string
 }
+
+/** 文件路由请求参数、内容以及响应的类型 */
+type RouteHandlerType<
+  T extends {
+    body?: unknown
+    return?: unknown
+    search?: unknown
+  }
+> = T

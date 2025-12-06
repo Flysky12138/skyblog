@@ -1,24 +1,28 @@
-import { VisitorLog } from '@prisma/client'
 import { NextRequest } from 'next/server'
-import { PaginationArgs } from 'prisma-paginate'
+import { PageNumberPaginationOptions } from 'prisma-extension-pagination'
 
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
+import { VisitorLog } from '@/prisma/client'
 
 const dbGet = async (payload: GET['search']) => {
-  return prisma.visitorLog.paginate(
-    {
+  const [visitors, pagination] = await prisma.visitorLog
+    .paginate({
       orderBy: {
         createdAt: 'desc'
       }
-    },
-    payload
-  )
+    })
+    .withPages(payload)
+
+  return {
+    pagination,
+    visitors
+  }
 }
 
 export type GET = RouteHandlerType<{
   return: Awaited<ReturnType<typeof dbGet>>
-  search: PaginationArgs
+  search: PageNumberPaginationOptions
 }>
 
 export const GET = async (request: NextRequest) => {

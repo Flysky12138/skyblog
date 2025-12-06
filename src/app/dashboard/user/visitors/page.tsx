@@ -17,6 +17,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { CustomRequest } from '@/lib/http/request'
 import { formatISOTime } from '@/lib/parser/time'
 import { Toast } from '@/lib/toast'
+import { tw } from '@/lib/utils'
+
+const limit = 20
 
 const MDXClient = dynamic(() => import('@/components/mdx/client').then(it => it.MDXClient), {
   ssr: false,
@@ -24,8 +27,8 @@ const MDXClient = dynamic(() => import('@/components/mdx/client').then(it => it.
 })
 
 export default function Page() {
-  const [search, setSearch] = useImmer<GET['search']>({ limit: 20, page: 1 })
-  const [checked, setChecked] = React.useState<GET['return']['result']>([])
+  const [search, setSearch] = useImmer<GET['search']>({ limit, page: 1 })
+  const [checked, setChecked] = React.useState<GET['return']['visitors']>([])
 
   const { data, isLoading, mutate } = useSWR(
     ['0198eb9a-1aa7-77d8-9b1d-0f0f7efb4130', search],
@@ -38,7 +41,7 @@ export default function Page() {
 
   React.useEffect(() => {
     window.scrollTo({ behavior: 'smooth', top: 0 })
-  }, [data?.page])
+  }, [data?.pagination.currentPage])
 
   return (
     <div className="space-y-4">
@@ -54,10 +57,10 @@ export default function Page() {
           },
           { key: 'lon/lat', title: 'Lon/Lat', render: ({ geo }) => [geo.longitude, geo.latitude].filter(Boolean).join('/') },
           { key: 'device', title: 'Device', render: ({ agent }) => agent.device.vendor },
-          { dataIndex: 'createdAt', headerClassName: 'w-44', render: formatISOTime, title: '创建时间' },
+          { dataIndex: 'createdAt', headerClassName: tw`w-44`, render: formatISOTime, title: '创建时间' },
           {
             align: 'right',
-            headerClassName: 'w-16',
+            headerClassName: tw`w-16`,
             key: 'detail',
             title: '详情',
             render: record => (
@@ -70,8 +73,8 @@ export default function Page() {
                   </DialogTrigger>
                   <DialogContent className="max-w-3xl">
                     <DialogHeader>
-                      <DialogTitle>访客信息</DialogTitle>
-                      <DialogDescription className="hidden" />
+                      <DialogTitle>访客</DialogTitle>
+                      <DialogDescription>访客的详细信息</DialogDescription>
                     </DialogHeader>
                     <div className="text-sm *:m-0 [&_span[data-line]]:whitespace-pre-wrap">
                       <MDXClient
@@ -85,7 +88,7 @@ export default function Page() {
             )
           }
         ]}
-        dataSource={data?.result}
+        dataSource={data?.visitors}
         loading={isLoading}
         rowSelection={{
           selectedRows: checked,
@@ -110,14 +113,15 @@ export default function Page() {
             </Button>
           </AlertDelete>
         </DisplayByConditional>
-        <DisplayByConditional condition={(data?.totalPages || 0) > 1}>
+        <DisplayByConditional condition={(data?.pagination.pageCount || 0) > 1}>
           <Pagination
             className="justify-end"
+            limit={limit}
             onChange={payload => {
               setChecked([])
               setSearch(payload)
             }}
-            {...data}
+            {...data?.pagination}
           />
         </DisplayByConditional>
       </div>

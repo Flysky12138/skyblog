@@ -10,7 +10,7 @@ import { prisma } from '@/lib/prisma'
 
 export default async function Page() {
   cacheLife('max')
-  cacheTag(CacheTag.FRIEND)
+  cacheTag(CacheTag.FRIENDS)
 
   const friends = await prisma.friend.findMany()
 

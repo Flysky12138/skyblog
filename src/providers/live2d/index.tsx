@@ -174,7 +174,7 @@ const Live2D = () => {
           x: 0
         }}
         aria-label="live2d"
-        className="z-nav fixed bottom-0 cursor-grab select-none"
+        className="fixed bottom-0 z-20 cursor-grab select-none"
         initial={{
           opacity: 0,
           x: '-100%'

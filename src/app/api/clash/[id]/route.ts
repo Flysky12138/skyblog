@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client'
 import { NextRequest, userAgent } from 'next/server'
 
 import { getRealIp } from '@/lib/http/headers'
@@ -6,6 +5,7 @@ import { CustomResponse } from '@/lib/http/response'
 import { replaceVariables } from '@/lib/parser/string'
 import { prisma } from '@/lib/prisma'
 import { isDev } from '@/lib/utils'
+import { Prisma } from '@/prisma/client'
 
 const dbGet = async (id: string, data: Prisma.VisitorLogCreateInput) => {
   const subscribeLastAt = new Date().toISOString()

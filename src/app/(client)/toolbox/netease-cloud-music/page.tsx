@@ -1,5 +1,6 @@
 'use client'
 
+import { SearchIcon } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import React from 'react'
 import { toast } from 'sonner'
@@ -8,7 +9,7 @@ import { useImmer } from 'use-immer'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/static/card'
-import { Input } from '@/components/ui/input'
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { Spinner } from '@/components/ui/spinner'
 import { CustomRequest } from '@/lib/http/request'
 
@@ -77,30 +78,36 @@ export default function Page() {
 
   return (
     <div className="mx-auto flex h-[calc(var(--height-main)-2*var(--py))] max-w-xl flex-col gap-4">
-      <Input
-        placeholder="搜索 / 粘贴歌单或专辑分享链接"
-        value={search}
-        onChange={event => {
-          const text = event.target.value
-          const playlistId = text.match(/playlist(?:\?id=|\/)(\d+)/)?.[1]
-          if (playlistId) {
-            setSearch(`p${playlistId}`)
-            toast.success('识别到歌单，已自动转换')
-            return
-          }
-          const albumId = text.match(/album(?:\?id=|\/)(\d+)/)?.[1]
-          if (albumId) {
-            setSearch(`a${albumId}`)
-            toast.success('识别到专辑，已自动转换')
-            return
-          }
-          setSearch(text)
-        }}
-        onKeyDown={event => {
-          if (event.key != 'Enter') return
-          setKeywords(search.trim())
-        }}
-      />
+      <InputGroup>
+        <InputGroupInput
+          placeholder="搜索 / 粘贴歌单或专辑分享链接"
+          value={search}
+          onChange={event => {
+            const text = event.target.value
+            const playlistId = text.match(/playlist(?:\?id=|\/)(\d+)/)?.[1]
+            if (playlistId) {
+              setSearch(`p${playlistId}`)
+              toast.success('识别到歌单，已自动转换')
+              return
+            }
+            const albumId = text.match(/album(?:\?id=|\/)(\d+)/)?.[1]
+            if (albumId) {
+              setSearch(`a${albumId}`)
+              toast.success('识别到专辑，已自动转换')
+              return
+            }
+            setSearch(text)
+          }}
+          onKeyDown={event => {
+            if (event.key != 'Enter') return
+            setKeywords(search.trim())
+          }}
+        />
+        <InputGroupAddon>
+          <SearchIcon />
+        </InputGroupAddon>
+      </InputGroup>
+
       <DisplayByConditional
         condition={songs.length > 0}
         fallback={
@@ -133,6 +140,7 @@ export default function Page() {
           }}
         />
       </DisplayByConditional>
+
       <DownloadList songs={songs} />
       <Audio ref={audioRef} song={player} />
     </div>

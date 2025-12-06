@@ -7,9 +7,7 @@ interface CardProps extends SlotProps {
 }
 
 export const Card = ({ asChild, className, ...props }: CardProps) => {
-  const Comp = asChild ? Root : 'section'
+  const Comp = asChild ? Root : 'div'
 
-  return (
-    <Comp aria-label="card" className={cn('bg-card border-card-border light:border-transparent rounded-lg border shadow-sm', className)} {...props} />
-  )
+  return <Comp className={cn('bg-card border-card-border light:border-transparent rounded-lg border shadow-sm', className)} {...props} />
 }

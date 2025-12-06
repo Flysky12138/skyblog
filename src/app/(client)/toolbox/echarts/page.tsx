@@ -7,7 +7,6 @@ import { useDebounce, useWindowSize } from 'react-use'
 import { ModuleKind, ScriptTarget, transpile } from 'typescript'
 
 import { MonacoEditor } from '@/components/monaco-editor'
-import { tsEchartsConfig } from '@/components/monaco-editor/languages/ts-echarts'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 import { useEcharts } from '@/hooks/use-echarts'
 
@@ -31,16 +30,14 @@ export default function Page() {
       >
         <ResizablePanel>
           <MonacoEditor
-            code={code}
+            language="typescript"
             options={{
               minimap: {
                 enabled: false
               }
             }}
-            onChange={payplod => {
-              setCode(payplod || '')
-            }}
-            {...tsEchartsConfig}
+            value={code}
+            onChange={setCode}
           />
         </ResizablePanel>
         <ResizableHandle withHandle />
