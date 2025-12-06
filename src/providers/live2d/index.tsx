@@ -2,152 +2,220 @@
 
 import { AnimatePresence, motion } from 'framer-motion'
 import { Bot, BotOff } from 'lucide-react'
-import { Live2DModel } from 'pixi-live2d-display'
+import { JSONObject, Live2DModel, ModelSettings } from 'pixi-live2d-display'
 import React from 'react'
-import { useAsync, useInterval, useLocalStorage } from 'react-use'
+import { useInterval } from 'react-use'
 
-import { DisplayByBreakPoint } from '@/components/display/display-by-breakpoint'
+import { DisplayByBreakPoint, DisplayByBreakPointProps } from '@/components/display/display-by-breakpoint'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { TransitionCollapse } from '@/components/transition/transition-collapse'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
-import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
-import { CustomRequest } from '@/lib/http/request'
+import { VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
+import { rpc, unwrap } from '@/lib/http/rpc'
+import { toastPromiseDelay } from '@/lib/toast'
 import { cn } from '@/lib/utils'
-import { get } from '@/server/edge-config'
 
 import styles from './index.module.css'
 import { initGlobalScript, loadModel, PADDING } from './utils'
 
-interface Live2DContextProps {
-  /** 开关 */
-  enable?: boolean
-  /** 加载中 */
-  loading: boolean
-  /** 消息 */
-  message: MessageDetail['content']
-  setEnable: React.Dispatch<Live2DContextProps['enable']>
-  setLoading: React.Dispatch<Live2DContextProps['loading']>
-  setMessage: React.Dispatch<MessageDetail>
-  setSrc: React.Dispatch<Live2DContextProps['src']>
-  /** 地址 */
-  src?: string
+declare global {
+  interface Window {
+    PIXI?: typeof import('pixi.js') & {
+      live2d?: typeof import('pixi-live2d-display')
+    }
+  }
 }
 
-interface MessageDetail {
-  /** 文本内容 */
+interface Live2DContextProps {
+  isEnabled: boolean
+  isLoading: boolean
+  message: Message['content']
+  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setSource: React.Dispatch<Live2DContextProps['source']>
+  source?: JSONObject | ModelSettings | null | string
+  setMessage: (msg: Message) => void
+}
+
+interface Message {
   content: null | string
   /**
-   * 权重，大的覆盖小的
+   * 优先级，数值越大优先级越高
    * @default 0
    */
   priority?: number
   /**
-   * 显示时间 ms
+   * 显示时长，单位毫秒
    * @default 6000
    */
   timeout?: number
 }
 
-const Live2DContext = React.createContext<Live2DContextProps>(null!)
+const Live2DContext = React.createContext<Live2DContextProps | null>(null)
 
-export const useLive2DContext = () => React.useContext(Live2DContext)
-
-export const Live2DProvider = (props: React.PropsWithChildren) => {
-  const [enable, setEnable] = useLocalStorage('live2d-enable', false)
-  const [loading, setLoading] = React.useState(false)
-  const [src, setSrc] = React.useState<Live2DContextProps['src']>()
-
-  // 获取 src
-  useAsync(async () => {
-    const _src = await get<string>(VERCEL_EDGE_CONFIG.LIVE2D_SRC)
-    setSrc(_src)
-  }, [])
-
-  // 消息
-  const timer = React.useRef<NodeJS.Timeout>(undefined)
-  const [messageDetail, setMessageDetail] = React.useState<MessageDetail>({ content: null })
-  const setMessage = React.useCallback<Live2DContextProps['setMessage']>(
-    ({ content, priority = 0, timeout = 6000 }) => {
-      if (priority < (messageDetail.priority || 0)) return
-      clearTimeout(timer.current)
-      setMessageDetail({ content, priority, timeout })
-      timer.current = setTimeout(() => {
-        setMessageDetail({ content: null, priority: 0, timeout: 6000 })
-      }, timeout)
-    },
-    [messageDetail.priority]
-  )
-
-  // 网络语消息显示
-  useInterval(async () => {
-    if (!enable || loading) return
-    const data = await CustomRequest('GET /api/phrase', {})
-    if (!data.hitokoto) return
-    setMessage({ content: data.hitokoto, priority: 1 })
-  }, 1000 * 30)
-
-  const contextValue = React.useMemo(
-    () => ({ enable, loading, message: messageDetail.content, setEnable, setLoading, setMessage, setSrc, src }),
-    [enable, loading, messageDetail.content, setEnable, setLoading, setMessage, setSrc, src]
-  )
-
-  return <Live2DContext value={contextValue} {...props} />
+export const useLive2DContext = () => {
+  const context = React.useContext(Live2DContext)
+  if (!context) {
+    throw new Error('useLive2DContext must be used within Live2DProvider')
+  }
+  return context
 }
 
-export const Live2DBreakpoint = (props: React.PropsWithChildren) => {
-  return <DisplayByBreakPoint min="lg" {...props} />
-}
-
-export const Live2DToggleButton = () => {
-  const { enable, loading, setEnable, src } = useLive2DContext()
-
-  if (!src) return null
-
+export function Live2DContent() {
   return (
     <Live2DBreakpoint>
-      <TransitionCollapse orientation="horizontal">
-        <Button aria-label="live2d toggle" disabled={loading} size="icon" variant="outline" onClick={() => setEnable(!enable)}>
-          <DisplayByConditional condition={loading} fallback={enable ? <Bot /> : <BotOff />}>
-            <Spinner />
-          </DisplayByConditional>
-        </Button>
-      </TransitionCollapse>
+      <Live2DContentInner />
     </Live2DBreakpoint>
   )
 }
 
-const Live2D = () => {
-  const [model, setModel] = React.useState<Live2DModel>()
-  const { enable, loading, message, setEnable, setLoading, src } = useLive2DContext()
+export function Live2DProvider({ children }: React.PropsWithChildren) {
+  const [isEnabled, setIsEnabled] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [source, setSource] = React.useState<Live2DContextProps['source']>()
 
-  // 模型加载
-  useAsync(async () => {
-    if (!enable || !src) return
-    try {
-      setLoading(true)
-      await initGlobalScript()
-      const _model = await loadModel(src)
-      setModel(_model)
-      _model?.on('hit', hitAreas => {
-        if (hitAreas.includes('breast_l')) _model.textures.push(_model.textures.shift()!)
-        if (hitAreas.includes('breast_r')) _model.motion('breast', 0)
-      })
-    } catch (error) {
-      delete window.PIXI
-      setEnable(false)
-      console.error(error)
-    } finally {
-      setLoading(false)
+  // source 获取
+  React.useEffect(() => {
+    let ignore = false
+
+    rpc['edge-config'].get
+      .get({ query: { key: VERCEL_EDGE_CONFIG_KEY.LIVE2D_SRC } })
+      .then(unwrap)
+      .then(src => !ignore && setSource(src))
+      .catch(console.error)
+
+    return () => {
+      ignore = true
     }
-  }, [enable, src])
+  }, [])
 
-  // 创建容器，并装载模型
+  // message system
+  const timerRef = React.useRef<NodeJS.Timeout>(undefined)
+  const messageRef = React.useRef<Message>({ content: null })
+  const [messageState, setMessageState] = React.useState<Message>({
+    content: null
+  })
+
+  const setMessage = React.useCallback(({ content, priority = 0, timeout = 6000 }: Message) => {
+    if (priority < (messageRef.current.priority ?? 0)) return
+
+    clearTimeout(timerRef.current)
+
+    const next = { content, priority, timeout }
+    messageRef.current = next
+    setMessageState(next)
+
+    timerRef.current = setTimeout(() => {
+      messageRef.current = { content: null }
+      setMessageState({ content: null })
+    }, timeout)
+  }, [])
+
+  React.useEffect(() => {
+    return () => clearTimeout(timerRef.current)
+  }, [])
+
+  // hitokoto interval
+  useInterval(
+    async () => {
+      if (!isEnabled || isLoading) return
+      try {
+        const data = await rpc.phrase.get().then(unwrap)
+        data?.hitokoto && setMessage({ content: data.hitokoto, priority: 1 })
+      } catch {}
+    },
+    isEnabled ? 30_000 : null
+  )
+
+  const value = React.useMemo(
+    () => ({
+      isEnabled,
+      isLoading,
+      message: messageState.content,
+      setIsEnabled,
+      setIsLoading,
+      setMessage,
+      setSource,
+      source
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isEnabled, isLoading, messageState.content, source]
+  )
+
+  return <Live2DContext.Provider value={value}>{children}</Live2DContext.Provider>
+}
+
+export function Live2DToggleButton() {
+  return (
+    <Live2DBreakpoint>
+      <Live2DToggleButtonInner />
+    </Live2DBreakpoint>
+  )
+}
+
+function Live2DBreakpoint(props: DisplayByBreakPointProps) {
+  return <DisplayByBreakPoint min="lg" {...props} />
+}
+
+function Live2DContentInner() {
+  const sectionRef = React.useRef<HTMLElement>(null)
   const canvasRef = React.useRef<HTMLCanvasElement>(null)
+
+  const [model, setModel] = React.useState<Live2DModel>()
+
+  const { isEnabled, isLoading, setIsEnabled, setIsLoading, source } = useLive2DContext()
+
+  // model load
+  React.useEffect(() => {
+    if (!isEnabled || !source) return
+
+    let ignore = false
+
+    void (async () => {
+      try {
+        setIsLoading(true)
+        await toastPromiseDelay(initGlobalScript(), {
+          error: 'Failed to initialize Live2D environment',
+          id: '019b2566-b670-73bd-a442-289f9eb7ae2a',
+          loading: 'Initializing Live2D environment...'
+        })
+
+        if (ignore) return
+
+        const m = await toastPromiseDelay(loadModel(source), {
+          error: 'Failed to load Live2D Model',
+          id: '019b2566-b670-73bd-a442-289f9eb7ae2a',
+          loading: 'Loading Live2D Model...'
+        })
+        m.on('hit', areas => {
+          if (areas.includes('breast_l')) {
+            m.textures.push(m.textures.shift()!)
+          }
+          if (areas.includes('breast_r')) {
+            m.motion('breast', 0)
+          }
+        })
+        setModel(m)
+      } catch (error) {
+        console.error(error)
+        setIsEnabled(false)
+      } finally {
+        if (ignore) return
+        setIsLoading(false)
+      }
+    })()
+
+    return () => {
+      ignore = true
+    }
+  }, [isEnabled, source, setIsEnabled, setIsLoading])
+
+  // pixi mount
   React.useEffect(() => {
     if (!model || !canvasRef.current) return
+
     const app = new window.PIXI!.Application({
-      antialias: true,
       autoDensity: true,
       autoStart: true,
       backgroundAlpha: 0,
@@ -156,67 +224,92 @@ const Live2D = () => {
       view: canvasRef.current,
       width: model.width + PADDING.x * 2
     })
+
     app.stage.addChild(model)
-    // 鼠标离开窗口后，让人物正视前方
-    const listener = () => model.focus(app.renderer.view.width / 2, (app.renderer.view.height - PADDING.y) / 3)
-    document.documentElement.addEventListener('pointerleave', listener)
+
+    const onLeave = () => {
+      model.focus(model.x + model.width / 2, model.y + model.height / 2)
+    }
+    document.documentElement.addEventListener('pointerleave', onLeave)
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        sectionRef.current?.classList.remove('-translate-x-full', 'opacity-0')
+      })
+    })
+
     return () => {
-      document.documentElement.removeEventListener('pointerleave', listener)
-      app?.destroy(true, true)
+      document.documentElement.removeEventListener('pointerleave', onLeave)
+      model.destroy()
+      app.destroy()
     }
   }, [model])
 
   return (
-    <DisplayByConditional condition={enable && !loading}>
-      <motion.section
-        animate={{
-          opacity: 1,
-          x: 0
-        }}
-        aria-label="live2d"
-        className="z-nav fixed bottom-0 cursor-grab select-none"
-        initial={{
-          opacity: 0,
-          x: '-100%'
-        }}
-        transition={{
-          delay: 0.2,
-          duration: 0.6,
-          type: 'tween'
-        }}
+    <DisplayByConditional condition={isEnabled && !isLoading}>
+      <section
+        ref={sectionRef}
+        aria-label="live2d model"
+        className={cn(
+          'fixed bottom-0 z-20 cursor-grab select-none',
+          '-translate-x-full opacity-0 transition-[opacity,translate] duration-[1000ms,700ms] ease-in'
+        )}
       >
-        <AnimatePresence>
-          {message && (
-            <motion.p
-              key={message}
-              animate={{ opacity: 1, transition: { delay: 0.1 } }}
-              className={cn(
-                'absolute -top-12 left-24 z-10 w-max max-w-xs rounded-xl px-3 py-1 backdrop-blur-xs',
-                'pointer-events-none text-sm break-all text-fuchsia-700 dark:text-white',
-                'dark:border-opacity-30 border border-orange-300',
-                'bg-orange-300/20 dark:bg-yellow-200/20',
-                'shadow-[1px_3px_5px] shadow-orange-300/20',
-                styles.message
-              )}
-              exit={{ opacity: 0 }}
-              initial={{ opacity: 0 }}
-            >
-              {message}
-            </motion.p>
-          )}
-        </AnimatePresence>
+        <MessageContent className="absolute -top-12 left-24 z-10" />
         <div className="border border-dashed transition-[backdrop-filter] not-hover:border-transparent hover:backdrop-blur-sm">
           <canvas ref={canvasRef} className="dark:brightness-75" />
         </div>
-      </motion.section>
+      </section>
     </DisplayByConditional>
   )
 }
 
-export const Live2DContent = () => {
+function Live2DToggleButtonInner() {
+  const { isEnabled, isLoading, setIsEnabled, source } = useLive2DContext()
+
+  if (!source) return null
+
   return (
-    <Live2DBreakpoint>
-      <Live2D />
-    </Live2DBreakpoint>
+    <TransitionCollapse orientation="horizontal">
+      <Button
+        aria-label="live2d toggle"
+        aria-pressed={!isLoading && isEnabled}
+        disabled={isLoading}
+        size="icon"
+        variant="outline"
+        onClick={() => setIsEnabled(v => !v)}
+      >
+        <DisplayByConditional condition={isLoading} fallback={isEnabled ? <Bot /> : <BotOff />}>
+          <Spinner />
+        </DisplayByConditional>
+      </Button>
+    </TransitionCollapse>
+  )
+}
+
+function MessageContent({ className }: { className?: string }) {
+  const { message } = useLive2DContext()
+
+  return (
+    <AnimatePresence>
+      {message && (
+        <motion.p
+          key={message}
+          animate={{ opacity: 1, transition: { delay: 0.1 } }}
+          className={cn(
+            className,
+            'pointer-events-none w-max max-w-xs rounded-xl px-3 py-1 text-sm break-all',
+            'border border-orange-300 bg-orange-300/20 backdrop-blur-xs',
+            'text-fuchsia-700 shadow-[1px_3px_5px] shadow-orange-300/20',
+            'dark:border-opacity-30 dark:bg-yellow-200/20 dark:text-white',
+            styles.message
+          )}
+          exit={{ opacity: 0 }}
+          initial={{ opacity: 0 }}
+        >
+          {message}
+        </motion.p>
+      )}
+    </AnimatePresence>
   )
 }

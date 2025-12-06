@@ -4,7 +4,7 @@ import { motion, useDragControls } from 'framer-motion'
 import { AppWindow, Binary, CloudUpload, Eye, EyeClosed, GitCompare, Hand, ReceiptText, Save, WandSparkles } from 'lucide-react'
 import { Updater } from 'use-immer'
 
-import { R2Upload } from '@/app/dashboard/r2/[[...slug]]/_components/r2-upload'
+import { StorageUploadModal } from '@/app/dashboard/storage/_components/storage-upload-modal'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/static/card'
 import {
@@ -17,14 +17,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger
-} from '@/components/ui-overwrite/alert-dialog'
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { STORAGE } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
-import { DefaultPostType } from '../page'
-import { PostDetail } from './post-detail'
-import { Transcoder } from './transcoder'
+import { DefaultPostType } from '../utils'
+import { PostEditModal } from './post-edit-modal'
+import { TranscoderModal } from './transcoder-modal'
 
 export interface EditorToolbarProps {
   className?: string
@@ -43,7 +44,7 @@ export interface EditorToolbarProps {
   onUpdate: (type: 'normal' | 'secret') => void
 }
 
-export const EditorToolbar = ({
+export function EditorToolbar({
   className,
   disabled,
   dragConstraints,
@@ -55,14 +56,14 @@ export const EditorToolbar = ({
   onFormat,
   onPreview,
   onUpdate
-}: EditorToolbarProps) => {
+}: EditorToolbarProps) {
   const dragControls = useDragControls()
 
   return (
-    <Card asChild className={cn('flex flex-wrap-reverse items-center gap-3 p-2 backdrop-blur-xs', className)}>
+    <Card asChild className={cn('flex w-max max-w-[calc(100%---spacing(8))] flex-wrap-reverse items-center gap-3 p-2 backdrop-blur-xs', className)}>
       <motion.section
         drag
-        aria-label="post editor toolbar"
+        aria-label="monaco editor toolbar"
         dragConstraints={dragConstraints}
         dragControls={dragControls}
         dragElastic={0}
@@ -87,13 +88,13 @@ export const EditorToolbar = ({
           </Button>
           <Separator />
           <Tooltip>
-            <Transcoder>
+            <TranscoderModal>
               <TooltipTrigger asChild>
                 <Button size="icon" variant="outline">
                   <Binary />
                 </Button>
               </TooltipTrigger>
-            </Transcoder>
+            </TranscoderModal>
             <TooltipContent>转码</TooltipContent>
           </Tooltip>
           <Separator />
@@ -115,24 +116,24 @@ export const EditorToolbar = ({
           </Tooltip>
           <Separator />
           <Tooltip>
-            <R2Upload path={`/posts/${post.id}/`}>
+            <StorageUploadModal id={STORAGE.ROOT_DIRECTORY_ID}>
               <TooltipTrigger asChild>
                 <Button disabled={isCreate} size="icon" variant="outline">
                   <CloudUpload />
                 </Button>
               </TooltipTrigger>
-            </R2Upload>
+            </StorageUploadModal>
             <TooltipContent>文件</TooltipContent>
           </Tooltip>
           <Separator />
           <Tooltip>
-            <PostDetail value={post} onChange={setPost}>
+            <PostEditModal value={post} onChange={setPost}>
               <TooltipTrigger asChild>
                 <Button size="icon" variant="outline">
                   <ReceiptText />
                 </Button>
               </TooltipTrigger>
-            </PostDetail>
+            </PostEditModal>
             <TooltipContent>信息</TooltipContent>
           </Tooltip>
           <Tooltip>
@@ -142,14 +143,14 @@ export const EditorToolbar = ({
                 variant="outline"
                 onClick={() => {
                   setPost(state => {
-                    state.published = !state.published
+                    state.isPublished = !state.isPublished
                   })
                 }}
               >
-                {post.published ? <Eye /> : <EyeClosed />}
+                {post.isPublished ? <Eye /> : <EyeClosed />}
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{post.published ? '公开' : '隐藏'}</TooltipContent>
+            <TooltipContent>{post.isPublished ? '公开' : '隐藏'}</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -193,7 +194,6 @@ export const EditorToolbar = ({
                         悄悄更新
                       </AlertDialogAction>
                       <AlertDialogAction
-                        variant="destructive"
                         onClick={() => {
                           onUpdate('normal')
                         }}
@@ -214,4 +214,6 @@ export const EditorToolbar = ({
   )
 }
 
-const Separator = () => <hr className="bg-divide h-4 w-0.5 rounded-full" />
+function Separator() {
+  return <hr className="bg-divide h-4 w-0.5 rounded-full" />
+}

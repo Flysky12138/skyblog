@@ -1,17 +1,18 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
 import { useAsync } from 'react-use'
 
-import { CustomRequest } from '@/lib/http/request'
+import { authClient } from '@/lib/auth/client'
+import { rpc } from '@/lib/http/rpc'
 
-export const Report = () => {
-  const session = useSession()
+export function Report() {
+  const { data: session, isPending } = authClient.useSession()
 
   useAsync(async () => {
-    if (session.status == 'loading' || session.data?.role == 'ADMIN') return
-    await CustomRequest('POST /api/visitor', {})
-  }, [session])
+    if (isPending) return
+    if (session?.user.role == 'admin') return
+    await rpc.visits.post()
+  }, [isPending, session])
 
   return null
 }

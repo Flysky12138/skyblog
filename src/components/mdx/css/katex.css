@@ -2,7 +2,7 @@
 
 .katex-display {
   @apply my-6 rounded-md p-3 pt-4 backdrop-blur;
-  @apply bg-sheet border-card-border border;
+  @apply bg-sheet border;
   @apply overflow-x-auto overflow-y-clip;
   .katex {
     @apply min-w-max;

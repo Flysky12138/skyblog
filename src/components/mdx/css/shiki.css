@@ -14,14 +14,11 @@ figure[data-rehype-pretty-code-figure] {
   [data-rehype-pretty-code-caption] {
     @apply m-0 px-3 py-1 text-xs;
   }
-  pre {
-    @apply bg-sheet relative rounded-none p-0;
-    &:has(+ [data-rehype-pretty-code-caption]) {
-      @apply border-divide border-b;
-    }
+  [data-line] {
+    @apply px-4;
   }
-  code {
-    @apply overflow-x-auto py-2.5;
+  pre:has(+ [data-rehype-pretty-code-caption]) {
+    @apply border-divide border-b;
   }
 }
 
@@ -32,39 +29,58 @@ code[data-theme] span {
 
 /* 行号 */
 code[data-line-numbers] {
+  --diff-width: 0px;
+  --before-width: 0px;
+  &[data-line-numbers-max-digits='1'] {
+    --before-width: calc(var(--diff-width) + var(--spacing) * 8);
+  }
+  &[data-line-numbers-max-digits='2'] {
+    --before-width: calc(var(--diff-width) + var(--spacing) * 10);
+  }
+  &[data-line-numbers-max-digits='3'] {
+    --before-width: calc(var(--diff-width) + var(--spacing) * 12);
+  }
+  &[data-line-numbers-max-digits='4'] {
+    --before-width: calc(var(--diff-width) + var(--spacing) * 14);
+  }
+  &:has(.diff) {
+    --diff-width: calc(var(--spacing) * 2);
+  }
   counter-reset: line;
-  & > [data-line]::before {
-    counter-increment: line;
-    content: counter(line);
-    @apply mr-6 inline-block w-4 text-right text-slate-500;
+  @apply static;
+  [data-line] {
+    @apply px-0 pr-4;
+    @apply before:w-(--before-width);
+    @apply before:content-[counter(line)] before:[counter-increment:line];
+    @apply before:bg-sheet before:text-slate-500;
+    @apply before:sticky before:left-0 before:inline-block before:pr-3.5 before:text-right;
   }
 }
 
-/* 行高亮 */
-pre [data-line] {
-  @apply border-l-2 border-transparent px-4;
-  &.highlighted, /** @shikijs/transformers transformerNotationHighlight */
-  &[data-highlighted-line] {
-    @apply border-slate-300 dark:border-slate-600;
-    @apply bg-slate-300/30 dark:bg-slate-600/30;
-  }
+/**
+ * 行高亮
+ * @shikijs/transformers transformerNotationHighlight
+ */
+pre [data-line].highlighted {
+  @apply border-slate-300 dark:border-slate-600;
+  @apply bg-slate-300/30 dark:bg-slate-600/30;
+  @apply before:bg-[#EAEDF3] dark:before:bg-[#272B34];
 }
 
 /** 
  * 标记增删的行
  * @shikijs/transformers transformerNotationDiff
  */
-pre [data-line] {
-  &.diff {
-    @apply relative after:absolute after:left-1;
-    @apply border-transparent!;
-  }
-  &.diff.add {
+pre [data-line].diff {
+  @apply after:absolute after:left-1;
+  &.add {
     @apply after:text-green-500 after:content-["+"];
-    @apply bg-green-100 dark:bg-green-900/30;
+    @apply bg-green-300/30 dark:bg-green-800/30;
+    @apply before:bg-[#D9F4E2] dark:before:bg-[#1E2F24];
   }
-  &.diff.remove {
+  &.remove {
     @apply after:text-red-500 after:content-["-"];
-    @apply bg-red-100 dark:bg-red-900/30;
+    @apply bg-red-300/30 dark:bg-red-800/30;
+    @apply before:bg-[#F4DEDF] dark:before:bg-[#3D1A1C];
   }
 }

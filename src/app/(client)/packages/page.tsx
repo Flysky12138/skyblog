@@ -2,8 +2,7 @@
 
 import { makeBadge } from 'badge-maker'
 import { cacheLife } from 'next/cache'
-
-import packageJson from '@/../package.json'
+import packageJson from 'root/package.json'
 
 export default async function Page() {
   cacheLife('max')

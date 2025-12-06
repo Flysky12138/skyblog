@@ -47,6 +47,17 @@ type ColumnType<T> = {
    * 头部行的标题
    */
   title?: (() => React.ReactNode) | string
+  /**
+   * 列的宽度
+   * @default 120
+   */
+  width?: number
+  /**
+   * 列宽度是否自适应
+   *
+   * 建议最多只设置一个，开启后 `width` 为最小值，并且宽度会自动拉伸
+   */
+  widthFit?: boolean
 } & (ColumnItemType<T> | ColumnSlotType<T>)
 
 interface TableProps<T> {
@@ -85,7 +96,7 @@ interface TableProps<T> {
   onRow?: (record: T, index: number) => React.ComponentProps<'tr'>
 }
 
-export const Table = <T,>({
+export function Table<T>({
   className,
   columns,
   dataSource = [],
@@ -95,17 +106,33 @@ export const Table = <T,>({
   rowKey = 'id',
   rowSelection,
   onRow
-}: TableProps<T>) => {
+}: TableProps<T>) {
   const isValidating = loading && !!dataSource.length
 
-  columns = modifyColumns(columns, { dataSource, isValidating, loading, rowSelection })
+  columns = modifyColumns(columns, { dataSource, loading, rowSelection })
 
   return (
     <TablePrimitive className={className}>
+      <colgroup>
+        {columns.map((column, index) => (
+          <col
+            key={index}
+            width={column.width}
+            {...(column.widthFit
+              ? {
+                  style: {
+                    minWidth: column.width,
+                    width: 'fit-content'
+                  }
+                }
+              : {})}
+          />
+        ))}
+      </colgroup>
       <TableHeader>
         <TableRow>
-          {columns.map(column => (
-            <TableHead key={(column.dataIndex || column.key) as string} className={cn(column.headerClassName, cellAlign(column.align))}>
+          {columns.map((column, index) => (
+            <TableHead key={index} className={cn(column.headerClassName, cellAlign(column.align))}>
               {isFunction(column.title) ? column.title() : column.title}
             </TableHead>
           ))}
@@ -127,9 +154,9 @@ export const Table = <T,>({
               className={isFunction(rowClassName) ? rowClassName(record, index) : rowClassName}
               {...onRow?.(record, index)}
             >
-              {columns.map(column => (
+              {columns.map((column, i) => (
                 <TableCell
-                  key={(column.dataIndex || column.key) as string}
+                  key={i}
                   className={cn(
                     isFunction(column.className)
                       ? Reflect.apply(column.className, null, column.dataIndex ? [record[column.dataIndex], record, index] : [record, index])
@@ -150,62 +177,18 @@ export const Table = <T,>({
   )
 }
 
-export const TablePrimitive = ({ className, ...props }: React.ComponentProps<'table'>) => (
-  <div className="bg-card relative w-full overflow-auto rounded-sm shadow-sm dark:shadow-black" data-slot="table">
-    <table className={cn('w-full table-auto caption-bottom text-sm', className)} {...props} />
-  </div>
-)
-
-export const TableHeader = ({ className, ...props }: React.ComponentProps<'thead'>) => (
-  <thead className={cn('[&_tr]:border-b-2', className)} {...props} />
-)
-
-export const TableBody = ({ className, ...props }: React.ComponentProps<'tbody'>) => (
-  <tbody className={cn('relative [&_tr:last-child]:border-0', className)} {...props} />
-)
-
-export const TableFooter = ({ className, ...props }: React.ComponentProps<'tfoot'>) => (
-  <tfoot className={cn('bg-muted/50 border-t font-medium [&>tr]:last:border-b-0', className)} {...props} />
-)
-
-export const TableRow = ({ className, ...props }: React.ComponentProps<'tr'>) => (
-  <tr className={cn('not-[&:has(th)]:hover:bg-muted/50 h-10 border-b', className)} {...props} />
-)
-
-export const TableHead = ({ className, ...props }: React.ComponentProps<'th'>) => (
-  <th className={cn('text-muted-foreground h-10 px-4 text-left align-middle font-medium whitespace-nowrap', className)} {...props} />
-)
-
-export const TableCell = ({ className, ...props }: React.ComponentProps<'td'>) => (
-  <td className={cn('px-4 py-1.5 align-middle whitespace-nowrap', className)} {...props} />
-)
-
-export const TableCaption = ({ className, ...props }: React.ComponentProps<'caption'>) => (
-  <caption className={cn('text-muted-foreground text-sm', className)} {...props} />
-)
-
-export const TableRowLoading = ({ children, className, ...props }: RequiredPick<React.ComponentProps<'td'>, 'colSpan'>) => (
-  <TableRow>
-    <TableCell className={cn('font-title cursor-default text-center', className)} {...props}>
-      {children || 'Loading...'}
-    </TableCell>
-  </TableRow>
-)
-
-export const TableActionButton = ({
+export function TableActionButton({
   className,
   tooltip,
   ...props
 }: React.ComponentProps<typeof Button> & {
   tooltip?: React.ComponentProps<typeof TooltipContent> | string
-}) => {
+}) {
   const button = (
     <Button className={cn('size-7 rounded-sm border not-hover:border-transparent', className)} size="icon" variant="secondary" {...props} />
   )
 
-  if (!tooltip) {
-    return button
-  }
+  if (!tooltip) return button
 
   if (typeof tooltip == 'string') {
     tooltip = {
@@ -221,13 +204,72 @@ export const TableActionButton = ({
   )
 }
 
-export const TableDeleteButton = ({ disabled, ...props }: AlertDeleteProps & { disabled?: boolean }) => (
-  <AlertDelete {...props}>
-    <TableActionButton className="border-0!" disabled={disabled} variant="destructive">
-      <Trash />
-    </TableActionButton>
-  </AlertDelete>
-)
+export function TableBody({ className, ...props }: React.ComponentProps<'tbody'>) {
+  return <tbody className={cn('relative [&_tr:last-child]:border-0', className)} {...props} />
+}
+
+export function TableCaption({ className, ...props }: React.ComponentProps<'caption'>) {
+  return <caption className={cn('text-muted-foreground text-sm', className)} {...props} />
+}
+
+export function TableCell({ className, ...props }: React.ComponentProps<'td'>) {
+  return <td className={cn('px-3 py-1.5 align-middle', className)} {...props} />
+}
+
+export function TableDeleteButton({ disabled, onConfirm, ...props }: AlertDeleteProps & { disabled?: boolean }) {
+  const [isPending, startTransition] = React.useTransition()
+
+  return (
+    <AlertDelete
+      onConfirm={event => {
+        startTransition(async () => {
+          await onConfirm(event)
+        })
+      }}
+      {...props}
+    >
+      <TableActionButton className="border-0!" disabled={disabled} variant="destructive">
+        <DisplayByConditional condition={isPending} fallback={<Trash />}>
+          <Spinner />
+        </DisplayByConditional>
+      </TableActionButton>
+    </AlertDelete>
+  )
+}
+
+export function TableFooter({ className, ...props }: React.ComponentProps<'tfoot'>) {
+  return <tfoot className={cn('bg-muted/50 border-t font-medium [&>tr]:last:border-b-0', className)} {...props} />
+}
+
+export function TableHead({ className, ...props }: React.ComponentProps<'th'>) {
+  return <th className={cn('text-muted-foreground h-10 px-3 text-left align-middle font-medium whitespace-nowrap', className)} {...props} />
+}
+
+export function TableHeader({ className, ...props }: React.ComponentProps<'thead'>) {
+  return <thead className={cn('[&_tr]:border-b-2', className)} {...props} />
+}
+
+export function TablePrimitive({ className, ...props }: React.ComponentProps<'table'>) {
+  return (
+    <div className="bg-card pointer-coarse:no-scrollbar relative w-full overflow-auto rounded-sm shadow-sm dark:shadow-black" data-slot="table">
+      <table className={cn('w-full table-fixed caption-bottom text-sm', className)} {...props} />
+    </div>
+  )
+}
+
+export function TableRow({ className, ...props }: React.ComponentProps<'tr'>) {
+  return <tr className={cn('not-[&:has(th)]:hover:bg-muted/50 h-10 border-b', className)} {...props} />
+}
+
+export function TableRowLoading({ children, className, ...props }: RequiredPick<React.ComponentProps<'td'>, 'colSpan'>) {
+  return (
+    <TableRow>
+      <TableCell className={cn('font-title cursor-default text-center', className)} {...props}>
+        {children || 'Loading...'}
+      </TableCell>
+    </TableRow>
+  )
+}
 
 /**
  * 单元格内容
@@ -255,13 +297,10 @@ const cellAlign = (align: AlignType = 'left') => {
 /**
  * 修改 `columns`
  */
-const modifyColumns = <T,>(
-  columns: ColumnType<T>[],
-  options: Pick<TableProps<T>, 'dataSource' | 'loading' | 'rowSelection'> & {
-    isValidating: boolean
-  }
-): ColumnType<T>[] => {
-  const { dataSource = [], isValidating, loading, rowSelection } = options
+const modifyColumns = <T,>(columns: ColumnType<T>[], options: Pick<TableProps<T>, 'dataSource' | 'loading' | 'rowSelection'>): ColumnType<T>[] => {
+  const { dataSource = [], loading, rowSelection } = options
+
+  const disabled = loading || !dataSource.length
 
   const selectedRows = new Set<T>(rowSelection?.selectedRows)
   const isSelectedAll = dataSource.every(record => selectedRows.has(record))
@@ -269,17 +308,19 @@ const modifyColumns = <T,>(
   return columns.map(column => {
     switch (column.key) {
       case 'index':
-        return Object.assign({ headerClassName: tw`w-9`, title: '#', render: (_, index: number) => index + 1 } as ColumnType<T>, column)
+        column = Object.assign({ title: '#', width: 42, render: (_, index: number) => index + 1 } as ColumnType<T>, column)
+        break
       case 'section':
-        return Object.assign(
+        column = Object.assign(
           {
             className: tw`leading-0`,
-            headerClassName: tw`w-9 leading-0`,
+            headerClassName: tw`leading-0`,
             key: 'section',
+            width: 40,
             render: record => (
               <Checkbox
                 checked={selectedRows.has(record)}
-                disabled={loading || isValidating}
+                disabled={disabled}
                 onCheckedChange={() => {
                   selectedRows.has(record) ? selectedRows.delete(record) : selectedRows.add(record)
                   rowSelection?.onChange?.(Array.from(selectedRows))
@@ -288,8 +329,8 @@ const modifyColumns = <T,>(
             ),
             title: () => (
               <Checkbox
-                checked={!loading && isSelectedAll}
-                disabled={loading || isValidating}
+                checked={!loading && isSelectedAll && !disabled}
+                disabled={disabled}
                 onCheckedChange={() => {
                   isSelectedAll ? selectedRows.clear() : dataSource.forEach(it => selectedRows.add(it))
                   rowSelection?.onChange?.(Array.from(selectedRows))
@@ -299,8 +340,18 @@ const modifyColumns = <T,>(
           } as ColumnType<T>,
           column
         )
-      default:
-        return column
+        break
     }
+
+    switch (column.dataIndex) {
+      case 'createdAt':
+      case 'updatedAt':
+        column.width = 180
+        break
+    }
+
+    column.width ||= 120
+
+    return column
   })
 }
