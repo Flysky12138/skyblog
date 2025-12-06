@@ -3,19 +3,21 @@
 import { Handshake, Package } from 'lucide-react'
 import { cacheLife, cacheTag } from 'next/cache'
 import Link from 'next/link'
+import packageJson from 'root/package.json'
 
-import packageJson from '@/../package.json'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/static/card'
 import { Button } from '@/components/ui/button'
-import { CacheTag } from '@/lib/cache'
+import { CACHE_TAG } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
 
-export const CardButtons = async () => {
+export async function CardButtons() {
   cacheLife('max')
-  cacheTag(CacheTag.FRIEND)
+  cacheTag(CACHE_TAG.FRIENDS)
 
-  const friendCount = await prisma.friend.count()
+  const friendCount = await prisma.friend.count({
+    where: { isActive: true }
+  })
 
   const pkgCount = Object.keys(packageJson.dependencies).length + Object.keys(packageJson.devDependencies).length
 
