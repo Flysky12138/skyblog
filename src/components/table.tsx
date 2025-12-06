@@ -98,7 +98,7 @@ export const Table = <T,>({
 }: TableProps<T>) => {
   const isValidating = loading && !!dataSource.length
 
-  columns = modifyColumns(columns, { dataSource, isValidating, loading, rowSelection })
+  columns = modifyColumns(columns, { dataSource, loading, rowSelection })
 
   return (
     <TablePrimitive className={className}>
@@ -233,8 +233,12 @@ export const TableDeleteButton = ({ disabled, ...props }: AlertDeleteProps & { d
  * 单元格内容
  */
 const cellContentRender = (text: any): string => {
-  if (!text) return ''
-  if (isObjectLike(text)) return JSON.stringify(text, null, 4)
+  if (!text) {
+    return ''
+  }
+  if (isObjectLike(text)) {
+    return JSON.stringify(text, null, 4)
+  }
   return text
 }
 
@@ -255,13 +259,10 @@ const cellAlign = (align: AlignType = 'left') => {
 /**
  * 修改 `columns`
  */
-const modifyColumns = <T,>(
-  columns: ColumnType<T>[],
-  options: Pick<TableProps<T>, 'dataSource' | 'loading' | 'rowSelection'> & {
-    isValidating: boolean
-  }
-): ColumnType<T>[] => {
-  const { dataSource = [], isValidating, loading, rowSelection } = options
+const modifyColumns = <T,>(columns: ColumnType<T>[], options: Pick<TableProps<T>, 'dataSource' | 'loading' | 'rowSelection'>): ColumnType<T>[] => {
+  const { dataSource = [], loading, rowSelection } = options
+
+  const disabled = loading || !dataSource.length
 
   const selectedRows = new Set<T>(rowSelection?.selectedRows)
   const isSelectedAll = dataSource.every(record => selectedRows.has(record))
@@ -269,7 +270,7 @@ const modifyColumns = <T,>(
   return columns.map(column => {
     switch (column.key) {
       case 'index':
-        return Object.assign({ headerClassName: tw`w-9`, title: '#', render: (_, index: number) => index + 1 } as ColumnType<T>, column)
+        return Object.assign({ headerClassName: tw`w-10`, title: '#', render: (_, index: number) => index + 1 } as ColumnType<T>, column)
       case 'section':
         return Object.assign(
           {
@@ -279,7 +280,7 @@ const modifyColumns = <T,>(
             render: record => (
               <Checkbox
                 checked={selectedRows.has(record)}
-                disabled={loading || isValidating}
+                disabled={disabled}
                 onCheckedChange={() => {
                   selectedRows.has(record) ? selectedRows.delete(record) : selectedRows.add(record)
                   rowSelection?.onChange?.(Array.from(selectedRows))
@@ -288,8 +289,8 @@ const modifyColumns = <T,>(
             ),
             title: () => (
               <Checkbox
-                checked={!loading && isSelectedAll}
-                disabled={loading || isValidating}
+                checked={!loading && isSelectedAll && !disabled}
+                disabled={disabled}
                 onCheckedChange={() => {
                   isSelectedAll ? selectedRows.clear() : dataSource.forEach(it => selectedRows.add(it))
                   rowSelection?.onChange?.(Array.from(selectedRows))

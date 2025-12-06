@@ -1,9 +1,6 @@
-'use client'
-
 import React from 'react'
 
 import { DATA_IS_BLOCK, DATA_IS_COLLAPSED } from '@/components/mdx/rehype/rehype-code'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 
 export const Code = (props: React.ComponentProps<'code'>) => {
@@ -18,14 +15,16 @@ const CodeBlock = ({
 }: React.ComponentProps<'code'> & {
   [DATA_IS_COLLAPSED]?: boolean
 }) => (
-  <ScrollArea
-    className={cn({
-      '*:data-[slot=scroll-area-viewport]:max-h-100': isCollapsed
-    })}
-  >
-    <code className={cn('text-[1em] font-semibold', className)} {...props} />
-    <ScrollBar orientation="horizontal" />
-  </ScrollArea>
+  <code
+    className={cn(
+      'no-scrollbar relative overflow-x-auto py-2.5 text-[1em] font-semibold',
+      {
+        'max-h-100': isCollapsed
+      },
+      className
+    )}
+    {...props}
+  />
 )
 
 const CodeInline = ({ className, ...props }: React.ComponentProps<'code'>) => (

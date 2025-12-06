@@ -1,29 +1,35 @@
 model Clash {
-  id              String         @id @default(uuid(7))
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @default(now())
-  name            String
-  subtitle        String?
-  content         String
-  subscribeLastAt DateTime?
-  clashTemplateId String?
-  /// [ClashVariables]
-  variables       Json           @default("{}")
-  enabled         Boolean        @default(true)
-  visitorInfos    VisitorLog[]
-  clashTemplates  ClashTemplate? @relation(fields: [clashTemplateId], references: [id])
+  id        String   @id @default(uuid(7))
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@unique([name, subtitle])
-  @@map("clashs")
+  name        String
+  description String?
+  content     String
+  isEnabled   Boolean @default(true) @map("is_enabled")
+
+  /// [ClashVariables]
+  variables Json?
+
+  templateId String?        @map("template_id")
+  template   ClashTemplate? @relation(fields: [templateId], references: [id], onDelete: Restrict)
+
+  activityLogs ActivityLog[]
+
+  @@unique([name, description])
+  @@index([isEnabled])
+  @@map("clashes")
 }
 
 model ClashTemplate {
   id        String   @id @default(uuid(7))
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  content   String
-  clashs    Clash[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  name    String
+  content String
+
+  clashes Clash[]
 
   @@map("clash_templates")
 }

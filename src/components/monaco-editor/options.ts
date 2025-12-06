@@ -1,4 +1,18 @@
 import { editor } from 'monaco-editor'
+import { BundledLanguage, BundledTheme } from 'shiki'
+
+/**
+ * 语言
+ */
+export const langs = ['javascript', 'typescript', 'markdown', 'yaml'] satisfies BundledLanguage[]
+
+/**
+ * 主题
+ *
+ * @example
+ * ['dark-plus', 'light-plus']
+ */
+export const themes = ['dark-plus', 'light-plus'] satisfies BundledTheme[]
 
 /**
  * `monaco-editor` 默认配置

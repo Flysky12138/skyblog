@@ -1,12 +1,14 @@
-import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
+import { Prisma, Role } from '@/prisma/client'
 
 const dbPost = async (data: POST['body']) => {
   const count = await prisma.user.count()
-  if (count == 0) data.role = 'ADMIN'
+  if (count == 0) {
+    data.role = Role.ADMIN
+  }
 
   return prisma.user.upsert({
     create: data,

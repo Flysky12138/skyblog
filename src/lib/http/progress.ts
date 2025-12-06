@@ -11,17 +11,21 @@ export interface ProgressProps {
  * 获取下载进度
  */
 export const readResponseProgress = async (response: Response, onProgress: (props: ProgressProps) => void) => {
-  if (!response.body) return new Blob()
+  if (!response.body) {
+    return new Blob()
+  }
 
   const total = Number.parseInt(response.headers.get('content-length') || '0', 10)
   let loaded = 0
 
-  const reader = response.body.getReader()
-  const chunks = []
+  const chunks: Uint8Array<ArrayBuffer>[] = []
 
+  const reader = response.body.getReader()
   while (true) {
     const { done, value } = await reader.read()
-    if (done) break
+    if (done) {
+      break
+    }
 
     chunks.push(value)
     loaded += value.length

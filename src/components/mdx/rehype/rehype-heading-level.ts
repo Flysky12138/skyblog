@@ -20,7 +20,9 @@ class Stack {
    */
   add(tag: string) {
     const h = Number.parseInt(tag.match(/\d+/)?.[0] || '')
-    if (Number.isNaN(h)) return ''
+    if (Number.isNaN(h)) {
+      return ''
+    }
 
     let top = this.#tags.at(-1)
 
@@ -34,8 +36,12 @@ class Stack {
     }
 
     const order = top.order.slice()
-    if (top.h == h) order.push(order.pop()! + 1)
-    if (top.h < h) order.push(1)
+    if (top.h == h) {
+      order.push(order.pop()! + 1)
+    }
+    if (top.h < h) {
+      order.push(1)
+    }
     this.#tags.push({ h, order })
     return order.join('.')
   }

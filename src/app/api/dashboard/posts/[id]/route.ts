@@ -1,9 +1,9 @@
-import { Category, Post, Tag } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
 import { CacheClear } from '@/lib/cache'
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
+import { Category, Post, Tag } from '@/prisma/client'
 
 import { include } from '../prisma.config'
 
@@ -22,7 +22,9 @@ export const GET = async (request: NextRequest, { params }: RouteContext<'/api/d
   try {
     const { id } = await params
 
-    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    if (!id) {
+      return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    }
 
     const res = await dbGet(id)
 
@@ -47,23 +49,23 @@ const dbPost = async (data: POST['body']) => {
         }))
       },
       content: data.content,
-      description: data.description,
-      display: data.display,
-      sticky: data.sticky,
+      pinOrder: data.pinOrder,
+      summary: data.summary,
       tags: {
         connectOrCreate: data.tags.map(name => ({
           create: { name },
           where: { name }
         }))
       },
-      title: data.title
+      title: data.title,
+      visibilityMask: data.visibilityMask
     },
     include
   })
 }
 
 export type POST = RouteHandlerType<{
-  body: Pick<Post, 'authorId' | 'content' | 'description' | 'display' | 'published' | 'sticky' | 'title'> & {
+  body: Pick<Post, 'authorId' | 'content' | 'isPublished' | 'pinOrder' | 'summary' | 'title' | 'visibilityMask'> & {
     categories: Category['name'][]
     tags: Tag['name'][]
   }
@@ -74,12 +76,15 @@ export const POST = async (request: NextRequest, { params }: RouteContext<'/api/
   try {
     const { id } = await params
 
-    if (id != 'new') return await CustomResponse.error("{id} 值不为 'new'", { status: 400 })
+    if (id != 'new') {
+      return await CustomResponse.error("{id} 值不为 'new'", { status: 400 })
+    }
 
     const data = await request.json()
     const res = await dbPost(data)
 
     CacheClear.post(res.id)
+    CacheClear.posts()
 
     return await CustomResponse.encrypt(res)
   } catch (error) {
@@ -104,10 +109,9 @@ const dbPut = async (id: string, data: PUT['body']) => {
         }))
       },
       content: data.content,
-      description: data.description,
-      display: data.display,
-      published: data.published,
-      sticky: data.sticky,
+      isPublished: data.isPublished,
+      pinOrder: data.pinOrder,
+      summary: data.summary,
       tags: {
         connectOrCreate: data.tags.map(name => ({
           create: { name },
@@ -115,7 +119,8 @@ const dbPut = async (id: string, data: PUT['body']) => {
         }))
       },
       title: data.title,
-      updatedAt: data.updatedAt
+      updatedAt: data.updatedAt,
+      visibilityMask: data.visibilityMask
     },
     include,
     where: { id }
@@ -131,7 +136,9 @@ export const PUT = async (request: NextRequest, { params }: RouteContext<'/api/d
   try {
     const { id } = await params
 
-    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    if (!id) {
+      return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    }
 
     const data = await request.json()
     const res = await dbPut(id, data)
@@ -153,7 +160,7 @@ const dbPatch = async (id: string, data: PATCH['body']) => {
 }
 
 export type PATCH = RouteHandlerType<{
-  body: Pick<Post, 'published'>
+  body: Pick<Post, 'isPublished'>
   return: Awaited<ReturnType<typeof dbPatch>>
 }>
 
@@ -161,7 +168,9 @@ export const PATCH = async (request: NextRequest, { params }: RouteContext<'/api
   try {
     const { id } = await params
 
-    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    if (!id) {
+      return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    }
 
     const data = await request.json()
     const res = await dbPatch(id, data)
@@ -188,11 +197,14 @@ export const DELETE = async (request: NextRequest, { params }: RouteContext<'/ap
   try {
     const { id } = await params
 
-    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    if (!id) {
+      return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    }
 
     const res = await dbDelete(id)
 
     CacheClear.post(id)
+    CacheClear.posts()
 
     return await CustomResponse.encrypt(res)
   } catch (error) {

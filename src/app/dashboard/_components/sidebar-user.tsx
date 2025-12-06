@@ -2,6 +2,7 @@
 
 import { ChevronsUpDown, LogOut } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -16,6 +17,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/c
 import { Skeleton } from '@/components/ui/skeleton'
 
 export const SidebarUser = () => {
+  const router = useRouter()
   const { isMobile, open } = useSidebar()
   const session = useSession()
 
@@ -39,8 +41,8 @@ export const SidebarUser = () => {
               tooltip={alt}
             >
               <Avatar className="size-8 rounded-lg">
-                <AvatarImage alt={alt} src={src} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarImage alt={alt} crossOrigin="anonymous" decoding="async" loading="lazy" src={src} />
+                <AvatarFallback className="rounded-lg">{name}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{name}</span>
@@ -58,8 +60,8 @@ export const SidebarUser = () => {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="size-8 rounded-lg">
-                  <AvatarImage alt={alt} src={src} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarImage alt={alt} crossOrigin="anonymous" decoding="async" loading="lazy" src={src} />
+                  <AvatarFallback className="rounded-lg">{name}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{name}</span>
@@ -70,8 +72,9 @@ export const SidebarUser = () => {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-destructive! cursor-pointer"
-              onClick={() => {
-                signOut()
+              onClick={async () => {
+                await signOut()
+                router.refresh()
               }}
             >
               <LogOut /> 注销

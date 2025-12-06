@@ -7,7 +7,9 @@ export class DirectoryHelper {
    * 新建子文件夹
    */
   async createDirectory(dirName: string) {
-    if (!this.#dirHandle) throw new Error('请先调用 openDirectory()')
+    if (!this.#dirHandle) {
+      throw new Error('请先调用 openDirectory()')
+    }
     return this.#dirHandle.getDirectoryHandle(dirName, { create: true })
   }
 
@@ -15,7 +17,9 @@ export class DirectoryHelper {
    * 删除文件
    */
   async deleteFile(fileName: string) {
-    if (!this.#dirHandle) throw new Error('请先调用 openDirectory()')
+    if (!this.#dirHandle) {
+      throw new Error('请先调用 openDirectory()')
+    }
     await this.#dirHandle.removeEntry(fileName)
   }
 
@@ -23,7 +27,9 @@ export class DirectoryHelper {
    * 获取目录中的文件列表
    */
   async listFiles() {
-    if (!this.#dirHandle) throw new Error('请先调用 openDirectory()')
+    if (!this.#dirHandle) {
+      throw new Error('请先调用 openDirectory()')
+    }
     const files = []
     for await (const [name, handle] of this.#dirHandle.entries()) {
       files.push({ kind: handle.kind, name })
@@ -55,7 +61,9 @@ export class DirectoryHelper {
    * 读取文件内容（文本）
    */
   async readFile(fileName: string) {
-    if (!this.#dirHandle) throw new Error('请先调用 openDirectory()')
+    if (!this.#dirHandle) {
+      throw new Error('请先调用 openDirectory()')
+    }
     const fileHandle = await this.#dirHandle.getFileHandle(fileName)
     const file = await fileHandle.getFile()
     return file.text()
@@ -65,7 +73,9 @@ export class DirectoryHelper {
    * 写入文件（会覆盖）
    */
   async writeFile(fileName: string, content: FileSystemWriteChunkType) {
-    if (!this.#dirHandle) throw new Error('请先调用 openDirectory()')
+    if (!this.#dirHandle) {
+      throw new Error('请先调用 openDirectory()')
+    }
     const fileHandle = await this.#dirHandle.getFileHandle(fileName, { create: true })
     const writable = await fileHandle.createWritable()
     await writable.write(content)

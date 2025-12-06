@@ -5,16 +5,16 @@ import { Updater } from 'use-immer'
 import { uuidv7 } from 'uuidv7'
 
 import { MultiSelect } from '@/components/form/multi-select'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Textarea } from '@/components/ui/textarea'
 import { Toggle } from '@/components/ui/toggle'
-import { POST_CARD_DISPLAY } from '@/lib/constants'
+import { POST_CARD_VISIBILITY_MASK } from '@/lib/constants'
 import { CustomRequest } from '@/lib/http/request'
 import { cn } from '@/lib/utils'
 
-import { DefaultPostType } from '../page'
+import { DefaultPostType } from '../utils'
 
 interface PostDetailProps {
   children: React.ReactNode
@@ -31,123 +31,149 @@ export const PostDetail = ({ children, value: post, onChange: setPost }: PostDet
   })
 
   return (
-    <Sheet>
-      <SheetTrigger asChild>{children}</SheetTrigger>
-      <SheetContent
-        side="right"
+    <Dialog>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent
+        className="max-w-5xl"
         onCloseAutoFocus={event => {
           event.preventDefault()
         }}
       >
-        <SheetHeader>
-          <SheetTitle>文章信息</SheetTitle>
-          <SheetDescription className="hidden" />
-        </SheetHeader>
-        <div className="scrollbar-hidden flex h-full flex-col gap-4 overflow-y-auto p-4 pt-0">
-          <div className="flex flex-col gap-2">
-            <Label aria-required="true">标题</Label>
-            <Input
-              value={post.title}
-              onChange={event => {
-                setPost(state => {
-                  state.title = event.target.value
-                })
-              }}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label>描述</Label>
-            <Textarea
-              className="min-h-24"
-              value={post.description || ''}
-              onChange={event => {
-                setPost(state => {
-                  state.description = event.target.value || null
-                })
-              }}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label>分类</Label>
-            <MultiSelect
-              multiple
-              fieldNames={{ label: 'name', value: 'id' }}
-              options={categories}
-              value={post.categories}
-              onAddOption={name => ({ id: uuidv7(), name })}
-              onValueChange={payload => {
-                setPost(state => {
-                  state.categories = payload
-                })
-              }}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label>标签</Label>
-            <MultiSelect
-              multiple
-              fieldNames={{ label: 'name', value: 'id' }}
-              options={tags}
-              value={post.tags}
-              onAddOption={name => ({ id: uuidv7(), name })}
-              onValueChange={payload => {
-                setPost(state => {
-                  state.tags = payload
-                })
-              }}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label className="col-span-full">区块显示</Label>
-            <div className="grid grid-cols-10 gap-3">
-              <ShowAreaRadioButton
-                className="col-span-full h-10"
-                pressed={(post.display & POST_CARD_DISPLAY.HEADER) == POST_CARD_DISPLAY.HEADER}
-                onPressedChange={() => {
-                  setPost(state => {
-                    state.display ^= POST_CARD_DISPLAY.HEADER
-                  })
-                }}
-              >
+        <DialogHeader>
+          <DialogTitle>文章</DialogTitle>
+          <DialogDescription>文章的描述信息</DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <FieldGroup>
+            <Field>
+              <FieldLabel aria-required="true" htmlFor="title">
                 标题
-              </ShowAreaRadioButton>
-              <ShowAreaRadioButton pressed className="col-span-7 h-40">
-                正文
-              </ShowAreaRadioButton>
-              <ShowAreaRadioButton
-                className="col-span-3 h-40"
-                pressed={(post.display & POST_CARD_DISPLAY.TOC) == POST_CARD_DISPLAY.TOC}
-                onPressedChange={() => {
+              </FieldLabel>
+              <Input
+                autoComplete="off"
+                id="title"
+                value={post.title}
+                onChange={event => {
                   setPost(state => {
-                    state.display ^= POST_CARD_DISPLAY.TOC
+                    state.title = event.target.value
                   })
                 }}
-              >
-                目录
-              </ShowAreaRadioButton>
-              <ShowAreaRadioButton
-                className="col-span-full h-14"
-                pressed={(post.display & POST_CARD_DISPLAY.ISSUES) == POST_CARD_DISPLAY.ISSUES}
-                onPressedChange={() => {
+              />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="summary">描述</FieldLabel>
+              <Textarea
+                className="min-h-24"
+                id="summary"
+                value={post.summary || ''}
+                onChange={event => {
                   setPost(state => {
-                    state.display ^= POST_CARD_DISPLAY.ISSUES
+                    state.summary = event.target.value || null
                   })
                 }}
-              >
-                评论
-              </ShowAreaRadioButton>
-            </div>
-          </div>
+              />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="slug">路由</FieldLabel>
+              <Input
+                autoComplete="off"
+                id="slug"
+                value={post.slug || ''}
+                onChange={event => {
+                  setPost(state => {
+                    state.slug = event.target.value || null
+                  })
+                }}
+              />
+            </Field>
+            <Field>
+              <FieldLabel>分类</FieldLabel>
+              <MultiSelect
+                multiple
+                fieldNames={{ label: 'name', value: 'id' }}
+                options={categories}
+                value={post.categories}
+                onAddOption={name => ({ id: uuidv7(), name })}
+                onValueChange={payload => {
+                  setPost(state => {
+                    state.categories = payload
+                  })
+                }}
+              />
+            </Field>
+            <Field>
+              <FieldLabel>标签</FieldLabel>
+              <MultiSelect
+                multiple
+                fieldNames={{ label: 'name', value: 'id' }}
+                options={tags}
+                value={post.tags}
+                onAddOption={name => ({ id: uuidv7(), name })}
+                onValueChange={payload => {
+                  setPost(state => {
+                    state.tags = payload
+                  })
+                }}
+              />
+            </Field>
+          </FieldGroup>
+
+          <FieldGroup>
+            <Field>
+              <FieldLabel>封面</FieldLabel>
+            </Field>
+            <Field>
+              <FieldLabel>区块显示</FieldLabel>
+              <div className="grid grid-cols-10 gap-3">
+                <RadioArea
+                  className="col-span-full h-10"
+                  pressed={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.HEADER) == POST_CARD_VISIBILITY_MASK.HEADER}
+                  onPressedChange={() => {
+                    setPost(state => {
+                      state.visibilityMask ^= POST_CARD_VISIBILITY_MASK.HEADER
+                    })
+                  }}
+                >
+                  标题
+                </RadioArea>
+                <RadioArea pressed className="col-span-7 h-40">
+                  正文
+                </RadioArea>
+                <RadioArea
+                  className="col-span-3 h-40"
+                  pressed={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.TOC) == POST_CARD_VISIBILITY_MASK.TOC}
+                  onPressedChange={() => {
+                    setPost(state => {
+                      state.visibilityMask ^= POST_CARD_VISIBILITY_MASK.TOC
+                    })
+                  }}
+                >
+                  目录
+                </RadioArea>
+                <RadioArea
+                  className="col-span-full h-14"
+                  pressed={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.COMMENT) == POST_CARD_VISIBILITY_MASK.COMMENT}
+                  onPressedChange={() => {
+                    setPost(state => {
+                      state.visibilityMask ^= POST_CARD_VISIBILITY_MASK.COMMENT
+                    })
+                  }}
+                >
+                  评论
+                </RadioArea>
+              </div>
+            </Field>
+          </FieldGroup>
         </div>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   )
 }
 
-const ShowAreaRadioButton = ({ className, ...props }: React.ComponentProps<typeof Toggle>) => {
+const RadioArea = ({ className, ...props }: React.ComponentProps<typeof Toggle>) => {
   return (
     <Toggle
-      className={cn('text-md hover:bg-accent/40 font-title border-dashed data-[state=on]:border-solid', className)}
+      className={cn('text-md hover:bg-input/30 font-title border-dashed data-[state=on]:border-solid', className)}
       role="radio"
       variant="outline"
       {...props}

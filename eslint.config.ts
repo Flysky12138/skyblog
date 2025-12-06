@@ -1,7 +1,6 @@
+import nextVitals from 'eslint-config-next/core-web-vitals'
 import eslintPluginPerfectionist from 'eslint-plugin-perfectionist'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
-import eslintPluginReact from 'eslint-plugin-react'
-import eslintPluginReactHooks from 'eslint-plugin-react-hooks'
 import eslintPluginUnusedImports from 'eslint-plugin-unused-imports'
 import { defineConfig } from 'eslint/config'
 import tseslint from 'typescript-eslint'
@@ -15,6 +14,8 @@ type Rules = Required<ExtractConfig<InfiniteDepthConfigWithExtends>>['rules']
  * @see https://eslint.org.cn/docs/latest/rules
  */
 const eslintRules: Rules = {
+  // 永远不要在块周围省略大括号，即使它们是可选的
+  curly: 'error',
   // 使用函数表达式而不是函数声明
   'func-style': ['error', 'expression'],
   // 要求使用箭头函数进行回调
@@ -29,14 +30,19 @@ const tseslintRules: Rules = {
   '@typescript-eslint/no-empty-object-type': 'off',
   '@typescript-eslint/no-explicit-any': 'off',
   '@typescript-eslint/no-require-imports': 'off',
+  '@typescript-eslint/no-unsafe-function-type': 'off',
   '@typescript-eslint/no-unused-expressions': 'off',
   '@typescript-eslint/no-unused-vars': [
     'error',
     {
       args: 'none',
+      argsIgnorePattern: '^_',
       caughtErrors: 'none',
+      caughtErrorsIgnorePattern: '^_',
       destructuredArrayIgnorePattern: '.',
-      vars: 'all'
+      ignoreRestSiblings: true,
+      vars: 'all',
+      varsIgnorePattern: '^_'
     }
   ],
   '@typescript-eslint/return-await': 'error'
@@ -89,23 +95,20 @@ const reactRules: Rules = {
 }
 
 /**
- * @see https://www.npmjs.com/package/eslint-plugin-react-hooks
- */
-const reactHooksRules: Rules = {
-  'react-hooks/exhaustive-deps': 'error',
-  'react-hooks/rules-of-hooks': 'error'
-}
-
-/**
  * @see https://github.com/sweepline/eslint-plugin-unused-imports?tab=readme-ov-file#usage
  */
 const unusedImportsRules: Rules = {
   'unused-imports/no-unused-imports': 'error'
 }
 
+// next
+const nextRules: Rules = {
+  '@next/next/no-img-element': 'off'
+}
+
 export default defineConfig(
   {
-    ignores: ['public/', '.next/', 'src/components/ui/', 'next-env.d.ts', '*.cjs']
+    ignores: ['public/', '.next/', 'src/components/ui/', 'src/prisma/', 'next-env.d.ts', '*.mjs']
   },
   // https://typescript-eslint.io/users/configs/#projects-without-type-checking
   tseslint.configs.recommended,
@@ -116,33 +119,8 @@ export default defineConfig(
   // 对各种数据结构进行排序
   // https://perfectionist.dev/configs/recommended-natural
   eslintPluginPerfectionist.configs['recommended-natural'],
-  // https://github.com/jsx-eslint/eslint-plugin-react?tab=readme-ov-file#flat-configs
-  eslintPluginReact.configs.flat.recommended,
-  eslintPluginReact.configs.flat['jsx-runtime'],
-  eslintPluginReactHooks.configs.flat.recommended,
-  // 自定义规则
-  {
-    ignores: [
-      '**/*.d.ts',
-      '*.config.ts',
-      'src/app/**/{layout,page,loading,not-found,global-error,error,robots,sitemap,manifest,opengraph-image}.{js,ts,tsx}'
-    ],
-    rules: {
-      // 禁止默认导出
-      'no-restricted-exports': [
-        'error',
-        {
-          restrictDefaultExports: {
-            defaultFrom: true,
-            direct: true,
-            named: true,
-            namedFrom: true,
-            namespaceFrom: true
-          }
-        }
-      ]
-    }
-  },
+  // https://nextjs.org/docs/app/api-reference/config/eslint
+  nextVitals,
   {
     languageOptions: {
       ecmaVersion: 'latest',
@@ -159,13 +137,35 @@ export default defineConfig(
       ...tseslintRules,
       ...perfectionistRules,
       ...reactRules,
-      ...reactHooksRules,
-      ...unusedImportsRules
+      ...unusedImportsRules,
+      ...nextRules
     },
     settings: {
       react: {
         version: 'detect'
       }
+    }
+  },
+  // 禁止默认导出
+  {
+    ignores: [
+      '**/*.d.ts',
+      '*.config.ts',
+      'src/app/**/{layout,page,loading,not-found,global-error,error,robots,sitemap,manifest,opengraph-image}.{js,ts,tsx}'
+    ],
+    rules: {
+      'no-restricted-exports': [
+        'error',
+        {
+          restrictDefaultExports: {
+            defaultFrom: true,
+            direct: true,
+            named: true,
+            namedFrom: true,
+            namespaceFrom: true
+          }
+        }
+      ]
     }
   }
 )

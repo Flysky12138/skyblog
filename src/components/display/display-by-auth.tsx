@@ -2,16 +2,16 @@
 
 import { useSession } from 'next-auth/react'
 
-import { Auth } from '@/../types/auth'
+import { Role } from '@/prisma/enums'
 
 import { DisplayByConditional, DisplayByConditionalProps } from './display-by-conditional'
 
 interface DisplayByAuthProps extends Omit<DisplayByConditionalProps, 'condition'> {
-  role: Auth['role']
+  role: Role
 }
 
 export const DisplayByAuth = ({ role, ...props }: DisplayByAuthProps) => {
   const session = useSession()
 
-  return <DisplayByConditional condition={session.data?.role == role} {...props} />
+  return <DisplayByConditional condition={session.data?.user?.role == role} {...props} />
 }

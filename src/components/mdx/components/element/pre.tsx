@@ -24,19 +24,23 @@ export const Pre = ({ children, className, tabIndex, ...props }: React.Component
   const [copied, setCopied] = React.useState(false)
 
   const preRef = React.useRef<HTMLPreElement>(null)
-  const handleCopyClick = () => {
-    if (copied) return
+  const handleCopyClick = React.useEffectEvent(() => {
+    if (copied) {
+      return
+    }
     const code = preRef.current?.querySelector('code')?.textContent
-    if (!code) return
+    if (!code) {
+      return
+    }
     copy(code)
     setCopied(true)
     setTimeout(() => {
       setCopied(false)
     }, 2000)
-  }
+  })
 
   return (
-    <pre ref={preRef} className={cn('group/pre relative', className)} {...props}>
+    <pre ref={preRef} className={cn('group/pre bg-sheet relative rounded-none p-0', className)} {...props}>
       {children}
       <div
         className={cn(

@@ -13,7 +13,9 @@ export const PADDING = {
  * @see https://github.com/guansss/pixi-live2d-display
  */
 export const initGlobalScript = async () => {
-  if (window.PIXI?.live2d?.ZipLoader) return
+  if (window.PIXI?.live2d?.ZipLoader) {
+    return
+  }
   // live2d v2/3+ support & pixi & pixi-live2d-display
   await loadJSFile('/live2d/lib/live2d.min.js')
   await loadJSFile('/live2d/lib/live2dcubismcore.min.js')
@@ -35,7 +37,9 @@ export const initGlobalScript = async () => {
  */
 export const loadModel = async (source: JSONObject | ModelSettings | string) => {
   try {
-    if (!window.PIXI?.live2d) throw new Error('Live2D is not loaded')
+    if (!window.PIXI?.live2d) {
+      throw new Error('Live2D is not loaded')
+    }
     const model = await window.PIXI.live2d.Live2DModel.from(source)
     // 设置模型样式
     model.x = PADDING.x

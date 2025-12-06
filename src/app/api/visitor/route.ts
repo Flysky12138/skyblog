@@ -1,29 +1,25 @@
-import { Prisma } from '@prisma/client'
-import { geolocation } from '@vercel/functions'
-import { after, NextRequest, userAgent } from 'next/server'
+import { after, NextRequest } from 'next/server'
 
-import { getRealIp } from '@/lib/http/headers'
+import { getUserVisitInfo } from '@/lib/http/headers'
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@/prisma/client'
 
-const dbPost = async (data: Prisma.VisitorLogCreateInput) => {
-  return prisma.visitorLog.create({ data })
+const dbPost = async (data: Prisma.ActivityLogCreateInput) => {
+  return prisma.activityLog.create({ data })
 }
 
 export const POST = async (request: NextRequest) => {
-  const VISITED = 'visited'
   try {
+    const VISITED = 'visited'
+
     if (request.cookies.has(VISITED)) {
       return new Response()
     }
 
     after(async () => {
-      await dbPost({
-        agent: userAgent(request),
-        geo: geolocation(request),
-        ip: getRealIp(request),
-        referer: request.headers.get('referer')
-      })
+      const visitInfo = getUserVisitInfo(request)
+      await dbPost(visitInfo)
     })
 
     return new Response(null, {

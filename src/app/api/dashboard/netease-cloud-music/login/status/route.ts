@@ -3,7 +3,7 @@ import { createRequire } from 'module'
 import NeteaseCloudMusicApi from 'NeteaseCloudMusicApi'
 import { NextRequest } from 'next/server'
 
-import { VERCEL_EDGE_CONFIG } from '@/lib/constants'
+import { VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
 import { CustomResponse } from '@/lib/http/response'
 
 const require = createRequire(import.meta.url)
@@ -14,7 +14,7 @@ export type GET = RouteHandlerType<{}>
 export const GET = async (request: NextRequest) => {
   try {
     const { body } = await login_status({
-      cookie: await get(VERCEL_EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
+      cookie: await get(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
     }).catch(error => Promise.reject(error.body.message))
 
     return await CustomResponse.encrypt(body)

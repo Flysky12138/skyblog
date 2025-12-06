@@ -1,25 +1,30 @@
 'use client'
 
 import React from 'react'
-import { useEvent, useMount } from 'react-use'
+import { useMount } from 'react-use'
 
-import { DefaultPostType, MessageEventDataMounted, MessageEventDataRefresh } from '@/app/dashboard/posts/[id]/page'
+import { BROADCAST_CHANNEL_ID, DefaultPostType, MessageEventDataMounted, MessageEventDataRefresh } from '@/app/dashboard/posts/[id]/utils'
 import { MDXClient } from '@/components/mdx/client'
 import { Card } from '@/components/static/card'
+import { useBroadcastChannel } from '@/hooks/use-broadcast-channel'
 
 export default function Page() {
   const [post, setPost] = React.useState<DefaultPostType>()
 
+  const { postMessage } = useBroadcastChannel<MessageEventDataRefresh, MessageEventDataMounted>(BROADCAST_CHANNEL_ID, ({ type, value }) => {
+    if (type != 'post-refresh') {
+      return
+    }
+    setPost(value)
+  })
+
   useMount(() => {
-    window.opener.postMessage({ type: 'post-preview-mounted' } satisfies MessageEventDataMounted, window.origin)
+    postMessage({ type: 'post-preview-mounted' })
   })
 
-  useEvent('message', ({ data, origin }: MessageEvent<MessageEventDataRefresh>) => {
-    if (origin != window.origin || data.type != 'post-refresh') return
-    setPost(data.value)
-  })
-
-  if (!post?.content) return null
+  if (!post?.content) {
+    return null
+  }
 
   return (
     <Card asChild>

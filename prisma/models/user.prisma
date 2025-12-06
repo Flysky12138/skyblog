@@ -3,15 +3,30 @@ enum Role {
   ADMIN
 }
 
-model User {
-  id        String   @id @default(uuid(7))
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  name      String?
-  avatarUrl String?
-  role      Role     @default(USER)
-  posts     Post[]
+enum UserStatus {
+  ACTIVE
+  DISABLED
+  BANNED
+}
 
+model User {
+  id        String    @id @default(uuid(7))
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  email     String  @unique
+  name      String?
+  avatarUrl String? @map("avatar_url")
+
+  role   Role       @default(USER)
+  status UserStatus @default(ACTIVE)
+
+  posts    Post[]
+  comments Comment[]
+
+  @@index([status])
+  @@index([deletedAt])
+  @@index([status, role])
   @@map("users")
 }

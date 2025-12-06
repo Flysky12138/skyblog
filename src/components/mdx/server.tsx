@@ -1,9 +1,10 @@
 'use server'
 
+import './css'
+
 import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote-client/rsc'
 
 import { components } from './components'
-import './css'
 import { mdxOptions } from './options'
 
 interface MDXServerProps {

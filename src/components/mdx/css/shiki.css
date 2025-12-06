@@ -14,14 +14,11 @@ figure[data-rehype-pretty-code-figure] {
   [data-rehype-pretty-code-caption] {
     @apply m-0 px-3 py-1 text-xs;
   }
-  pre {
-    @apply bg-sheet relative rounded-none p-0;
-    &:has(+ [data-rehype-pretty-code-caption]) {
-      @apply border-divide border-b;
-    }
+  [data-line] {
+    @apply px-6;
   }
-  code {
-    @apply overflow-x-auto py-2.5;
+  pre:has(+ [data-rehype-pretty-code-caption]) {
+    @apply border-divide border-b;
   }
 }
 
@@ -33,38 +30,43 @@ code[data-theme] span {
 /* 行号 */
 code[data-line-numbers] {
   counter-reset: line;
-  & > [data-line]::before {
-    counter-increment: line;
-    content: counter(line);
-    @apply mr-6 inline-block w-4 text-right text-slate-500;
+  @apply static;
+  [data-line] {
+    @apply px-0 pr-4;
+    @apply [--line-before-bg:#F5F7F9] dark:[--line-before-bg:#292930];
+    &::before {
+      counter-increment: line;
+      content: counter(line);
+      @apply sticky left-0 inline-block w-16 pr-5 text-right text-slate-500;
+      @apply bg-(--line-before-bg);
+    }
   }
 }
 
-/* 行高亮 */
-pre [data-line] {
-  @apply border-l-2 border-transparent px-4;
-  &.highlighted, /** @shikijs/transformers transformerNotationHighlight */
-  &[data-highlighted-line] {
-    @apply border-slate-300 dark:border-slate-600;
-    @apply bg-slate-300/30 dark:bg-slate-600/30;
-  }
+/**
+ * 行高亮
+ * @shikijs/transformers transformerNotationHighlight
+ */
+pre [data-line].highlighted {
+  @apply border-slate-300 dark:border-slate-600;
+  @apply bg-slate-300/30 dark:bg-slate-600/30;
+  @apply [--line-before-bg:#E8ECF2] dark:[--line-before-bg:#333642];
 }
 
 /** 
  * 标记增删的行
  * @shikijs/transformers transformerNotationDiff
  */
-pre [data-line] {
-  &.diff {
-    @apply relative after:absolute after:left-1;
-    @apply border-transparent!;
-  }
-  &.diff.add {
+pre [data-line].diff {
+  @apply after:absolute after:left-2;
+  &.add {
     @apply after:text-green-500 after:content-["+"];
     @apply bg-green-100 dark:bg-green-900/30;
+    @apply [--line-before-bg:var(--color-green-100)] dark:[--line-before-bg:#283630];
   }
-  &.diff.remove {
+  &.remove {
     @apply after:text-red-500 after:content-["-"];
     @apply bg-red-100 dark:bg-red-900/30;
+    @apply [--line-before-bg:var(--color-red-100)] dark:[--line-before-bg:#41272B];
   }
 }

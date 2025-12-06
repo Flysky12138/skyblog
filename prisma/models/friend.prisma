@@ -1,10 +1,17 @@
 model Friend {
   id        String   @id @default(uuid(7))
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  subtitle  String?
-  url       String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
+  name        String
+  description String?
+  siteUrl     String  @map("site_url")
+
+  order    Int     @default(0)
+  isActive Boolean @default(true) @map("is_active")
+
+  @@index([isActive])
+  @@index([order(sort: Desc), createdAt(sort: Desc)])
+  @@index([isActive, order(sort: Desc), createdAt(sort: Desc)])
   @@map("friends")
 }

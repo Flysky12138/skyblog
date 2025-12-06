@@ -1,13 +1,13 @@
-import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@/prisma/client'
 
 const select = {
   _count: {
     select: {
-      clashs: true
+      clashes: true
     }
   },
   content: true,
@@ -76,7 +76,9 @@ export type PUT = RouteHandlerType<{
 export const PUT = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    if (!id) {
+      return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    }
 
     const data = await request.json()
     const res = await dbPut(id, data)
@@ -101,7 +103,9 @@ export type DELETE = RouteHandlerType<{
 export const DELETE = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    if (!id) {
+      return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    }
 
     const res = await dbDelete(id)
 

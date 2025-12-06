@@ -1,3 +1,5 @@
+'use client'
+
 import { isBrowser } from 'es-toolkit'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -21,18 +23,57 @@ interface PortalProps extends React.PropsWithChildren {
 export const Portal = ({ children, container, disabled = false, selector, onMount }: PortalProps) => {
   const isMounted = useMounted()
 
-  const targetEl = React.useMemo(() => {
-    if (!isBrowser()) return null
-    if (container) return container
-    if (selector) {
-      const found = document.querySelector(selector)
-      if (found) return found
-    }
-    return null
-  }, [container, selector])
+  const [targetEl, setTargetEl] = React.useState<Element | null>(null)
+  const createdRef = React.useRef<Element | null>(null)
 
   React.useEffect(() => {
-    if (!isBrowser()) return
+    if (!isBrowser()) {
+      return
+    }
+
+    // 如果被禁用，确保不创建或保留容器
+    if (disabled) {
+      if (createdRef.current) {
+        createdRef.current.remove()
+        createdRef.current = null
+      }
+      setTargetEl(null)
+      return
+    }
+
+    // 优先使用显式提供的 container
+    if (container) {
+      setTargetEl(container)
+      return
+    }
+
+    // 尝试使用 selector 查找容器
+    if (selector) {
+      const found = document.querySelector(selector)
+      if (found) {
+        setTargetEl(found)
+        return
+      }
+    }
+
+    // 回退：创建一个元素并挂载到 body，卸载时清理该元素
+    const el = document.createElement('div')
+    document.body.append(el)
+    createdRef.current = el
+    setTargetEl(el)
+
+    return () => {
+      if (createdRef.current) {
+        createdRef.current.remove()
+        createdRef.current = null
+      }
+    }
+  }, [container, selector, disabled])
+
+  React.useEffect(() => {
+    if (!isBrowser()) {
+      return
+    }
     if (targetEl && onMount) {
       onMount(targetEl)
     }

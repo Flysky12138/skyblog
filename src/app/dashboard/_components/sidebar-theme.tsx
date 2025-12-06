@@ -12,7 +12,9 @@ export const SidebarTheme = () => {
   const { isDark, toggleTheme } = useTheme()
 
   const isMounted = useMounted()
-  if (!isMounted) return <Skeleton className="h-8" />
+  if (!isMounted) {
+    return <Skeleton className="h-8" />
+  }
 
   return (
     <SidebarMenu>

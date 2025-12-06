@@ -12,8 +12,10 @@ img {
   @apply dark:brightness-80;
 }
 article {
+  @apply @container;
   @apply font-article overflow-hidden;
   @apply prose prose-sm prose-sky dark:prose-invert md:prose-base;
+  @apply prose-ul:ps-[1em];
   @apply *:first:mt-0! *:last:mb-0!;
   ul {
     @apply list-disc;

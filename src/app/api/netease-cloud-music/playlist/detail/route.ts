@@ -3,7 +3,7 @@ import NeteaseCloudMusicApi from 'NeteaseCloudMusicApi'
 import { cacheLife, cacheTag } from 'next/cache'
 import { NextRequest } from 'next/server'
 
-import { CacheTag } from '@/lib/cache'
+import { CACHE_TAG } from '@/lib/constants'
 import { CustomResponse } from '@/lib/http/response'
 
 import { getNeteaseCloudMusicCookie } from '../../utils'
@@ -14,7 +14,7 @@ const { playlist_detail } = require('NeteaseCloudMusicApi') as typeof NeteaseClo
 const getPlaylistDetail = async (id: string) => {
   'use cache'
   cacheLife('days')
-  cacheTag(CacheTag.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
+  cacheTag(CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
 
   try {
     const res: any = await playlist_detail({ cookie: await getNeteaseCloudMusicCookie(), id })
@@ -55,7 +55,9 @@ export type GET = RouteHandlerType<{
 export const GET = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    if (!id) {
+      return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    }
 
     const data = await getPlaylistDetail(id)
 

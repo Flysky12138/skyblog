@@ -1,5 +1,6 @@
 'use client'
 
+import { SearchIcon } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import React from 'react'
 import { toast } from 'sonner'
@@ -8,11 +9,11 @@ import { useImmer } from 'use-immer'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Card } from '@/components/static/card'
-import { Input } from '@/components/ui/input'
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { Spinner } from '@/components/ui/spinner'
 import { CustomRequest } from '@/lib/http/request'
 
-import { AudioProps } from './_components/audio'
+import { AudioRef } from './_components/audio'
 import { DownloadList } from './_components/download-list'
 import { SongList } from './_components/song-list'
 
@@ -25,12 +26,15 @@ export default function Page() {
   const {
     data = [],
     isLoading,
-    setSize,
-    size
+    setSize
   } = useSWRInfinite(
     (pageIndex, previousPageData) => {
-      if (!keywords) return null
-      if (previousPageData && !previousPageData?.hasMore) return null
+      if (!keywords) {
+        return null
+      }
+      if (previousPageData && !previousPageData?.hasMore) {
+        return null
+      }
       return [pageIndex, keywords, '0198f59d-bdf5-72dd-a3e1-1cba5681d3b7']
     },
     async ([page, keywords]) => {
@@ -66,8 +70,8 @@ export default function Page() {
   const hasMore = data.at(-1)?.hasMore
 
   // 播放器
-  const audioRef = React.useRef<NonNullable<AudioProps['ref']>['current']>(null)
-  const [player, setPlayer] = useImmer<(typeof data)[number]['songs'][number] | null>(null)
+  const audioRef = React.useRef<AudioRef>(null)
+  const [player, setPlayer] = useImmer<(typeof songs)[number] | null>(null)
 
   React.useEffect(() => {
     const _search = decodeURIComponent(new URLSearchParams(window.location.search).get('search') || '')
@@ -76,31 +80,39 @@ export default function Page() {
   }, [])
 
   return (
-    <div className="mx-auto flex h-[calc(var(--height-main)-2*var(--py))] max-w-xl flex-col gap-4">
-      <Input
-        placeholder="搜索 / 粘贴歌单或专辑分享链接"
-        value={search}
-        onChange={event => {
-          const text = event.target.value
-          const playlistId = text.match(/playlist(?:\?id=|\/)(\d+)/)?.[1]
-          if (playlistId) {
-            setSearch(`p${playlistId}`)
-            toast.success('识别到歌单，已自动转换')
-            return
-          }
-          const albumId = text.match(/album(?:\?id=|\/)(\d+)/)?.[1]
-          if (albumId) {
-            setSearch(`a${albumId}`)
-            toast.success('识别到专辑，已自动转换')
-            return
-          }
-          setSearch(text)
-        }}
-        onKeyDown={event => {
-          if (event.key != 'Enter') return
-          setKeywords(search.trim())
-        }}
-      />
+    <>
+      <InputGroup>
+        <InputGroupInput
+          placeholder="搜索 / 粘贴歌单或专辑分享链接"
+          value={search}
+          onChange={event => {
+            const text = event.target.value
+            const playlistId = text.match(/playlist(?:\?id=|\/)(\d+)/)?.[1]
+            if (playlistId) {
+              setSearch(`p${playlistId}`)
+              toast.success('识别到歌单，已自动转换')
+              return
+            }
+            const albumId = text.match(/album(?:\?id=|\/)(\d+)/)?.[1]
+            if (albumId) {
+              setSearch(`a${albumId}`)
+              toast.success('识别到专辑，已自动转换')
+              return
+            }
+            setSearch(text)
+          }}
+          onKeyDown={event => {
+            if (event.key != 'Enter') {
+              return
+            }
+            setKeywords(search.trim())
+          }}
+        />
+        <InputGroupAddon>
+          <SearchIcon />
+        </InputGroupAddon>
+      </InputGroup>
+
       <DisplayByConditional
         condition={songs.length > 0}
         fallback={
@@ -121,8 +133,8 @@ export default function Page() {
       >
         <SongList
           hasMore={hasMore}
-          loadMoreRows={() => {
-            setSize(size + 1)
+          loadMoreRows={async () => {
+            await setSize(size => size + 1)
           }}
           songs={songs}
           onRowClick={song => {
@@ -133,8 +145,9 @@ export default function Page() {
           }}
         />
       </DisplayByConditional>
+
       <DownloadList songs={songs} />
       <Audio ref={audioRef} song={player} />
-    </div>
+    </>
   )
 }

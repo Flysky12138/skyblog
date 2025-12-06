@@ -1,5 +1,4 @@
 # pnpm dlx shadcn@latest add -y -o "https://21st.dev/r/davidhzdev/gradient-text"
-# pnpm dlx shadcn@latest add "https://21st.dev/r/haydenbleasel/spinner"
 
 pnpm dlx shadcn@latest add -y -o \
     alert-dialog \
@@ -8,12 +7,15 @@ pnpm dlx shadcn@latest add -y -o \
     badge \
     breadcrumb \
     button \
+    button-group \
     checkbox \
     command \
     dialog \
     drawer \
     dropdown-menu \
+    field \
     input \
+    input-group \
     item \
     label \
     pagination \

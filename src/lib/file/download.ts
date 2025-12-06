@@ -6,10 +6,9 @@
 export const download = async (blob: Blob, filename: string) => {
   const url = URL.createObjectURL(blob)
 
-  const a = Object.assign(document.createElement('a'), {
-    download: filename,
-    href: url
-  })
+  const a = document.createElement('a')
+  a.download = filename
+  a.href = url
 
   a.click()
 

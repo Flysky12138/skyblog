@@ -7,11 +7,11 @@ const dbGet = async (id: string) => {
   return prisma.post.findUnique({
     select: {
       categories: true,
+      commentCount: true,
       createdAt: true,
-      links: true,
-      published: true,
+      isPublished: true,
       updatedAt: true,
-      views: true
+      viewCount: true
     },
     where: { id }
   })
@@ -27,7 +27,9 @@ export type GET = RouteHandlerType<{
 export const GET = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    if (!id) {
+      return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    }
 
     const res = await dbGet(id)
     return await CustomResponse.encrypt(res)

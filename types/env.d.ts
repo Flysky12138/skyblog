@@ -35,7 +35,7 @@ declare namespace NodeJS {
     /**
      * monaco editor cdn
      * @example
-     * "/cdn/cdn.jsdelivr.net/npm/monaco-editor@0.51.0/"
+     * "/cdn/cdn.jsdelivr.net/npm/monaco-editor@0.51.0/min/vs"
      */
     NEXT_PUBLIC_CDN_MONACO_EDITOR: string
     /** 博客描述 */
@@ -51,43 +51,11 @@ declare namespace NodeJS {
      */
     NEXT_PUBLIC_PAGE_POSTCARD_COUNT: string
     /**
-     * cloudflare r2 bucket's name
-     * @example
-     * "skyblog"
-     */
-    NEXT_PUBLIC_R2_BUCKET_NAME: string
-    /**
      * cloudflare r2 bucket's origin url for direct visit file
      * @example
      * "https://r2.flysky.xyz"
      */
     NEXT_PUBLIC_R2_URL: StartsWith<Protocol>
-    /**
-     * rybbit id
-     * @see https://www.rybbit.io/
-     */
-    NEXT_PUBLIC_RYBBIT_ID?: string
-    /**
-     * cloudflare r2 api id
-     * @see https://dash.cloudflare.com/?to=/:account/r2/api-tokens
-     * @example
-     * "e44e40ebab57c6e45fc8daffc43b8aac"
-     */
-    NEXT_PUBLIC_S3_ACCESS_ID: string
-    /**
-     * cloudflare r2 api key
-     * @see https://dash.cloudflare.com/?to=/:account/r2/api-tokens
-     * @example
-     * "05e34ea2c231c6baa4d84591bb65df7eb7c2a7989c2d3d6e8638135c526aa65a"
-     */
-    NEXT_PUBLIC_S3_ACCESS_KEY: string
-    /**
-     * s3 api url
-     * @see https://dash.cloudflare.com/?to=/:account/r2/api-tokens
-     * @example
-     * "https://1e7c6cead9e4b1aa143fb3c5aef8cead.r2.cloudflarestorage.com"
-     */
-    NEXT_PUBLIC_S3_API: StartsWith<Protocol>
     /** 博客名称 */
     NEXT_PUBLIC_TITLE: string
     /**
@@ -96,6 +64,33 @@ declare namespace NodeJS {
      * "http://localhost:3000"
      */
     NEXT_PUBLIC_WEBSITE_URL: StartsWith<Protocol>
+    /**
+     * cloudflare r2 api id
+     * @see https://dash.cloudflare.com/?to=/:account/r2/api-tokens
+     * @example
+     * "e44e40ebab57c6e45fc8daffc43b8aac"
+     */
+    R2_ACCESS_KEY_ID: string
+    /**
+     * cloudflare r2 bucket's name
+     * @example
+     * "skyblog"
+     */
+    R2_BUCKET_NAME: string
+    /**
+     * s3 api url
+     * @see https://dash.cloudflare.com/?to=/:account/r2/api-tokens
+     * @example
+     * "https://1e7c6cead9e4b1aa143fb3c5aef8cead.r2.cloudflarestorage.com"
+     */
+    R2_S3_API: StartsWith<Protocol>
+    /**
+     * cloudflare r2 api key
+     * @see https://dash.cloudflare.com/?to=/:account/r2/api-tokens
+     * @example
+     * "05e34ea2c231c6baa4d84591bb65df7eb7c2a7989c2d3d6e8638135c526aa65a"
+     */
+    R2_SECRET_ACCESS_KEY: string
     /**
      * token for browserless api
      * @see https://cloud.browserless.io

@@ -5,44 +5,22 @@ import { useSession } from 'next-auth/react'
 import { ErrorBoundary } from 'next/dist/client/components/error-boundary'
 import { useRouter } from 'next/navigation'
 import React from 'react'
-import { useAsync, useDebounce, useEvent, useWindowSize } from 'react-use'
+import { useAsync, useDebounce, useWindowSize } from 'react-use'
 import { toast } from 'sonner'
 import { useImmer } from 'use-immer'
-import { uuidv7 } from 'uuidv7'
 
-import { GET } from '@/app/api/dashboard/posts/[id]/route'
 import { MDXClient } from '@/components/mdx/client'
 import { MonacoEditor, MonacoEditorRef } from '@/components/monaco-editor'
 import { markdownConfig } from '@/components/monaco-editor/languages/markdown'
 import { ErrorComponent } from '@/components/static/error-component'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { POST_CARD_DISPLAY } from '@/lib/constants'
+import { useBroadcastChannel } from '@/hooks/use-broadcast-channel'
 import { CustomRequest } from '@/lib/http/request'
-import { Toast } from '@/lib/toast'
+import { toastPromise } from '@/lib/toast'
 
 import { EditorToolbar, EditorToolbarProps } from './_components/editor-toolbar'
-
-export type DefaultPostType = NonNullable<GET['return']>
-export interface MessageEventDataMounted extends MessageEventData<'post-preview-mounted'> {}
-export interface MessageEventDataRefresh extends MessageEventData<'post-refresh', DefaultPostType> {}
-
-const DEFAULT_POST: DefaultPostType = {
-  authorId: '',
-  categories: [],
-  content: null,
-  createdAt: new Date(),
-  description: null,
-  display: POST_CARD_DISPLAY.HEADER | POST_CARD_DISPLAY.ISSUES | POST_CARD_DISPLAY.TOC,
-  id: '-1',
-  links: 0,
-  published: false,
-  sticky: 0,
-  tags: [],
-  title: '',
-  updatedAt: new Date(),
-  views: 0
-}
+import { BROADCAST_CHANNEL_ID, DEFAULT_POST, DefaultPostType, MessageEventDataMounted, MessageEventDataRefresh } from './utils'
 
 export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   const router = useRouter()
@@ -54,8 +32,10 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
 
   // 文章数据
   const [post, setPost] = useImmer(DEFAULT_POST)
-  const oldPost = React.useRef(DEFAULT_POST)
-  const oldCode = React.useRef('')
+  const [oldValue, setOldValue] = useImmer({
+    code: '',
+    post: DEFAULT_POST
+  })
 
   // Diff 对比模式
   const [isCompare, setIsCompare] = React.useState(false)
@@ -66,103 +46,116 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   const dragConstraintsRef = React.useRef<HTMLDivElement>(null)
   // 编辑器引用
   const editorRef = React.useRef<MonacoEditorRef>(null)
-  // 预览窗口引用
-  const previewWindowRef = React.useRef<WindowProxy>(null)
 
   // 初始化数据
-  const initData = (data: DefaultPostType | null) => {
-    if (!data) return
+  const initData = React.useEffectEvent((data: DefaultPostType | null) => {
+    if (!data) {
+      return
+    }
     setPost(data)
-    oldPost.current = data
-    oldCode.current = data.content || ''
-  }
+    setOldValue(draft => {
+      draft.code = data.content || ''
+      draft.post = data
+    })
+  })
 
   // 请求数据
   useAsync(async () => {
-    if (isCreate) return
+    if (isCreate) {
+      return
+    }
     const data = await CustomRequest('GET /api/dashboard/posts/[id]', { params: { id } })
     initData(data)
   }, [id])
 
-  // 预览数据更新
-  const refreshPreviewWindow = () => {
+  const { postMessage } = useBroadcastChannel<MessageEventDataMounted, MessageEventDataRefresh>(BROADCAST_CHANNEL_ID, ({ type }, channel) => {
+    // 窗口加载完成后获取一次预览数据
+    if (type != 'post-preview-mounted') {
+      return
+    }
     setPreviewContent(post.content)
-    previewWindowRef.current?.postMessage({ type: 'post-refresh', value: post } satisfies MessageEventDataRefresh, window.origin)
-  }
-  useDebounce(refreshPreviewWindow, 1000, [post])
-
-  // 窗口加载完成后获取一次预览数据
-  useEvent('message', ({ data, origin }: MessageEvent<MessageEventDataMounted>) => {
-    if (origin != window.origin || data.type != 'post-preview-mounted') return
-    refreshPreviewWindow()
+    channel.postMessage({ type: 'post-refresh', value: post } satisfies MessageEventDataRefresh)
   })
+  // 预览数据更新
+  useDebounce(
+    () => {
+      setPreviewContent(post.content)
+      postMessage({ type: 'post-refresh', value: post })
+    },
+    1000,
+    [post]
+  )
+
+  // 禁用按钮
+  const disabled = React.useMemo(
+    () => ({
+      format: isCompare,
+      save: isCreate ? !post.content : isEqual(post, oldValue.post)
+    }),
+    [isCompare, isCreate, oldValue.post, post]
+  )
 
   // 创建
-  const handleCreate = async () => {
+  const handleCreate = React.useEffectEvent(async () => {
     if (!post.title) {
       toast.error('表单验证失败', { richColors: true })
       return
     }
-    const data = await Toast(
+    const data = await toastPromise(
       CustomRequest('POST /api/dashboard/posts/[id]', {
         body: {
-          authorId: session.data?.id || uuidv7(),
+          authorId: session.data?.user?.userId as string,
           categories: post.categories.map(({ name }) => name),
           content: post.content,
-          description: post.description,
-          display: post.display,
-          published: post.published,
-          sticky: post.sticky,
+          isPublished: post.isPublished,
+          pinOrder: post.pinOrder,
+          summary: post.summary,
           tags: post.tags.map(({ name }) => name),
-          title: post.title
+          title: post.title,
+          visibilityMask: post.visibilityMask
         },
         params: { id }
       }),
       {
-        success: '保存成功'
+        success: '创建成功'
       }
     )
     router.replace(`/dashboard/posts/${data.id}`)
-  }
+  })
 
   // 更新
-  const handleUpdate: EditorToolbarProps['onUpdate'] = async type => {
+  const handleUpdate: EditorToolbarProps['onUpdate'] = React.useEffectEvent(async type => {
     if (!post.title) {
       toast.error('表单验证失败', { richColors: true })
       return
     }
-    const data = await Toast(
+    const data = await toastPromise(
       CustomRequest('PUT /api/dashboard/posts/[id]', {
         body: {
           categories: post.categories.map(({ name }) => name),
           content: post.content,
-          description: post.description,
-          display: post.display,
-          published: post.published,
-          sticky: post.sticky,
+          isPublished: post.isPublished,
+          pinOrder: post.pinOrder,
+          summary: post.summary,
           tags: post.tags.map(({ name }) => name),
           title: post.title,
-          updatedAt: type == 'normal' ? new Date() : undefined
+          updatedAt: type == 'normal' ? new Date() : undefined,
+          visibilityMask: post.visibilityMask
         },
         params: { id }
       }),
       {
-        success: '保存成功'
+        success: '更新成功'
       }
     )
     initData(data)
-  }
+  })
 
   return (
     <div ref={dragConstraintsRef} className="relative flex h-full max-h-screen overflow-hidden">
-      <style>{`main { padding: 0 !important }`}</style>
       <EditorToolbar
         className="absolute bottom-2 left-1/2 z-50 -translate-x-1/2"
-        disabled={{
-          format: isCompare,
-          // eslint-disable-next-line react-hooks/refs
-          save: isCreate ? !post.content : isEqual(post, oldPost.current)
-        }}
+        disabled={disabled}
         dragConstraints={dragConstraintsRef}
         isCreate={isCreate}
         post={post}
@@ -175,7 +168,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
           editorRef.current?.format()
         }}
         onPreview={() => {
-          previewWindowRef.current = window.open(`/posts/preview`, '_blank')
+          window.open(`/posts/preview`, '_blank')
         }}
         onUpdate={handleUpdate}
       />
@@ -183,13 +176,12 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
         <ResizablePanel defaultSize={60}>
           <MonacoEditor
             ref={editorRef}
-            code={post.content || ''}
-            diffMode={isCompare}
-            // eslint-disable-next-line react-hooks/refs
-            oldCode={oldCode.current}
+            isDiffMode={isCompare}
+            originalValue={oldValue.code}
+            value={post.content || ''}
             onChange={value => {
-              setPost(state => {
-                state.content = value || null
+              setPost(draft => {
+                draft.content = value || null
               })
             }}
             {...markdownConfig}

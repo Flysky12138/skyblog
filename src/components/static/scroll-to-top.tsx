@@ -24,27 +24,39 @@ export const ScrollToTop = ({ className, showOnScrollYOverflow = 200, ...props }
 
   const { y, yProgress } = useWindowScrollState()
 
-  const timer = React.useRef<NodeJS.Timeout>(undefined)
   React.useEffect(() => {
-    clearTimeout(timer.current)
     setShowProgress(true)
-    timer.current = setTimeout(setShowProgress, 500, false)
+    const timer = setTimeout(() => {
+      setShowProgress(false)
+    }, 500)
+    return () => clearTimeout(timer)
   }, [yProgress])
 
-  if (!isMounted) return null
-  if (y <= showOnScrollYOverflow) return null
+  const handleClick = React.useEffectEvent(() => {
+    if (showProgress) {
+      return
+    }
+    document.documentElement.scrollTop = Math.min(document.documentElement.scrollTop, 700)
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ behavior: 'smooth', top: 0 })
+    })
+  })
+
+  if (!isMounted) {
+    return null
+  }
+  if (y <= showOnScrollYOverflow) {
+    return null
+  }
 
   return (
     <Button
-      aria-label="Scroll back to top"
+      aria-label="scroll back to top"
       className={cn('relative p-4 select-none', className, {
         'cursor-default': showProgress
       })}
       size="icon"
-      onClick={() => {
-        if (showProgress) return
-        window.scrollTo({ behavior: 'smooth', top: 0 })
-      }}
+      onClick={handleClick}
       {...props}
     >
       <AnimatePresence initial={false} mode="popLayout">

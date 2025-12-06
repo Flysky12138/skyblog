@@ -9,7 +9,7 @@ export const SidebarLogo = () => {
     <SidebarMenu>
       <SidebarMenuItem>
         <SidebarMenuButton asChild tooltip={process.env.NEXT_PUBLIC_TITLE}>
-          <Link href="/">
+          <Link aria-label="to home page" href="/">
             <Icon className="size-5" />
             <Logo />
           </Link>

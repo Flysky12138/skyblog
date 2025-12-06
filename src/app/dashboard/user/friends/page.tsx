@@ -20,7 +20,7 @@ import {
 } from '@/components/ui-overwrite/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { CustomRequest } from '@/lib/http/request'
-import { Toast } from '@/lib/toast'
+import { toastPromise } from '@/lib/toast'
 import { cn } from '@/lib/utils'
 
 import { FriendDetail } from './_components/friend-detail'
@@ -55,19 +55,19 @@ export default function Page() {
           >
             <p className="absolute bottom-1 left-2 text-lg opacity-75">{friend.name}</p>
             <Button asChild size="icon" variant="outline">
-              <Link href={friend.url as Route} rel="noreferrer nofollow" target="_blank">
+              <Link href={friend.siteUrl as Route} rel="noreferrer nofollow" target="_blank">
                 <Eye />
               </Link>
             </Button>
             <FriendDetail
               value={friend}
               onSubmit={async body => {
-                const data = await Toast(CustomRequest('PUT /api/dashboard/user/friends/[id]', { body, params: { id: friend.id } }), {
+                const data = await toastPromise(CustomRequest('PUT /api/dashboard/user/friends/[id]', { body, params: { id: friend.id } }), {
                   success: '更新成功'
                 })
                 setFriends(
-                  produce(state => {
-                    state.splice(index, 1, data)
+                  produce<typeof friends>(draft => {
+                    draft.splice(index, 1, data)
                   })
                 )
               }}
@@ -91,12 +91,12 @@ export default function Page() {
                   <AlertDialogCancel>取消</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={async () => {
-                      await Toast(CustomRequest('DELETE /api/dashboard/user/friends/[id]', { params: { id: friend.id } }), {
+                      await toastPromise(CustomRequest('DELETE /api/dashboard/user/friends/[id]', { params: { id: friend.id } }), {
                         success: '删除成功'
                       })
                       setFriends(
-                        produce(state => {
-                          state.splice(index, 1)
+                        produce<typeof friends>(draft => {
+                          draft.splice(index, 1)
                         }),
                         {
                           revalidate: false
@@ -114,12 +114,12 @@ export default function Page() {
       ))}
       <FriendDetail
         onSubmit={async body => {
-          const data = await Toast(CustomRequest('POST /api/dashboard/user/friends', { body }), {
+          const data = await toastPromise(CustomRequest('POST /api/dashboard/user/friends', { body }), {
             success: '保存成功'
           })
           setFriends(
-            produce(state => {
-              state.push(data)
+            produce<typeof friends>(draft => {
+              draft.push(data)
             }),
             {
               revalidate: false

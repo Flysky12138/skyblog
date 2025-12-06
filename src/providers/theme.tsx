@@ -21,7 +21,9 @@ export const ThemeToggleButton = () => {
   const { isDark, toggleTheme } = useTheme()
 
   const isMounted = useMounted()
-  if (!isMounted) return <Skeleton className="size-9" />
+  if (!isMounted) {
+    return <Skeleton className="size-9" />
+  }
 
   return (
     <Button aria-label="theme toggle" size="icon" variant="outline" onClick={toggleTheme}>

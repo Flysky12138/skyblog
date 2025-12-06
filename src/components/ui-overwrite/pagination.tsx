@@ -34,7 +34,7 @@ export const PaginationLink = ({
 
 export const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => {
   return (
-    <PaginationLink aria-label="Go to previous page" {...props}>
+    <PaginationLink aria-label="go to previous page" {...props}>
       <ChevronLeftIcon />
       <span className="sr-only">Previous</span>
     </PaginationLink>
@@ -43,7 +43,7 @@ export const PaginationPrevious = ({ className, ...props }: React.ComponentProps
 
 export const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => {
   return (
-    <PaginationLink aria-label="Go to next page" {...props}>
+    <PaginationLink aria-label="go to next page" {...props}>
       <span className="sr-only">Next</span>
       <ChevronRightIcon />
     </PaginationLink>

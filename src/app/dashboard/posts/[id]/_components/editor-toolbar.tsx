@@ -22,7 +22,7 @@ import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
-import { DefaultPostType } from '../page'
+import { DefaultPostType } from '../utils'
 import { PostDetail } from './post-detail'
 import { Transcoder } from './transcoder'
 
@@ -59,10 +59,10 @@ export const EditorToolbar = ({
   const dragControls = useDragControls()
 
   return (
-    <Card asChild className={cn('flex flex-wrap-reverse items-center gap-3 p-2 backdrop-blur-xs', className)}>
+    <Card asChild className={cn('flex w-max max-w-[calc(100%---spacing(8))] flex-wrap-reverse items-center gap-3 p-2 backdrop-blur-xs', className)}>
       <motion.section
         drag
-        aria-label="post editor toolbar"
+        aria-label="monaco editor toolbar"
         dragConstraints={dragConstraints}
         dragControls={dragControls}
         dragElastic={0}
@@ -142,14 +142,14 @@ export const EditorToolbar = ({
                 variant="outline"
                 onClick={() => {
                   setPost(state => {
-                    state.published = !state.published
+                    state.isPublished = !state.isPublished
                   })
                 }}
               >
-                {post.published ? <Eye /> : <EyeClosed />}
+                {post.isPublished ? <Eye /> : <EyeClosed />}
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{post.published ? '公开' : '隐藏'}</TooltipContent>
+            <TooltipContent>{post.isPublished ? '公开' : '隐藏'}</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>

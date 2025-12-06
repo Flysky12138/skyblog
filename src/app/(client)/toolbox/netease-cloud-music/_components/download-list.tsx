@@ -3,7 +3,7 @@
 import { Download } from 'lucide-react'
 import React from 'react'
 import { useAsyncFn, useBeforeUnload, useMap, useSet } from 'react-use'
-import { FixedSizeList } from 'react-window'
+import { List, RowComponentProps } from 'react-window'
 import { toast } from 'sonner'
 
 import {
@@ -24,7 +24,7 @@ import { DirectoryHelper } from '@/lib/file/directory-helper'
 import { FFmpeg } from '@/lib/file/ffmpeg'
 import { ProgressProps, readResponseProgress } from '@/lib/http/progress'
 import { CustomRequest } from '@/lib/http/request'
-import { promisePool } from '@/lib/promise'
+import { promiseAllSettledPool } from '@/lib/promise'
 import { cn } from '@/lib/utils'
 
 type LevelType = AppRouteHandlerMethodMap['GET /api/netease-cloud-music/song/url']['return'][number]['level']
@@ -48,10 +48,10 @@ interface DownloadListProps {
 export const DownloadList = ({ songs }: DownloadListProps) => {
   songs = songs.filter(song => !song.ar.some(ar => REMOVE_ARTIST_NAMES.some(name => ar.name.includes(name))))
 
-  const [level, setLevel] = React.useState<LevelType>('lossless')
-  const [selected, { add: selectedAdd, clear: selectedClear, has: selectedhas, toggle: selectedToggle }] =
+  const [level, setLevel] = React.useState<LevelType>('hires')
+  const [selected, { add: addSelected, clear: clearSelected, has: hasSelected, toggle: toggleSelected }] =
     useSet<DownloadListProps['songs'][number]>()
-  const [progress, { get: progressGet, remove: progressRemove, set: progressSet }] = useMap<Record<number, ProgressProps | undefined>>()
+  const [progress, { get: getProgress, remove: removeProgress, set: setProgress }] = useMap<Record<number, ProgressProps | undefined>>()
 
   const [{ loading: isDownloading }, handleDownload] = useAsyncFn(async () => {
     const helper = new DirectoryHelper()
@@ -60,14 +60,16 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
     const ffmpeg = new FFmpeg()
     await ffmpeg.init()
 
-    return promisePool(
+    return promiseAllSettledPool(
       Array.from(selected).map(song => async () => {
         try {
           const [{ md5, type, url }] = await CustomRequest('GET /api/netease-cloud-music/song/url', { search: { id: song.id, level } })
-          if (!url) throw new Error([song.ar[0].name, song.al.name].filter(Boolean).join(' - '))
+          if (!url) {
+            throw new Error([song.ar[0].name, song.al.name].filter(Boolean).join(' - '))
+          }
 
           const audioBlob = await fetch(url.replace('http:', 'https:')).then(async res => {
-            return readResponseProgress(res, payload => progressSet(song.id, payload))
+            return readResponseProgress(res, payload => setProgress(song.id, payload))
           })
           const coverBlob = await fetch(song.al.picUrl.replace('http:', 'https:') + '?param=1200y1200').then(res => res.blob())
 
@@ -79,8 +81,8 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
 
           await helper.writeFile(`${song?.name || md5}.${type}`, audio)
 
-          selectedToggle(song)
-          progressRemove(song.id)
+          toggleSelected(song)
+          removeProgress(song.id)
         } catch (error) {
           toast.error('下载歌曲失败', {
             description: error instanceof Error ? error.message : (error as string),
@@ -93,7 +95,9 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
 
   useBeforeUnload(isDownloading, '正在下载中，不要关闭窗口')
 
-  if (!songs.length) return null
+  if (!songs.length) {
+    return null
+  }
 
   return (
     <DialogDrawer>
@@ -105,19 +109,20 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
         </DialogDrawerTrigger>
       </Portal>
       <DialogDrawerContent dialogClassName="max-w-xl p-0! gap-0" drawerClassName="border" showCloseButton={false}>
-        <DialogDrawerHeader className="hidden">
-          <DialogDrawerTitle />
-          <DialogDrawerDescription />
+        <DialogDrawerHeader className="sr-only">
+          <DialogDrawerTitle>歌曲下载面板</DialogDrawerTitle>
+          <DialogDrawerDescription>下载所选歌曲到本地磁盘</DialogDrawerDescription>
         </DialogDrawerHeader>
+
         <div className="border-divide flex items-center gap-2 border-b px-2.5 pt-3 pb-3 shadow-xs md:mt-0">
           <Checkbox
             checked={selected.size == songs.length ? true : selected.size == 0 ? false : 'indeterminate'}
             disabled={isDownloading}
             onClick={() => {
               if (selected.size == songs.length) {
-                selectedClear()
+                clearSelected()
               } else {
-                songs.forEach(selectedAdd)
+                songs.forEach(addSelected)
               }
             }}
           />
@@ -143,49 +148,71 @@ export const DownloadList = ({ songs }: DownloadListProps) => {
             {isDownloading && <Spinner />} 下载（{selected.size}）
           </Button>
         </div>
-        <FixedSizeList
-          className="scrollbar-hidden"
-          height={48 * 10}
-          itemCount={isDownloading ? selected.size : songs.length}
-          itemData={isDownloading ? Array.from(selected) : songs}
-          itemSize={48}
+
+        <List
+          className="no-scrollbar"
           overscanCount={8}
-          width="100%"
-        >
-          {({ data, index, style }) => {
-            const song = data[index]
-            return (
-              <div
-                className={cn(
-                  'flex cursor-pointer items-center gap-2 border-b px-1.5 last:border-b-0',
-                  'bg-linear-to-r bg-clip-padding bg-no-repeat',
-                  'from-indigo-200 via-purple-200 to-pink-200',
-                  'dark:from-indigo-800/30 dark:via-purple-800/30 dark:to-pink-800/30'
-                )}
-                style={{ backgroundSize: `${progressGet(song.id)?.progress || 0}%`, ...style }}
-                onClick={() => {
-                  if (isDownloading) return
-                  selectedToggle(song)
-                }}
-              >
-                {!isDownloading && <Checkbox checked={selectedhas(song)} className="mx-1" />}
-                <img
-                  alt={song.al.name}
-                  decoding="async"
-                  height={36}
-                  loading="lazy"
-                  src={song.al.picUrl.replace('http:', 'https:') + '?param=72y72'}
-                  width={36}
-                />
-                <div className="truncate">
-                  <p className="truncate text-sm">{song.name}</p>
-                  <p className="text-muted-foreground text-xs">{[song.ar[0].name, song.al.name].filter(Boolean).join(' - ')}</p>
-                </div>
-              </div>
-            )
-          }}
-        </FixedSizeList>
+          rowComponent={Row}
+          rowCount={isDownloading ? selected.size : songs.length}
+          rowHeight={48}
+          rowProps={
+            {
+              getProgress,
+              isDownloading,
+              isSelected: hasSelected,
+              songs: isDownloading ? Array.from(selected) : songs,
+              onRowClick: toggleSelected
+            } satisfies RowProps
+          }
+          style={{ height: 48 * 10 }}
+        />
       </DialogDrawerContent>
     </DialogDrawer>
+  )
+}
+
+interface RowProps {
+  hasMore?: boolean
+  isDownloading: boolean
+  songs: DownloadListProps['songs']
+  getProgress: (id: number) => ProgressProps | undefined
+  isSelected: (song: RowProps['songs'][number]) => boolean
+  onRowClick?: (song: RowProps['songs'][number]) => void
+}
+
+const Row = ({ ariaAttributes, getProgress, index, isDownloading, isSelected, songs, style, onRowClick }: RowComponentProps & RowProps) => {
+  const song = songs[index]
+  return (
+    <div
+      className={cn(
+        'flex cursor-pointer items-center gap-2 border-b px-1.5 last:border-b-0',
+        'bg-linear-to-r bg-clip-padding bg-no-repeat',
+        'from-indigo-200 via-purple-200 to-pink-200',
+        'dark:from-indigo-800/30 dark:via-purple-800/30 dark:to-pink-800/30'
+      )}
+      style={{ backgroundSize: `${getProgress(song.id)?.progress || 0}%`, ...style }}
+      {...ariaAttributes}
+      onClick={() => {
+        if (isDownloading) {
+          return
+        }
+        onRowClick?.(song)
+      }}
+    >
+      {!isDownloading && <Checkbox checked={isSelected(song) || false} className="mx-1" />}
+      <img
+        alt={song.al.name}
+        crossOrigin="anonymous"
+        decoding="async"
+        height={36}
+        loading="lazy"
+        src={song.al.picUrl.replace('http:', 'https:') + '?param=72y72'}
+        width={36}
+      />
+      <div className="truncate">
+        <p className="truncate text-sm">{song.name}</p>
+        <p className="text-muted-foreground text-xs">{[song.ar[0].name, song.al.name].filter(Boolean).join(' - ')}</p>
+      </div>
+    </div>
   )
 }

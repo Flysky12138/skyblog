@@ -1,30 +1,36 @@
-import Fs from 'node:fs'
-import Path from 'node:path'
-import Url from 'node:url'
+import { readdirSync, statSync, writeFileSync } from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const API_FOLDER_PATH = Url.fileURLToPath(new URL(`../src/app/api`, import.meta.url))
-const OUTPUT_FILE_PATH = Url.fileURLToPath(new URL('../routes.d.ts', import.meta.url))
+const API_FOLDER_PATH = fileURLToPath(new URL(`../src/app/api`, import.meta.url))
+const OUTPUT_FILE_PATH = fileURLToPath(new URL('../routes.d.ts', import.meta.url))
 
 const AppRouteHandlerMethodMap = new Map<string, {}>()
 
-for (const path of Fs.readdirSync(API_FOLDER_PATH, { recursive: true }) as string[]) {
-  const fullPath = Path.join(API_FOLDER_PATH, path)
+for (const _path of readdirSync(API_FOLDER_PATH, { recursive: true }) as string[]) {
+  const fullPath = path.join(API_FOLDER_PATH, _path)
 
-  if (!Fs.statSync(fullPath).isFile()) continue
-  if (!path.endsWith(`${Path.sep}route.ts`)) continue
+  if (!statSync(fullPath).isFile()) {
+    continue
+  }
+  if (!_path.endsWith(`${path.sep}route.ts`)) {
+    continue
+  }
 
-  const routes = Path.posix.join(...[Path.sep, 'api'].concat(path.split(Path.sep).slice(0, -1)))
+  const routes = path.posix.join(...[path.sep, 'api'].concat(_path.split(path.sep).slice(0, -1)))
 
   const modules = await import(fullPath)
   for (const mode of ['DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT'] satisfies Method[]) {
-    if (!Reflect.has(modules, mode)) continue
-    AppRouteHandlerMethodMap.set(`'${mode} ${routes}'`, `import('@/app/api/${path}').${mode}`)
+    if (!Reflect.has(modules, mode)) {
+      continue
+    }
+    AppRouteHandlerMethodMap.set(`'${mode} ${routes}'`, `import('@/app/api/${_path}').${mode}`)
   }
 }
 
 const data = `/**
  * 根据 Nextjs 文件路由系统规则生成
- * @generator [${Path.basename(import.meta.url)}](${import.meta.url})
+ * @generator [${path.basename(import.meta.url)}](${import.meta.url})
  */
 interface AppRouteHandlerMethodMap {
 ${Array.from(AppRouteHandlerMethodMap)
@@ -34,4 +40,4 @@ ${Array.from(AppRouteHandlerMethodMap)
 }
 `
 
-Fs.writeFileSync(OUTPUT_FILE_PATH, data, { encoding: 'utf-8' })
+writeFileSync(OUTPUT_FILE_PATH, data, { encoding: 'utf-8' })

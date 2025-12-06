@@ -1,5 +1,6 @@
 'use client'
 
+import { Fancybox } from '@fancyapps/ui'
 import { produce } from 'immer'
 import {
   CloudUpload,
@@ -17,7 +18,6 @@ import {
   LucideProps,
   Undo2
 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
 import useSWR from 'swr'
@@ -38,11 +38,11 @@ import { Badge } from '@/components/ui/badge'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item'
 import { getFileType } from '@/lib/file/info'
-import { R2 } from '@/lib/http/r2'
 import { formatFileSize } from '@/lib/parser/size'
 import { formatISOTime } from '@/lib/parser/time'
-import { Toast } from '@/lib/toast'
-import { useImageViewerContext } from '@/providers/image-viewer'
+import { toastPromise } from '@/lib/toast'
+import { cn } from '@/lib/utils'
+import { S3Service } from '@/server'
 
 import { R2Upload } from './r2-upload'
 
@@ -51,21 +51,20 @@ interface R2TableProps {
   hiddenParentDirectoryRow?: boolean
   hiddenUploadButton?: boolean
   paths?: string[]
+  onFolderRowClick?: (paths: string[]) => void
 }
 
-export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButton, paths }: R2TableProps) => {
-  const router = useRouter()
-
+export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButton, paths, onFolderRowClick }: R2TableProps) => {
   const path = decodeURIComponent(paths?.length ? `/${paths.join('/')}/` : '/') as FilePathType
 
-  const { data, isLoading, mutate } = useSWR(['0198eb99-6327-72b5-8a08-6629db4b7a53', path], () =>
-    R2.list(path == '/' ? '' : (path.slice(1) as EndsWith<'/'>))
-  )
+  const { data, isLoading, mutate } = useSWR(['0198eb99-6327-72b5-8a08-6629db4b7a53', path], () => {
+    return S3Service.list(path == '/' ? '' : path.slice(1))
+  })
 
   const isEmpty = data?.files.length == 0 && data?.folders.length == 0
 
   return (
-    <TablePrimitive className={className}>
+    <TablePrimitive className={cn('table-fixed', className)}>
       <TableHeader>
         <TableRow>
           <TableHead className="w-10" />
@@ -84,12 +83,16 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
         </TableRow>
       </TableHeader>
       <TableBody>
+        {/* 加载状态 */}
+        <DisplayByConditional condition={isLoading || isEmpty}>
+          <TableRowLoading colSpan={5}>{isEmpty && '内容为空'}</TableRowLoading>
+        </DisplayByConditional>
         {/* 返回上层 */}
-        <DisplayByConditional condition={!!paths?.length && !hiddenParentDirectoryRow}>
+        <DisplayByConditional condition={!isLoading && !!paths?.length && !hiddenParentDirectoryRow}>
           <TableRow
             className="cursor-pointer"
             onClick={() => {
-              router.replace(`/dashboard/r2/${paths!.slice(0, -1).join('/')}`)
+              onFolderRowClick?.(paths?.slice(0, -1) || [])
             }}
           >
             <TableCell>
@@ -100,17 +103,13 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
             </TableCell>
           </TableRow>
         </DisplayByConditional>
-        {/* 加载状态 */}
-        <DisplayByConditional condition={isLoading || isEmpty}>
-          <TableRowLoading colSpan={5}>{isEmpty && '内容为空'}</TableRowLoading>
-        </DisplayByConditional>
         {/* 文件夹 */}
         {data?.folders.map(folder => (
           <TableRow
             key={folder}
             className="cursor-pointer"
             onClick={() => {
-              router.replace(`/dashboard/r2/${folder}`)
+              onFolderRowClick?.(folder.split('/').filter(Boolean))
             }}
           >
             <TableCell>
@@ -137,13 +136,13 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
                   description="这将永久删除文件。"
                   title={file.key.slice(file.key.lastIndexOf('/') + 1)}
                   onConfirm={async () => {
-                    await Toast(R2.delete([file.key]), {
+                    await toastPromise(S3Service.delete([file.key]), {
                       description: file.key.slice(file.key.lastIndexOf('/') + 1),
                       success: '删除成功'
                     })
                     await mutate(
-                      produce(state => {
-                        state.files.splice(index, 1)
+                      produce<typeof data>(draft => {
+                        draft.files.splice(index, 1)
                       }),
                       {
                         revalidate: false
@@ -160,9 +159,7 @@ export const R2Table = ({ className, hiddenParentDirectoryRow, hiddenUploadButto
   )
 }
 
-/**
- * 文件图标
- */
+// 文件图标
 const FileIconMap = ({ type = '', ...props }: LucideProps & { type?: string }) => {
   switch (getFileType(type)) {
     case 'audio':
@@ -184,25 +181,24 @@ const FileIconMap = ({ type = '', ...props }: LucideProps & { type?: string }) =
   }
 }
 
-/**
- * 文件预览
- */
-const FileViewButton = ({ file }: { file: R2.FileInfo }) => {
-  const { openViewer } = useImageViewerContext()
-
+// 文件预览
+const FileViewButton = ({ file }: { file: S3.FileInfo }) => {
   const types: ReturnType<typeof getFileType>[] = ['image', 'pdf']
+  const type = getFileType(file.contentType)
 
-  if (!types.includes(getFileType(file.contentType))) return null
+  if (!types.includes(type)) {
+    return null
+  }
 
   return (
     <TableActionButton
       onClick={() => {
-        switch (getFileType(file.contentType)) {
+        switch (type) {
           case 'image':
-            openViewer({ images: [{ key: file.key, src: R2.get(file.key) }] })
+            Fancybox.show([{ src: S3Service.getPublicUrl(file.key) }])
             break
           case 'pdf':
-            window.open(R2.get(file.key), '_blank')
+            window.open(S3Service.getPublicUrl(file.key), '_blank')
             break
         }
       }}
@@ -212,20 +208,18 @@ const FileViewButton = ({ file }: { file: R2.FileInfo }) => {
   )
 }
 
-/**
- * 文件链接复制
- */
-const FileLinkCopyButton = ({ file }: { file: R2.FileInfo }) => {
+// 文件链接复制
+const FileLinkCopyButton = ({ file }: { file: S3.FileInfo }) => {
   const [{}, copy] = useCopyToClipboard()
 
-  const links = [{ label: '直链', value: R2.get(file.key) }]
+  const links = [{ label: '直链', value: S3Service.getPublicUrl(file.key) }]
 
   switch (getFileType(file.contentType)) {
     case 'image':
       const width = file.metadata.width
       const height = file.metadata.height
       const alt = file.key.split('/').at(-1)?.split('.')[0]
-      const src = R2.get(file.key)
+      const src = S3Service.getPublicUrl(file.key)
       links.push(
         { label: 'Markdown', value: `![${alt}](${src})` },
         { label: 'HTML', value: `::img{alt="${alt}" src="${src}" width="${width}" height="${height}"}` }
@@ -255,7 +249,7 @@ const FileLinkCopyButton = ({ file }: { file: R2.FileInfo }) => {
                 <ItemTitle>
                   <Badge className="rounded-sm">{link.label}</Badge>
                 </ItemTitle>
-                <ItemDescription className="text-wrap break-all">{link.value}</ItemDescription>
+                <ItemDescription className="line-clamp-none text-wrap break-all">{link.value}</ItemDescription>
               </ItemContent>
             </Item>
           </DropdownMenuItem>

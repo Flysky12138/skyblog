@@ -1,0 +1,35 @@
+enum ActivityType {
+  REPORT
+  COMMENT
+  CLASH
+}
+
+model ActivityLog {
+  id        BigInt   @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  ip           String
+  referer      String?
+  countryCode  String?      @map("country_code")
+  browser      String?
+  os           String?
+  activityType ActivityType @default(REPORT) @map("activity_type")
+
+  /// [Geo]
+  geo   Json?
+  /// [Agent]
+  agent Json?
+
+  clashId String? @map("clash_id")
+  clash   Clash?  @relation(fields: [clashId], references: [id], onDelete: SetNull)
+
+  comments Comment[]
+
+  @@index([os])
+  @@index([browser])
+  @@index([countryCode])
+  @@index([activityType])
+  @@index([createdAt(sort: Desc)])
+  @@index([clashId, createdAt(sort: Desc)])
+  @@map("activity_logs")
+}

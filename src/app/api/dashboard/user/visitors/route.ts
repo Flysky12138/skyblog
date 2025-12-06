@@ -1,24 +1,28 @@
-import { VisitorLog } from '@prisma/client'
 import { NextRequest } from 'next/server'
-import { PaginationArgs } from 'prisma-paginate'
+import { PageNumberPaginationOptions } from 'prisma-extension-pagination'
 
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
+import { ActivityLog } from '@/prisma/client'
 
 const dbGet = async (payload: GET['search']) => {
-  return prisma.visitorLog.paginate(
-    {
+  const [visitors, pagination] = await prisma.activityLog
+    .paginate({
       orderBy: {
         createdAt: 'desc'
       }
-    },
-    payload
-  )
+    })
+    .withPages(payload)
+
+  return {
+    pagination,
+    visitors
+  }
 }
 
 export type GET = RouteHandlerType<{
   return: Awaited<ReturnType<typeof dbGet>>
-  search: PaginationArgs
+  search: PageNumberPaginationOptions
 }>
 
 export const GET = async (request: NextRequest) => {
@@ -34,7 +38,7 @@ export const GET = async (request: NextRequest) => {
 }
 
 const dbDelete = async (payload: DELETE['body']) => {
-  return prisma.visitorLog.deleteMany({
+  return prisma.activityLog.deleteMany({
     where: {
       id: {
         in: payload.ids
@@ -45,7 +49,7 @@ const dbDelete = async (payload: DELETE['body']) => {
 
 export type DELETE = RouteHandlerType<{
   body: {
-    ids: VisitorLog['id'][]
+    ids: ActivityLog['id'][]
   }
   return: Awaited<ReturnType<typeof dbDelete>>
 }>

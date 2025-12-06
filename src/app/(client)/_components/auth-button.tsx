@@ -7,11 +7,14 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { Role } from '@/prisma/enums'
 
 export const AuthButton = () => {
   const session = useSession()
 
-  if (session.status == 'loading') return <Skeleton className="size-9" />
+  if (session.status == 'loading') {
+    return <Skeleton className="size-9" />
+  }
 
   if (session.status != 'authenticated') {
     return (
@@ -28,7 +31,7 @@ export const AuthButton = () => {
     )
   }
 
-  if (session.data.role == 'ADMIN') {
+  if (session.data.user?.role == Role.ADMIN) {
     return (
       <Button asChild aria-label="dashboard" size="icon" variant="outline">
         <Link href="/dashboard">

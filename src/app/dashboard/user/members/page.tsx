@@ -17,6 +17,7 @@ export default function Page() {
         { dataIndex: 'name', title: '名字' },
         { dataIndex: 'email', title: '邮箱' },
         { dataIndex: 'role', title: '权限' },
+        { dataIndex: 'status', title: '状态' },
         { dataIndex: 'updatedAt', render: formatISOTime, title: '更新时间' },
         { dataIndex: 'createdAt', render: formatISOTime, title: '创建时间' }
       ]}

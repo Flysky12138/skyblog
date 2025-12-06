@@ -1,34 +1,26 @@
-'use client'
+import { redirect, RedirectType } from 'next/navigation'
 
-import { signOut, useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { useAsyncFn } from 'react-use'
-import { toast } from 'sonner'
+import { auth, signOut } from '@/lib/auth'
 
-import { Button } from '@/components/ui/button'
+import { ButtonClickOnce } from '../_components/button-click-once'
 
-export default function Page() {
-  const router = useRouter()
-  const session = useSession()
+export default async function Page() {
+  const session = await auth()
 
-  const [{ loading }, handleSignOut] = useAsyncFn(signOut)
-
-  if (session.status == 'unauthenticated') {
-    toast.error('未登陆')
-    router.replace('/auth/login')
+  if (!session?.user) {
+    redirect('/auth/login', RedirectType.replace)
   }
 
   return (
-    <Button
-      className="min-w-3xs"
-      disabled={session.status == 'loading' || loading}
-      size="lg"
-      variant="destructive"
-      onClick={() => {
-        handleSignOut()
+    <form
+      action={async () => {
+        'use server'
+        await signOut()
       }}
     >
-      {loading ? '正在退出登陆...' : '退出登陆'}
-    </Button>
+      <ButtonClickOnce className="min-w-3xs" size="lg" type="submit" variant="destructive">
+        注销
+      </ButtonClickOnce>
+    </form>
   )
 }

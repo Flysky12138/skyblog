@@ -8,6 +8,7 @@ import { useAudio } from 'react-use'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 
+import { GET } from '@/app/api/netease-cloud-music/search/route'
 import {
   DialogDrawer,
   DialogDrawerContent,
@@ -24,13 +25,17 @@ import { Portal } from '@/components/utils/portal'
 import { ATTRIBUTE } from '@/lib/constants'
 import { CustomRequest } from '@/lib/http/request'
 import { formatMillisecond } from '@/lib/parser/time'
+import { cn } from '@/lib/utils'
+import { useLive2DContext } from '@/providers/live2d'
 
 export interface AudioProps {
-  ref?: React.RefObject<null | {
-    controls: ReturnType<typeof useAudio>[2]
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
-  }>
-  song?: AppRouteHandlerMethodMap['GET /api/netease-cloud-music/search']['return']['songs'][number] | null
+  ref?: React.RefObject<AudioRef | null>
+  song?: GET['return']['songs'][number] | null
+}
+
+export interface AudioRef {
+  controls: ReturnType<typeof useAudio>[2]
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const Audio = ({ ref, song }: AudioProps) => {
@@ -38,7 +43,9 @@ export const Audio = ({ ref, song }: AudioProps) => {
 
   const [isMoving, setIsMoving] = React.useState(false)
   const [sliderValue, setSliderValue] = React.useState(0)
+  const [loop, setLoop] = React.useState(false)
 
+  // 获取音频地址
   const {
     data: src,
     isLoading,
@@ -47,7 +54,9 @@ export const Audio = ({ ref, song }: AudioProps) => {
     song?.id ? ['0198f641-f60c-720d-98c2-69a4f880a373', 'standard', song.id] : null,
     async () => {
       const [{ url }] = await CustomRequest('GET /api/netease-cloud-music/song/url', { search: { id: song?.id || -1, level: 'standard' } })
-      if (url) return url
+      if (url) {
+        return url
+      }
       toast.error('获取音频失败')
       return ''
     },
@@ -57,6 +66,7 @@ export const Audio = ({ ref, song }: AudioProps) => {
       revalidateOnReconnect: false
     }
   )
+  // 获取歌词
   const { data: lyrics } = useSWR(
     song?.id ? ['01999f06-e557-7399-add7-0dc78c051556', song.id] : null,
     () => CustomRequest('GET /api/netease-cloud-music/lyric', { search: { id: song?.id || -1 } }),
@@ -69,7 +79,6 @@ export const Audio = ({ ref, song }: AudioProps) => {
     }
   )
 
-  const [loop, setLoop] = React.useState(false)
   const [audio, { duration, paused, time }, controls] = useAudio({
     autoPlay: true,
     loop,
@@ -79,10 +88,26 @@ export const Audio = ({ ref, song }: AudioProps) => {
     }
   })
 
+  const displayTime = Number.isFinite(time) ? time * 1000 : 0
+  const displayDuration = Number.isFinite(duration) ? duration * 1000 : 0
+
+  // 当前进度的歌词
   const lyric = React.useMemo(() => {
+    if (!lyrics.lrc) {
+      return null
+    }
     const index = lyrics.lrc.findLastIndex(item => item.time <= time)
     return lyrics.lrc[clamp(index, 0, lyrics.lrc.length - 1)]?.lyric
   }, [lyrics.lrc, time])
+
+  // Live2D 显示歌词
+  const { setMessage } = useLive2DContext()
+  React.useEffect(() => {
+    if (!lyric) {
+      return
+    }
+    setMessage({ content: lyric, priority: 10, timeout: 60_000 })
+  }, [lyric, setMessage])
 
   // 切换歌曲进度归零且暂停
   React.useEffect(() => {
@@ -90,15 +115,17 @@ export const Audio = ({ ref, song }: AudioProps) => {
     controls.seek(0)
     mutateSrc('', { revalidate: false })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [song?.id])
+  }, [mutateSrc, song?.id])
 
-  React.useImperativeHandle(ref, () => ({ controls, setOpen }), [controls])
+  React.useImperativeHandle(ref, () => ({ controls, setOpen }), [controls, setOpen])
 
-  if (!song) return null
+  if (!song) {
+    return null
+  }
 
   return (
     <>
-      <Portal container={document.body}>{audio}</Portal>
+      <Portal>{audio}</Portal>
       <DialogDrawer open={open} onOpenChange={setOpen}>
         <Portal selector={`#${ATTRIBUTE.ID.NAV_CONTAINER}`}>
           <DialogDrawerTrigger asChild>
@@ -113,9 +140,11 @@ export const Audio = ({ ref, song }: AudioProps) => {
           drawerClassName="*:first:hidden"
           showCloseButton={false}
         >
-          <DialogDrawerHeader className="hidden">
-            <DialogDrawerTitle />
-            <DialogDrawerDescription />
+          <DialogDrawerHeader className="sr-only">
+            <DialogDrawerTitle>歌曲播放面板</DialogDrawerTitle>
+            <DialogDrawerDescription>
+              正在播放歌曲: {song.name}, 歌手: {song.ar[0].name}
+            </DialogDrawerDescription>
           </DialogDrawerHeader>
           <div className="relative">
             <img alt={song.name} className="w-full" height={720} src={song.al.picUrl.replace('http:', 'https:') + '?param=720y720'} width={720} />
@@ -137,10 +166,13 @@ export const Audio = ({ ref, song }: AudioProps) => {
               <span className="shrink-0 text-sm leading-0">{song.ar[0].name}</span>
             </p>
             <Slider
-              className="mt-5"
-              max={duration * 1000}
+              className={cn(
+                'mt-5 cursor-pointer',
+                '**:data-[slot=slider-range]:to-primary **:data-[slot=slider-range]:bg-transparent **:data-[slot=slider-range]:bg-linear-to-r **:data-[slot=slider-range]:from-transparent'
+              )}
+              max={displayDuration}
               min={0}
-              value={isMoving ? [sliderValue] : [time * 1000]}
+              value={isMoving ? [sliderValue] : [displayTime]}
               onValueChange={value => {
                 setIsMoving(true)
                 setSliderValue(value[0])
@@ -150,8 +182,8 @@ export const Audio = ({ ref, song }: AudioProps) => {
               }}
             />
             <p className="mt-2 flex justify-between text-xs">
-              <span>{formatMillisecond(time * 1000)}</span>
-              <span>{formatMillisecond(duration * 1000)}</span>
+              <span>{formatMillisecond(displayTime)}</span>
+              <span>{formatMillisecond(displayDuration)}</span>
             </p>
             <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
               <div>

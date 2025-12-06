@@ -1,11 +1,11 @@
-import { Prisma } from '@prisma/client'
 import { NextRequest } from 'next/server'
 
 import { CustomResponse } from '@/lib/http/response'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@/prisma/client'
 
 const include = {
-  visitorInfos: {
+  activityLogs: {
     orderBy: {
       createdAt: 'desc'
     }
@@ -15,7 +15,9 @@ const include = {
 const dbGet = async () => {
   return prisma.clash.findMany({
     include,
-    orderBy: { createdAt: 'desc' }
+    orderBy: {
+      createdAt: 'desc'
+    }
   })
 }
 
@@ -66,7 +68,7 @@ const dbPut = async (id: string, data: PUT['body']) => {
 }
 
 export type PUT = RouteHandlerType<{
-  body: Pick<Prisma.ClashUncheckedCreateInput, 'clashTemplateId' | 'content' | 'name' | 'subtitle'> & {
+  body: Pick<Prisma.ClashUncheckedCreateInput, 'content' | 'description' | 'name' | 'templateId'> & {
     variables: object
   }
   return: Awaited<ReturnType<typeof dbPut>>
@@ -78,7 +80,9 @@ export type PUT = RouteHandlerType<{
 export const PUT = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    if (!id) {
+      return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    }
 
     const data = await request.json()
     const res = await dbPut(id, data)
@@ -98,7 +102,7 @@ const dbPatch = async (id: string, data: PATCH['body']) => {
 }
 
 export type PATCH = RouteHandlerType<{
-  body: Pick<Prisma.ClashUncheckedCreateInput, 'enabled'>
+  body: Pick<Prisma.ClashUncheckedCreateInput, 'isEnabled'>
   return: Awaited<ReturnType<typeof dbPatch>>
   search: {
     id: string
@@ -108,7 +112,9 @@ export type PATCH = RouteHandlerType<{
 export const PATCH = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    if (!id) {
+      return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    }
 
     const data = await request.json()
     const res = await dbPatch(id, data)
@@ -133,7 +139,9 @@ export type DELETE = RouteHandlerType<{
 export const DELETE = async (request: NextRequest) => {
   try {
     const id = request.nextUrl.searchParams.get('id')
-    if (!id) return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    if (!id) {
+      return await CustomResponse.error('{id} 值缺失', { status: 400 })
+    }
 
     const res = await dbDelete(id)
 

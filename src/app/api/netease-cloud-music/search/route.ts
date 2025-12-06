@@ -3,7 +3,7 @@ import NeteaseCloudMusicApi from 'NeteaseCloudMusicApi'
 import { cacheLife, cacheTag } from 'next/cache'
 import { NextRequest } from 'next/server'
 
-import { CacheTag } from '@/lib/cache'
+import { CACHE_TAG } from '@/lib/constants'
 import { CustomResponse } from '@/lib/http/response'
 
 import { getNeteaseCloudMusicCookie } from '../utils'
@@ -14,7 +14,7 @@ const { cloudsearch } = require('NeteaseCloudMusicApi') as typeof NeteaseCloudMu
 const getCloudsearch = async ({ keywords, limit, page, type }: Required<GET['search']>) => {
   'use cache'
   cacheLife('days')
-  cacheTag(CacheTag.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
+  cacheTag(CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
 
   try {
     const res: any = await cloudsearch({ cookie: await getNeteaseCloudMusicCookie(), keywords, limit, offset: page * limit, type })
@@ -77,7 +77,9 @@ export type GET = RouteHandlerType<{
 export const GET = async (request: NextRequest) => {
   try {
     const keywords = request.nextUrl.searchParams.get('keywords')
-    if (!keywords) return await CustomResponse.error('{keywords} 值缺失', { status: 400 })
+    if (!keywords) {
+      return await CustomResponse.error('{keywords} 值缺失', { status: 400 })
+    }
 
     const limit = Number.parseInt(request.nextUrl.searchParams.get('limit') || '100')
     const page = Number.parseInt(request.nextUrl.searchParams.get('page') || '0')

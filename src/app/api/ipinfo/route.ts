@@ -11,10 +11,14 @@ export type GET = RouteHandlerType<{
 
 export const GET = async (request: NextRequest) => {
   const ip = isDev() ? '0.0.0.0' : getRealIp(request)
-  if (!ip) return CustomResponse.error('未知访问', { status: 400 })
+  if (!ip) {
+    return CustomResponse.error('未知访问', { status: 400 })
+  }
 
   try {
-    if (!process.env.TOKEN_IPINFO) throw new Error()
+    if (!process.env.TOKEN_IPINFO) {
+      throw new Error('TOKEN_IPINFO 值缺失')
+    }
     const res = await fetch(`https://ipinfo.io/${ip}?token=${process.env.TOKEN_IPINFO}`, {
       next: {
         revalidate: 3600 * 24 * 30
