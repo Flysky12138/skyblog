@@ -13,7 +13,7 @@ export interface MDXPickHeadingProps {
   source: string
 }
 
-export const MDXPickHeading = async ({ headingComponent, source }: MDXPickHeadingProps) => {
+export async function MDXPickHeading({ headingComponent, source }: MDXPickHeadingProps) {
   return (
     <MDXRemote
       components={{

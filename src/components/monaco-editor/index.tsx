@@ -1,113 +1,174 @@
 'use client'
 
-import { DiffEditor, DiffEditorProps, Editor, EditorProps, loader, Monaco } from '@monaco-editor/react'
-import { isBrowser, toMerged } from 'es-toolkit'
+import './index.css'
+
+import loader, { Monaco } from '@monaco-editor/loader'
+import { Root, SlotProps } from '@radix-ui/react-slot'
+import { shikiToMonaco } from '@shikijs/monaco'
+import { toMerged } from 'es-toolkit'
 import { editor, IDisposable } from 'monaco-editor'
 import React from 'react'
+import { createHighlighter } from 'shiki'
 
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { useTheme } from '@/hooks/use-theme'
 import { cn } from '@/lib/utils'
 
-import './index.css'
-import { monacoEditorDefaultOptions } from './options'
+import { langs, monacoEditorDefaultOptions, themes } from './options'
 
 export interface LanguageConfig {
   /** 内容语言 */
-  language: 'markdown' | 'yaml' | (string & {})
+  language: (typeof langs)[number]
   /** 注册事件 */
   registerEvents?: (monaco: Monaco) => IDisposable[]
 }
+
 export interface MonacoEditorRef {
-  editor: editor.IStandaloneCodeEditor | undefined
+  editor?: editor.IStandaloneCodeEditor
   /** 格式化 */
   format: () => Promise<void> | undefined
 }
-interface MonacoEditorProps extends LanguageConfig, Pick<EditorProps, 'className' | 'height' | 'loading' | 'onChange' | 'options'> {
-  code: EditorProps['value']
-  /**
-   * @default false
-   */
-  diffMode?: boolean
-  oldCode?: DiffEditorProps['original']
-  ref?: React.Ref<MonacoEditorRef>
+
+interface MonacoEditorProps extends LanguageConfig, Omit<SlotProps, 'children' | 'onChange'> {
+  asChild?: boolean
+  /** 是否为对比模式 */
+  isDiffMode?: boolean
+  options?: Omit<editor.IStandaloneEditorConstructionOptions, 'language' | 'theme' | 'value'>
+  originalValue?: string
+  ref?: React.RefObject<MonacoEditorRef | null>
+  value?: string
+  onChange?: (value: string) => void
 }
 
-export const MonacoEditor = ({
+export function MonacoEditor({
+  asChild,
   className,
-  code = '',
-  diffMode = false,
-  oldCode = '',
+  isDiffMode,
+  language,
+  options = {},
+  originalValue = '',
   ref,
   registerEvents,
+  value = '',
   onChange,
   ...props
-}: MonacoEditorProps) => {
-  props.options = toMerged(monacoEditorDefaultOptions, props.options || {})
-  props.loading ||= '加载中...'
+}: MonacoEditorProps) {
+  const Comp = asChild ? Root : 'div'
+
+  const rootRef = React.useRef<HTMLDivElement>(null)
+  const monacoRef = React.useRef<any>(null)
+  const editorRef = React.useRef<editor.IStandaloneCodeEditor>(undefined)
+  const diffEditorRef = React.useRef<editor.IStandaloneDiffEditor>(undefined)
+
+  const [isMounted, setIsMounted] = React.useState(false)
 
   // 主题
   const { isDark } = useTheme()
-  const theme = isDark ? 'vs-dark' : 'vs'
+  const theme = themes[isDark ? 0 : 1]
+
+  // 配置
+  const _options = React.useMemo(() => toMerged(monacoEditorDefaultOptions, { ...options, language, theme }), [language, options, theme])
+
+  // 销毁编辑器
+  const destroyMonacoEditor = React.useEffectEvent(() => {
+    editorRef.current?.dispose()
+    diffEditorRef.current?.dispose()
+  })
+  // 创建编辑器
+  const createMonacoEditor = React.useEffectEvent((monaco?: any) => {
+    if (!monaco) return
+
+    destroyMonacoEditor()
+
+    if (isDiffMode) {
+      diffEditorRef.current = monaco.editor.createDiffEditor(rootRef.current, _options)
+      diffEditorRef.current!.setModel({
+        modified: monaco.editor.createModel(value, language),
+        original: monaco.editor.createModel(originalValue, language)
+      })
+    } else {
+      editorRef.current = monaco.editor.create(rootRef.current, _options)
+      editorRef.current!.setModel(monaco.editor.createModel(value, language))
+    }
+
+    editorRef.current?.onDidChangeModelContent(() => {
+      const val = editorRef.current!.getValue()
+      onChange?.(val)
+    })
+  })
 
   // 取消注册内容事件列表
-  const iDisposables = React.useRef<IDisposable[]>([])
+  const [iDisposables, setIDisposables] = React.useState<IDisposable[]>([])
   React.useEffect(() => {
-    return () => iDisposables.current.forEach(it => it.dispose())
-  }, [diffMode])
+    return () => iDisposables.forEach(it => it.dispose())
+  }, [iDisposables])
 
-  const editorRef = React.useRef<editor.IStandaloneCodeEditor>(undefined)
+  // 初始化
+  React.useEffect(() => {
+    loader.init().then(async monaco => {
+      monacoRef.current = monaco
+
+      setIDisposables(registerEvents?.(monaco) ?? [])
+
+      const highlighter = await createHighlighter({ langs, themes })
+      langs.forEach(id => monaco.languages.register({ id }))
+      shikiToMonaco(highlighter, monaco)
+
+      setIsMounted(true)
+
+      createMonacoEditor(monaco)
+    })
+
+    return destroyMonacoEditor
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // 配置更新
+  React.useEffect(() => {
+    isDiffMode ? diffEditorRef.current?.updateOptions(_options) : editorRef.current?.updateOptions(_options)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [_options])
+
+  // 切换编辑器
+  React.useEffect(() => {
+    createMonacoEditor(monacoRef.current)
+  }, [isDiffMode])
+
+  // 内容监听
+  React.useEffect(() => {
+    if (!editorRef.current) return
+    if (isDiffMode) return
+    // 外部 value 更新（防止死循环）
+    if (value != editorRef.current.getValue()) {
+      editorRef.current.setValue(value)
+    }
+  }, [isDiffMode, value])
+
+  // 抛出属性
   React.useImperativeHandle(ref, () => ({
     editor: editorRef.current,
     format: () => editorRef.current?.getAction('editor.action.formatDocument')?.run()
   }))
 
   return (
-    <section
-      aria-label="Monaco Editor"
+    <Comp
+      ref={rootRef}
+      aria-label="monaco editor"
       className={cn('h-full overflow-hidden', className)}
       onKeyDown={event => {
         if (event.key == 's' && (event.ctrlKey || event.metaKey)) {
           event.preventDefault()
         }
       }}
+      {...props}
     >
-      <DisplayByConditional
-        condition={!diffMode}
-        fallback={
-          <DiffEditor
-            key={1}
-            beforeMount={monaco => {
-              iDisposables.current = registerEvents?.(monaco) || []
-            }}
-            modified={code}
-            original={oldCode}
-            theme={theme}
-            {...props}
-          />
-        }
-      >
-        <Editor
-          key={2}
-          beforeMount={monaco => {
-            iDisposables.current = registerEvents?.(monaco) || []
-          }}
-          theme={theme}
-          value={code}
-          onChange={onChange}
-          onMount={editor => {
-            editorRef.current = editor
-          }}
-          {...props}
-        />
-      </DisplayByConditional>
-    </section>
+      {!isMounted && <div className="font-code flex size-full items-center justify-center">Loading...</div>}
+    </Comp>
   )
 }
 
 loader.config({
   paths: {
-    vs: process.env.NEXT_PUBLIC_CDN_MONACO_EDITOR + 'min/vs'
+    vs: process.env.NEXT_PUBLIC_CDN_MONACO_EDITOR
   },
   'vs/nls': {
     availableLanguages: {
@@ -115,17 +176,3 @@ loader.config({
     }
   }
 })
-
-if (isBrowser()) {
-  window.MonacoEnvironment = {
-    // @ts-ignore
-    getWorker(_, label) {
-      switch (label) {
-        case 'yaml':
-          return new Worker(new URL('monaco-yaml/yaml.worker', import.meta.url))
-        // default:
-        //   return new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker', import.meta.url))
-      }
-    }
-  }
-}

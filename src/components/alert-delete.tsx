@@ -10,16 +10,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger
-} from '@/components/ui-overwrite/alert-dialog'
+} from '@/components/ui/alert-dialog'
 
 export interface AlertDeleteProps extends React.PropsWithChildren {
   description: string
+  disabled?: boolean
   title: string
   onCancel?: React.MouseEventHandler<HTMLButtonElement>
   onConfirm: React.MouseEventHandler<HTMLButtonElement>
 }
 
-export const AlertDelete = ({ children, description, title, onCancel, onConfirm }: AlertDeleteProps) => {
+export function AlertDelete({ children, description, disabled, title, onCancel, onConfirm }: AlertDeleteProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
@@ -30,7 +31,9 @@ export const AlertDelete = ({ children, description, title, onCancel, onConfirm 
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel}>取消</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>确定</AlertDialogAction>
+          <AlertDialogAction className="min-w-32" disabled={disabled} onClick={onConfirm}>
+            确定
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
