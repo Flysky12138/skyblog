@@ -1,4 +1,4 @@
-import { CacheFirst, PrecacheEntry, Serwist, SerwistGlobalConfig, StaleWhileRevalidate } from 'serwist'
+import { CacheFirst, ExpirationPlugin, PrecacheEntry, Serwist, SerwistGlobalConfig, StaleWhileRevalidate } from 'serwist'
 
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -25,7 +25,15 @@ const serwist = new Serwist({
       matcher: ({ url }) => url.pathname.startsWith('/_next/static/')
     },
     {
-      handler: new CacheFirst({ cacheName: 's3' }),
+      handler: new CacheFirst({
+        cacheName: 's3',
+        plugins: [
+          new ExpirationPlugin({
+            maxAgeSeconds: 60 * 60 * 24 * 7,
+            maxEntries: 100
+          })
+        ]
+      }),
       matcher: ({ url }) => new URL(process.env.NEXT_PUBLIC_R2_URL).origin == url.origin
     },
     {
@@ -33,23 +41,65 @@ const serwist = new Serwist({
       matcher: ({ request }) => request.destination == 'font'
     },
     {
-      handler: new CacheFirst({ cacheName: 'image' }),
+      handler: new CacheFirst({
+        cacheName: 'image',
+        plugins: [
+          new ExpirationPlugin({
+            maxAgeSeconds: 60 * 60 * 24 * 30,
+            maxEntries: 300
+          })
+        ]
+      }),
       matcher: ({ request }) => request.destination == 'image'
     },
     {
-      handler: new CacheFirst({ cacheName: 'audio' }),
+      handler: new CacheFirst({
+        cacheName: 'audio',
+        plugins: [
+          new ExpirationPlugin({
+            maxAgeSeconds: 60 * 60 * 24 * 30,
+            maxEntries: 100,
+            purgeOnQuotaError: true
+          })
+        ]
+      }),
       matcher: ({ request }) => request.destination == 'audio'
     },
     {
-      handler: new CacheFirst({ cacheName: 'video' }),
+      handler: new CacheFirst({
+        cacheName: 'video',
+        plugins: [
+          new ExpirationPlugin({
+            maxAgeSeconds: 60 * 60 * 24 * 30,
+            maxEntries: 50,
+            purgeOnQuotaError: true
+          })
+        ]
+      }),
       matcher: ({ request }) => request.destination == 'video'
     },
     {
-      handler: new CacheFirst({ cacheName: 'cdn' }),
+      handler: new CacheFirst({
+        cacheName: 'cdn',
+        plugins: [
+          new ExpirationPlugin({
+            maxAgeSeconds: 60 * 60 * 24 * 90,
+            maxEntries: 100
+          })
+        ]
+      }),
       matcher: ({ url }) => url.pathname.startsWith('/cdn/') || url.origin == 'https://cdn.jsdelivr.net'
     },
     {
-      handler: new CacheFirst({ cacheName: 'public' }),
+      handler: new CacheFirst({
+        cacheName: 'public',
+        plugins: [
+          new ExpirationPlugin({
+            maxAgeSeconds: 60 * 60 * 24 * 90,
+            maxEntries: 100
+          })
+        ]
+      }),
       matcher: ({ url }) => ['/embed/', '/live2d/'].some(prefix => url.pathname.startsWith(prefix))
     }
   ]
