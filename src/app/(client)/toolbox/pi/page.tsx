@@ -1,5 +1,7 @@
 'use client'
 
+import '@/components/mdx/css/index'
+
 import { AlertCircle } from 'lucide-react'
 import React from 'react'
 import { useImmer } from 'use-immer'
@@ -10,8 +12,8 @@ import { Button } from '@/components/ui-overwrite/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Alert, AlertTitle } from '@/components/ui/alert'
 import { ButtonGroup } from '@/components/ui/button-group'
-import '@/components/mdx/css/index'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { haptic } from '@/lib/haptic'
 
 import Arctan_ from './_components/arctan.mdx'
 import ChudnovskyBsCode_ from './_components/chudnovsky-bs-code.mdx'
@@ -49,6 +51,7 @@ export default function Page() {
     worker.onmessage = ({ data }) => {
       setResult(data)
       setLoading(false)
+      haptic()
     }
     workerRef.current = worker
     return () => {
@@ -98,6 +101,7 @@ export default function Page() {
           <ButtonGroup className="grow">
             <Select
               defaultValue={String(form.size)}
+              disabled={loading}
               onValueChange={value => {
                 if (!value) return
                 setForm(draft => {
