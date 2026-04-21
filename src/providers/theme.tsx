@@ -1,6 +1,5 @@
 'use client'
 
-import { MoonStar, Sun } from 'lucide-react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import React from 'react'
 
@@ -18,14 +17,14 @@ export function ThemeProvider(props: React.PropsWithChildren) {
 }
 
 export function ThemeToggleButton() {
-  const { isDark, toggleTheme } = useTheme()
+  const { theme, themeIcon, toggleTheme } = useTheme()
 
   const isMounted = useMounted()
   if (!isMounted) return <Skeleton className="size-9" />
 
   return (
-    <Button aria-label="theme toggle" size="icon" variant="outline" onClick={toggleTheme}>
-      {isDark ? <MoonStar /> : <Sun />}
+    <Button aria-label="theme toggle" data-theme={theme} size="icon" variant="outline" onClick={toggleTheme}>
+      {themeIcon}
     </Button>
   )
 }
