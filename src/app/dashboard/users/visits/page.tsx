@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnDef, getCoreRowModel, getPaginationRowModel, getSortedRowModel, PaginationState, useReactTable } from '@tanstack/react-table'
-import { Eye } from 'lucide-react'
+import { EyeIcon } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import React from 'react'
 import useSWR from 'swr'
@@ -85,7 +85,7 @@ export default function Page() {
           <Dialog>
             <DialogTrigger asChild>
               <DataTableRowActionButton>
-                <Eye />
+                <EyeIcon />
               </DataTableRowActionButton>
             </DialogTrigger>
             <DialogContent className="max-w-3xl">

@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { pick } from 'es-toolkit'
-import { Lock } from 'lucide-react'
+import { LockIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'nextjs-toploader/app'
@@ -121,7 +121,7 @@ export default function Page() {
               </div>
               <Button asChild type="button" variant="secondary">
                 <Link aria-disabled={loading} href="/auth/sign-in">
-                  <Lock />
+                  <LockIcon />
                   使用密码登录
                 </Link>
               </Button>

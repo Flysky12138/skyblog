@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnDef, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
-import { BadgeCheck, BadgeX } from 'lucide-react'
+import { BadgeCheckIcon, BadgeXIcon } from 'lucide-react'
 import useSWR from 'swr'
 
 import { DataTable } from '@/components/data-table'
@@ -22,7 +22,7 @@ export default function Page() {
       header: '验证',
       size: 60,
       cell: ({ row }) =>
-        row.original.emailVerified ? <BadgeCheck className="text-green-500" size={16} /> : <BadgeX className="text-pink-500" size={16} />
+        row.original.emailVerified ? <BadgeCheckIcon className="text-green-500" size={16} /> : <BadgeXIcon className="text-pink-500" size={16} />
     },
     {
       accessorKey: 'name',

@@ -2,7 +2,7 @@
 
 import { ColumnDef, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 import { produce } from 'immer'
-import { Pencil } from 'lucide-react'
+import { PencilIcon } from 'lucide-react'
 import useSWR from 'swr'
 
 import { DataTable } from '@/components/data-table'
@@ -62,7 +62,7 @@ export function PostCategoryTable() {
             }}
           >
             <DataTableRowActionButton>
-              <Pencil />
+              <PencilIcon />
             </DataTableRowActionButton>
           </PostCategoryEditModal>
           <DataTableRowDeleteButton

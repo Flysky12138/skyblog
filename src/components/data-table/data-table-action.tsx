@@ -1,7 +1,7 @@
 'use client'
 
 import { RowData, Table } from '@tanstack/react-table'
-import { Trash } from 'lucide-react'
+import { TrashIcon } from 'lucide-react'
 import React from 'react'
 
 import { AlertDelete, AlertDeleteProps } from '@/components/alert-delete'
@@ -51,7 +51,7 @@ export function DataTableRowDeleteButton({ disabled, onConfirm, ...props }: Aler
       {...props}
     >
       <DataTableRowActionButton className="border-0!" disabled={disabled || isPending} variant="destructive">
-        {isPending ? <Spinner /> : <Trash />}
+        {isPending ? <Spinner /> : <TrashIcon />}
       </DataTableRowActionButton>
     </AlertDelete>
   )

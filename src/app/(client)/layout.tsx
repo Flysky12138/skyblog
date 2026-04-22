@@ -1,4 +1,4 @@
-import { ToolCase } from 'lucide-react'
+import { ToolCaseIcon } from 'lucide-react'
 import Link from 'next/link'
 
 import { DisplayByBreakPoint } from '@/components/display/display-by-breakpoint'
@@ -31,7 +31,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
             <TooltipTrigger asChild>
               <Button asChild aria-label="toolbox" size="icon" variant="outline">
                 <Link href="/toolbox">
-                  <ToolCase />
+                  <ToolCaseIcon />
                 </Link>
               </Button>
             </TooltipTrigger>

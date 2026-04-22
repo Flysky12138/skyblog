@@ -1,7 +1,7 @@
 'use client'
 
 import { chunk } from 'es-toolkit'
-import { Download, X } from 'lucide-react'
+import { DownloadIcon, XIcon } from 'lucide-react'
 import React from 'react'
 import { useMeasure } from 'react-use'
 import { List } from 'react-window'
@@ -44,10 +44,10 @@ export const Print = React.memo(function Print({ pi, size, time, onClose }: Prin
             download(blob, `pi-${size}.txt`)
           }}
         >
-          <Download /> 下载
+          <DownloadIcon /> 下载
         </Button>
         <Button className="text-sm" size="sm" variant="secondary" onClick={onClose}>
-          <X /> 关闭
+          <XIcon /> 关闭
         </Button>
       </div>
 

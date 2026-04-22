@@ -1,5 +1,5 @@
 import { pick } from 'es-toolkit'
-import { Award, CalendarDays, LucideIcon, Shapes, Tag } from 'lucide-react'
+import { AwardIcon, CalendarDaysIcon, LucideIcon, ShapesIcon, TagIcon } from 'lucide-react'
 import Link from 'next/link'
 
 import { Card } from '@/components/static/card'
@@ -30,19 +30,19 @@ export default async function Page({ searchParams }: PageProps<'/'>) {
       {posts.map(post => (
         <Card key={post.id} className="p-card space-y-3 break-all lg:space-y-4">
           <h2 className="flex items-center gap-2">
-            {post.pinOrder > 0 && <Award size={20} />}
+            {post.pinOrder > 0 && <AwardIcon size={20} />}
             <Link className="font-title hover:text-link-foreground focus-within:text-link-foreground text-xl" href={`/posts/${post.slug ?? post.id}`}>
               {post.title}
             </Link>
           </h2>
           <div className="text-secondary-foreground flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs">
-            <CalendarDays size={12} />
+            <CalendarDaysIcon size={12} />
             <>更新于 {fromNow(post.updatedAt)}</>
             {/* <Typography endDecorator="·" level="body-xs" startDecorator={<QuestionAnswerRounded sx={{ fontSize: '1.1em' }} />}>
               评论数 {0}
             </Typography> */}
-            <PostCategroyTag Icon={Shapes} queryKey="categories" values={post.categories.map(({ category }) => category)} />
-            <PostCategroyTag Icon={Tag} queryKey="tags" values={post.tags.map(({ tag }) => tag)} />
+            <PostCategroyTag Icon={ShapesIcon} queryKey="categories" values={post.categories.map(({ category }) => category)} />
+            <PostCategroyTag Icon={TagIcon} queryKey="tags" values={post.tags.map(({ tag }) => tag)} />
           </div>
           {post.summary && <p className="text-muted-foreground line-clamp-3 text-sm">{post.summary}</p>}
         </Card>

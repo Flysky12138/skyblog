@@ -1,7 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion, Variants } from 'framer-motion'
-import { Check, Copy } from 'lucide-react'
+import { CheckIcon, CopyIcon } from 'lucide-react'
 import React from 'react'
 import { useCopyToClipboard } from 'react-use'
 
@@ -55,7 +55,7 @@ export function Pre({ children, className, tabIndex, ...props }: React.Component
           <Button aria-label="copy code" className="text-[initial]" size="icon-sm" variant="outline" onClick={handleCopyClick}>
             <AnimatePresence initial={false} mode="popLayout">
               <motion.div key={copied ? 'check' : 'clipboard'} animate="active" exit="inactive" initial="inactive" variants={variants}>
-                {copied ? <Check /> : <Copy />}
+                {copied ? <CheckIcon /> : <CopyIcon />}
               </motion.div>
             </AnimatePresence>
           </Button>

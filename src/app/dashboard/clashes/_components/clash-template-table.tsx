@@ -2,7 +2,7 @@
 
 import { ColumnDef, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 import { produce } from 'immer'
-import { Pencil, Plus } from 'lucide-react'
+import { PencilIcon, PlusIcon } from 'lucide-react'
 import useSWR from 'swr'
 
 import { DataTable } from '@/components/data-table'
@@ -70,7 +70,7 @@ export function ClashTemplateTable() {
             }}
           >
             <DataTableRowActionButton>
-              <Pencil />
+              <PencilIcon />
             </DataTableRowActionButton>
           </ClashTemplateEditModal>
           <DataTableRowDeleteButton
@@ -109,7 +109,7 @@ export function ClashTemplateTable() {
           }}
         >
           <DataTableRowActionButton>
-            <Plus />
+            <PlusIcon />
           </DataTableRowActionButton>
         </ClashTemplateEditModal>
       )

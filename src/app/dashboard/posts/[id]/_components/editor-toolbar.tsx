@@ -1,7 +1,18 @@
 'use client'
 
 import { motion, useDragControls } from 'framer-motion'
-import { AppWindow, Binary, CloudUpload, Eye, EyeClosed, GitCompare, Hand, ReceiptText, Save, WandSparkles } from 'lucide-react'
+import {
+  AppWindowIcon,
+  BinaryIcon,
+  CloudUploadIcon,
+  EyeClosedIcon,
+  EyeIcon,
+  GitCompareIcon,
+  HandIcon,
+  ReceiptTextIcon,
+  SaveIcon,
+  WandSparklesIcon
+} from 'lucide-react'
 import { Updater } from 'use-immer'
 
 import { StorageUploadModal } from '@/app/dashboard/storage/_components/storage-upload-modal'
@@ -83,14 +94,14 @@ export function EditorToolbar({
             dragControls.start(event)
           }}
         >
-          <Hand />
+          <HandIcon />
         </Button>
         <Separator />
         <Tooltip>
           <TranscoderModal>
             <TooltipTrigger asChild>
               <Button size="icon" variant="outline">
-                <Binary />
+                <BinaryIcon />
               </Button>
             </TooltipTrigger>
           </TranscoderModal>
@@ -100,7 +111,7 @@ export function EditorToolbar({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button size="icon" variant="outline" onClick={onCompare}>
-              <GitCompare />
+              <GitCompareIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Diff 对比</TooltipContent>
@@ -108,7 +119,7 @@ export function EditorToolbar({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button disabled={disabled.format} size="icon" variant="outline" onClick={onFormat}>
-              <WandSparkles />
+              <WandSparklesIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>格式化</TooltipContent>
@@ -118,7 +129,7 @@ export function EditorToolbar({
           <StorageUploadModal id={STORAGE.ROOT_DIRECTORY_ID}>
             <TooltipTrigger asChild>
               <Button disabled={isCreate} size="icon" variant="outline">
-                <CloudUpload />
+                <CloudUploadIcon />
               </Button>
             </TooltipTrigger>
           </StorageUploadModal>
@@ -129,7 +140,7 @@ export function EditorToolbar({
           <PostEditModal value={post} onChange={setPost}>
             <TooltipTrigger asChild>
               <Button size="icon" variant="outline">
-                <ReceiptText />
+                <ReceiptTextIcon />
               </Button>
             </TooltipTrigger>
           </PostEditModal>
@@ -146,7 +157,7 @@ export function EditorToolbar({
                 })
               }}
             >
-              {post.isPublished ? <Eye /> : <EyeClosed />}
+              {post.isPublished ? <EyeIcon /> : <EyeClosedIcon />}
             </Button>
           </TooltipTrigger>
           <TooltipContent>{post.isPublished ? '公开' : '隐藏'}</TooltipContent>
@@ -154,7 +165,7 @@ export function EditorToolbar({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button size="icon" variant="outline" onClick={onPreview}>
-              <AppWindow />
+              <AppWindowIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>预览</TooltipContent>
@@ -164,7 +175,7 @@ export function EditorToolbar({
             <TooltipTrigger asChild>
               <AlertDialogTrigger asChild>
                 <Button disabled={disabled.save} size="icon">
-                  <Save />
+                  <SaveIcon />
                 </Button>
               </AlertDialogTrigger>
             </TooltipTrigger>

@@ -1,7 +1,7 @@
 'use client'
 
 import { produce } from 'immer'
-import { Eye, Pencil, Plus, Trash } from 'lucide-react'
+import { EyeIcon, PencilIcon, PlusIcon, TrashIcon } from 'lucide-react'
 import { Route } from 'next'
 import Link from 'next/link'
 import useSWR from 'swr'
@@ -52,7 +52,7 @@ export default function Page() {
             <p className="absolute bottom-1 left-2 text-lg opacity-75">{friend.name}</p>
             <Button asChild size="icon" variant="outline">
               <Link href={friend.siteUrl as Route} rel="noreferrer nofollow" target="_blank">
-                <Eye />
+                <EyeIcon />
               </Link>
             </Button>
             <FriendEditModal
@@ -69,13 +69,13 @@ export default function Page() {
               }}
             >
               <Button size="icon" variant="outline">
-                <Pencil />
+                <PencilIcon />
               </Button>
             </FriendEditModal>
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button size="icon" variant="destructive">
-                  <Trash />
+                  <TrashIcon />
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -124,7 +124,7 @@ export default function Page() {
         }}
       >
         <Card className="flex aspect-video cursor-pointer items-center justify-center" tabIndex={0}>
-          <Plus size={30} strokeWidth={3} />
+          <PlusIcon size={30} strokeWidth={3} />
         </Card>
       </FriendEditModal>
     </div>

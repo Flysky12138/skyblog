@@ -1,6 +1,6 @@
 'use cache'
 
-import { PencilLine } from 'lucide-react'
+import { PencilLineIcon } from 'lucide-react'
 import { Metadata } from 'next'
 import { cacheLife, cacheTag } from 'next/cache'
 import Link from 'next/link'
@@ -98,7 +98,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
           <DisplayByAuth role="admin">
             <Button asChild className="absolute top-3 right-3 md:top-5 md:right-5" size="icon" variant="ghost">
               <Link href={`/dashboard/posts/${post.id}`} target="_blank">
-                <PencilLine />
+                <PencilLineIcon />
               </Link>
             </Button>
           </DisplayByAuth>

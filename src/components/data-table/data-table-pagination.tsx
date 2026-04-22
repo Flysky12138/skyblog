@@ -1,7 +1,7 @@
 'use client'
 
 import { RowData, Table } from '@tanstack/react-table'
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -44,7 +44,7 @@ export function DataTablePagination<TData extends RowData>({ className, table }:
           onClick={() => table.setPageIndex(0)}
         >
           <span className="sr-only">第一页</span>
-          <ChevronsLeft />
+          <ChevronsLeftIcon />
         </Button>
         <Button
           disabled={!table.getCanPreviousPage() || table.options.meta?.isLoading}
@@ -53,14 +53,14 @@ export function DataTablePagination<TData extends RowData>({ className, table }:
           onClick={() => table.previousPage()}
         >
           <span className="sr-only">上一页</span>
-          <ChevronLeft />
+          <ChevronLeftIcon />
         </Button>
         <Button asChild className="pointer-events-none h-8 cursor-default" variant="secondary">
           <span>{table.options.meta?.isLoading ? <Spinner /> : `${table.getState().pagination.pageIndex + 1} / ${table.getPageCount()}`}</span>
         </Button>
         <Button disabled={!table.getCanNextPage() || table.options.meta?.isLoading} size="icon-sm" variant="outline" onClick={() => table.nextPage()}>
           <span className="sr-only">下一页</span>
-          <ChevronRight />
+          <ChevronRightIcon />
         </Button>
         <Button
           className="hidden lg:flex"
@@ -70,7 +70,7 @@ export function DataTablePagination<TData extends RowData>({ className, table }:
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
         >
           <span className="sr-only">最后一页</span>
-          <ChevronsRight />
+          <ChevronsRightIcon />
         </Button>
       </div>
     </div>

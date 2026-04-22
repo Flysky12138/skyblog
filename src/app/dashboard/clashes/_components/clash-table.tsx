@@ -2,7 +2,7 @@
 
 import { ColumnDef, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 import { produce } from 'immer'
-import { Pencil, Plus, Share2 } from 'lucide-react'
+import { PencilIcon, PlusIcon, Share2Icon } from 'lucide-react'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
 import useSWR from 'swr'
@@ -100,7 +100,7 @@ export function ClashTable() {
               toast.success('复制成功')
             }}
           >
-            <Share2 />
+            <Share2Icon />
           </DataTableRowActionButton>
           <ClashEditModal
             value={row.original}
@@ -119,7 +119,7 @@ export function ClashTable() {
             }}
           >
             <DataTableRowActionButton>
-              <Pencil />
+              <PencilIcon />
             </DataTableRowActionButton>
           </ClashEditModal>
           <DataTableRowDeleteButton
@@ -158,7 +158,7 @@ export function ClashTable() {
           }}
         >
           <DataTableRowActionButton>
-            <Plus />
+            <PlusIcon />
           </DataTableRowActionButton>
         </ClashEditModal>
       )

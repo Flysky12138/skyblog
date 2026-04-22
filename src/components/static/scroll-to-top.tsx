@@ -1,7 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronUp } from 'lucide-react'
+import { ChevronUpIcon } from 'lucide-react'
 import React from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -77,7 +77,7 @@ export function ScrollToTop({ className, showOnScrollYOverflow = 200, ...props }
           </motion.div>
         ) : (
           <motion.div key={2} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} initial={{ opacity: 0, y: 15 }}>
-            <ChevronUp strokeWidth={3} />
+            <ChevronUpIcon strokeWidth={3} />
           </motion.div>
         )}
       </AnimatePresence>

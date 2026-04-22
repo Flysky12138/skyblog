@@ -2,7 +2,7 @@
 
 import '@/components/mdx/css/index'
 
-import { AlertCircle } from 'lucide-react'
+import { AlertCircleIcon } from 'lucide-react'
 import React from 'react'
 import { useImmer } from 'use-immer'
 
@@ -137,7 +137,7 @@ export default function Page() {
 
       <DisplayByConditional condition={form.mode == 'arctan'}>
         <Alert variant="destructive">
-          <AlertCircle />
+          <AlertCircleIcon />
           <AlertTitle>收敛速度太慢，不提供计算</AlertTitle>
         </Alert>
       </DisplayByConditional>
@@ -147,7 +147,7 @@ export default function Page() {
           condition={!result.error}
           fallback={
             <Alert variant="destructive">
-              <AlertCircle />
+              <AlertCircleIcon />
               <AlertTitle>{result.error?.message}</AlertTitle>
             </Alert>
           }

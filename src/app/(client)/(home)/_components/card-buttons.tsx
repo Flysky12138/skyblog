@@ -1,6 +1,6 @@
 'use cache'
 
-import { Handshake, Package } from 'lucide-react'
+import { HandshakeIcon, PackageIcon } from 'lucide-react'
 import { cacheLife, cacheTag } from 'next/cache'
 import Link from 'next/link'
 
@@ -26,13 +26,13 @@ export async function CardButtons() {
       <DisplayByConditional condition={friendCount > 0}>
         <Button asChild variant="outline">
           <Link href="/friends">
-            <Handshake /> 友链（{friendCount}）
+            <HandshakeIcon /> 友链（{friendCount}）
           </Link>
         </Button>
       </DisplayByConditional>
       <Button asChild variant="outline">
         <Link href="/packages">
-          <Package /> 项目依赖（{pkgCount}）
+          <PackageIcon /> 项目依赖（{pkgCount}）
         </Link>
       </Button>
     </Card>

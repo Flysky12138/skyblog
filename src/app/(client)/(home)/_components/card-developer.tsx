@@ -1,7 +1,7 @@
 'use cache'
 
 import { Octokit } from '@octokit/rest'
-import { Mail } from 'lucide-react'
+import { MailIcon } from 'lucide-react'
 import { cacheLife } from 'next/cache'
 
 import Github from '@/assets/svg/github.svg'
@@ -53,7 +53,7 @@ export async function CardDeveloper() {
           <TooltipTrigger asChild>
             <Button asChild size="icon" variant="secondary">
               <a aria-label="google email" href="mailto:xhp443@gmail.com" rel="noreferrer nofollow">
-                <Mail />
+                <MailIcon />
               </a>
             </Button>
           </TooltipTrigger>

@@ -19,7 +19,15 @@ const eslintRules: Rules = {
     'error',
     {
       paths: ['next/router'],
-      patterns: ['@radix-ui/*', '!@radix-ui/react-slot']
+      patterns: [
+        {
+          group: ['@radix-ui/*', '!@radix-ui/react-slot']
+        },
+        {
+          allowImportNamePattern: '^(.*Icon|LucideProps)$',
+          group: ['lucide-react']
+        }
+      ]
     }
   ]
 }

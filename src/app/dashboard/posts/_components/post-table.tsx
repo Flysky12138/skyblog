@@ -2,7 +2,7 @@
 
 import { ColumnDef, getCoreRowModel, getPaginationRowModel, getSortedRowModel, PaginationState, useReactTable } from '@tanstack/react-table'
 import { produce } from 'immer'
-import { Eye, Pencil } from 'lucide-react'
+import { EyeIcon, PencilIcon } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import useSWR from 'swr'
@@ -112,12 +112,12 @@ export function PostTable() {
         <div className="flex justify-end gap-2">
           <DataTableRowActionButton asChild>
             <Link className="cursor-pointer" href={`/posts/${row.original.slug ?? row.original.id}`} target="_blank">
-              <Eye />
+              <EyeIcon />
             </Link>
           </DataTableRowActionButton>
           <DataTableRowActionButton asChild>
             <Link className="cursor-pointer" href={`/dashboard/posts/${row.original.id}`}>
-              <Pencil />
+              <PencilIcon />
             </Link>
           </DataTableRowActionButton>
           <DataTableRowDeleteButton

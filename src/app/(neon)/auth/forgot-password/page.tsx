@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeftIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
 import { Controller, useForm } from 'react-hook-form'
@@ -82,7 +82,7 @@ export default function Page() {
         <FieldGroup>
           <Field>
             <FieldDescription className="flex items-center justify-center gap-1.5">
-              <ArrowLeft size={16} />
+              <ArrowLeftIcon size={16} />
               <Link className="text-foreground" href="/auth/sign-in">
                 返回
               </Link>

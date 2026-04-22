@@ -1,4 +1,4 @@
-import { RotateCw } from 'lucide-react'
+import { RotateCwIcon } from 'lucide-react'
 import { ErrorComponent as ErrorComponentType } from 'next/dist/client/components/error-boundary'
 
 import { Button } from '@/components/ui/button'
@@ -23,7 +23,7 @@ export function ErrorComponent({ className, error, reset }: ErrorComponentProps)
           </EmptyHeader>
           <EmptyContent>
             <Button variant="outline" onClick={reset}>
-              <RotateCw /> 刷新
+              <RotateCwIcon /> 刷新
             </Button>
           </EmptyContent>
         </Empty>

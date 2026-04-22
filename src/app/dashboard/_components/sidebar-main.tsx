@@ -1,7 +1,17 @@
 'use client'
 
 import { isUndefined } from 'es-toolkit'
-import { Archive, HeartHandshake, House, LibraryBig, NotebookPen, Plus, Settings, User, UserRoundSearch } from 'lucide-react'
+import {
+  ArchiveIcon,
+  HeartHandshakeIcon,
+  HouseIcon,
+  LibraryBigIcon,
+  NotebookPenIcon,
+  PlusIcon,
+  SettingsIcon,
+  UserIcon,
+  UserRoundSearchIcon
+} from 'lucide-react'
 import { Route } from 'next'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -39,33 +49,33 @@ const menus: Menu[] = [
   {
     label: 'Post',
     group: [
-      { href: '/dashboard', icon: <House />, name: '面板' },
+      { href: '/dashboard', icon: <HouseIcon />, name: '面板' },
       {
         href: '/dashboard/posts',
-        icon: <LibraryBig />,
+        icon: <LibraryBigIcon />,
         name: '文章',
         action: {
           href: '/dashboard/posts/create',
-          icon: <Plus />
+          icon: <PlusIcon />
         }
       },
-      { href: '/dashboard/posts/create', icon: <NotebookPen />, name: '新建文章', onlyShow: 'collapsed' },
-      { href: `/dashboard/storage?id=${STORAGE.ROOT_DIRECTORY_ID}`, icon: <Archive />, name: '仓库' }
+      { href: '/dashboard/posts/create', icon: <NotebookPenIcon />, name: '新建文章', onlyShow: 'collapsed' },
+      { href: `/dashboard/storage?id=${STORAGE.ROOT_DIRECTORY_ID}`, icon: <ArchiveIcon />, name: '仓库' }
     ]
   },
   {
     label: 'User',
     group: [
-      { href: '/dashboard/users/members', icon: <User />, name: '成员' },
-      { href: '/dashboard/users/visits', icon: <UserRoundSearch />, name: '访客' }
+      { href: '/dashboard/users/members', icon: <UserIcon />, name: '成员' },
+      { href: '/dashboard/users/visits', icon: <UserRoundSearchIcon />, name: '访客' }
     ]
   },
   {
     label: 'Other',
     group: [
-      { href: '/dashboard/friends', icon: <HeartHandshake />, name: '友链' },
+      { href: '/dashboard/friends', icon: <HeartHandshakeIcon />, name: '友链' },
       { href: '/dashboard/clashes', icon: <Clash />, name: 'Clash 共享' },
-      { href: '/dashboard/setting', icon: <Settings />, name: '设置' }
+      { href: '/dashboard/setting', icon: <SettingsIcon />, name: '设置' }
     ]
   }
 ]

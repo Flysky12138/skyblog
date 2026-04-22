@@ -1,7 +1,7 @@
 'use client'
 
 import { Column } from '@tanstack/react-table'
-import { ArrowDown, ArrowUp, ChevronsUpDown } from 'lucide-react'
+import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from 'lucide-react'
 
 export function DataTableColumnSortHeader<TData, TValue>({ column, title }: { column: Column<TData, TValue>; title: string }) {
   if (!column.getCanSort()) {
@@ -27,7 +27,7 @@ export function DataTableColumnSortHeader<TData, TValue>({ column, title }: { co
       }}
     >
       <span>{title}</span>
-      {sortState == 'desc' ? <ArrowDown /> : sortState == 'asc' ? <ArrowUp /> : <ChevronsUpDown />}
+      {sortState == 'desc' ? <ArrowDownIcon /> : sortState == 'asc' ? <ArrowUpIcon /> : <ChevronsUpDownIcon />}
     </button>
   )
 }

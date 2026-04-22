@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
 import { Route } from 'next'
 import Link from 'next/link'
 import { PageNumberPaginationMeta } from 'prisma-extension-pagination'
@@ -41,14 +41,14 @@ export function PostPagination({ currentPage, pageCount }: PostPaginationProps) 
         {prev && (
           <Button asChild className="justify-self-start" variant="outline">
             <Link href={prev}>
-              <ArrowLeft /> 上一页
+              <ArrowLeftIcon /> 上一页
             </Link>
           </Button>
         )}
         {next && (
           <Button asChild className="col-start-2 justify-self-end" variant="outline">
             <Link href={next}>
-              下一页 <ArrowRight />
+              下一页 <ArrowRightIcon />
             </Link>
           </Button>
         )}

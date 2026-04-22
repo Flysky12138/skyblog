@@ -1,6 +1,6 @@
 'use client'
 
-import { LayoutDashboard, LogIn, UserRoundCog } from 'lucide-react'
+import { LayoutDashboardIcon, LogInIcon, UserRoundCogIcon } from 'lucide-react'
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
@@ -19,7 +19,7 @@ export function AuthButton() {
         <TooltipTrigger asChild>
           <Button asChild aria-label="login" size="icon" variant="outline">
             <Link href="/auth/sign-in">
-              <LogIn />
+              <LogInIcon />
             </Link>
           </Button>
         </TooltipTrigger>
@@ -32,7 +32,7 @@ export function AuthButton() {
     return (
       <Button asChild aria-label="dashboard" size="icon" variant="outline">
         <Link href="/dashboard">
-          <LayoutDashboard />
+          <LayoutDashboardIcon />
         </Link>
       </Button>
     )
@@ -43,7 +43,7 @@ export function AuthButton() {
       <TooltipTrigger asChild>
         <Button asChild aria-label="logout" size="icon" variant="outline">
           <Link href="/account/settings">
-            <UserRoundCog />
+            <UserRoundCogIcon />
           </Link>
         </Button>
       </TooltipTrigger>

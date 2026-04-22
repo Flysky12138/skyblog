@@ -1,7 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { Bot, BotOff } from 'lucide-react'
+import { BotIcon, BotOffIcon } from 'lucide-react'
 import { JSONObject, Live2DModel, ModelSettings } from 'pixi-live2d-display'
 import React from 'react'
 import { useInterval } from 'react-use'
@@ -279,7 +279,7 @@ function Live2DToggleButtonInner() {
         variant="outline"
         onClick={() => setIsEnabled(v => !v)}
       >
-        <DisplayByConditional condition={isLoading} fallback={isEnabled ? <Bot /> : <BotOff />}>
+        <DisplayByConditional condition={isLoading} fallback={isEnabled ? <BotIcon /> : <BotOffIcon />}>
           <Spinner />
         </DisplayByConditional>
       </Button>

@@ -2,7 +2,7 @@
 
 import { Treaty } from '@elysiajs/eden'
 import { limitAsync, remove, unionWith } from 'es-toolkit'
-import { File, Folder, Trash, Upload } from 'lucide-react'
+import { FileIcon, FolderIcon, TrashIcon, UploadIcon } from 'lucide-react'
 import React from 'react'
 import { useAsyncFn, useBeforeUnload } from 'react-use'
 import { useImmer } from 'use-immer'
@@ -139,8 +139,8 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
 
           <TabsContent value="select">
             <div className="grid gap-2 sm:grid-cols-2">
-              <FileSelect multiple logo={File} title="选择文件" onChange={onChange} />
-              <FileSelect multiple logo={Folder} title="选择文件夹" type="folder" onChange={onChange} />
+              <FileSelect multiple logo={FileIcon} title="选择文件" onChange={onChange} />
+              <FileSelect multiple logo={FolderIcon} title="选择文件夹" type="folder" onChange={onChange} />
             </div>
           </TabsContent>
 
@@ -148,7 +148,7 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
             <div className="flex flex-col gap-2">
               {!isUploadFinished && (
                 <Button className="ml-auto" loading={isUploading} size="sm" onClick={handleUpload}>
-                  <Upload /> 开始上传
+                  <UploadIcon /> 开始上传
                 </Button>
               )}
               <DataTableWrapper>
@@ -191,7 +191,7 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
                                 })
                               }}
                             >
-                              <Trash />
+                              <TrashIcon />
                             </DataTableRowActionButton>
                           </TableCell>
                         </TableRow>

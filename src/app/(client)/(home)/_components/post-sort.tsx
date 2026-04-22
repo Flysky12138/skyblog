@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowDownNarrowWide, ArrowDownWideNarrow } from 'lucide-react'
+import { ArrowDownNarrowWideIcon, ArrowDownWideNarrowIcon } from 'lucide-react'
 import { useRouter } from 'nextjs-toploader/app'
 import React from 'react'
 
@@ -44,7 +44,7 @@ export function PostSort({ className, order, sortord }: PostSortProps) {
               handleClick({ order: order == 'desc' ? 'asc' : 'desc', sortord })
             }}
           >
-            {order == 'desc' ? <ArrowDownWideNarrow /> : <ArrowDownNarrowWide />}
+            {order == 'desc' ? <ArrowDownWideNarrowIcon /> : <ArrowDownNarrowWideIcon />}
           </Button>
         </TooltipTrigger>
         <TooltipContent>{order == 'desc' ? '降序' : '升序'}</TooltipContent>

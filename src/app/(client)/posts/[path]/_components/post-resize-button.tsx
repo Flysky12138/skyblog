@@ -1,6 +1,6 @@
 'use client'
 
-import { Expand, Shrink } from 'lucide-react'
+import { ExpandIcon, ShrinkIcon } from 'lucide-react'
 import React from 'react'
 import { useEvent, useScrollbarWidth, useToggle } from 'react-use'
 
@@ -72,7 +72,7 @@ export function PostResizeButton({ className, ...props }: PostResizeButtonProps)
         {...props}
         onClick={handleClick}
       >
-        {isFullPage ? <Shrink /> : <Expand />}
+        {isFullPage ? <ShrinkIcon /> : <ExpandIcon />}
       </Button>
     </>
   )

@@ -2,7 +2,7 @@
 
 import { clamp } from 'es-toolkit'
 import { AnimatePresence, motion } from 'framer-motion'
-import { AudioLines, Loader2Icon, Pause, Play, Repeat1 } from 'lucide-react'
+import { AudioLinesIcon, Loader2Icon, PauseIcon, PlayIcon, Repeat1Icon } from 'lucide-react'
 import React from 'react'
 import { useAudio } from 'react-use'
 import { toast } from 'sonner'
@@ -133,7 +133,7 @@ export function AudioPlayerModal({ ref, song }: AudioPlayerModalProps) {
         <Portal selector={`#${ATTRIBUTE.ID.NAV_CONTAINER}`}>
           <DialogDrawerTrigger asChild>
             <Button size="icon">
-              <AudioLines />
+              <AudioLinesIcon />
             </Button>
           </DialogDrawerTrigger>
         </Portal>
@@ -191,7 +191,7 @@ export function AudioPlayerModal({ ref, song }: AudioPlayerModalProps) {
             <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
               <div>
                 <Toggle className="rounded-full" pressed={loop} variant={loop ? 'outline' : 'default'} onPressedChange={setLoop}>
-                  <Repeat1 />
+                  <Repeat1Icon />
                 </Toggle>
               </div>
               <Button
@@ -204,7 +204,7 @@ export function AudioPlayerModal({ ref, song }: AudioPlayerModalProps) {
               >
                 <DisplayByConditional condition={!isLoading} fallback={<Loader2Icon className="size-5 animate-spin" />}>
                   <motion.div className="flex size-full items-center justify-center px-4 py-2" tabIndex={-1} whileTap={{ scale: 0.8 }}>
-                    {paused ? <Play className="size-6" /> : <Pause className="size-6" />}
+                    {paused ? <PlayIcon className="size-6" /> : <PauseIcon className="size-6" />}
                   </motion.div>
                 </DisplayByConditional>
               </Button>

@@ -1,6 +1,6 @@
 'use client'
 
-import { Folder, Link, Undo2 } from 'lucide-react'
+import { FolderIcon, LinkIcon, Undo2Icon } from 'lucide-react'
 import React from 'react'
 import useSWR from 'swr'
 
@@ -56,7 +56,7 @@ export function StorageTable2({ className, id }: StorageTable2Props) {
               }}
             >
               <TableCell>
-                <Undo2 size={18} />
+                <Undo2Icon size={18} />
               </TableCell>
               <TableCell className="tracking-widest select-none" colSpan={3}>
                 ..
@@ -81,7 +81,7 @@ export function StorageTable2({ className, id }: StorageTable2Props) {
               }}
             >
               <TableCell>
-                <Folder size={18} />
+                <FolderIcon size={18} />
               </TableCell>
               <TableCell>{directory.name}</TableCell>
               <TableCell colSpan={2} />
@@ -98,7 +98,7 @@ export function StorageTable2({ className, id }: StorageTable2Props) {
               <TableCell className="space-x-2 text-right">
                 <StorageFileLinkCopy file={file}>
                   <DataTableRowActionButton>
-                    <Link />
+                    <LinkIcon />
                   </DataTableRowActionButton>
                 </StorageFileLinkCopy>
               </TableCell>

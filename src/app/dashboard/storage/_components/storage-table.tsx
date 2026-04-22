@@ -1,7 +1,7 @@
 'use client'
 
 import { produce } from 'immer'
-import { CloudUpload, Eye, Folder, Link, Undo2 } from 'lucide-react'
+import { CloudUploadIcon, EyeIcon, FolderIcon, LinkIcon, Undo2Icon } from 'lucide-react'
 import useSWR from 'swr'
 
 import { DataTableWrapper } from '@/components/data-table'
@@ -73,7 +73,7 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
                 }}
               >
                 <DataTableRowActionButton>
-                  <CloudUpload />
+                  <CloudUploadIcon />
                 </DataTableRowActionButton>
               </StorageUploadModal>
             </TableHead>
@@ -89,7 +89,7 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
               }}
             >
               <TableCell>
-                <Undo2 size={18} />
+                <Undo2Icon size={18} />
               </TableCell>
               <TableCell className="tracking-widest select-none" colSpan={4}>
                 ..
@@ -114,7 +114,7 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
               }}
             >
               <TableCell>
-                <Folder size={18} />
+                <FolderIcon size={18} />
               </TableCell>
               <TableCell>{directory.name}</TableCell>
               <TableCell colSpan={2} />
@@ -157,12 +157,12 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
               <TableCell className="space-x-2 text-right">
                 <StorageFileView asChild file={file}>
                   <DataTableRowActionButton>
-                    <Eye />
+                    <EyeIcon />
                   </DataTableRowActionButton>
                 </StorageFileView>
                 <StorageFileLinkCopy file={file}>
                   <DataTableRowActionButton>
-                    <Link />
+                    <LinkIcon />
                   </DataTableRowActionButton>
                 </StorageFileLinkCopy>
                 <DataTableRowDeleteButton

@@ -2,7 +2,7 @@
 
 import dayjs from 'dayjs'
 import { limitAsync } from 'es-toolkit'
-import { Download } from 'lucide-react'
+import { DownloadIcon } from 'lucide-react'
 import React from 'react'
 import { useAsyncFn, useBeforeUnload, useMap, useSet } from 'react-use'
 import { List, RowComponentProps } from 'react-window'
@@ -125,7 +125,7 @@ export function DownloadModal({ songs }: DownloadModalProps) {
       <Portal selector={`#${ATTRIBUTE.ID.NAV_CONTAINER}`}>
         <DialogDrawerTrigger asChild>
           <Button size="icon">
-            <Download />
+            <DownloadIcon />
           </Button>
         </DialogDrawerTrigger>
       </Portal>

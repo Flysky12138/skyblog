@@ -1,4 +1,4 @@
-import { Hash } from 'lucide-react'
+import { HashIcon } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -13,7 +13,7 @@ function Heading({ children, className, component: Component, ...props }: Headin
     <Component className={cn('group/heading relative block [&_code]:py-0', className)} {...props}>
       {children}
       <Link replace className="invisible absolute ml-1 -translate-y-0.5 group-hover/heading:visible" href={`#${props.id}`}>
-        <Hash className="inline-block size-[1em]" />
+        <HashIcon className="inline-block size-[1em]" />
       </Link>
     </Component>
   )

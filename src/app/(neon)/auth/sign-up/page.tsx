@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Eye, EyeOff } from 'lucide-react'
+import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
 import React from 'react'
@@ -100,7 +100,7 @@ export default function Page() {
                           setShowPassword(v => !v)
                         }}
                       >
-                        {showPassword ? <Eye /> : <EyeOff />}
+                        {showPassword ? <EyeIcon /> : <EyeOffIcon />}
                       </InputGroupButton>
                     </InputGroupAddon>
                   </InputGroup>

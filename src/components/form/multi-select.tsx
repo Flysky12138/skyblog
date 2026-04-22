@@ -2,7 +2,7 @@
 
 import { cloneDeep } from 'es-toolkit'
 import { Draft } from 'immer'
-import { Check, ChevronsUpDown, XCircle, XIcon } from 'lucide-react'
+import { CheckIcon, ChevronsUpDownIcon, XCircleIcon, XIcon } from 'lucide-react'
 import React from 'react'
 import { useImmer } from 'use-immer'
 
@@ -110,7 +110,7 @@ export function MultiSelect<T extends Record<string, unknown>>({
                         }
                       }}
                     >
-                      <XCircle className="pointer-events-auto size-3" />
+                      <XCircleIcon className="pointer-events-auto size-3" />
                     </button>
                   </Badge>
                 ))}
@@ -139,7 +139,7 @@ export function MultiSelect<T extends Record<string, unknown>>({
           ) : (
             <p className="text-muted-foreground">{placeholder}</p>
           )}
-          <ChevronsUpDown className="text-muted-foreground" />
+          <ChevronsUpDownIcon className="text-muted-foreground" />
         </Button>
       </PopoverTrigger>
 
@@ -185,7 +185,7 @@ export function MultiSelect<T extends Record<string, unknown>>({
                   }}
                 >
                   {getLabel(option)}
-                  <Check className={cn('ml-auto', isSelected(option) ? 'opacity-100' : 'opacity-0')} />
+                  <CheckIcon className={cn('ml-auto', isSelected(option) ? 'opacity-100' : 'opacity-0')} />
                 </CommandItem>
               ))}
             </CommandGroup>

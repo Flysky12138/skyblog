@@ -1,4 +1,4 @@
-import { ArrowUpRight, Hash } from 'lucide-react'
+import { ArrowUpRightIcon, HashIcon } from 'lucide-react'
 import { Route } from 'next'
 import Link from 'next/link'
 import React from 'react'
@@ -15,7 +15,7 @@ export function A({ children, className, ...props }: React.ComponentProps<'a'>) 
     return (
       <a className={className} rel="noreferrer nofollow" target="_blank" {...props}>
         {children}
-        <ArrowUpRight className="inline-block translate-y-1 align-super" size={12} />
+        <ArrowUpRightIcon className="inline-block translate-y-1 align-super" size={12} />
       </a>
     )
   }
@@ -23,7 +23,7 @@ export function A({ children, className, ...props }: React.ComponentProps<'a'>) 
   // 内部链接
   return (
     <Link className={className} href={props.href as Route}>
-      <Hash className="ml-1 inline-block -translate-y-0.5" size={12} />
+      <HashIcon className="ml-1 inline-block -translate-y-0.5" size={12} />
       {children}
     </Link>
   )

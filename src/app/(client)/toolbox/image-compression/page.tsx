@@ -1,7 +1,8 @@
 'use client'
 
 import { Fancybox } from '@fancyapps/ui'
-import { ChevronLeft, ChevronRight, ImageIcon } from 'lucide-react'
+import { remove } from 'es-toolkit'
+import { ChevronLeftIcon, ChevronRightIcon, ImageIcon } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import { useDebounce, useLocalStorage } from 'react-use'
@@ -168,7 +169,18 @@ export default function Page() {
   })
 
   if (!activeFile) {
-    return <FileSelect multiple accept="image/*" description="选择或拖入需要处理的图片" logo={ImageIcon} title="未选择图片" onChange={setFiles} />
+    return (
+      <FileSelect
+        multiple
+        accept="image/*"
+        description="选择或拖入需要处理的图片"
+        logo={ImageIcon}
+        title="未选择图片"
+        onChange={files => {
+          setFiles(remove(files, file => file.type.startsWith('image/')))
+        }}
+      />
+    )
   }
 
   return (
@@ -237,7 +249,7 @@ export default function Page() {
                         setActiveFileIndex(i => (i + files.length - 1) % files.length)
                       }}
                     >
-                      <ChevronLeft />
+                      <ChevronLeftIcon />
                     </Button>
                     <Button className="pointer-events-none" tabIndex={-1} variant="outline">
                       {activeFileIndex + 1} / {files.length}
@@ -249,7 +261,7 @@ export default function Page() {
                         setActiveFileIndex(i => (i + 1) % files.length)
                       }}
                     >
-                      <ChevronRight />
+                      <ChevronRightIcon />
                     </Button>
                   </ButtonGroup>
                 )}

@@ -1,6 +1,6 @@
 'use client'
 
-import { ChevronsUpDown, LogOut, UserRoundCog } from 'lucide-react'
+import { ChevronsUpDownIcon, LogOutIcon, UserRoundCogIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
 
@@ -47,7 +47,7 @@ export function SidebarUser() {
                 <span className="truncate font-semibold">{name}</span>
                 <span className="text-muted-foreground truncate text-xs">{email}</span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <ChevronsUpDownIcon className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -71,7 +71,7 @@ export function SidebarUser() {
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild className="cursor-pointer">
               <Link href="/account/settings">
-                <UserRoundCog /> 个人资料
+                <UserRoundCogIcon /> 个人资料
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -81,7 +81,7 @@ export function SidebarUser() {
                 router.replace('/auth/sign-in')
               }}
             >
-              <LogOut /> 注销
+              <LogOutIcon /> 注销
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

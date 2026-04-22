@@ -1,4 +1,4 @@
-import { Shapes, SwatchBook, Tag } from 'lucide-react'
+import { ShapesIcon, SwatchBookIcon, TagIcon } from 'lucide-react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
@@ -11,13 +11,13 @@ export default function Page() {
     <Tabs className="gap-card-small!" defaultValue="post">
       <TabsList>
         <TabsTrigger className="px-4 sm:px-8" value="post">
-          <SwatchBook /> Post
+          <SwatchBookIcon /> Post
         </TabsTrigger>
         <TabsTrigger className="px-4 sm:px-8" value="category">
-          <Shapes /> Category
+          <ShapesIcon /> Category
         </TabsTrigger>
         <TabsTrigger className="px-4 sm:px-8" value="tag">
-          <Tag /> Tag
+          <TagIcon /> Tag
         </TabsTrigger>
       </TabsList>
       <TabsContent value="post">

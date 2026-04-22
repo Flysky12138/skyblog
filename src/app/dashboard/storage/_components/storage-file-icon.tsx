@@ -1,4 +1,14 @@
-import { File, FileArchive, FileAudio2, FileImage, FileJson2, FileText, FileType2, FileVideo2, LucideProps } from 'lucide-react'
+import {
+  FileArchiveIcon,
+  FileAudio2Icon,
+  FileIcon,
+  FileImageIcon,
+  FileJson2Icon,
+  FileTextIcon,
+  FileType2Icon,
+  FileVideo2Icon,
+  LucideProps
+} from 'lucide-react'
 
 import { getFileType } from '@/lib/file/info'
 
@@ -11,20 +21,20 @@ export function StorageFileIcon({ mimeType, ...props }: StorageFileIconProps) {
 
   switch (type) {
     case 'audio':
-      return <FileAudio2 {...props} />
+      return <FileAudio2Icon {...props} />
     case 'font':
-      return <FileType2 {...props} />
+      return <FileType2Icon {...props} />
     case 'image':
-      return <FileImage {...props} />
+      return <FileImageIcon {...props} />
     case 'json':
-      return <FileJson2 {...props} />
+      return <FileJson2Icon {...props} />
     case 'text':
-      return <FileText {...props} />
+      return <FileTextIcon {...props} />
     case 'video':
-      return <FileVideo2 {...props} />
+      return <FileVideo2Icon {...props} />
     case 'zip':
-      return <FileArchive {...props} />
+      return <FileArchiveIcon {...props} />
     default:
-      return <File {...props} />
+      return <FileIcon {...props} />
   }
 }
