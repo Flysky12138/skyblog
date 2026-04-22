@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils'
 interface FileSelectProps {
   /**
    * 接受的文件类型
-   * @example '*'
+   * @default '*'
    */
   accept?: string
   className?: string
@@ -24,10 +24,15 @@ interface FileSelectProps {
    */
   multiple?: boolean
   title: string
+  /**
+   * 文件选择方式
+   * @default 'file'
+   */
+  type?: 'file' | 'folder'
   onChange: (files: File[]) => void
 }
 
-export function FileSelect({ accept = '*', className, description, logo: Logo, multiple = false, title, onChange }: FileSelectProps) {
+export function FileSelect({ accept = '*', className, description, logo: Logo, multiple = false, title, type, onChange }: FileSelectProps) {
   const accessibleProps = useAccessibleClick(event => {
     event.currentTarget.click()
   })
@@ -56,7 +61,7 @@ export function FileSelect({ accept = '*', className, description, logo: Logo, m
             <Logo />
           </EmptyMedia>
           <EmptyTitle>{title}</EmptyTitle>
-          <EmptyDescription>{description}</EmptyDescription>
+          {description && <EmptyDescription>{description}</EmptyDescription>}
         </EmptyHeader>
       </Empty>
       <Input
@@ -64,6 +69,7 @@ export function FileSelect({ accept = '*', className, description, logo: Logo, m
         accept={accept}
         multiple={multiple}
         type="file"
+        webkitdirectory={type == 'folder' ? 'true' : undefined}
         onChange={event => {
           onChange(Array.from(event.target.files ?? []))
         }}
