@@ -8,9 +8,9 @@ import { DataTableWrapper } from '@/components/data-table'
 import { DataTableRowActionButton, DataTableRowDeleteButton } from '@/components/data-table/data-table-action'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { FileHelper } from '@/lib/helper/file'
+import { TimeHelper } from '@/lib/helper/time'
 import { rpc, unwrap } from '@/lib/http/rpc'
-import { formatFileSize } from '@/lib/parser/size'
-import { formatISOTime } from '@/lib/parser/time'
 import { toastPromise } from '@/lib/toast'
 
 import { StorageFileIcon } from './storage-file-icon'
@@ -152,8 +152,8 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
                 <StorageFileIcon mimeType={file.mimeType} size={18} />
               </TableCell>
               <TableCell className="truncate">{[file.name, file.ext].filter(Boolean).join('.')}</TableCell>
-              <TableCell>{formatFileSize(Number(file.size))}</TableCell>
-              <TableCell>{formatISOTime(file.updatedAt)}</TableCell>
+              <TableCell>{FileHelper.formatFileSize(Number(file.size))}</TableCell>
+              <TableCell>{TimeHelper.formatISOTime(file.updatedAt)}</TableCell>
               <TableCell className="space-x-2 text-right">
                 <StorageFileView asChild file={file}>
                   <DataTableRowActionButton>

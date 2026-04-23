@@ -15,7 +15,8 @@ import { Badge } from '@/components/ui/badge'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { rpc } from '@/lib/http/rpc'
-import { getVariablesNames } from '@/lib/parser/string'
+
+import { getVariablesNames } from './utils'
 
 interface ClashTemplateEditModalProps extends React.PropsWithChildren {
   value?: Treaty.Data<typeof rpc.dashboard.clashes.templates.get>[number]

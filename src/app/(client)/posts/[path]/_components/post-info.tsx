@@ -10,8 +10,8 @@ import useSWR from 'swr'
 import { Skeleton } from '@/components/ui/skeleton'
 import { authClient } from '@/lib/auth/client'
 import { SESSIONSTORAGE_KEY } from '@/lib/constants'
+import { TimeHelper } from '@/lib/helper/time'
 import { rpc, unwrap } from '@/lib/http/rpc'
-import { formatISOTime2 } from '@/lib/parser/time'
 
 interface PostInfoProps {
   defaultValue: Treaty.Data<ReturnType<typeof rpc.posts>['get']>
@@ -57,7 +57,7 @@ export function PostInfo({ defaultValue, id }: PostInfoProps) {
 
   return (
     <p className="text-muted-foreground text-sm break-all">
-      这篇文章发布于 {formatISOTime2(post.createdAt)}
+      这篇文章发布于 {TimeHelper.formatISOTime2(post.createdAt)}
       {post.categories.length > 0 ? (
         <>
           ，归类于&nbsp;

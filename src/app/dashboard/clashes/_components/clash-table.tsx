@@ -11,8 +11,8 @@ import { DataTable } from '@/components/data-table'
 import { DataTableRowActionButton, DataTableRowDeleteButton } from '@/components/data-table/data-table-action'
 import { getColumnConfig } from '@/components/data-table/utils'
 import { Switch } from '@/components/ui/switch'
+import { TimeHelper } from '@/lib/helper/time'
 import { rpc, unwrap } from '@/lib/http/rpc'
-import { formatISOTime } from '@/lib/parser/time'
 import { toastPromise } from '@/lib/toast'
 
 import { ClashEditModal } from './clash-edit-modal'
@@ -54,7 +54,7 @@ export function ClashTable() {
       header: '最近订阅时间',
       id: 'lastAt',
       size: 180,
-      cell: ({ row }) => (row.original.activityLogs.length ? formatISOTime(row.original.activityLogs[0].createdAt) : null)
+      cell: ({ row }) => (row.original.activityLogs.length ? TimeHelper.formatISOTime(row.original.activityLogs[0].createdAt) : null)
     },
     getColumnConfig('updatedAt'),
     {

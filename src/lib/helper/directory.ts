@@ -61,18 +61,17 @@ export class DirectoryHelper {
    * 打开目录选择器
    */
   async openDirectory(options?: DirectoryPickerOptions) {
-    const now = Date.now()
     try {
       this.#dirHandle = await window.showDirectoryPicker(options)
     } catch (error) {
-      if (Date.now() - now < 200) {
-        toast.warning('当前浏览器不支持选择目录功能', {
-          duration: 6 * 1000,
-          id: '0199b418-183d-71bd-849a-09f6a9cd8985',
-          richColors: true
-        })
+      if (error instanceof DOMException && error.name == 'AbortError') {
+        throw new Error('已取消文件夹选择操作')
       }
-      throw new Error('已取消文件夹选择操作')
+      toast.warning('当前浏览器不支持选择目录功能', {
+        duration: 6 * 1000,
+        id: '0199b418-183d-71bd-849a-09f6a9cd8985',
+        richColors: true
+      })
     }
     return this.#dirHandle
   }

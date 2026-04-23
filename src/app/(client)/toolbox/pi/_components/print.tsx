@@ -7,7 +7,7 @@ import { useMeasure } from 'react-use'
 import { List } from 'react-window'
 
 import { Button } from '@/components/ui/button'
-import { download } from '@/lib/file/download'
+import { FileHelper } from '@/lib/helper/file'
 
 interface PrintProps {
   pi: string
@@ -40,8 +40,7 @@ export const Print = React.memo(function Print({ pi, size, time, onClose }: Prin
           size="sm"
           variant="secondary"
           onClick={() => {
-            const blob = new Blob([piChunk.join('')], { type: 'text/plain;charset=utf-8' })
-            download(blob, `pi-${size}.txt`)
+            FileHelper.downloadFile(pi, `pi-${size}.txt`, 'text/plain;charset=utf-8')
           }}
         >
           <DownloadIcon /> 下载

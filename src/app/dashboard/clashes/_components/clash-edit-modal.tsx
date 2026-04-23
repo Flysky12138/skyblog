@@ -18,9 +18,8 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { rpc, unwrap } from '@/lib/http/rpc'
-import { getVariablesNames, replaceVariables } from '@/lib/parser/string'
 
-import { SWR_KEY_CLASH_TEMPLATES } from './utils'
+import { getVariablesNames, replaceVariables, SWR_KEY_CLASH_TEMPLATES } from './utils'
 
 interface ClashEditModalProps extends React.PropsWithChildren {
   value?: Treaty.Data<typeof rpc.dashboard.clashes.get>[number]

@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 import { Card } from '@/components/static/card'
 import { Prisma } from '@/generated/prisma/client'
-import { fromNow } from '@/lib/parser/time'
+import { TimeHelper } from '@/lib/helper/time'
 
 import { PostPagination } from './_components/post-pagination'
 import { PostSort } from './_components/post-sort'
@@ -37,7 +37,7 @@ export default async function Page({ searchParams }: PageProps<'/'>) {
           </h2>
           <div className="text-secondary-foreground flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs">
             <CalendarDaysIcon size={12} />
-            <>更新于 {fromNow(post.updatedAt)}</>
+            <>更新于 {TimeHelper.fromNow(post.updatedAt)}</>
             {/* <Typography endDecorator="·" level="body-xs" startDecorator={<QuestionAnswerRounded sx={{ fontSize: '1.1em' }} />}>
               评论数 {0}
             </Typography> */}

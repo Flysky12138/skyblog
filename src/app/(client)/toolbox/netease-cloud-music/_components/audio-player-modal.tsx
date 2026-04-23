@@ -23,8 +23,8 @@ import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Toggle } from '@/components/ui/toggle'
 import { ATTRIBUTE } from '@/lib/constants'
+import { TimeHelper } from '@/lib/helper/time'
 import { rpc, unwrap } from '@/lib/http/rpc'
-import { formatMillisecond } from '@/lib/parser/time'
 import { cn } from '@/lib/utils'
 import { useLive2DContext } from '@/providers/live2d'
 
@@ -185,8 +185,8 @@ export function AudioPlayerModal({ ref, song }: AudioPlayerModalProps) {
               }}
             />
             <p className="mt-2 flex justify-between text-xs">
-              <span>{formatMillisecond(displayTime)}</span>
-              <span>{formatMillisecond(displayDuration)}</span>
+              <span>{TimeHelper.formatMillisecond(displayTime)}</span>
+              <span>{TimeHelper.formatMillisecond(displayDuration)}</span>
             </p>
             <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
               <div>

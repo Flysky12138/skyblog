@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia'
 
+import { replaceVariables } from '@/app/dashboard/clashes/_components/utils'
 import { getRealIp, getUserVisitInfo } from '@/lib/http/headers'
-import { replaceVariables } from '@/lib/parser/string'
 import { isDev } from '@/lib/utils'
 
 import { idModel } from '../model'

@@ -1,7 +1,25 @@
 import JSZip from 'jszip'
 import { JSONObject, ModelSettings } from 'pixi-live2d-display'
 
-import { loadJSFile } from '@/lib/file/load'
+/**
+ * 加载 JS 脚本
+ */
+const loadJSFile = (url: StartsWith<'/' | Protocol>) => {
+  const script = document.createElement('script')
+  script.async = true
+  script.src = url
+  document.head.append(script)
+  return new Promise((resolve, reject) => {
+    script.addEventListener('load', () => {
+      script.remove()
+      resolve(script)
+    })
+    script.addEventListener('error', () => {
+      script.remove()
+      reject(script)
+    })
+  })
+}
 
 export const PADDING = {
   x: 10,

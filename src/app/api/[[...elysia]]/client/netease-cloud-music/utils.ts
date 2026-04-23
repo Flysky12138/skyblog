@@ -2,7 +2,7 @@ import { get } from '@vercel/edge-config'
 import { cacheLife, cacheTag } from 'next/cache'
 
 import { CACHE_TAG, VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
-import { timeToSeconds } from '@/lib/parser/time'
+import { TimeHelper } from '@/lib/helper/time'
 
 /**
  * 获取网易云音乐 Cookie
@@ -25,7 +25,7 @@ export const parseLyric = (lyric?: string) => {
   const matcher = lyric.matchAll(/\[([\d:.]+)\]\r*(.*)$/gm)
   let lyrics = Array.from(matcher, ([_, second, lrc]) => ({
     lyric: lrc.trim(),
-    time: timeToSeconds(second, 'mm:ss.'.padEnd(second.length, 'S'))
+    time: TimeHelper.timeToSeconds(second, 'mm:ss.'.padEnd(second.length, 'S'))
   }))
 
   // 过滤存在错误数据的歌词

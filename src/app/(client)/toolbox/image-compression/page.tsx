@@ -17,8 +17,8 @@ import { Field, FieldDescription, FieldGroup, FieldLabel, FieldTitle } from '@/c
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { DirectoryHelper } from '@/lib/file/directory-helper'
-import { formatFileSize } from '@/lib/parser/size'
+import { DirectoryHelper } from '@/lib/helper/directory'
+import { FileHelper } from '@/lib/helper/file'
 
 import { compressImageByCanvas, imageCompressionGroup } from './utils'
 
@@ -175,7 +175,7 @@ export default function Page() {
         accept="image/*"
         description="选择或拖入需要处理的图片"
         logo={ImageIcon}
-        title="未选择图片"
+        title="选择图片"
         onChange={files => {
           setFiles(remove(files, file => file.type.startsWith('image/')))
         }}
@@ -202,9 +202,9 @@ export default function Page() {
                 )}
               </React.Activity>
               <ButtonGroup className="absolute top-2 right-2">
-                <Badge variant="secondary">{formatFileSize(activeFile.size)}</Badge>
+                <Badge variant="secondary">{FileHelper.formatFileSize(activeFile.size)}</Badge>
                 <ButtonGroupSeparator />
-                <Badge>{compressedFile ? formatFileSize(compressedFile.size) : '?'}</Badge>
+                <Badge>{compressedFile ? FileHelper.formatFileSize(compressedFile.size) : '?'}</Badge>
               </ButtonGroup>
             </Button>
           </Card>

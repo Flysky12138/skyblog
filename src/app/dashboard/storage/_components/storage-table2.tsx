@@ -8,8 +8,8 @@ import { DataTableWrapper } from '@/components/data-table'
 import { DataTableRowActionButton } from '@/components/data-table/data-table-action'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { FileHelper } from '@/lib/helper/file'
 import { rpc, unwrap } from '@/lib/http/rpc'
-import { formatFileSize } from '@/lib/parser/size'
 
 import { StorageFileIcon } from './storage-file-icon'
 import { StorageFileLinkCopy } from './storage-file-link-copy'
@@ -94,7 +94,7 @@ export function StorageTable2({ className, id }: StorageTable2Props) {
                 <StorageFileIcon mimeType={file.mimeType} size={18} />
               </TableCell>
               <TableCell className="truncate">{[file.name, file.ext].filter(Boolean).join('.')}</TableCell>
-              <TableCell>{formatFileSize(Number(file.size))}</TableCell>
+              <TableCell>{FileHelper.formatFileSize(Number(file.size))}</TableCell>
               <TableCell className="space-x-2 text-right">
                 <StorageFileLinkCopy file={file}>
                   <DataTableRowActionButton>

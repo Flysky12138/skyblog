@@ -8,7 +8,7 @@ import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item'
-import { getFileType } from '@/lib/file/info'
+import { FileHelper } from '@/lib/helper/file'
 import { rpc } from '@/lib/http/rpc'
 
 import { getPublicUrl } from './utils'
@@ -22,7 +22,7 @@ export function StorageFileLinkCopy({ children, file }: StorageFileLinkCopyProps
 
   const links = [{ label: '直链', value: getPublicUrl(file.s3Object.objectKey) }]
 
-  switch (getFileType(file.mimeType)) {
+  switch (FileHelper.getFileType(file.mimeType)) {
     case 'image':
       links.push(
         { label: 'Markdown', value: `![${file.name}](${getPublicUrl(file.s3Object.objectKey)})` },

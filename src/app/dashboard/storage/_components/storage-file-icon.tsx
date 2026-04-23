@@ -10,14 +10,14 @@ import {
   LucideProps
 } from 'lucide-react'
 
-import { getFileType } from '@/lib/file/info'
+import { FileHelper } from '@/lib/helper/file'
 
 interface StorageFileIconProps extends LucideProps {
   mimeType: string
 }
 
 export function StorageFileIcon({ mimeType, ...props }: StorageFileIconProps) {
-  const type = getFileType(mimeType)
+  const type = FileHelper.getFileType(mimeType)
 
   switch (type) {
     case 'audio':

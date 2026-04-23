@@ -69,12 +69,3 @@ export abstract class AesGcm {
    */
   static #algorithm = (iv: Uint8Array<ArrayBuffer>): AesGcmParams => ({ iv, name: 'AES-GCM' })
 }
-
-/**
- * SHA-256 摘要运算
- */
-export const sha256 = async (file: File) => {
-  const buffer = await file.arrayBuffer()
-  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer)
-  return Array.from(new Uint8Array(hashBuffer), b => b.toString(16).padStart(2, '0')).join('')
-}

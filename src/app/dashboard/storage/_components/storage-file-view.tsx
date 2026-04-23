@@ -4,7 +4,7 @@ import { Treaty } from '@elysiajs/eden'
 import { Fancybox } from '@fancyapps/ui'
 import { Root, SlotProps } from '@radix-ui/react-slot'
 
-import { getFileType } from '@/lib/file/info'
+import { FileHelper } from '@/lib/helper/file'
 import { rpc } from '@/lib/http/rpc'
 
 import { getPublicUrl } from './utils'
@@ -15,8 +15,8 @@ interface StorageFileViewProps extends SlotProps {
 }
 
 export function StorageFileView({ asChild, file, onClick, ...props }: StorageFileViewProps) {
-  const types: ReturnType<typeof getFileType>[] = ['image', 'pdf']
-  const type = getFileType(file.mimeType)
+  const types: ReturnType<typeof FileHelper.getFileType>[] = ['image', 'pdf']
+  const type = FileHelper.getFileType(file.mimeType)
 
   if (!types.includes(type)) return null
 

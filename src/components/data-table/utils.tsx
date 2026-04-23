@@ -2,7 +2,7 @@ import { ColumnDef, RowData } from '@tanstack/react-table'
 import { merge } from 'es-toolkit'
 
 import { Checkbox } from '@/components/ui/checkbox'
-import { formatISOTime } from '@/lib/parser/time'
+import { TimeHelper } from '@/lib/helper/time'
 
 import { DataTableColumnSortHeader } from './data-table-column-header'
 
@@ -18,7 +18,7 @@ export const getColumnConfig = <TData extends RowData>(accessorKey: ColumnAccess
         {
           accessorKey: 'createdAt',
           size: 180,
-          cell: ({ row }) => formatISOTime((row.original as any)['createdAt']),
+          cell: ({ row }) => TimeHelper.formatISOTime((row.original as any)['createdAt']),
           header: ({ column }) => <DataTableColumnSortHeader column={column} title="创建时间" />
         } satisfies ColumnDef<TData>,
         options ?? {}
@@ -54,7 +54,7 @@ export const getColumnConfig = <TData extends RowData>(accessorKey: ColumnAccess
         {
           accessorKey: 'updatedAt',
           size: 180,
-          cell: ({ row }) => formatISOTime((row.original as any)['updatedAt']),
+          cell: ({ row }) => TimeHelper.formatISOTime((row.original as any)['updatedAt']),
           header: ({ column }) => <DataTableColumnSortHeader column={column} title="更新时间" />
         } satisfies ColumnDef<TData>,
         options ?? {}

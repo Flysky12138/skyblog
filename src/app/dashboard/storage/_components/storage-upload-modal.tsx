@@ -14,10 +14,8 @@ import { Button } from '@/components/ui-overwrite/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { sha256 } from '@/lib/crypto'
-import { getFileType, getImageSize, parseFileName } from '@/lib/file/info'
+import { FileHelper } from '@/lib/helper/file'
 import { rpc, unwrap } from '@/lib/http/rpc'
-import { formatFileSize } from '@/lib/parser/size'
 import { toastPromise, toastPromiseDelay } from '@/lib/toast'
 import { cn } from '@/lib/utils'
 
@@ -55,7 +53,7 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
     setActiveTab('waiting')
     const fileEntries: FileEntry[] = await toastPromiseDelay(
       Array.fromAsync(files, async file => ({
-        id: await sha256(file),
+        id: await FileHelper.getFileHash(file),
         name: file.name,
         path: file.webkitRelativePath || file.name,
         rawFile: file,
@@ -80,15 +78,26 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
       const bucket = objectDetail?.bucket || (await chunkUpload({ file: file.rawFile, key: file.id, type: file.type }))
       // 获取文件信息
       const metadata = {
-        ...(getFileType(file.type) == 'image' ? await getImageSize(file.rawFile) : {})
+        ...(FileHelper.getFileType(file.type) == 'image' ? await FileHelper.getImageSize(file.rawFile) : {})
       }
-      const { ext, name } = parseFileName(file.name)
       // 保存记录到数据库
       return rpc.dashboard.storage.files
         .post({
-          directory: { id, names: file.path.split('/').filter(Boolean).slice(0, -1) },
-          file: { ext, metadata, mimeType: file.type, name, size: file.size },
-          s3Object: { bucket, objectKey: file.id }
+          directory: {
+            id,
+            names: file.path.split('/').filter(Boolean).slice(0, -1)
+          },
+          file: {
+            ext: FileHelper.getExtension(file.name),
+            metadata,
+            mimeType: file.type,
+            name: FileHelper.getBaseName(file.name),
+            size: file.size
+          },
+          s3Object: {
+            bucket,
+            objectKey: file.id
+          }
         })
         .then(unwrap)
     }
@@ -180,7 +189,7 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
                             <StorageFileIcon mimeType={file.type} size={18} />
                           </TableCell>
                           <TableCell>{file.path}</TableCell>
-                          <TableCell>{formatFileSize(file.size)}</TableCell>
+                          <TableCell>{FileHelper.formatFileSize(file.size)}</TableCell>
                           <TableCell className="text-right">
                             <DataTableRowActionButton
                               disabled={isUploading}
