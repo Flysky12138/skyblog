@@ -6,11 +6,9 @@ import { isDev } from '@/lib/utils'
 
 import { clashes } from './clashes'
 import { client } from './client'
-import { crons } from './crons'
 import { dashboard } from './dashboard'
 
 export const app = new Elysia({ prefix: '/api' })
-  .use(crons)
   .use(clashes)
   .mapResponse(async ({ responseValue }) => {
     if (isDev()) return

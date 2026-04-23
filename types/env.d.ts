@@ -102,5 +102,12 @@ declare namespace NodeJS {
      * "Z6Wn8v7YkAf5Ml0DxJzI1gBp"
      */
     TOKEN_VERCEL: string
+    /**
+     * 企业微信机器人 webhook url
+     * @see https://work.weixin.qq.com/api/doc/90000/90136/91770
+     * @example
+     * "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxxx-xxxx-xxxx-xxxx"
+     */
+    WECOM_WEBHOOK_URL?: string
   }
 }
