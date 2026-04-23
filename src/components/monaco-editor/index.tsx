@@ -55,7 +55,7 @@ export function MonacoEditor({
   const Comp = asChild ? Root : 'div'
 
   const rootRef = React.useRef<HTMLDivElement>(null)
-  const monacoRef = React.useRef<any>(null)
+  const monacoRef = React.useRef<Monaco>(undefined)
   const editorRef = React.useRef<editor.IStandaloneCodeEditor>(undefined)
   const diffEditorRef = React.useRef<editor.IStandaloneDiffEditor>(undefined)
 
@@ -74,7 +74,11 @@ export function MonacoEditor({
     diffEditorRef.current?.dispose()
   })
   // 创建编辑器
-  const createMonacoEditor = React.useEffectEvent((monaco?: any) => {
+  const createMonacoEditor = React.useEffectEvent((monaco?: Monaco) => {
+    if (!rootRef.current) {
+      console.warn('Monaco Editor root element not found')
+      return
+    }
     if (!monaco) return
 
     destroyMonacoEditor()

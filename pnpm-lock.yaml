@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@monaco-editor/loader':
+    hash: 796f13a51bd92874865e1bfb86db18ca66c2399cf3dc80dbcc696d5e9d874794
+    path: patches/@monaco-editor__loader.patch
+
 importers:
 
   .:
@@ -40,7 +45,7 @@ importers:
         version: 3.1.1(@types/react@19.2.14)(react@19.2.5)
       '@monaco-editor/loader':
         specifier: ^1.7.0
-        version: 1.7.0
+        version: 1.7.0(patch_hash=796f13a51bd92874865e1bfb86db18ca66c2399cf3dc80dbcc696d5e9d874794)
       '@neondatabase/auth':
         specifier: 0.1.0-beta.21
         version: 0.1.0-beta.21(9ead20c5ab2e4d49e7c4e8c1c8de1911)
@@ -11610,7 +11615,7 @@ snapshots:
       '@types/react': 19.2.14
       react: 19.2.5
 
-  '@monaco-editor/loader@1.7.0':
+  '@monaco-editor/loader@1.7.0(patch_hash=796f13a51bd92874865e1bfb86db18ca66c2399cf3dc80dbcc696d5e9d874794)':
     dependencies:
       state-local: 1.0.7
 

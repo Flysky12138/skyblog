@@ -10,3 +10,5 @@ onlyBuiltDependencies:
   - esbuild
   - prisma
   - sharp
+patchedDependencies:
+  '@monaco-editor/loader': patches/@monaco-editor__loader.patch
