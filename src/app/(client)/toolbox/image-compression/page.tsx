@@ -32,7 +32,7 @@ export default function Page() {
 
   const compressedFileCache = React.useRef(new WeakMap<File, Blob | undefined>())
 
-  const [activeTab, setActiveTab] = React.useState<'compressed' | 'original' | (string & {})>('compressed')
+  const [activeTab, setActiveTab] = React.useState<StringLiteralsOrString<'compressed' | 'original'>>('compressed')
   const [activeFileIndex, setActiveFileIndex] = React.useState(0)
 
   const [ext, setExt] = useLocalStorage<string | undefined>('image-compression:ext', undefined)

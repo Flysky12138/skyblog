@@ -48,8 +48,8 @@ export abstract class WeCom {
   static async text(
     content: string,
     options?: {
-      mentioned_list?: ('@all' | (string & {}))[]
-      mentioned_mobile_list?: ('@all' | (string & {}))[]
+      mentioned_list?: StringLiteralsOrString<'@all'>[]
+      mentioned_mobile_list?: StringLiteralsOrString<'@all'>[]
     }
   ) {
     'use server'
