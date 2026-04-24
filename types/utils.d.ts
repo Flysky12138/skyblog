@@ -30,6 +30,9 @@ type RequiredPick<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
 /** 以 `T` 开头的字符串 */
 type StartsWith<T extends string> = `${T}${string}`
 
+/** 字符串或 `T` */
+type StringLiteralsOrString<T extends string> = (string & {}) | T
+
 /** 取对象值 */
 type ValueOf<T> = Required<T>[keyof T]
 
