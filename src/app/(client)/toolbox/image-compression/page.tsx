@@ -121,7 +121,7 @@ export default function Page() {
 
     try {
       const helper = new DirectoryHelper()
-      await helper.openDirectory({ mode: 'readwrite', startIn: 'desktop' })
+      await helper.openDirectory({ id: 'image-compression', mode: 'readwrite', startIn: 'desktop' })
 
       toast.loading('正在保存图片', { id })
 
@@ -177,7 +177,7 @@ export default function Page() {
         logo={ImageIcon}
         title="选择图片"
         onChange={files => {
-          setFiles(remove(files, file => file.type.startsWith('image/')))
+          setFiles(remove(files, file => FileHelper.isFileType(file, 'image/*')))
         }}
       />
     )

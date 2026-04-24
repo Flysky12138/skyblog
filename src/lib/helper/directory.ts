@@ -1,5 +1,7 @@
 import { toast } from 'sonner'
 
+import { toastPromiseDelay } from '../toast'
+
 export class DirectoryHelper {
   #dirHandle: FileSystemDirectoryHandle | null = null
 
@@ -52,7 +54,10 @@ export class DirectoryHelper {
     }
 
     const startDir = dirPath ? await this.#getDirHandleByPath(dirPath, false) : this.#dirHandle
-    await walk(startDir, dirPath ? dirPath.split('/').filter(Boolean).join('/') : '')
+    await toastPromiseDelay(walk(startDir, dirPath ? dirPath.split('/').filter(Boolean).join('/') : ''), {
+      error: '文件列表读取失败',
+      loading: '正在读取文件列表...'
+    })
 
     return results
   }
@@ -73,7 +78,7 @@ export class DirectoryHelper {
         richColors: true
       })
     }
-    return this.#dirHandle
+    return this
   }
 
   /**

@@ -18,7 +18,7 @@ export const toolGroup = [
     title: '工具',
     children: [
       {
-        description: '本地处理的图片压缩和格式转换工具',
+        description: '本地处理图片压缩和格式的转换工具',
         href: '/toolbox/image-compression',
         id: 'image-compression',
         title: '图片压缩'
@@ -59,15 +59,14 @@ export const toolGroup = [
 ] as const satisfies ToolGroup[]
 
 type StaticToolGroup = (typeof toolGroup)[number]
+type ToolChildIds<T extends StaticToolGroup['id']> = Extract<StaticToolGroup, { id: T }>['children'][number]['id']
 
-export const getToolPageMetadata = <T extends StaticToolGroup['id'], K extends Extract<StaticToolGroup, { id: T }>['children'][number]['id']>(
-  id: T,
-  cId: K
-): Metadata => {
-  const { description, title } = toolGroup.find(group => group.id == id)!.children.find(child => child.id == cId)!
+export const getToolPageMetadata = <T extends StaticToolGroup['id'], C extends ToolChildIds<T>>(id: T, cId: C): Metadata => {
+  const group = toolGroup.find(group => group.id == id)!
+  const child = group.children.find(child => child.id == cId)!
 
   return {
-    description,
-    title
+    description: child.description,
+    title: child.title
   }
 }

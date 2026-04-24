@@ -9,21 +9,23 @@ import { Input } from '@/components/ui/input'
 import { useAccessibleClick } from '@/hooks/use-accessible-click'
 import { cn } from '@/lib/utils'
 
-interface FileSelectProps {
+interface FileSelectBaseProps extends React.ComponentProps<'label'>, React.PropsWithChildren {
+  description?: string
+  logo: LucideIcon
+  title: string
+}
+
+interface FileSelectProps extends Pick<FileSelectBaseProps, 'className' | 'description' | 'logo' | 'title'> {
   /**
    * 接受的文件类型
    * @default '*'
    */
   accept?: string
-  className?: string
-  description?: string
-  logo: LucideIcon
   /**
    * 是否多选
    * @default false
    */
   multiple?: boolean
-  title: string
   /**
    * 文件选择方式
    * @default 'file'
@@ -32,7 +34,7 @@ interface FileSelectProps {
   onChange: (files: File[]) => void
 }
 
-export function FileSelect({ accept = '*', className, description, logo: Logo, multiple = false, title, type, onChange }: FileSelectProps) {
+export function FileSelect({ accept, className, multiple, type, onChange, ...props }: FileSelectProps) {
   const accessibleProps = useAccessibleClick(event => {
     event.currentTarget.click()
   })
@@ -42,28 +44,17 @@ export function FileSelect({ accept = '*', className, description, logo: Logo, m
   })
 
   return (
-    <FieldLabel
+    <FileSelectBase
       className={cn(
-        'bg-card mx-auto w-full max-w-2xl cursor-pointer rounded-lg border border-dashed transition-all',
-        'focus-visible:ring-3',
-        'hover:border-blue-500/75',
         {
           'border-green-500/75': state.over
         },
         className
       )}
+      {...props}
       {...accessibleProps}
       {...bond}
     >
-      <Empty className="pointer-events-none">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <Logo />
-          </EmptyMedia>
-          <EmptyTitle>{title}</EmptyTitle>
-          {description && <EmptyDescription>{description}</EmptyDescription>}
-        </EmptyHeader>
-      </Empty>
       <Input
         hidden
         accept={accept}
@@ -74,6 +65,31 @@ export function FileSelect({ accept = '*', className, description, logo: Logo, m
           onChange(Array.from(event.target.files ?? []))
         }}
       />
+    </FileSelectBase>
+  )
+}
+
+export function FileSelectBase({ children, className, description, logo: Logo, title, ...props }: FileSelectBaseProps) {
+  return (
+    <FieldLabel
+      className={cn(
+        'bg-card mx-auto w-full max-w-2xl cursor-pointer rounded-lg border border-dashed transition-all',
+        'focus-visible:ring-3',
+        'hover:border-blue-500/75',
+        className
+      )}
+      {...props}
+    >
+      <Empty className="pointer-events-none">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Logo />
+          </EmptyMedia>
+          <EmptyTitle>{title}</EmptyTitle>
+          {description && <EmptyDescription>{description}</EmptyDescription>}
+        </EmptyHeader>
+      </Empty>
+      {children}
     </FieldLabel>
   )
 }

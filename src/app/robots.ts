@@ -15,6 +15,7 @@ export default function robots(): MetadataRoute.Robots {
     sitemap: [
       new URL('/sitemap.xml', process.env.NEXT_PUBLIC_WEBSITE_URL).href,
       new URL('/posts/sitemap.xml', process.env.NEXT_PUBLIC_WEBSITE_URL).href,
+      new URL('/toolbox/sitemap.xml', process.env.NEXT_PUBLIC_WEBSITE_URL).href,
       new URL('/friends/sitemap.xml', process.env.NEXT_PUBLIC_WEBSITE_URL).href
     ]
   }
