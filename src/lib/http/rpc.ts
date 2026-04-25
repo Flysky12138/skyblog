@@ -1,5 +1,5 @@
 import { Treaty, treaty } from '@elysiajs/eden'
-import { isBrowser, pick } from 'es-toolkit'
+import { isBrowser } from 'es-toolkit'
 import { toast } from 'sonner'
 
 import { app } from '@/app/api/[[...elysia]]/route'
@@ -18,26 +18,13 @@ export const rpc = treaty<typeof app>(url, {
       const contentType = response.headers.get('Content-Type')
 
       if (!response.ok) {
-        // Elysia 接口 Zod 验证错误
         if (contentType?.includes('text/plain')) {
-          const text = await response.text()
-
-          const data = (() => {
-            try {
-              return JSON.parse(text)
-            } catch (error) {
-              return text
-            }
-          })()
-
-          if (typeof data == 'object') {
-            throw new Error(JSON.stringify(pick(data ?? {}, ['type', 'property', 'on', 'message'])))
-          } else {
-            throw new Error(JSON.stringify(data.replace(/^\s*/, '')))
-          }
+          throw new Error(await response.text())
         }
-
-        throw new Error(JSON.stringify(response.statusText))
+        if (contentType?.includes('application/json')) {
+          throw new Error(JSON.stringify(await response.json()))
+        }
+        throw new Error(response.statusText)
       }
 
       // AES-GCM
@@ -60,22 +47,23 @@ export const rpc = treaty<typeof app>(url, {
       // Blob
       return await response.blob()
     } catch (error) {
-      const message = JSON.parse((error as Error).message)
-
-      const text = typeof message == 'string' ? message : JSON.stringify(message, null, 2)
+      const message = (error as Error).message
 
       if (isBrowser()) {
         if (window.location.pathname.startsWith('/dashboard')) {
-          toast.error(text, { id: text, richColors: true })
+          toast.error(message, { id: message, richColors: true })
         }
       }
 
-      return Promise.reject(text)
+      return Promise.reject(error)
     }
   }
 }).api
 
 export const unwrap = <T extends Treaty.TreatyResponse<{}>>({ data, error }: T) => {
-  if (error) return Promise.reject(error)
+  if (error) {
+    console.error(error.status, error.value)
+    return Promise.reject(new Error(JSON.stringify((error.value as any).message ?? error.value, null, 2)))
+  }
   return data as Treaty.Data<T>
 }
