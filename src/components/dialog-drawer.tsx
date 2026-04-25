@@ -2,8 +2,26 @@
 
 import React from 'react'
 
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
-import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui-overwrite/drawer'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui-overwrite/dialog'
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger
+} from '@/components/ui-overwrite/drawer'
 import { breakpoints, useBreakpoint } from '@/hooks/use-breakpoint'
 import { cn } from '@/lib/utils'
 
@@ -29,6 +47,12 @@ export function DialogDrawer(props: React.ComponentProps<typeof Dialog | typeof 
       </DisplayByConditional>
     </DialogDrawerContext>
   )
+}
+
+export function DialogDrawerClose(props: React.ComponentProps<typeof DialogClose | typeof DrawerClose>) {
+  const { isMobile } = useDialogDrawerContext()
+  const Comp = isMobile ? DrawerClose : DialogClose
+  return <Comp suppressHydrationWarning {...props} />
 }
 
 export function DialogDrawerContent({

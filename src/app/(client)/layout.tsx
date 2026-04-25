@@ -50,7 +50,9 @@ export default function Layout({ children }: LayoutProps<'/'>) {
         <Container className="py-(--py) [--py:1.25rem] sm:[--py:1.75rem] md:[--py:2.25rem]">{children}</Container>
       </main>
       <aside className="fixed inset-x-0 bottom-[calc(var(--height-footer)+--spacing(12))] z-20">
-        <Container className="flex h-0 flex-col items-end justify-end gap-3" id={ATTRIBUTE.ID.NAV_CONTAINER} variant="aside">
+        <Container className="flex h-0 flex-col items-end justify-end gap-3" variant="aside">
+          <div id={ATTRIBUTE.ID.NAV_CONTAINER_AUDIO} />
+          <div id={ATTRIBUTE.ID.NAV_CONTAINER_DOWNLOAD} />
           <DisplayByBreakPoint min="sm">
             <ScrollToTop />
           </DisplayByBreakPoint>
