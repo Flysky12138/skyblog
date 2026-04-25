@@ -1,7 +1,10 @@
-import { AlbumResponseType, SongUrlQueryType } from '@/app/api/[[...elysia]]/client/netease-cloud-music/model'
+import { SongUrlQueryType } from '@/app/api/[[...elysia]]/client/netease-cloud-music/model'
 
 export type LevelType = NonNullable<SongUrlQueryType['level']>
 
+/**
+ * 音质等级
+ */
 export const LEVEL_OPTIONS: { label: string; value: LevelType }[] = [
   { label: '超清母带 20M~180M', value: 'jymaster' },
   { label: '沉浸环绕声 20M~80M', value: 'sky' },
@@ -13,11 +16,7 @@ export const LEVEL_OPTIONS: { label: string; value: LevelType }[] = [
   { label: '标准 2~5M', value: 'standard' }
 ]
 
+/**
+ * 移除的歌手名称
+ */
 export const REMOVE_ARTIST_BY_NAMES = ['杰伦', '杰倫', '蔡健雅', '曲婉婷']
-
-export const songCanDownload = (song: AlbumResponseType['songs'][number]) => {
-  if (song.pc) return true
-  if (song.privilege.fee == 0) return true
-  if (song.privilege.payed) return true
-  return false
-}

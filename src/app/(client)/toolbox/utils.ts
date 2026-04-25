@@ -44,7 +44,7 @@ export const toolGroup = [
     children: [
       {
         description: '共享会员，下载网易云音乐歌曲',
-        href: '/toolbox/netease-cloud-music?search=林俊杰',
+        href: '/toolbox/netease-cloud-music?search=p14381797319',
         id: 'netease-cloud-music',
         title: '网易云音乐'
       },

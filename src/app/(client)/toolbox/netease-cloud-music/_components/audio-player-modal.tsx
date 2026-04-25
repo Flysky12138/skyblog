@@ -130,7 +130,7 @@ export function AudioPlayerModal({ ref, song }: AudioPlayerModalProps) {
     <>
       <Portal>{audio}</Portal>
       <DialogDrawer open={open} onOpenChange={setOpen}>
-        <Portal selector={`#${ATTRIBUTE.ID.NAV_CONTAINER}`}>
+        <Portal selector={`#${ATTRIBUTE.ID.NAV_CONTAINER_AUDIO}`}>
           <DialogDrawerTrigger asChild>
             <Button size="icon">
               <AudioLinesIcon />
