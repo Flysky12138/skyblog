@@ -164,6 +164,7 @@ export abstract class Service {
     })
 
     revalidateTag(CACHE_TAG.POST(id), 'max')
+    revalidateTag(CACHE_TAG.POSTS, 'max')
 
     return data
   }
