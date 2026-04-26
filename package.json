@@ -45,8 +45,8 @@
     "supports bigint"
   ],
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1036.0",
-    "@aws-sdk/s3-request-presigner": "^3.1036.0",
+    "@aws-sdk/client-s3": "^3.1037.0",
+    "@aws-sdk/s3-request-presigner": "^3.1037.0",
     "@elysiajs/eden": "^1.4.9",
     "@elysiajs/node": "^1.4.5",
     "@fancyapps/ui": "^6.1.13",
@@ -83,7 +83,7 @@
     "immer": "^11.1.4",
     "input-otp": "^1.4.2",
     "jszip": "^3.10.1",
-    "lucide-react": "^1.9.0",
+    "lucide-react": "^1.11.0",
     "monaco-editor": "0.55.1",
     "next": "^16.2.4",
     "next-mdx-remote-client": "^2.1.10",
@@ -94,7 +94,7 @@
     "radix-ui": "^1.4.3",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "react-hook-form": "^7.73.1",
+    "react-hook-form": "^7.74.0",
     "react-resizable-panels": "^4",
     "react-use": "^17.6.0",
     "react-window": "^2.2.7",
@@ -123,7 +123,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.5.0",
+    "@commitlint/cli": "^20.5.2",
     "@commitlint/config-conventional": "^20.5.0",
     "@japont/unicode-range": "^1.0.0",
     "@next/env": "^16.2.4",
@@ -144,7 +144,7 @@
     "eslint-plugin-unused-imports": "^4.4.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
-    "npm-check-updates": "^21.0.3",
+    "npm-check-updates": "^22.0.1",
     "pixi-live2d-display": "^0.4.0",
     "pixi.js": "6.5.2",
     "prettier": "^3.8.3",
