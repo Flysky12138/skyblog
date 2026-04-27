@@ -15,6 +15,7 @@ import { ErrorComponent } from '@/components/static/error-component'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useBroadcastChannel } from '@/hooks/use-broadcast-channel'
+import { useMounted } from '@/hooks/use-mounted'
 import { authClient } from '@/lib/auth/client'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
@@ -32,6 +33,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   const router = useRouter()
   const { width } = useWindowSize()
   const { data: session } = authClient.useSession()
+  const isMounted = useMounted()
 
   const { id } = React.use(params)
   const isCreate = id == 'create'
@@ -158,6 +160,8 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
     )
     initData(data)
   })
+
+  if (!isMounted) return null
 
   return (
     <div ref={dragConstraintsRef} className="relative flex h-full max-h-screen overflow-hidden">
