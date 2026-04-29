@@ -61,7 +61,7 @@ export default function Page() {
                 const data = await toastPromise(rpc.dashboard.friends({ id: friend.id }).put(body).then(unwrap), {
                   success: '更新成功'
                 })
-                setFriends(
+                await setFriends(
                   produce<typeof friends>(draft => {
                     draft.splice(index, 1, data)
                   })

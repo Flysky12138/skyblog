@@ -88,7 +88,7 @@ export function PostTable() {
                   success: '更新成功'
                 }
               )
-              mutate(
+              await mutate(
                 produce<typeof data>(draft => {
                   draft?.posts.splice(row.index, 1, post)
                 }),
@@ -127,7 +127,7 @@ export function PostTable() {
               await toastPromise(rpc.dashboard.posts({ id: row.original.id }).delete().then(unwrap), {
                 success: '删除成功'
               })
-              mutate(
+              await mutate(
                 produce<typeof data>(draft => {
                   draft?.posts.splice(row.index, 1)
                 }),

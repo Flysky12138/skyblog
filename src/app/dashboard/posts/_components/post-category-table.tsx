@@ -72,7 +72,7 @@ export function PostCategoryTable() {
               await toastPromise(rpc.dashboard.posts.categories({ id: row.original.id }).delete(), {
                 success: '删除成功'
               })
-              mutate(
+              await mutate(
                 produce<typeof categories>(draft => {
                   draft.splice(row.index, 1)
                 }),

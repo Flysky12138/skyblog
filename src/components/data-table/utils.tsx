@@ -11,7 +11,7 @@ type ColumnAccessorKey = 'createdAt' | 'index' | 'selection' | 'updatedAt'
 /**
  * 获取列配置
  */
-export const getColumnConfig = <TData extends RowData>(accessorKey: ColumnAccessorKey, options?: ColumnDef<TData>): ColumnDef<TData> => {
+export const getColumnConfig = <T extends RowData>(accessorKey: ColumnAccessorKey, options?: ColumnDef<T>): ColumnDef<T> => {
   switch (accessorKey) {
     case 'createdAt':
       return merge(
@@ -20,7 +20,7 @@ export const getColumnConfig = <TData extends RowData>(accessorKey: ColumnAccess
           size: 180,
           cell: ({ row }) => TimeHelper.formatISOTime((row.original as any)['createdAt']),
           header: ({ column }) => <DataTableColumnSortHeader column={column} title="创建时间" />
-        } satisfies ColumnDef<TData>,
+        } satisfies ColumnDef<T>,
         options ?? {}
       )
     case 'index':
@@ -30,7 +30,7 @@ export const getColumnConfig = <TData extends RowData>(accessorKey: ColumnAccess
           id: 'index',
           size: 42,
           cell: ({ row }) => row.index + 1
-        } satisfies ColumnDef<TData>,
+        } satisfies ColumnDef<T>,
         options ?? {}
       )
     case 'selection':
@@ -46,7 +46,7 @@ export const getColumnConfig = <TData extends RowData>(accessorKey: ColumnAccess
               onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
             />
           )
-        } satisfies ColumnDef<TData>,
+        } satisfies ColumnDef<T>,
         options ?? {}
       )
     case 'updatedAt':
@@ -56,7 +56,7 @@ export const getColumnConfig = <TData extends RowData>(accessorKey: ColumnAccess
           size: 180,
           cell: ({ row }) => TimeHelper.formatISOTime((row.original as any)['updatedAt']),
           header: ({ column }) => <DataTableColumnSortHeader column={column} title="更新时间" />
-        } satisfies ColumnDef<TData>,
+        } satisfies ColumnDef<T>,
         options ?? {}
       )
   }
