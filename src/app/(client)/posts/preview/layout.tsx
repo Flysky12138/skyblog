@@ -4,6 +4,6 @@ export const metadata: Metadata = {
   title: 'Post Preview'
 }
 
-export default function Layout({ children }: LayoutProps<'/posts/preview'>) {
+export default function Layout({ children }: React.PropsWithChildren) {
   return children
 }

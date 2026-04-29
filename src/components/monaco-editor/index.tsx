@@ -139,13 +139,21 @@ export function MonacoEditor({
 
   // 内容监听
   React.useEffect(() => {
-    if (!editorRef.current) return
-    if (isDiffMode) return
-    // 外部 value 更新（防止死循环）
-    if (value != editorRef.current.getValue()) {
-      editorRef.current.setValue(value)
+    if (isDiffMode) {
+      if (!diffEditorRef.current) return
+      if (originalValue != diffEditorRef.current.getModel()?.original.getValue()) {
+        diffEditorRef.current.getModel()?.original.setValue(originalValue)
+      }
+      if (value != diffEditorRef.current.getModel()?.modified.getValue()) {
+        diffEditorRef.current.getModel()?.modified.setValue(value)
+      }
+    } else {
+      if (!editorRef.current) return
+      if (value != editorRef.current.getValue()) {
+        editorRef.current.setValue(value)
+      }
     }
-  }, [isDiffMode, value])
+  }, [isDiffMode, originalValue, value])
 
   // 抛出属性
   React.useImperativeHandle(ref, () => ({

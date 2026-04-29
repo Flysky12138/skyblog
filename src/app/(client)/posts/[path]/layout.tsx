@@ -1,3 +1,3 @@
-export default function Layout({ children }: LayoutProps<'/posts/[path]'>) {
+export default function Layout({ children }: React.PropsWithChildren) {
   return <div className="gap-card flex flex-col">{children}</div>
 }

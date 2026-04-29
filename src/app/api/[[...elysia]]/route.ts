@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia'
 
 import { HEADER_KEY } from '@/lib/constants'
-import { AesGcm } from '@/lib/crypto'
+import { AesGcm } from '@/lib/http/crypto'
 import { isDev } from '@/lib/utils'
 
 import { clashes } from './clashes'

@@ -40,7 +40,6 @@ export function PostTable() {
   )
 
   const columns: ColumnDef<NonNullable<typeof data>['posts'][number]>[] = [
-    getColumnConfig('selection'),
     getColumnConfig('index'),
     {
       accessorKey: 'title',
@@ -88,7 +87,7 @@ export function PostTable() {
                   success: '更新成功'
                 }
               )
-              mutate(
+              await mutate(
                 produce<typeof data>(draft => {
                   draft?.posts.splice(row.index, 1, post)
                 }),
@@ -121,13 +120,12 @@ export function PostTable() {
             </Link>
           </DataTableRowActionButton>
           <DataTableRowDeleteButton
-            description="这将永久删除文章。"
             title={row.original.title}
             onConfirm={async () => {
               await toastPromise(rpc.dashboard.posts({ id: row.original.id }).delete().then(unwrap), {
                 success: '删除成功'
               })
-              mutate(
+              await mutate(
                 produce<typeof data>(draft => {
                   draft?.posts.splice(row.index, 1)
                 }),

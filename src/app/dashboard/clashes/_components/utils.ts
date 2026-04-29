@@ -3,7 +3,7 @@ export const SWR_KEY_CLASH_TEMPLATES = '0198eb97-f705-777e-a134-9073d575c7b5'
 /**
  * 解析文本所有 `#{key}` 字符串中的 `key`，会过滤掉重复值
  */
-export const getVariablesNames = (content: string) => {
+export const getVariablesNames = (content = '') => {
   return Array.from(new Set(Array.from(content.matchAll(/#\{(.+?)\}/g), ([, key]) => key.trim())))
 }
 

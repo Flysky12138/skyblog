@@ -33,7 +33,7 @@ export function StorageBreadcrumb({ id, onChange }: StorageBreadcrumbProps) {
   }
 
   return (
-    <Card asChild className="rounded-sm px-3 py-2">
+    <Card asChild className="rounded-sm border-0 px-3 py-2">
       <Breadcrumb>
         <BreadcrumbList>
           {paths.map((path, index) => (

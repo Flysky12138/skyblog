@@ -1,24 +1,24 @@
 'use client'
 
 import { Treaty } from '@elysiajs/eden'
-import dayjs from 'dayjs'
-import { isEqual, pick, pickBy } from 'es-toolkit'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { pick, toMerged } from 'es-toolkit'
 import React from 'react'
-import { useAsyncFn } from 'react-use'
+import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
-import { useImmer } from 'use-immer'
 
-import { ClashCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/clashes/model'
+import { ClashCreateBodySchema, ClashCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/clashes/model'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { MonacoEditor } from '@/components/monaco-editor'
 import { Card } from '@/components/static/card'
 import { Button } from '@/components/ui-overwrite/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { ButtonGroup } from '@/components/ui/button-group'
-import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { rpc, unwrap } from '@/lib/http/rpc'
+import { randomString } from '@/lib/utils'
 
 import { getVariablesNames, replaceVariables, SWR_KEY_CLASH_TEMPLATES } from './utils'
 
@@ -28,17 +28,14 @@ interface ClashEditModalProps extends React.PropsWithChildren {
 }
 
 export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProps) {
-  const [open, setOpen] = React.useState(false)
-
-  const [form, setForm] = useImmer<ClashCreateBodyType>({
-    content: '',
-    description: '',
-    name: '',
-    templateId: null,
-    variables: {}
+  const form = useForm({
+    defaultValues: { content: '', description: '', name: '', templateId: null, variables: {} },
+    resolver: zodResolver(ClashCreateBodySchema)
   })
+  const [templateId, variables] = form.watch(['templateId', 'variables'])
 
-  const isUseTemplate = !!form.templateId
+  // 是否使用模板
+  const isUseTemplate = !!templateId
 
   // 模版内容，可从缓存中快速获取
   const { data: clashTemplates, isLoading } = useSWR(SWR_KEY_CLASH_TEMPLATES, () => rpc.dashboard.clashes.templates.get().then(unwrap), {
@@ -46,39 +43,29 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
   })
 
   // 选中的模板
-  const selectedClashTemplate = React.useMemo(() => {
-    return clashTemplates?.find(it => it.id == form.templateId)
-  }, [form.templateId, clashTemplates])
+  const selectedClashTemplate = React.useMemo(() => clashTemplates?.find(it => it.id == templateId), [clashTemplates, templateId])
   // 选中的模板中的变量名
-  const selectedClashTemplateVariables = React.useMemo(() => {
-    return selectedClashTemplate ? getVariablesNames(selectedClashTemplate.content) : []
-  }, [selectedClashTemplate])
+  const selectedClashTemplateVariableKeys = React.useMemo(() => getVariablesNames(selectedClashTemplate?.content), [selectedClashTemplate?.content])
   // 赋值后的模板内容
   const realTemplateContent = React.useMemo(() => {
-    return replaceVariables(selectedClashTemplate?.content, form.variables, false)
-  }, [selectedClashTemplate, form.variables])
+    return replaceVariables(selectedClashTemplate?.content, variables, false)
+  }, [selectedClashTemplate?.content, variables])
 
-  // 可保存
-  const canSubmit = React.useMemo(() => {
-    if (isUseTemplate) {
-      return form.name && isEqual(selectedClashTemplateVariables, Object.keys(pickBy(form.variables, Boolean)))
-    }
-    return form.name && form.content
-  }, [form.content, form.name, form.variables, isUseTemplate, selectedClashTemplateVariables])
-
-  const [{ loading }, handleSubmit] = useAsyncFn(async () => {
-    await onSubmit(form)
-    setOpen(false)
-  }, [form])
+  React.useEffect(() => {
+    if (!isUseTemplate) return
+    form.setValue(
+      'variables',
+      selectedClashTemplateVariableKeys.reduce((pre, cur) => ({ ...pre, [cur]: variables[cur] ?? '' }), {})
+    )
+  }, [form, isUseTemplate, selectedClashTemplateVariableKeys, variables])
 
   return (
     <Dialog
-      open={open}
       onOpenChange={isOpen => {
-        setOpen(isOpen)
+        form.reset()
         if (!isOpen) return
         if (value) {
-          setForm(pick(value, ['content', 'description', 'name', 'templateId', 'variables']))
+          form.setValues(pick(value, ['content', 'description', 'name', 'templateId', 'variables']))
         }
       }}
     >
@@ -88,117 +75,136 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
           <DialogTitle>共享配置</DialogTitle>
           <DialogDescription>自定义 Clash 客户端订阅内容</DialogDescription>
         </DialogHeader>
-
-        <div className="grid h-full gap-6 lg:grid-cols-[1fr_400px]">
-          <Card asChild className="rounded-sm not-lg:h-80">
-            <MonacoEditor
-              isDiffMode={isUseTemplate}
-              language="yaml"
-              options={{
-                readOnly: isUseTemplate
-              }}
-              originalValue={isUseTemplate ? selectedClashTemplate?.content : value?.content}
-              value={isUseTemplate ? realTemplateContent : form.content}
-              onChange={payload => {
-                setForm(draft => {
-                  draft.content = payload
-                })
-              }}
-            />
-          </Card>
-
+        <form className="grid h-full gap-6 lg:grid-cols-[1fr_400px]" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
-            <Field>
-              <FieldLabel aria-required htmlFor="name">
-                名称
-              </FieldLabel>
-              <ButtonGroup>
-                <Input
-                  autoComplete="off"
-                  id="name"
-                  value={form.name}
-                  onChange={event => {
-                    setForm(draft => {
-                      draft.name = event.target.value
-                    })
-                  }}
-                />
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setForm(draft => {
-                      draft.name = dayjs().format('YYYYMMDDHHmmss')
-                    })
-                  }}
-                >
-                  随机
-                </Button>
-              </ButtonGroup>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="description">描述</FieldLabel>
-              <Input
-                autoComplete="off"
-                id="description"
-                value={form.description || ''}
-                onChange={event => {
-                  setForm(draft => {
-                    draft.description = event.target.value
-                  })
-                }}
-              />
-            </Field>
-            <Field>
-              <FieldLabel>模板</FieldLabel>
-              <Select
-                disabled={clashTemplates?.length == 0 || isLoading}
-                value={form.templateId || 'null'}
-                onValueChange={id => {
-                  setForm(draft => {
-                    draft.templateId = id == 'null' ? null : id
-                    draft.variables = {} // 清空变量字典，因为这和模板有关
-                  })
-                }}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="选择模板" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="null">自定义</SelectItem>
-                  {clashTemplates?.map(({ id, name }) => (
-                    <SelectItem key={id} value={id}>
-                      {name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </Field>
-            <DisplayByConditional condition={selectedClashTemplateVariables.length > 0}>
-              <Field>
-                <FieldLabel aria-required>变量</FieldLabel>
-                <div className="grid grid-cols-2 gap-3">
-                  {selectedClashTemplateVariables.map((key, index) => (
-                    <Input
-                      key={key + index}
-                      autoComplete="off"
-                      className="w-full"
-                      placeholder={key}
-                      value={form.variables[key] || undefined}
-                      onChange={event => {
-                        setForm(draft => {
-                          draft.variables[key] = event.target.value
-                        })
+            <Controller
+              control={form.control}
+              name="content"
+              render={({ field, fieldState }) => (
+                <Field className="h-full" data-invalid={fieldState.invalid}>
+                  <FieldLabel className="sr-only" htmlFor={field.name}>
+                    内容
+                  </FieldLabel>
+                  <Card asChild className="rounded-sm not-lg:h-80">
+                    <MonacoEditor
+                      aria-invalid={fieldState.invalid}
+                      id={field.name}
+                      isDiffMode={isUseTemplate}
+                      language="yaml"
+                      options={{
+                        readOnly: isUseTemplate
                       }}
+                      originalValue={isUseTemplate ? selectedClashTemplate?.content : value?.content}
+                      value={isUseTemplate ? realTemplateContent : field.value}
+                      onChange={field.onChange}
                     />
-                  ))}
-                </div>
-              </Field>
-            </DisplayByConditional>
-            <Button disabled={!canSubmit} loading={loading} onClick={handleSubmit}>
-              {value ? '更新' : '保存'}
-            </Button>
+                  </Card>
+                </Field>
+              )}
+            />
           </FieldGroup>
-        </div>
+          <FieldGroup>
+            <Controller
+              control={form.control}
+              name="name"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel aria-required htmlFor={field.name}>
+                    名称
+                  </FieldLabel>
+                  <ButtonGroup>
+                    <Input {...field} aria-invalid={fieldState.invalid} autoComplete="off" id={field.name} />
+                    <Button
+                      variant="outline"
+                      onClick={event => {
+                        event.preventDefault()
+                        field.onChange(randomString(12))
+                      }}
+                    >
+                      随机
+                    </Button>
+                  </ButtonGroup>
+                  <FieldDescription>将作为订阅文件的文件名</FieldDescription>
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+            <Controller
+              control={form.control}
+              name="description"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>描述</FieldLabel>
+                  <Input {...field} aria-invalid={fieldState.invalid} autoComplete="off" id={field.name} value={field.value ?? ''} />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+            <Controller
+              control={form.control}
+              name="templateId"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>模板</FieldLabel>
+                  <Select
+                    disabled={clashTemplates?.length == 0 || isLoading}
+                    value={field.value || 'custom'}
+                    onValueChange={id => {
+                      field.onChange(id == 'custom' ? null : id)
+                    }}
+                  >
+                    <SelectTrigger aria-invalid={fieldState.invalid} className="w-full" id={field.name}>
+                      <SelectValue placeholder="选择模板" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="custom">自定义</SelectItem>
+                      {clashTemplates?.map(({ id, name }) => (
+                        <SelectItem key={id} value={id}>
+                          {name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+            <DisplayByConditional condition={selectedClashTemplateVariableKeys.length > 0}>
+              <Controller
+                control={form.control}
+                name="variables"
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel aria-required htmlFor={field.name}>
+                      变量
+                    </FieldLabel>
+                    <div className="grid grid-cols-2 gap-3" id={field.name}>
+                      {selectedClashTemplateVariableKeys.map((key, index) => (
+                        <Input
+                          key={key + index}
+                          aria-invalid={fieldState.invalid && key in (fieldState.error ?? {})}
+                          autoComplete="off"
+                          className="aria-[invalid=false]:text-foreground w-full"
+                          placeholder={key}
+                          value={field.value[key] ?? ''}
+                          onChange={event => {
+                            field.onChange(toMerged(field.value, { [key]: event.target.value }))
+                          }}
+                        />
+                      ))}
+                    </div>
+                    {fieldState.invalid && <FieldError errors={Object.values(fieldState.error ?? {}) as (typeof fieldState.error)[]} />}
+                  </Field>
+                )}
+              />
+            </DisplayByConditional>
+            <Field>
+              <Button loading={form.formState.isSubmitting} type="submit">
+                {value ? '更新' : '保存'}
+              </Button>
+            </Field>
+          </FieldGroup>
+        </form>
       </DialogContent>
     </Dialog>
   )

@@ -5,6 +5,6 @@ export const metadata: Metadata = {
   title: '依赖'
 }
 
-export default function Layout({ children }: LayoutProps<'/packages'>) {
+export default function Layout({ children }: React.PropsWithChildren) {
   return children
 }

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   }
 }
 
-export default async function Layout({ children }: LayoutProps<'/dashboard'>) {
+export default async function Layout({ children }: React.PropsWithChildren) {
   const cookieStore = await cookies()
   const defaultOpen = cookieStore.has('sidebar_state') ? cookieStore.get('sidebar_state')?.value == 'true' : true
 
@@ -40,7 +40,7 @@ export default async function Layout({ children }: LayoutProps<'/dashboard'>) {
         <SidebarRail />
       </Sidebar>
       <div className="flex grow flex-col overflow-auto">
-        <Header className="md:hidden" />
+        <Header className="shrink-0 md:hidden" />
         <main className="bg-root h-full p-4 md:p-8">{children}</main>
       </div>
     </SidebarProvider>

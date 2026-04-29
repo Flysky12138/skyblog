@@ -3,31 +3,27 @@ import 'dayjs/locale/zh-cn'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import duration from 'dayjs/plugin/duration'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import timezone from 'dayjs/plugin/timezone'
 import updateLocale from 'dayjs/plugin/updateLocale'
+import utc from 'dayjs/plugin/utc'
 
 dayjs.locale('zh-cn')
 dayjs.extend(customParseFormat)
 dayjs.extend(duration)
 dayjs.extend(relativeTime)
 dayjs.extend(updateLocale)
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export abstract class TimeHelper {
   /**
    * 后端给的 ISO 时间转指定字符串
+   * @default template = 'YYYY-MM-DD HH:mm:ss'
    * @example
-   * formatISOTime(new Date()) // 2024-05-29 08:19:52
+   * formatDate(new Date()) // 2024-05-29 08:19:52
    */
-  static formatISOTime(time: Date) {
-    return dayjs(time).format('YYYY-MM-DD HH:mm:ss')
-  }
-
-  /**
-   * 后端给的 ISO 时间转指定字符串
-   * @example
-   * formatISOTime2(new Date()) // 2024年05月29日，星期三，08:21
-   */
-  static formatISOTime2(time: Date) {
-    return dayjs(time).format('YYYY年MM月DD日，星期dd，HH:mm')
+  static formatDate(time: Date, template = 'YYYY-MM-DD HH:mm:ss') {
+    return dayjs(time).format(template)
   }
 
   /**

@@ -13,7 +13,7 @@ export const PostCreateBodySchema = z.strictObject({
   slug: z
     .string()
     .nonempty()
-    .regex(/^[\w-]+$/)
+    .regex(/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/)
     .nullish()
 })
 export type PostCreateBodyType = z.infer<typeof PostCreateBodySchema>
@@ -31,7 +31,7 @@ export const PostUpdateBodySchema = z.strictObject({
   slug: z
     .string()
     .nonempty()
-    .regex(/^[\w-]+$/)
+    .regex(/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/)
     .nullish()
 })
 export type PostUpdateBodyType = z.infer<typeof PostUpdateBodySchema>

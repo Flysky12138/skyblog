@@ -125,7 +125,6 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
                 }}
               >
                 <DataTableRowDeleteButton
-                  description="这将永久删除文件夹。"
                   title={directory.name}
                   onConfirm={async () => {
                     await toastPromise(rpc.dashboard.storage.directories({ id: directory.id }).delete(), {
@@ -153,7 +152,7 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
               </TableCell>
               <TableCell className="truncate">{[file.name, file.ext].filter(Boolean).join('.')}</TableCell>
               <TableCell>{FileHelper.formatFileSize(Number(file.size))}</TableCell>
-              <TableCell>{TimeHelper.formatISOTime(file.updatedAt)}</TableCell>
+              <TableCell>{TimeHelper.formatDate(file.updatedAt)}</TableCell>
               <TableCell className="space-x-2 text-right">
                 <StorageFileView asChild file={file}>
                   <DataTableRowActionButton>
@@ -166,7 +165,6 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
                   </DataTableRowActionButton>
                 </StorageFileLinkCopy>
                 <DataTableRowDeleteButton
-                  description="这将永久删除文件。"
                   title={[file.name, file.ext].filter(Boolean).join('.')}
                   onConfirm={async () => {
                     await toastPromise(rpc.dashboard.storage.files({ id: file.id }).delete(), {

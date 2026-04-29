@@ -36,10 +36,12 @@ export function CronTable() {
         widthFit: true
       }
     },
+    getColumnConfig('updatedAt'),
+    getColumnConfig('createdAt'),
     {
       accessorKey: 'isEnabled',
       header: '开关',
-      size: 80,
+      size: 60,
       cell: ({ row }) => (
         <div className="leading-0">
           <DataTableRowUpdateButton
@@ -58,8 +60,6 @@ export function CronTable() {
         </div>
       )
     },
-    getColumnConfig('updatedAt'),
-    getColumnConfig('createdAt'),
     {
       id: 'actions',
       size: 140,
@@ -90,7 +90,6 @@ export function CronTable() {
             </DataTableRowActionButton>
           </CronEditModal>
           <DataTableRowDeleteButton
-            description="将永久删除该项。"
             title={row.original.name}
             onConfirm={async () => {
               await toastPromise(rpc.dashboard.crons({ id: row.original.id }).delete(), {
