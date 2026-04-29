@@ -5,7 +5,7 @@ export const FriendCreateBodySchema = z.strictObject({
   isActive: z.boolean().optional(),
   name: z.string().nonempty(),
   order: z.int().positive().optional(),
-  siteUrl: z.url()
+  siteUrl: z.httpUrl()
 })
 export type FriendCreateBodyType = z.infer<typeof FriendCreateBodySchema>
 
@@ -14,6 +14,6 @@ export const FriendUpdateBodySchema = z.strictObject({
   isActive: z.boolean().optional(),
   name: z.string().nonempty(),
   order: z.int().positive().optional(),
-  siteUrl: z.url()
+  siteUrl: z.httpUrl()
 })
 export type FriendUpdateBodyType = z.infer<typeof FriendUpdateBodySchema>

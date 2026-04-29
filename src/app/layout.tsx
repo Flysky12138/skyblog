@@ -66,7 +66,7 @@ const code = Cascadia_Code({
   weight: '400'
 })
 
-export default function Layout({ children }: LayoutProps<'/'>) {
+export default function Layout({ children }: React.PropsWithChildren) {
   prefetchDNS('https://cdn.jsdelivr.net')
 
   return (

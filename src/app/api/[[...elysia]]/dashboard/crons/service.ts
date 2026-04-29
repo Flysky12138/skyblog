@@ -1,6 +1,6 @@
+import dayjs from 'dayjs'
 import { limitAsync } from 'es-toolkit'
 
-import { TimeHelper } from '@/lib/helper/time'
 import { WeCom } from '@/lib/http/wecom'
 import { prisma } from '@/lib/prisma'
 
@@ -54,7 +54,7 @@ export abstract class Service {
     try {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor
-      const fn = new AsyncFunction('WeCom', 'now', content)
+      const fn = new AsyncFunction('WeCom', 'now', content.replace(/^\s*export\s+{\s*?}/m, ''))
       await fn(WeCom, now)
     } catch (error) {
       const message = (error as Error).message
@@ -90,5 +90,5 @@ export abstract class Service {
 }
 
 const now = () => {
-  return TimeHelper.formatISOTime2(new Date())
+  return dayjs().tz('Asia/Shanghai').format('YYYY年MM月DD日，星期dd，HH:mm:ss')
 }

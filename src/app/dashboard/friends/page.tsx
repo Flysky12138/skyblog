@@ -6,18 +6,8 @@ import { Route } from 'next'
 import Link from 'next/link'
 import useSWR from 'swr'
 
+import { AlertDialogDelete } from '@/components/alert-dialog-delete'
 import { Card } from '@/components/static/card'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
-} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
@@ -26,7 +16,7 @@ import { cn } from '@/lib/utils'
 import { FriendEditModal } from './_components/friend-edit-modal'
 
 export default function Page() {
-  const { data: friends, mutate: setFriends } = useSWR('0198eb99-caec-75cc-a4de-05dfa95cc14a', () => rpc.dashboard.friends.get().then(unwrap), {
+  const { data: friends, mutate } = useSWR('0198eb99-caec-75cc-a4de-05dfa95cc14a', () => rpc.dashboard.friends.get().then(unwrap), {
     fallbackData: []
   })
 
@@ -61,10 +51,13 @@ export default function Page() {
                 const data = await toastPromise(rpc.dashboard.friends({ id: friend.id }).put(body).then(unwrap), {
                   success: '更新成功'
                 })
-                setFriends(
+                await mutate(
                   produce<typeof friends>(draft => {
                     draft.splice(index, 1, data)
-                  })
+                  }),
+                  {
+                    revalidate: false
+                  }
                 )
               }}
             >
@@ -72,48 +65,36 @@ export default function Page() {
                 <PencilIcon />
               </Button>
             </FriendEditModal>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button size="icon" variant="destructive">
-                  <TrashIcon />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>{friend.name}</AlertDialogTitle>
-                  <AlertDialogDescription>此操作无法撤消，这将永久删除该项。</AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>取消</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={async () => {
-                      await toastPromise(rpc.dashboard.friends({ id: friend.id }).delete(), {
-                        success: '删除成功'
-                      })
-                      setFriends(
-                        produce<typeof friends>(draft => {
-                          draft.splice(index, 1)
-                        }),
-                        {
-                          revalidate: false
-                        }
-                      )
-                    }}
-                  >
-                    确定
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <AlertDialogDelete
+              title={friend.name}
+              onConfirm={async () => {
+                await toastPromise(rpc.dashboard.friends({ id: friend.id }).delete(), {
+                  success: '删除成功'
+                })
+                await mutate(
+                  produce<typeof friends>(draft => {
+                    draft.splice(index, 1)
+                  }),
+                  {
+                    revalidate: false
+                  }
+                )
+              }}
+            >
+              <Button size="icon" variant="destructive">
+                <TrashIcon />
+              </Button>
+            </AlertDialogDelete>
           </div>
         </Card>
       ))}
+
       <FriendEditModal
         onSubmit={async body => {
           const data = await toastPromise(rpc.dashboard.friends.post(body).then(unwrap), {
             success: '保存成功'
           })
-          setFriends(
+          await mutate(
             produce<typeof friends>(draft => {
               draft.push(data)
             }),

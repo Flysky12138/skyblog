@@ -57,7 +57,7 @@ export function PostInfo({ defaultValue, id }: PostInfoProps) {
 
   return (
     <p className="text-muted-foreground text-sm break-all">
-      这篇文章发布于 {TimeHelper.formatISOTime2(post.createdAt)}
+      这篇文章发布于 {TimeHelper.formatDate(post.createdAt, 'YYYY年MM月DD日，星期dd，HH:mm')}
       {post.categories.length > 0 ? (
         <>
           ，归类于&nbsp;

@@ -24,7 +24,6 @@ export function PostTagTable() {
   })
 
   const columns: ColumnDef<(typeof tags)[number]>[] = [
-    getColumnConfig('selection'),
     getColumnConfig('index'),
     {
       accessorKey: 'name',
@@ -66,13 +65,12 @@ export function PostTagTable() {
             </DataTableRowActionButton>
           </PostTagEditModal>
           <DataTableRowDeleteButton
-            description="这将永久删除标签。"
             title={row.original.name}
             onConfirm={async () => {
               await toastPromise(rpc.dashboard.posts({ id: row.original.id }).delete(), {
                 success: '删除成功'
               })
-              mutate(
+              await mutate(
                 produce<typeof tags>(draft => {
                   draft.splice(row.index, 1)
                 }),

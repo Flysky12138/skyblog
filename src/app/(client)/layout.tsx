@@ -15,7 +15,7 @@ import { ThemeToggleButton } from '@/providers/theme'
 
 import { AuthButton } from './_components/auth-button'
 
-export default function Layout({ children }: LayoutProps<'/'>) {
+export default function Layout({ children }: React.PropsWithChildren) {
   return (
     <Live2DProvider>
       <Header>

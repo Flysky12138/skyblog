@@ -22,22 +22,18 @@ interface CronEditModalProps extends React.PropsWithChildren {
 }
 
 export function CronEditModal({ children, value, onSubmit }: CronEditModalProps) {
-  const [open, setOpen] = React.useState(false)
-
   const form = useForm({
-    defaultValues: { content: '', isEnabled: true, name: '' },
+    defaultValues: { content: '\n\nexport {}\n', isEnabled: true, name: '' },
     resolver: zodResolver(CronCreateBodySchema)
   })
 
   return (
     <Dialog
-      open={open}
       onOpenChange={isOpen => {
-        setOpen(isOpen)
         form.reset()
         if (!isOpen) return
         if (value) {
-          form.setValues(pick(value, ['content', 'name']))
+          form.setValues(pick(value, ['content', 'isEnabled', 'name']))
         }
       }}
     >
@@ -58,16 +54,7 @@ export function CronEditModal({ children, value, onSubmit }: CronEditModalProps)
                     内容
                   </FieldLabel>
                   <Card asChild className="rounded-sm not-lg:h-80">
-                    <MonacoEditor
-                      aria-invalid={fieldState.invalid}
-                      id={field.name}
-                      value={form.getValues('content')}
-                      onChange={payload => {
-                        form.setValue('content', payload)
-                        field.onChange(payload)
-                      }}
-                      {...tsCronConfig}
-                    />
+                    <MonacoEditor aria-invalid={fieldState.invalid} id={field.name} value={field.value} onChange={field.onChange} {...tsCronConfig} />
                   </Card>
                 </Field>
               )}
@@ -79,7 +66,9 @@ export function CronEditModal({ children, value, onSubmit }: CronEditModalProps)
               name="name"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>名称</FieldLabel>
+                  <FieldLabel aria-required htmlFor={field.name}>
+                    名称
+                  </FieldLabel>
                   <Input {...field} aria-invalid={fieldState.invalid} autoComplete="off" id={field.name} />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>

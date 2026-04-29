@@ -14,7 +14,7 @@ export const AlbumResponseSchema = z.object({
       al: z.object({
         id: z.int(),
         name: z.string(),
-        picUrl: z.url()
+        picUrl: z.httpUrl()
       }),
       ar: z
         .object({
@@ -85,7 +85,7 @@ export const SongUrlResponseSchema = SongUrlQuerySchema.pick({ level: true })
     size: z.number(),
     time: z.number(),
     type: z.string(),
-    url: z.url()
+    url: z.httpUrl()
   })
   .array()
 export type SongUrlQueryType = z.infer<typeof SongUrlQuerySchema>

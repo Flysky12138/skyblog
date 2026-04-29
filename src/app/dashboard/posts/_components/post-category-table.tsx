@@ -24,7 +24,6 @@ export function PostCategoryTable() {
   })
 
   const columns: ColumnDef<(typeof categories)[number]>[] = [
-    getColumnConfig('selection'),
     getColumnConfig('index'),
     {
       accessorKey: 'name',
@@ -66,13 +65,12 @@ export function PostCategoryTable() {
             </DataTableRowActionButton>
           </PostCategoryEditModal>
           <DataTableRowDeleteButton
-            description="这将永久删除分类。"
             title={row.original.name}
             onConfirm={async () => {
               await toastPromise(rpc.dashboard.posts.categories({ id: row.original.id }).delete(), {
                 success: '删除成功'
               })
-              mutate(
+              await mutate(
                 produce<typeof categories>(draft => {
                   draft.splice(row.index, 1)
                 }),

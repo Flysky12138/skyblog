@@ -7,6 +7,6 @@ export const metadata: Metadata = {
   }
 }
 
-export default function Layout({ children }: LayoutProps<'/toolbox'>) {
+export default function Layout({ children }: React.PropsWithChildren) {
   return children
 }

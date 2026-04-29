@@ -7,7 +7,7 @@ import { CardDeveloper } from './_components/card-developer'
 import { CardGuestInfo } from './_components/card-guest-info'
 import { CardWolf } from './_components/card-wolf'
 
-export default function Layout({ children }: LayoutProps<'/'>) {
+export default function Layout({ children }: React.PropsWithChildren) {
   return (
     <>
       <h1 className="sr-only">{process.env.NEXT_PUBLIC_TITLE}</h1>

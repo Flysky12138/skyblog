@@ -7,6 +7,6 @@ export const metadata: Metadata = {
   }
 }
 
-export default function Layout({ children }: LayoutProps<'/'>) {
+export default function Layout({ children }: React.PropsWithChildren) {
   return <main className="container mx-auto flex flex-col items-center p-4 md:p-6">{children}</main>
 }

@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 import { app } from '@/app/api/[[...elysia]]/route'
 
 import { HEADER_KEY } from '../constants'
-import { AesGcm } from '../crypto'
+import { AesGcm } from './crypto'
 
 const url = isBrowser() ? process.env.NEXT_PUBLIC_WEBSITE_URL : `http://localhost:${process.env.PORT || 3000}`
 

@@ -1,15 +1,15 @@
 'use client'
 
 import { Treaty } from '@elysiajs/eden'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { pick } from 'es-toolkit'
 import React from 'react'
-import { useAsyncFn } from 'react-use'
-import { useImmer } from 'use-immer'
+import { Controller, useForm } from 'react-hook-form'
 
-import { FriendCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/friends/model'
+import { FriendCreateBodySchema, FriendCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/friends/model'
 import { Button } from '@/components/ui-overwrite/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
-import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { rpc } from '@/lib/http/rpc'
@@ -20,28 +20,18 @@ interface FriendEditModalProps extends React.PropsWithChildren {
 }
 
 export function FriendEditModal({ children, value, onSubmit }: FriendEditModalProps) {
-  const [open, setOpen] = React.useState(false)
-  const [form, setForm] = useImmer<FriendCreateBodyType>({
-    description: null,
-    name: '',
-    siteUrl: ''
+  const form = useForm({
+    defaultValues: { description: null, name: '', siteUrl: '' },
+    resolver: zodResolver(FriendCreateBodySchema)
   })
-
-  const [{ loading }, handleSubmit] = useAsyncFn(async () => {
-    await onSubmit(form)
-    setOpen(false)
-  }, [form])
-
-  const disable = !form.name || !form.siteUrl || loading
 
   return (
     <Dialog
-      open={open}
       onOpenChange={isOpen => {
-        setOpen(isOpen)
+        form.reset()
         if (!isOpen) return
         if (value) {
-          setForm(pick(value, ['description', 'name', 'siteUrl']))
+          form.setValues(pick(value, ['description', 'name', 'siteUrl']))
         }
       }}
     >
@@ -51,56 +41,59 @@ export function FriendEditModal({ children, value, onSubmit }: FriendEditModalPr
           <DialogTitle>友链</DialogTitle>
           <DialogDescription>填写友链信息</DialogDescription>
         </DialogHeader>
-        <FieldGroup>
-          <Field>
-            <FieldLabel aria-required htmlFor="name">
-              名字
-            </FieldLabel>
-            <Input
-              autoComplete="off"
-              id="name"
-              value={form.name}
-              onChange={event => {
-                setForm(draft => {
-                  draft.name = event.target.value
-                })
-              }}
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <FieldGroup>
+            <Controller
+              control={form.control}
+              name="name"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel aria-required htmlFor={field.name}>
+                    名称
+                  </FieldLabel>
+                  <Input {...field} aria-invalid={fieldState.invalid} autoComplete="off" id={field.name} />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
             />
-          </Field>
-          <Field>
-            <FieldLabel aria-required htmlFor="siteUrl">
-              链接
-            </FieldLabel>
-            <Input
-              autoComplete="off"
-              id="siteUrl"
-              type="url"
-              value={form.siteUrl}
-              onChange={event => {
-                setForm(draft => {
-                  draft.siteUrl = event.target.value
-                })
-              }}
+            <Controller
+              control={form.control}
+              name="siteUrl"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel aria-required htmlFor={field.name}>
+                    链接
+                  </FieldLabel>
+                  <Input {...field} aria-invalid={fieldState.invalid} autoComplete="off" id={field.name} type="url" />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
             />
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="description">描述</FieldLabel>
-            <Textarea
-              autoComplete="off"
-              className="min-h-24"
-              id="description"
-              value={form.description || ''}
-              onChange={event => {
-                setForm(draft => {
-                  draft.description = event.target.value || null
-                })
-              }}
+            <Controller
+              control={form.control}
+              name="description"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>描述</FieldLabel>
+                  <Textarea
+                    className="min-h-24"
+                    {...field}
+                    aria-invalid={fieldState.invalid}
+                    autoComplete="off"
+                    id={field.name}
+                    value={field.value ?? undefined}
+                  />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
             />
-          </Field>
-          <Button disabled={disable} loading={loading} onClick={handleSubmit}>
-            {value ? '保存' : '更新'}
-          </Button>
-        </FieldGroup>
+            <Field>
+              <Button loading={form.formState.isSubmitting} type="submit">
+                {value ? '保存' : '更新'}
+              </Button>
+            </Field>
+          </FieldGroup>
+        </form>
       </DialogContent>
     </Dialog>
   )

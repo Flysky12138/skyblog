@@ -15,10 +15,9 @@ export default function Page() {
   })
 
   const columns: ColumnDef<(typeof members)[number]>[] = [
-    getColumnConfig('selection'),
     getColumnConfig('index'),
     {
-      accessorKey: 'name',
+      accessorKey: 'emailVerified',
       header: '验证',
       size: 60,
       cell: ({ row }) =>
@@ -38,18 +37,18 @@ export default function Page() {
       size: 200
     },
     { accessorKey: 'role', header: '权限', size: 80 },
+    getColumnConfig('updatedAt'),
+    getColumnConfig('createdAt'),
     {
       accessorKey: 'banned',
       header: '封禁',
-      size: 80,
+      size: 60,
       cell: ({ row }) => (
         <div className="leading-0">
           <Switch disabled checked={row.original.banned ?? false} />
         </div>
       )
-    },
-    getColumnConfig('updatedAt'),
-    getColumnConfig('createdAt')
+    }
   ]
 
   const table = useReactTable({
