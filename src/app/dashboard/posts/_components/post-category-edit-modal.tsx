@@ -3,6 +3,7 @@
 import { Treaty } from '@elysiajs/eden'
 import { pick } from 'es-toolkit'
 import React from 'react'
+import { useAsyncFn } from 'react-use'
 import { useImmer } from 'use-immer'
 
 import { CategoryCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/posts/categories/model'
@@ -30,7 +31,10 @@ export function PostCategoryEditModal({ children, value, onSubmit }: PostCategor
   const [open, setOpen] = React.useState(false)
   const [form, setForm] = useImmer<CategoryCreateBodyType>({ name: '' })
 
-  const [isPending, startTransition] = React.useTransition()
+  const [{ loading }, handleSubmit] = useAsyncFn(async () => {
+    await onSubmit(form)
+    setOpen(false)
+  }, [form])
 
   return (
     <Dialog
@@ -68,16 +72,7 @@ export function PostCategoryEditModal({ children, value, onSubmit }: PostCategor
           <DialogClose asChild>
             <Button variant="outline">取消</Button>
           </DialogClose>
-          <Button
-            className="min-w-32"
-            loading={isPending}
-            onClick={() => {
-              startTransition(async () => {
-                await onSubmit(form)
-                setOpen(false)
-              })
-            }}
-          >
+          <Button className="min-w-32" loading={loading} onClick={handleSubmit}>
             确定
           </Button>
         </DialogFooter>

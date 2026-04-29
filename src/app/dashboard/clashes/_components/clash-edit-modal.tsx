@@ -4,6 +4,7 @@ import { Treaty } from '@elysiajs/eden'
 import dayjs from 'dayjs'
 import { isEqual, pick, pickBy } from 'es-toolkit'
 import React from 'react'
+import { useAsyncFn } from 'react-use'
 import useSWR from 'swr'
 import { useImmer } from 'use-immer'
 
@@ -65,7 +66,10 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
     return form.name && form.content
   }, [form.content, form.name, form.variables, isUseTemplate, selectedClashTemplateVariables])
 
-  const [isPending, startTransition] = React.useTransition()
+  const [{ loading }, handleSubmit] = useAsyncFn(async () => {
+    await onSubmit(form)
+    setOpen(false)
+  }, [form])
 
   return (
     <Dialog
@@ -190,16 +194,7 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
                 </div>
               </Field>
             </DisplayByConditional>
-            <Button
-              disabled={!canSubmit}
-              loading={isPending}
-              onClick={() => {
-                startTransition(async () => {
-                  await onSubmit(form)
-                  setOpen(false)
-                })
-              }}
-            >
+            <Button disabled={!canSubmit} loading={loading} onClick={handleSubmit}>
               {value ? '更新' : '保存'}
             </Button>
           </FieldGroup>
