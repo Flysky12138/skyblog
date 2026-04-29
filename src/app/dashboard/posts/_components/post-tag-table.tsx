@@ -72,7 +72,7 @@ export function PostTagTable() {
               await toastPromise(rpc.dashboard.posts({ id: row.original.id }).delete(), {
                 success: '删除成功'
               })
-              mutate(
+              await mutate(
                 produce<typeof tags>(draft => {
                   draft.splice(row.index, 1)
                 }),

@@ -30,7 +30,6 @@ export function ClashTable() {
   })
 
   const columns: ColumnDef<(typeof clashes)[number]>[] = [
-    getColumnConfig('selection'),
     getColumnConfig('index'),
     { accessorKey: 'name', header: '名称', size: 180 },
     {
@@ -72,7 +71,7 @@ export function ClashTable() {
                   success: '更新成功'
                 }
               )
-              mutate(
+              await mutate(
                 produce<typeof clashes>(draft => {
                   draft.splice(row.index, 1, clash)
                 }),
@@ -108,7 +107,7 @@ export function ClashTable() {
               const data = await toastPromise(rpc.dashboard.clashes({ id: row.original.id }).put(body).then(unwrap), {
                 success: '修改成功'
               })
-              mutate(
+              await mutate(
                 produce<typeof clashes>(draft => {
                   draft.splice(row.index, 1, data)
                 }),
@@ -129,7 +128,7 @@ export function ClashTable() {
               await toastPromise(rpc.dashboard.clashes({ id: row.original.id }).delete(), {
                 success: '删除成功'
               })
-              mutate(
+              await mutate(
                 produce<typeof clashes>(draft => {
                   draft.splice(row.index, 1)
                 }),
@@ -147,7 +146,7 @@ export function ClashTable() {
             const data = await toastPromise(rpc.dashboard.clashes.post(body).then(unwrap), {
               success: '添加成功'
             })
-            mutate(
+            await mutate(
               produce<typeof clashes>(draft => {
                 draft.unshift(data)
               }),

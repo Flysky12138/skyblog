@@ -15,7 +15,6 @@ export default function Page() {
   })
 
   const columns: ColumnDef<(typeof members)[number]>[] = [
-    getColumnConfig('selection'),
     getColumnConfig('index'),
     {
       accessorKey: 'name',
