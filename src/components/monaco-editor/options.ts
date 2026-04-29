@@ -24,12 +24,14 @@ export const monacoEditorDefaultOptions: editor.IStandaloneEditorConstructionOpt
   fontLigatures: false, // 连体字
   fontSize: 14,
   fontWeight: 'bold',
+  insertSpaces: true,
   lineDecorationsWidth: 12,
   lineNumbersMinChars: 4,
   renderLineHighlight: 'all',
   roundedSelection: true,
   scrollBeyondLastLine: true,
   smoothScrolling: true,
+  tabSize: 2,
   hover: {
     above: true
   },

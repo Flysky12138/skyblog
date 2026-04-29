@@ -16,7 +16,6 @@
     "lint:type": "tsc --noEmit",
     "db:generate": "prisma generate",
     "db:generate:internal": "prisma generate --schema=prisma/internal.prisma",
-    "db:push": "prisma db push",
     "db:seed": "prisma db seed",
     "db:dev": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
