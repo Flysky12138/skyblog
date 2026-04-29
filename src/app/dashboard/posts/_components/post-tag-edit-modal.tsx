@@ -3,6 +3,7 @@
 import { Treaty } from '@elysiajs/eden'
 import { pick } from 'es-toolkit'
 import React from 'react'
+import { useAsyncFn } from 'react-use'
 import { useImmer } from 'use-immer'
 
 import { TagCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/posts/tags/model'
@@ -30,7 +31,10 @@ export function PostTagEditModal({ children, value, onSubmit }: PostTagEditModal
   const [open, setOpen] = React.useState(false)
   const [form, setForm] = useImmer<TagCreateBodyType>({ name: '' })
 
-  const [isPending, startTransition] = React.useTransition()
+  const [{ loading }, handleSubmit] = useAsyncFn(async () => {
+    await onSubmit(form)
+    setOpen(false)
+  }, [form])
 
   return (
     <Dialog
@@ -68,16 +72,7 @@ export function PostTagEditModal({ children, value, onSubmit }: PostTagEditModal
           <DialogClose asChild>
             <Button variant="outline">取消</Button>
           </DialogClose>
-          <Button
-            className="min-w-32"
-            loading={isPending}
-            onClick={() => {
-              startTransition(async () => {
-                await onSubmit(form)
-                setOpen(false)
-              })
-            }}
-          >
+          <Button className="min-w-32" loading={loading} onClick={handleSubmit}>
             确定
           </Button>
         </DialogFooter>

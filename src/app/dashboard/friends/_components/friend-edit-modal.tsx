@@ -3,6 +3,7 @@
 import { Treaty } from '@elysiajs/eden'
 import { pick } from 'es-toolkit'
 import React from 'react'
+import { useAsyncFn } from 'react-use'
 import { useImmer } from 'use-immer'
 
 import { FriendCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/friends/model'
@@ -26,9 +27,12 @@ export function FriendEditModal({ children, value, onSubmit }: FriendEditModalPr
     siteUrl: ''
   })
 
-  const [isPending, startTransition] = React.useTransition()
+  const [{ loading }, handleSubmit] = useAsyncFn(async () => {
+    await onSubmit(form)
+    setOpen(false)
+  }, [form])
 
-  const disable = !form.name || !form.siteUrl || isPending
+  const disable = !form.name || !form.siteUrl || loading
 
   return (
     <Dialog
@@ -93,16 +97,7 @@ export function FriendEditModal({ children, value, onSubmit }: FriendEditModalPr
               }}
             />
           </Field>
-          <Button
-            disabled={disable}
-            loading={isPending}
-            onClick={() => {
-              startTransition(async () => {
-                await onSubmit(form)
-                setOpen(false)
-              })
-            }}
-          >
+          <Button disabled={disable} loading={loading} onClick={handleSubmit}>
             {value ? '保存' : '更新'}
           </Button>
         </FieldGroup>

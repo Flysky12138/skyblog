@@ -3,10 +3,10 @@
 import { RowData, Table } from '@tanstack/react-table'
 import { TrashIcon } from 'lucide-react'
 import React from 'react'
+import { useAsyncFn } from 'react-use'
 
 import { AlertDelete, AlertDeleteProps } from '@/components/alert-delete'
 import { Button } from '@/components/ui-overwrite/button'
-import { Spinner } from '@/components/ui/spinner'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
@@ -38,20 +38,17 @@ export function DataTableRowActionButton({
 }
 
 export function DataTableRowDeleteButton({ disabled, onConfirm, ...props }: AlertDeleteProps & { disabled?: boolean }) {
-  const [isPending, startTransition] = React.useTransition()
+  const [{ loading }, handleConfirm] = useAsyncFn(
+    async (event: React.MouseEvent<HTMLButtonElement>) => {
+      await onConfirm(event)
+    },
+    [onConfirm]
+  )
 
   return (
-    <AlertDelete
-      disabled={isPending}
-      onConfirm={event => {
-        startTransition(async () => {
-          await onConfirm(event)
-        })
-      }}
-      {...props}
-    >
-      <DataTableRowActionButton className="border-0!" disabled={disabled || isPending} variant="destructive">
-        {isPending ? <Spinner /> : <TrashIcon />}
+    <AlertDelete disabled={loading} onConfirm={handleConfirm} {...props}>
+      <DataTableRowActionButton className="border-0!" disabled={disabled} loading={loading} variant="destructive">
+        <TrashIcon />
       </DataTableRowActionButton>
     </AlertDelete>
   )
@@ -66,25 +63,18 @@ export function DataTableRowsDeleteButton<TData extends RowData>({
   title: string
   onConfirm: (payload: { rows: TData[] }) => void
 }) {
-  const [isPending, startTransition] = React.useTransition()
-
   const selectedRows = table.getFilteredSelectedRowModel().rows.map(row => row.original)
+
+  const [{ loading }, handleConfirm] = useAsyncFn(async () => {
+    await onConfirm({ rows: selectedRows })
+  }, [onConfirm, selectedRows])
 
   if (selectedRows.length == 0) return <i />
 
   return (
-    <AlertDelete
-      description={`将永久删除 ${selectedRows.length} 项。`}
-      disabled={isPending}
-      onConfirm={() => {
-        startTransition(async () => {
-          await onConfirm({ rows: selectedRows })
-        })
-      }}
-      {...props}
-    >
-      <Button disabled={isPending} size="sm" variant="destructive">
-        {isPending ? <Spinner /> : `已选择 ${selectedRows.length} 项`}
+    <AlertDelete description={`将永久删除 ${selectedRows.length} 项。`} disabled={loading} onConfirm={handleConfirm} {...props}>
+      <Button loading={loading} size="sm" variant="destructive">
+        已选择 {selectedRows.length} 项
       </Button>
     </AlertDelete>
   )

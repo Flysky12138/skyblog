@@ -3,6 +3,7 @@
 import { Treaty } from '@elysiajs/eden'
 import { pick } from 'es-toolkit'
 import React from 'react'
+import { useAsyncFn } from 'react-use'
 import { useImmer } from 'use-immer'
 
 import { ClashTemplateCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/clashes/templates/model'
@@ -33,7 +34,10 @@ export function ClashTemplateEditModal({ children, value, onSubmit }: ClashTempl
 
   const variables = React.useMemo(() => getVariablesNames(form.content), [form.content])
 
-  const [isPending, startTransition] = React.useTransition()
+  const [{ loading }, handleSubmit] = useAsyncFn(async () => {
+    await onSubmit(form)
+    setOpen(false)
+  }, [form])
 
   return (
     <Dialog
@@ -96,16 +100,7 @@ export function ClashTemplateEditModal({ children, value, onSubmit }: ClashTempl
                 </div>
               </Field>
             </DisplayByConditional>
-            <Button
-              disabled={!form.name || !form.content}
-              loading={isPending}
-              onClick={() => {
-                startTransition(async () => {
-                  await onSubmit(form)
-                  setOpen(false)
-                })
-              }}
-            >
+            <Button disabled={!form.name || !form.content} loading={loading} onClick={handleSubmit}>
               {value ? '更新' : '保存'}
             </Button>
           </FieldGroup>
