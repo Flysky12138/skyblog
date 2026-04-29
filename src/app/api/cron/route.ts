@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
 
-import { WeCom } from '@/lib/http/wecom'
+import { Service } from '../[[...elysia]]/dashboard/crons/service'
 
 export const GET = async () => {
   try {
-    await WeCom.markdown_v2(`# Test`)
+    await Service.runAll()
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message }, { status: 500 })
   }

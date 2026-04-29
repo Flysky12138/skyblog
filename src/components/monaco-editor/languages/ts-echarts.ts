@@ -42,7 +42,7 @@ export const tsEchartsConfig: LanguageConfig = {
       // 格式化
       monaco.languages.registerDocumentFormattingEditProvider(tsEchartsConfig.language, {
         provideDocumentFormattingEdits: async model => {
-          const options = toMerged<Options, Options>(require('/.prettierrc.mjs'), {
+          const options = toMerged<Options, Options>(require('/.prettierrc.mjs').default, {
             parser: tsEchartsConfig.language,
             plugins: [estreePlugins, babelPlugins, typescriptPlugins]
           })

@@ -5,7 +5,7 @@ import { TrashIcon } from 'lucide-react'
 import React from 'react'
 
 import { AlertDelete, AlertDeleteProps } from '@/components/alert-delete'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui-overwrite/button'
 import { Spinner } from '@/components/ui/spinner'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'

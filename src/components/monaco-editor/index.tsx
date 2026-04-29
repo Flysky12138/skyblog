@@ -157,7 +157,11 @@ export function MonacoEditor({
     <Comp
       ref={rootRef}
       aria-label="monaco editor"
-      className={cn('h-full overflow-hidden', className)}
+      className={cn(
+        'h-full overflow-hidden',
+        'aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40',
+        className
+      )}
       onKeyDown={event => {
         if (event.key == 's' && (event.ctrlKey || event.metaKey)) {
           event.preventDefault()

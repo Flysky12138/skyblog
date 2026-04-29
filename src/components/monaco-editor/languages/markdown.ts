@@ -14,7 +14,7 @@ export const markdownConfig: LanguageConfig = {
     // 格式化
     monaco.languages.registerDocumentFormattingEditProvider(markdownConfig.language, {
       provideDocumentFormattingEdits: async model => {
-        const options = toMerged<Options, Options>(require('/.prettierrc.mjs'), {
+        const options = toMerged<Options, Options>(require('/.prettierrc.mjs').default, {
           jsxSingleQuote: true,
           parser: markdownConfig.language,
           plugins: [estreePlugins, babelPlugins, markdownPlugins],

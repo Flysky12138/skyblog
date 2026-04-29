@@ -10,7 +10,8 @@ import {
   PlusIcon,
   SettingsIcon,
   UserIcon,
-  UserRoundSearchIcon
+  UserRoundSearchIcon,
+  WebhookIcon
 } from 'lucide-react'
 import { Route } from 'next'
 import Link from 'next/link'
@@ -67,14 +68,15 @@ const menus: Menu[] = [
     label: 'User',
     group: [
       { href: '/dashboard/users/members', icon: <UserIcon />, name: '成员' },
-      { href: '/dashboard/users/visits', icon: <UserRoundSearchIcon />, name: '访客' }
+      { href: '/dashboard/users/visits', icon: <UserRoundSearchIcon />, name: '访客' },
+      { href: '/dashboard/friends', icon: <HeartHandshakeIcon />, name: '友链' }
     ]
   },
   {
     label: 'Other',
     group: [
-      { href: '/dashboard/friends', icon: <HeartHandshakeIcon />, name: '友链' },
-      { href: '/dashboard/clashes', icon: <Clash />, name: 'Clash 共享' },
+      { href: '/dashboard/clashes', icon: <Clash />, name: 'Clash' },
+      { href: '/dashboard/crons', icon: <WebhookIcon />, name: 'Cron' },
       { href: '/dashboard/setting', icon: <SettingsIcon />, name: '设置' }
     ]
   }
