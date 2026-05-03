@@ -1,8 +1,12 @@
-import { Spinner } from '@/components/ui/spinner'
+import Link from 'next/link'
 
-import { Button as ShadcnButton } from '../ui/button'
+import { cn } from '@/lib/utils'
 
-interface ButtonProps extends React.ComponentProps<typeof ShadcnButton> {
+import { buttonVariants } from '../ui/button'
+import * as ButtonPrimitive from '../ui/button'
+import { Spinner } from '../ui/spinner'
+
+interface ButtonProps extends React.ComponentProps<typeof ButtonPrimitive.Button> {
   loading?: boolean
 }
 
@@ -13,8 +17,21 @@ export function Button({ children, disabled, loading, ...props }: ButtonProps) {
   const _disabled = disabled || loading
 
   return (
-    <ShadcnButton disabled={_disabled} {...props}>
+    <ButtonPrimitive.Button disabled={_disabled} focusableWhenDisabled={_disabled} {...props}>
       {loading ? <Spinner /> : children}
-    </ShadcnButton>
+    </ButtonPrimitive.Button>
   )
+}
+
+/**
+ * 添加 Link 按键
+ * @see https://ui.shadcn.com/docs/components/base/button#as-link
+ */
+export function ButtonLink({
+  className,
+  size,
+  variant,
+  ...props
+}: React.ComponentProps<typeof ButtonPrimitive.Button> & React.ComponentProps<typeof Link>) {
+  return <Link className={cn(buttonVariants({ size, variant }), className)} {...props} />
 }

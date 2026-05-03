@@ -10,10 +10,10 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/componen
 import { useMounted } from '@/hooks/use-mounted'
 
 import { EchartsPreview } from './_components/echarts-preview'
-import { DEFAULT_OPTION } from './utils'
+import { ECHARTS_TEMPLATE } from './utils'
 
 export default function Page() {
-  const [code, setCode] = React.useState(DEFAULT_OPTION)
+  const [code, setCode] = React.useState(ECHARTS_TEMPLATE)
   const [options, setOptions] = React.useState(code)
 
   const { width } = useWindowSize()
@@ -43,6 +43,7 @@ export default function Page() {
     <ResizablePanelGroup orientation={width < 1024 ? 'vertical' : 'horizontal'}>
       <ResizablePanel defaultSize={50}>
         <MonacoEditor
+          unstyled
           options={{
             minimap: {
               enabled: false

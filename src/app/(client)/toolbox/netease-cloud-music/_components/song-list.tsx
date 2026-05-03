@@ -7,6 +7,7 @@ import { useInfiniteLoader } from 'react-window-infinite-loader'
 import { AlbumResponseType } from '@/app/api/[[...elysia]]/client/netease-cloud-music/model'
 import { Card } from '@/components/static/card'
 import { Spinner } from '@/components/ui/spinner'
+import { cn } from '@/lib/utils'
 
 interface RowProps {
   hasMore?: boolean
@@ -36,17 +37,20 @@ export function SongList({ hasMore, loadMoreRows, songs, onRowClick }: SongListP
   })
 
   return (
-    <Card asChild>
-      <List
-        className="no-scrollbar overscroll-none"
-        overscanCount={8}
-        rowComponent={Row}
-        rowCount={rowCount}
-        rowHeight={48}
-        rowProps={{ hasMore, songs, onRowClick } satisfies RowProps}
-        onRowsRendered={onRowsRendered}
-      />
-    </Card>
+    <Card
+      className="rounded-md"
+      render={
+        <List
+          className="no-scrollbar overscroll-none"
+          overscanCount={8}
+          rowComponent={Row}
+          rowCount={rowCount}
+          rowHeight={48}
+          rowProps={{ hasMore, songs, onRowClick } satisfies RowProps}
+          onRowsRendered={onRowsRendered}
+        />
+      }
+    />
   )
 }
 
@@ -63,7 +67,9 @@ function Row({ ariaAttributes, hasMore, index, songs, style, onRowClick }: RowCo
 
   return (
     <div
-      className="relative flex cursor-pointer items-center gap-2 border-b px-1.5 last:border-b-0"
+      className={cn('relative flex cursor-pointer items-center gap-2 px-1.5', {
+        'border-t': index > 0
+      })}
       style={style}
       {...ariaAttributes}
       onClick={() => {

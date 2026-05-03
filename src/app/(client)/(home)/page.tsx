@@ -31,7 +31,10 @@ export default async function Page({ searchParams }: PageProps<'/'>) {
         <Card key={post.id} className="p-card space-y-3 break-all lg:space-y-4">
           <h2 className="flex items-center gap-2">
             {post.pinOrder > 0 && <AwardIcon size={20} />}
-            <Link className="font-title hover:text-link-foreground focus-within:text-link-foreground text-xl" href={`/posts/${post.slug ?? post.id}`}>
+            <Link
+              className="font-heading hover:text-link-foreground focus-within:text-link-foreground text-xl active:opacity-50"
+              href={`/posts/${post.slug ?? post.id}`}
+            >
               {post.title}
             </Link>
           </h2>

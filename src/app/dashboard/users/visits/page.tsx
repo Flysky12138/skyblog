@@ -83,10 +83,8 @@ export default function Page() {
       cell: ({ row }) => (
         <div className="flex justify-end gap-2">
           <Dialog>
-            <DialogTrigger asChild>
-              <DataTableRowActionButton>
-                <EyeIcon />
-              </DataTableRowActionButton>
+            <DialogTrigger render={<DataTableRowActionButton />}>
+              <EyeIcon />
             </DialogTrigger>
             <DialogContent className="max-w-3xl">
               <DialogHeader>

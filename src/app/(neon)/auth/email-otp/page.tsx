@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Card } from '@/components/static/card'
+import { ButtonLink } from '@/components/ui-overwrite/button'
 import { Button } from '@/components/ui/button'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
@@ -74,7 +75,7 @@ export default function Page() {
   const loading = loading1 || loading2
 
   return (
-    <Card className="p-card w-full max-w-sm rounded-xl">
+    <Card className="p-card w-full max-w-sm">
       <FieldSet disabled={loading}>
         <FieldLegend>邮箱验证码</FieldLegend>
         <FieldDescription>请输入您的邮箱地址以获取验证码</FieldDescription>
@@ -119,12 +120,10 @@ export default function Page() {
                 </Button>
                 <Button type="submit">{isSignIn ? '登录' : '验证邮箱'}</Button>
               </div>
-              <Button asChild type="button" variant="secondary">
-                <Link aria-disabled={loading} href="/auth/sign-in">
-                  <LockIcon />
-                  使用密码登录
-                </Link>
-              </Button>
+              <ButtonLink aria-disabled={loading} href="/auth/sign-in" variant="secondary">
+                <LockIcon data-icon="inline-start" />
+                使用密码登录
+              </ButtonLink>
             </Field>
           </FieldGroup>
         </form>

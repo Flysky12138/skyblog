@@ -102,6 +102,9 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ['NeteaseCloudMusicApi'],
   typedRoutes: true,
   webpack,
+  devIndicators: {
+    position: 'bottom-right'
+  },
   experimental: {
     // https://nextjs.org/docs/app/guides/memory-usage#preloading-entries
     preloadEntriesOnStart: false,

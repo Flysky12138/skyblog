@@ -41,7 +41,7 @@ export function PostInfo({ defaultValue, id }: PostInfoProps) {
       const { viewCount } = await rpc.posts({ id }).patch().then(unwrap)
       await mutate(
         produce<PostInfoProps['defaultValue']>(draft => {
-          draft!.viewCount = viewCount
+          draft.viewCount = viewCount
         }),
         {
           revalidate: false
@@ -50,7 +50,9 @@ export function PostInfo({ defaultValue, id }: PostInfoProps) {
       setViewed(true)
     }, 5 * 1000)
 
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+    }
   }, [session?.user.role, id, isPending, mutate, post?.isPublished, setViewed, viewed])
 
   if (!post) return <Skeleton className="h-5.25 w-60" />
@@ -64,7 +66,7 @@ export function PostInfo({ defaultValue, id }: PostInfoProps) {
           {post.categories.map(({ category }, index) => (
             <React.Fragment key={category.id}>
               <Link
-                className="text-link-foreground"
+                className="text-link-foreground focus-visible:ring-3"
                 href={{
                   pathname: '/',
                   query: {

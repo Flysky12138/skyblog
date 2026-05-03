@@ -15,11 +15,12 @@ import { rpc, unwrap } from '@/lib/http/rpc'
 import { cn } from '@/lib/utils'
 
 import { POST_CATEGORY_SWR_KEY, POST_TAG_SWR_KEY } from '../../utils'
-import { DefaultPostType } from '../utils'
+import { PostType } from '../utils'
 
-interface PostEditModalProps extends React.PropsWithChildren {
-  value: DefaultPostType
-  onChange: Updater<DefaultPostType>
+interface PostEditModalProps {
+  children: React.ReactElement
+  value: PostType
+  onChange: Updater<PostType>
 }
 
 export function PostEditModal({ children, value: post, onChange: setPost }: PostEditModalProps) {
@@ -32,7 +33,7 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
 
   return (
     <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger render={children} />
       <DialogContent className="max-w-5xl">
         <DialogHeader>
           <DialogTitle>文章</DialogTitle>
@@ -169,7 +170,7 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
 function RadioArea({ className, ...props }: React.ComponentProps<typeof Toggle>) {
   return (
     <Toggle
-      className={cn('text-md hover:bg-input/30 font-title border-dashed data-[state=on]:border-solid', className)}
+      className={cn('text-md hover:bg-input/30 font-heading border-dashed aria-pressed:border-solid', className)}
       role="radio"
       variant="outline"
       {...props}

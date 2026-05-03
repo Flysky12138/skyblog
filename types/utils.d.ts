@@ -10,6 +10,9 @@ type Builtin =
   | WeakMap<unknown, unknown>
   | WeakSet<unknown>
 
+/** 元素的属性，但不包含事件 */
+type ElementPropsWithoutEvents<T extends Element> = Omit<React.HTMLAttributes<T>, PickStartsWith<keyof React.DOMAttributes<T>, 'on'>>
+
 /** 以 `T` 结尾的字符串 */
 type EndsWith<T extends string> = `${string}${T}`
 

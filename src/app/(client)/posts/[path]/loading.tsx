@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 export default function Loading() {
   return (
     <>
-      <Card className="flex h-34.5 flex-col justify-center gap-4 p-3 md:p-5">
+      <Card className="space-y-4 p-3 md:p-5">
         <Skeleton className="h-7 w-60" />
         <Skeleton className="h-5 w-40" />
         <Skeleton className="h-5 w-full max-w-sm" />

@@ -5,5 +5,5 @@ export const metadata: Metadata = {
 }
 
 export default function Layout({ children }: React.PropsWithChildren) {
-  return <div className="flex flex-col gap-4">{children}</div>
+  return <div className="space-y-3">{children}</div>
 }

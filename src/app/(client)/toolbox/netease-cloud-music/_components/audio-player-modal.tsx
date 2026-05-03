@@ -26,7 +26,6 @@ import { ATTRIBUTE } from '@/lib/constants'
 import { TimeHelper } from '@/lib/helper/time'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { cn } from '@/lib/utils'
-import { useLive2DContext } from '@/providers/live2d'
 
 export interface AudioPlayerModalProps {
   ref?: React.RefObject<AudioPlayerModalRef | null>
@@ -100,13 +99,6 @@ export function AudioPlayerModal({ ref, song }: AudioPlayerModalProps) {
     return lyrics.lrc[clamp(index, 0, lyrics.lrc.length - 1)]?.lyric
   }, [lyrics.lrc, time])
 
-  // Live2D 显示歌词
-  const { setMessage } = useLive2DContext()
-  React.useEffect(() => {
-    if (!lyric) return
-    setMessage({ content: lyric, priority: 10, timeout: 60_000 })
-  }, [lyric, setMessage])
-
   // 当歌曲改变时，暂停并重置进度
   React.useEffect(() => {
     controls.pause()
@@ -131,11 +123,13 @@ export function AudioPlayerModal({ ref, song }: AudioPlayerModalProps) {
       <Portal>{audio}</Portal>
       <DialogDrawer open={open} onOpenChange={setOpen}>
         <Portal selector={`#${ATTRIBUTE.ID.NAV_CONTAINER_AUDIO}`}>
-          <DialogDrawerTrigger asChild>
-            <Button size="icon">
-              <AudioLinesIcon />
-            </Button>
-          </DialogDrawerTrigger>
+          <DialogDrawerTrigger
+            render={
+              <Button size="icon">
+                <AudioLinesIcon />
+              </Button>
+            }
+          />
         </Portal>
         <DialogDrawerContent
           className="overflow-hidden"
@@ -175,13 +169,13 @@ export function AudioPlayerModal({ ref, song }: AudioPlayerModalProps) {
               )}
               max={displayDuration}
               min={0}
-              value={isMoving ? [sliderValue] : [displayTime]}
+              value={isMoving ? sliderValue : displayTime}
               onValueChange={value => {
                 setIsMoving(true)
-                setSliderValue(value[0])
+                setSliderValue(value)
               }}
-              onValueCommit={value => {
-                controls.seek(value[0] / 1000)
+              onValueCommitted={value => {
+                controls.seek(value / 1000)
               }}
             />
             <p className="mt-2 flex justify-between text-xs">

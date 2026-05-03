@@ -1,7 +1,6 @@
 'use client'
 
 import { debounce, inRange } from 'es-toolkit'
-import { Route } from 'next'
 import Link from 'next/link'
 import React from 'react'
 import { useEvent } from 'react-use'
@@ -67,7 +66,8 @@ export function PostToc({ className, ref, ...props }: PostTocProps) {
       aria-label="post toc"
       className={cn(
         'hidden empty:hidden lg:block',
-        'no-scrollbar font-article w-52 shrink-0 space-y-1.5 self-start overflow-auto p-3 pr-1.5',
+        'w-52 space-y-1.5 p-3! pr-1.5!',
+        'no-scrollbar font-article shrink-0 self-start overflow-auto',
         'sticky top-[calc(var(--height-header)+--spacing(9))] max-h-[calc(100dvh-var(--height-header)---spacing(18))]',
         className
       )}
@@ -89,10 +89,10 @@ export function PostTocHeading({ children, className, id, ...props }: Omit<React
           'data-active:text-link-foreground data-active:bg-link/60',
           'data-active:before:bg-link-foreground/50 data-active:before:absolute data-active:before:inset-y-1 data-active:before:-left-2 data-active:before:w-1 data-active:before:rounded-md',
           'hover:text-link-foreground hover:bg-link/40',
-          'focus-visible:text-link-foreground',
+          'focus-visible:text-link-foreground focus-visible:ring-3',
           className
         )}
-        href={`#${id}` as Route}
+        href={`#${id}`}
         style={{
           paddingLeft: `${0.5 + depth}rem`
         }}

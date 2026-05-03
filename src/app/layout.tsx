@@ -53,25 +53,15 @@ export const viewport: Viewport = {
 }
 
 // use it in src/globals.css
-const title = ZCOOL_KuaiLe({
-  subsets: ['latin'],
-  variable: '--font-title',
-  weight: '400'
-})
-const code = Cascadia_Code({
-  adjustFontFallback: false,
-  display: 'swap',
-  subsets: ['latin'],
-  variable: '--font-code',
-  weight: '400'
-})
+const heading = ZCOOL_KuaiLe({ subsets: ['latin'], variable: '--font-heading', weight: '400' })
+const code = Cascadia_Code({ adjustFontFallback: false, display: 'swap', subsets: ['latin'], variable: '--font-code' })
 
 export default function Layout({ children }: React.PropsWithChildren) {
   prefetchDNS('https://cdn.jsdelivr.net')
 
   return (
     <html suppressHydrationWarning dir="ltr" lang="zh-CN">
-      <body className={cn(title.variable, code.variable)}>
+      <body className={cn(heading.variable, code.variable)}>
         <ThemeProvider>
           <SWRProvider>
             <TooltipProvider>{children}</TooltipProvider>

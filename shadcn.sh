@@ -9,6 +9,7 @@ pnpm dlx shadcn@latest add -y -o \
     breadcrumb \
     button-group \
     button \
+    card \
     checkbox \
     command \
     dialog \

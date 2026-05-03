@@ -24,7 +24,7 @@ import { Portal } from '@/components/portal'
 import { Button } from '@/components/ui-overwrite/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldContent, FieldGroup, FieldLabel, FieldTitle } from '@/components/ui/field'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ATTRIBUTE } from '@/lib/constants'
 import { AudioFFmpeg } from '@/lib/ffmpeg/audio'
 import { DirectoryHelper } from '@/lib/helper/directory'
@@ -132,11 +132,13 @@ export function DownloadModal({ songs }: DownloadModalProps) {
   return (
     <DialogDrawer>
       <Portal selector={`#${ATTRIBUTE.ID.NAV_CONTAINER_DOWNLOAD}`}>
-        <DialogDrawerTrigger asChild>
-          <Button size="icon">
-            <DownloadIcon />
-          </Button>
-        </DialogDrawerTrigger>
+        <DialogDrawerTrigger
+          render={
+            <Button size="icon">
+              <DownloadIcon />
+            </Button>
+          }
+        />
       </Portal>
       <DialogDrawerContent dialogClassName="max-w-xl p-0! gap-0 overflow-hidden" showCloseButton={false}>
         <DialogDrawerHeader className="sr-only">
@@ -146,7 +148,7 @@ export function DownloadModal({ songs }: DownloadModalProps) {
 
         <div className="border-divide flex items-center justify-between border-b px-2.5 pt-3 pb-3 shadow-xs md:mt-0">
           <Checkbox
-            checked={selected.size == songs.length ? true : selected.size == 0 ? false : 'indeterminate'}
+            checked={selected.size == songs.length}
             disabled={isDownloading}
             onClick={() => {
               if (selected.size == songs.length) {
@@ -157,12 +159,14 @@ export function DownloadModal({ songs }: DownloadModalProps) {
             }}
           />
           <DialogDrawer>
-            <DialogDrawerTrigger asChild>
-              <Button disabled={isDownloading || selected.size == 0} loading={isDownloading} size="sm">
-                下载（{selected.size}）
-              </Button>
-            </DialogDrawerTrigger>
-            <DialogDrawerContent dialogClassName="max-w-xl" drawerClassName="p-2 pt-0">
+            <DialogDrawerTrigger
+              render={
+                <Button disabled={isDownloading || selected.size == 0} loading={isDownloading} size="sm">
+                  下载（{selected.size}）
+                </Button>
+              }
+            />
+            <DialogDrawerContent dialogClassName="max-w-xl" drawerClassName="p-3 pt-0" showCloseButton={false}>
               <DialogDrawerHeader className="sr-only">
                 <DialogDrawerTitle>下载</DialogDrawerTitle>
                 <DialogDrawerDescription>设置下载参数</DialogDrawerDescription>
@@ -209,32 +213,39 @@ export function DownloadModal({ songs }: DownloadModalProps) {
                   <Field>
                     <FieldTitle>音质</FieldTitle>
                     <Select
-                      defaultValue={level}
                       disabled={isDownloading}
+                      items={LEVEL_OPTIONS}
+                      value={level}
                       onValueChange={value => {
-                        setLevel(value as LevelType)
+                        if (!value) return
+                        setLevel(value)
                       }}
                     >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {LEVEL_OPTIONS.map(option => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
+                        <SelectGroup>
+                          {LEVEL_OPTIONS.map(option => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
                       </SelectContent>
                     </Select>
                   </Field>
                 </DisplayByConditional>
               </FieldGroup>
               <DialogDrawerFooter className="mt-4 px-0">
-                <DialogDrawerClose asChild className="min-w-40">
-                  <Button disabled={downloadType.size == 0} onClick={handleDownload}>
-                    确定
-                  </Button>
-                </DialogDrawerClose>
+                <DialogDrawerClose
+                  className="min-w-40"
+                  render={
+                    <Button disabled={downloadType.size == 0} onClick={handleDownload}>
+                      确定
+                    </Button>
+                  }
+                />
               </DialogDrawerFooter>
             </DialogDrawerContent>
           </DialogDrawer>
@@ -266,10 +277,13 @@ function Row({ ariaAttributes, getProgress, index, isDownloading, isSelected, so
   return (
     <div
       className={cn(
-        'flex cursor-pointer items-center gap-2 border-b px-1.5 last:border-b-0',
+        'flex cursor-pointer items-center gap-2 px-1.5',
         'bg-linear-to-r bg-clip-padding bg-no-repeat',
         'from-indigo-200 via-purple-200 to-pink-200',
-        'dark:from-indigo-800/30 dark:via-purple-800/30 dark:to-pink-800/30'
+        'dark:from-indigo-800/30 dark:via-purple-800/30 dark:to-pink-800/30',
+        {
+          'border-t': index > 0
+        }
       )}
       style={{ backgroundSize: `${getProgress(song.id)?.progress ?? 0}%`, ...style }}
       {...ariaAttributes}

@@ -6,8 +6,8 @@ export default function Loading() {
   return (
     <>
       <div className="-order-1 ml-auto flex h-9 gap-2">
-        <Card className="w-9 rounded-md" />
-        <Card className="w-32 rounded-md" />
+        <Card className="w-9" variant="button" />
+        <Card className="w-32" variant="button" />
       </div>
       {Array.from({ length: 4 }).map((_, index) => (
         <Card

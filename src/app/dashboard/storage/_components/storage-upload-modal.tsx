@@ -33,7 +33,8 @@ interface FileEntry {
   type: string
 }
 
-interface StorageUploadModalProps extends React.PropsWithChildren {
+interface StorageUploadModalProps {
+  children: React.ReactElement
   id: string
   /** 每个上传成功的文件都会调用 */
   onUploaded?: (payload: Treaty.Data<typeof rpc.dashboard.storage.files.post>) => void
@@ -133,7 +134,7 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
         }
       }}
     >
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger render={children} />
       <DialogContent className="max-w-5xl">
         <DialogHeader>
           <DialogTitle>文件上传</DialogTitle>
@@ -207,7 +208,7 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell className="font-title cursor-default text-center" colSpan={4}>
+                        <TableCell className="font-heading cursor-default text-center" colSpan={4}>
                           未添加文件
                         </TableCell>
                       </TableRow>

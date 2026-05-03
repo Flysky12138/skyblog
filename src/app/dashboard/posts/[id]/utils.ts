@@ -3,10 +3,10 @@ import { Treaty } from '@elysiajs/eden'
 import { POST_CARD_VISIBILITY_MASK } from '@/lib/constants'
 import { rpc } from '@/lib/http/rpc'
 
-export type DefaultPostType = Treaty.Data<ReturnType<typeof rpc.dashboard.posts>['get']>
-
 export type MessageEventDataPostPreviewMounted = MessageEventData<'post-preview-mounted'>
-export type MessageEventDataPostUpdate = MessageEventData<'post-update', DefaultPostType>
+export type MessageEventDataPostUpdate = MessageEventData<'post-update', PostType>
+
+export type PostType = Treaty.Data<ReturnType<typeof rpc.dashboard.posts>['get']>
 
 /**
  * 文章预览 `BroadcastChannel` 频道 ID
@@ -14,9 +14,9 @@ export type MessageEventDataPostUpdate = MessageEventData<'post-update', Default
 export const POST_PREVIEW_BROADCAST_CHANNEL_ID = '019b4b21-0bca-72dc-92da-b03b64c4299c'
 
 /**
- * 默认文章数据
+ * 初始文章数据
  */
-export const DEFAULT_POST: DefaultPostType = {
+export const createInitialPost: () => PostType = () => ({
   authorId: '',
   categories: [],
   commentCount: 0,
@@ -33,4 +33,4 @@ export const DEFAULT_POST: DefaultPostType = {
   updatedAt: new Date(),
   viewCount: 0,
   visibilityMask: POST_CARD_VISIBILITY_MASK.HEADER | POST_CARD_VISIBILITY_MASK.COMMENT | POST_CARD_VISIBILITY_MASK.TOC
-}
+})

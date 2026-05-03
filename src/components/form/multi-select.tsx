@@ -2,7 +2,7 @@
 
 import { cloneDeep } from 'es-toolkit'
 import { Draft } from 'immer'
-import { CheckIcon, ChevronsUpDownIcon, XCircleIcon, XIcon } from 'lucide-react'
+import { ChevronsUpDownIcon, XCircleIcon, XIcon } from 'lucide-react'
 import React from 'react'
 import { useImmer } from 'use-immer'
 
@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
-import { cn } from '@/lib/utils'
 
 const DEFAULT_FIELD_NAMES = {
   label: 'label',
@@ -84,66 +83,70 @@ export function MultiSelect<T extends Record<string, unknown>>({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button aria-expanded={open} className="flex h-auto min-h-9 items-center justify-between py-1" role="combobox" variant="outline">
-          {selectedValues.length > 0 ? (
-            <>
-              <div className="flex grow flex-wrap items-center gap-2">
-                {selectedValues.map(option => (
-                  <Badge
-                    key={getValue(option)}
-                    className="border-foreground/10 bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-sm"
-                  >
-                    <span className="truncate">{getLabel(option)}</span>
-                    <button
-                      aria-label={`remove ${getLabel(option)} from selection`}
-                      className="-m-0.5 ml-2 size-4 cursor-pointer rounded-sm p-0.5 hover:bg-white/20 focus-visible:ring-3"
-                      onClick={event => {
+      <PopoverTrigger
+        render={<Button aria-expanded={open} className="flex h-auto min-h-9 items-center justify-between py-1" role="combobox" variant="outline" />}
+      >
+        {selectedValues.length > 0 ? (
+          <>
+            <div className="flex grow flex-wrap items-center gap-2">
+              {selectedValues.map(option => (
+                <Badge
+                  key={getValue(option)}
+                  className="border-foreground/10 bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-sm"
+                >
+                  <span className="truncate">{getLabel(option)}</span>
+                  <div
+                    aria-label={`remove ${getLabel(option)} from selection`}
+                    className="-m-0.5 ml-2 size-4 cursor-pointer rounded-sm p-0.5 hover:bg-white/20 focus-visible:ring-3"
+                    role="button"
+                    tabIndex={0}
+                    onClick={event => {
+                      event.stopPropagation()
+                      toggleOption(option)
+                    }}
+                    onKeyDown={event => {
+                      if (event.key == 'Enter' || event.key == ' ') {
+                        event.preventDefault()
                         event.stopPropagation()
                         toggleOption(option)
-                      }}
-                      onKeyDown={event => {
-                        if (event.key == 'Enter' || event.key == ' ') {
-                          event.preventDefault()
-                          event.stopPropagation()
-                          toggleOption(option)
-                        }
-                      }}
-                    >
-                      <XCircleIcon className="pointer-events-auto size-3" />
-                    </button>
-                  </Badge>
-                ))}
-              </div>
-              <div className="flex items-center justify-between">
-                <button
-                  aria-label={`clear all ${selectedValues.length} selected options`}
-                  className="text-muted-foreground hover:text-foreground ring-default mx-2 flex size-4 cursor-pointer items-center justify-center rounded-sm"
-                  onClick={event => {
+                      }
+                    }}
+                  >
+                    <XCircleIcon className="pointer-events-auto size-3" />
+                  </div>
+                </Badge>
+              ))}
+            </div>
+            <div className="flex items-center justify-between">
+              <div
+                aria-label={`clear all ${selectedValues.length} selected options`}
+                className="text-muted-foreground hover:text-foreground ring-default mx-2 flex size-4 cursor-pointer items-center justify-center rounded-sm"
+                role="button"
+                tabIndex={0}
+                onClick={event => {
+                  event.stopPropagation()
+                  onValueChange([])
+                }}
+                onKeyDown={event => {
+                  if (event.key == 'Enter' || event.key == ' ') {
+                    event.preventDefault()
                     event.stopPropagation()
                     onValueChange([])
-                  }}
-                  onKeyDown={event => {
-                    if (event.key == 'Enter' || event.key == ' ') {
-                      event.preventDefault()
-                      event.stopPropagation()
-                      onValueChange([])
-                    }
-                  }}
-                >
-                  <XIcon />
-                </button>
-                <Separator className="flex h-full min-h-6" orientation="vertical" />
+                  }
+                }}
+              >
+                <XIcon />
               </div>
-            </>
-          ) : (
-            <p className="text-muted-foreground">{placeholder}</p>
-          )}
-          <ChevronsUpDownIcon className="text-muted-foreground" />
-        </Button>
+              <Separator className="flex h-full min-h-6" orientation="vertical" />
+            </div>
+          </>
+        ) : (
+          <p className="text-muted-foreground">{placeholder}</p>
+        )}
+        <ChevronsUpDownIcon className="text-muted-foreground" />
       </PopoverTrigger>
 
-      <PopoverContent align="center" aria-multiselectable={multiple} className="w-(--radix-popover-trigger-width) p-0" role="listbox">
+      <PopoverContent align="start" aria-multiselectable={multiple} className="p-0" role="listbox">
         <Command
           filter={(value, search, keywords) => {
             return keywords?.some(keyword => keyword.toLowerCase().includes(search.trim().toLowerCase())) ? 1 : 0
@@ -177,6 +180,7 @@ export function MultiSelect<T extends Record<string, unknown>>({
                 <CommandItem
                   key={getValue(option)}
                   className="cursor-pointer"
+                  data-checked={isSelected(option)}
                   keywords={[getLabel(option)]}
                   role="option"
                   value={getValue(option)}
@@ -185,7 +189,6 @@ export function MultiSelect<T extends Record<string, unknown>>({
                   }}
                 >
                   {getLabel(option)}
-                  <CheckIcon className={cn('ml-auto', isSelected(option) ? 'opacity-100' : 'opacity-0')} />
                 </CommandItem>
               ))}
             </CommandGroup>

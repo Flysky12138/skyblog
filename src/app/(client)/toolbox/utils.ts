@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 
-interface ToolGroup {
+export interface Tool {
   id: string
   title: string
   children: {
@@ -12,7 +12,7 @@ interface ToolGroup {
   }[]
 }
 
-export const toolGroup = [
+export const tools = [
   {
     id: 'tool',
     title: '工具',
@@ -56,13 +56,13 @@ export const toolGroup = [
       }
     ]
   }
-] as const satisfies ToolGroup[]
+] as const satisfies Tool[]
 
-type StaticToolGroup = (typeof toolGroup)[number]
+type StaticToolGroup = (typeof tools)[number]
 type ToolChildIds<T extends StaticToolGroup['id']> = Extract<StaticToolGroup, { id: T }>['children'][number]['id']
 
 export const getToolPageMetadata = <T extends StaticToolGroup['id'], C extends ToolChildIds<T>>(id: T, cId: C): Metadata => {
-  const group = toolGroup.find(group => group.id == id)!
+  const group = tools.find(group => group.id == id)!
   const child = group.children.find(child => child.id == cId)!
 
   return {

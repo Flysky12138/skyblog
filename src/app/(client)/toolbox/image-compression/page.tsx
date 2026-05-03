@@ -9,7 +9,6 @@ import { useDebounce, useLocalStorage } from 'react-use'
 import { toast } from 'sonner'
 
 import { FileSelect } from '@/components/form/file-select'
-import { Card } from '@/components/static/card'
 import { Button } from '@/components/ui-overwrite/button'
 import { Badge } from '@/components/ui/badge'
 import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
@@ -22,7 +21,7 @@ import { FileHelper } from '@/lib/helper/file'
 
 import { compressImageByCanvas, imageCompressionGroup } from './utils'
 
-const defaultQuality = 70
+const DEFAULT_QUALITY = 70
 
 export default function Page() {
   const [files, setFiles] = React.useState<File[]>([])
@@ -35,10 +34,10 @@ export default function Page() {
   const [activeTab, setActiveTab] = React.useState<StringLiteralsOrString<'compressed' | 'original'>>('compressed')
   const [activeFileIndex, setActiveFileIndex] = React.useState(0)
 
-  const [ext, setExt] = useLocalStorage<string | undefined>('image-compression:ext', undefined)
-  const [quality, setQuality] = useLocalStorage('image-compression:quality', [defaultQuality])
+  const [ext, setExt] = useLocalStorage<null | string>('image-compression:ext', null)
+  const [quality, setQuality] = useLocalStorage('image-compression:quality', DEFAULT_QUALITY)
 
-  const currentQuality = quality ? quality[0] : defaultQuality
+  const currentQuality = quality ? quality : DEFAULT_QUALITY
 
   // 清除缓存
   const handleResetCompressedFileCache = React.useEffectEvent(() => {
@@ -191,35 +190,40 @@ export default function Page() {
           <TabsTrigger value="compressed">压缩图</TabsTrigger>
         </TabsList>
         <div className="flex grow gap-5 not-md:flex-col">
-          <Card asChild className="relative grow overflow-hidden rounded-md">
-            <Button className="h-auto" variant="outline" onClick={handlePreview}>
-              <React.Activity mode={activeTab == 'original' ? 'visible' : 'hidden'}>
-                <Image fill alt="original-image" className="size-full object-contain" src={filesUrl[activeFileIndex]} />
-              </React.Activity>
-              <React.Activity mode={activeTab == 'compressed' ? 'visible' : 'hidden'}>
-                {compressedFile && compressedFileUrl && (
-                  <Image fill alt="compressed-image" className="size-full object-contain" src={compressedFileUrl} />
-                )}
-              </React.Activity>
-              <ButtonGroup className="absolute top-2 right-2">
-                <Badge variant="secondary">{FileHelper.formatFileSize(activeFile.size)}</Badge>
-                <ButtonGroupSeparator />
-                <Badge>{compressedFile ? FileHelper.formatFileSize(compressedFile.size) : '?'}</Badge>
-              </ButtonGroup>
-            </Button>
-          </Card>
+          <Button className="relative h-auto grow rounded-md" variant="outline" onClick={handlePreview}>
+            <React.Activity mode={activeTab == 'original' ? 'visible' : 'hidden'}>
+              <Image fill alt="original-image" className="size-full object-contain" src={filesUrl[activeFileIndex]} />
+            </React.Activity>
+            <React.Activity mode={activeTab == 'compressed' ? 'visible' : 'hidden'}>
+              {compressedFile && compressedFileUrl && (
+                <Image fill alt="compressed-image" className="size-full object-contain" src={compressedFileUrl} />
+              )}
+            </React.Activity>
+            <ButtonGroup className="absolute top-2 right-2">
+              <Badge variant="secondary">{FileHelper.formatFileSize(activeFile.size)}</Badge>
+              <ButtonGroupSeparator />
+              <Badge>{compressedFile ? FileHelper.formatFileSize(compressedFile.size) : '?'}</Badge>
+            </ButtonGroup>
+          </Button>
 
           <FieldGroup className="w-full md:w-80 lg:w-96">
             <Field>
               <FieldLabel>目标格式</FieldLabel>
-              <Select value={ext} onValueChange={setExt}>
+              <Select
+                items={imageCompressionGroup.map(item => ({
+                  label: item.name,
+                  value: item.ext
+                }))}
+                value={ext}
+                onValueChange={setExt}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="选择一种导出格式" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     {imageCompressionGroup.map(item => (
-                      <SelectItem key={item.name} value={item.ext}>
+                      <SelectItem key={item.ext} value={item.ext}>
                         {item.name}
                       </SelectItem>
                     ))}

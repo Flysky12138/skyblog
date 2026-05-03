@@ -1,12 +1,13 @@
 'use client'
 
+// eslint-disable-next-line no-restricted-imports
+import { Dialog as DialogPrimitive } from '@base-ui/react/dialog'
 import { XIcon } from 'lucide-react'
-import { Dialog as DialogPrimitive } from 'radix-ui'
-import React from 'react'
 
 import { cn } from '@/lib/utils'
 
-import { DialogOverlay, DialogPortal } from '../ui/dialog'
+import { Button } from '../ui/button'
+import { DialogClose, DialogOverlay, DialogPortal } from '../ui/dialog'
 
 export {
   Dialog,
@@ -28,16 +29,21 @@ export function DialogContent({
   className,
   showCloseButton = true,
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Content> & {
+}: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
 }) {
   return (
-    <DialogPortal data-slot="dialog-portal">
-      <DialogOverlay className="flex justify-center overflow-y-auto p-4 backdrop-blur-sm sm:p-6">
-        <DialogPrimitive.Content
+    <DialogPortal>
+      <DialogOverlay className="duration-200" />
+      <DialogPrimitive.Viewport className="fixed inset-0 z-50 flex justify-center overflow-y-auto p-4 sm:p-6 md:p-10" data-slot="dialog-viewport">
+        <DialogPrimitive.Popup
           className={cn(
-            'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200',
-            'bg-background relative z-50 my-auto flex h-fit w-full flex-col gap-4 rounded-lg border p-3 shadow-lg sm:p-6',
+            'gap-bp-3 relative flex flex-col',
+            'my-auto w-full max-w-[calc(100%-2rem)] overflow-hidden rounded-lg p-5 duration-200',
+            'bg-popover text-popover-foreground ring-foreground/10 ring-1',
+            'data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95',
+            'data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95',
+            'data-nested-dialog-open:animate-out fill-mode-forwards data-nested-dialog-open:fade-out-0 data-nested-dialog-open:zoom-out-95',
             className
           )}
           data-slot="dialog-content"
@@ -45,21 +51,13 @@ export function DialogContent({
         >
           {children}
           {showCloseButton && (
-            <DialogPrimitive.Close
-              className={cn(
-                'ring-offset-background absolute top-4 right-4 rounded-xs opacity-70 transition-opacity disabled:pointer-events-none',
-                'data-[state=open]:bg-accent data-[state=open]:text-muted-foreground',
-                'focus:ring-ring hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden',
-                "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
-              )}
-              data-slot="dialog-close"
-            >
+            <DialogClose render={<Button className="absolute top-5 right-5" size="icon-sm" variant="ghost" />}>
               <XIcon />
               <span className="sr-only">Close</span>
-            </DialogPrimitive.Close>
+            </DialogClose>
           )}
-        </DialogPrimitive.Content>
-      </DialogOverlay>
+        </DialogPrimitive.Popup>
+      </DialogPrimitive.Viewport>
     </DialogPortal>
   )
 }

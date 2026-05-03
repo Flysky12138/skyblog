@@ -74,8 +74,8 @@ export function FileSelectBase({ children, className, description, logo: Logo, t
     <FieldLabel
       className={cn(
         'bg-card mx-auto w-full max-w-2xl cursor-pointer rounded-lg border border-dashed transition-all',
-        'focus-visible:ring-3',
         'hover:border-blue-500/75',
+        'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-3',
         className
       )}
       {...props}

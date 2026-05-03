@@ -42,7 +42,7 @@ export const getColumnConfig = <T extends RowData>(accessorKey: ColumnAccessorKe
           header: ({ table }) => (
             <Checkbox
               aria-label="选择所有行"
-              checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+              checked={table.getIsAllPageRowsSelected()}
               onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
             />
           )

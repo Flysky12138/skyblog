@@ -20,7 +20,6 @@ export function CardWolf() {
     if (!div || !canvas) return
 
     const width = div.offsetWidth
-
     const cellSize = width / grid[0].length
 
     canvas.width = width
@@ -48,7 +47,7 @@ export function CardWolf() {
   }, [])
 
   return (
-    <Card className="overflow-hidden p-1 select-none">
+    <Card className="p-2 select-none">
       <motion.div
         ref={divRef}
         animate={isMounted ? 'visible' : 'hidden'}

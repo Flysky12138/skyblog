@@ -5,8 +5,6 @@
 @custom-variant light (&:is(.light, .light *));
 
 @import 'tailwindcss';
-@import 'tw-animate-css';
-
 @plugin '@tailwindcss/typography';
 
 @import './styles/shadcn.css';
@@ -17,27 +15,30 @@
 :root {
   --root: oklch(0.98 0 0);
   --divide: oklch(0.93 0.01 0);
-  --card: var(--color-white);
   --link: var(--color-slate-200);
   --link-foreground: var(--color-sky-500);
   --sheet: oklch(97.893% 0.00298 264.796);
+  /* shadcn variables */
+  --card: var(--color-white);
 }
 
 .dark {
   --root: oklch(0.19 0.01 285.45);
   --divide: var(--color-slate-700);
-  --card: oklch(24.61% 0.01133 285.511);
   --link: var(--color-slate-700);
   --link-foreground: var(--color-sky-500);
   --sheet: oklch(21.516% 0.00781 285.688);
+  /* shadcn variables */
+  --card: oklch(24.61% 0.01133 285.511);
 }
 
 @theme inline {
   /* override default variables */
   --font-*: initial;
+  /* shadcn variables */
+  --font-heading: var(--font-heading);
   /* static variables */
   --font-root: 'FZSJ-ZHUZAYTE';
-  --font-title: var(--font-title);
   --font-emoji: 'Noto Color Emoji';
   --font-article: 'Microsoft Yahei', '微软雅黑';
   --font-code: var(--font-emoji), var(--font-code);
@@ -47,7 +48,6 @@
   /* dark & light variables */
   --color-root: var(--root);
   --color-divide: var(--divide);
-  --color-card: var(--card);
   --color-link: var(--link);
   --color-link-foreground: var(--link-foreground);
   --color-sheet: var(--sheet);

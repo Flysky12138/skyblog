@@ -2,12 +2,21 @@
 
 import { produce } from 'immer'
 import { EyeIcon, PencilIcon, PlusIcon, TrashIcon } from 'lucide-react'
-import { Route } from 'next'
-import Link from 'next/link'
 import useSWR from 'swr'
 
-import { AlertDialogDelete } from '@/components/alert-dialog-delete'
 import { Card } from '@/components/static/card'
+import { ButtonLink } from '@/components/ui-overwrite/button'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
@@ -23,7 +32,7 @@ export default function Page() {
   return (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5">
       {friends?.map((friend, index) => (
-        <Card key={friend.id} className="group relative aspect-video overflow-hidden select-none">
+        <Card key={friend.id} className="group relative aspect-video select-none">
           <img
             alt={friend.name}
             className="absolute inset-0"
@@ -40,11 +49,9 @@ export default function Page() {
             )}
           >
             <p className="absolute bottom-1 left-2 text-lg opacity-75">{friend.name}</p>
-            <Button asChild size="icon" variant="outline">
-              <Link href={friend.siteUrl as Route} rel="noreferrer nofollow" target="_blank">
-                <EyeIcon />
-              </Link>
-            </Button>
+            <ButtonLink href={friend.siteUrl} rel="noreferrer nofollow" size="icon" target="_blank" variant="outline">
+              <EyeIcon />
+            </ButtonLink>
             <FriendEditModal
               value={friend}
               onSubmit={async body => {
@@ -65,26 +72,38 @@ export default function Page() {
                 <PencilIcon />
               </Button>
             </FriendEditModal>
-            <AlertDialogDelete
-              title={friend.name}
-              onConfirm={async () => {
-                await toastPromise(rpc.dashboard.friends({ id: friend.id }).delete(), {
-                  success: '删除成功'
-                })
-                await mutate(
-                  produce<typeof friends>(draft => {
-                    draft.splice(index, 1)
-                  }),
-                  {
-                    revalidate: false
-                  }
-                )
-              }}
-            >
-              <Button size="icon" variant="destructive">
+            <AlertDialog>
+              <AlertDialogTrigger render={<Button size="icon" variant="destructive" />}>
                 <TrashIcon />
-              </Button>
-            </AlertDialogDelete>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>{friend.name}</AlertDialogTitle>
+                  <AlertDialogDescription>此操作无法撤消，将永久删除该项</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>取消</AlertDialogCancel>
+                  <AlertDialogAction
+                    className="min-w-32"
+                    onClick={async () => {
+                      await toastPromise(rpc.dashboard.friends({ id: friend.id }).delete(), {
+                        success: '删除成功'
+                      })
+                      await mutate(
+                        produce<typeof friends>(draft => {
+                          draft.splice(index, 1)
+                        }),
+                        {
+                          revalidate: false
+                        }
+                      )
+                    }}
+                  >
+                    确定
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </Card>
       ))}
@@ -104,9 +123,14 @@ export default function Page() {
           )
         }}
       >
-        <Card className="flex aspect-video cursor-pointer items-center justify-center" tabIndex={0}>
-          <PlusIcon size={30} strokeWidth={3} />
-        </Card>
+        <Card
+          className="aspect-video ring-0"
+          render={
+            <Button className="h-auto" variant="outline">
+              <PlusIcon className="size-8" strokeWidth={3} />
+            </Button>
+          }
+        />
       </FriendEditModal>
     </div>
   )

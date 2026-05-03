@@ -8,8 +8,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
@@ -33,22 +33,24 @@ export function SidebarUser() {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              size="lg"
-              tooltip={name}
-            >
-              <Avatar className="size-8 rounded-sm">
-                <AvatarImage alt={name} crossOrigin="anonymous" decoding="async" loading="lazy" src={src} />
-                <AvatarFallback className="rounded-sm">{name.slice(0, 3)}</AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{name}</span>
-                <span className="text-muted-foreground truncate text-xs">{email}</span>
-              </div>
-              <ChevronsUpDownIcon className="ml-auto size-4" />
-            </SidebarMenuButton>
+          <DropdownMenuTrigger
+            render={
+              <SidebarMenuButton
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                size="lg"
+                tooltip={name}
+              />
+            }
+          >
+            <Avatar>
+              <AvatarImage alt={name} crossOrigin="anonymous" decoding="async" loading="lazy" src={src} />
+              <AvatarFallback>{name.slice(0, 3)}</AvatarFallback>
+            </Avatar>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-semibold">{name}</span>
+              <span className="text-muted-foreground truncate text-xs">{email}</span>
+            </div>
+            <ChevronsUpDownIcon className="ml-auto size-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
@@ -56,33 +58,34 @@ export function SidebarUser() {
             side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}
           >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="size-8 rounded-sm">
+            <DropdownMenuGroup>
+              <div className="flex items-center gap-2 p-1">
+                <Avatar>
                   <AvatarImage alt={name} crossOrigin="anonymous" decoding="async" loading="lazy" src={src} />
-                  <AvatarFallback className="rounded-sm">{name.slice(0, 3)}</AvatarFallback>
+                  <AvatarFallback>{name.slice(0, 3)}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{name}</span>
                   <span className="text-muted-foreground truncate text-xs">{email}</span>
                 </div>
               </div>
-            </DropdownMenuLabel>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href="/account/settings">
+            <DropdownMenuGroup>
+              <DropdownMenuItem className="cursor-pointer" render={<Link href="/account/settings" />}>
                 <UserRoundCogIcon /> 个人资料
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-destructive! cursor-pointer"
-              onClick={async () => {
-                await authClient.signOut()
-                router.replace('/auth/sign-in')
-              }}
-            >
-              <LogOutIcon /> 注销
-            </DropdownMenuItem>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                variant="destructive"
+                onClick={async () => {
+                  await authClient.signOut()
+                  router.replace('/auth/sign-in')
+                }}
+              >
+                <LogOutIcon /> 注销
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

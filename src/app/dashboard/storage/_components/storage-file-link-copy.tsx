@@ -13,7 +13,8 @@ import { rpc } from '@/lib/http/rpc'
 
 import { getPublicUrl } from './utils'
 
-interface StorageFileLinkCopyProps extends React.PropsWithChildren {
+interface StorageFileLinkCopyProps {
+  children: React.ReactElement
   file: Treaty.Data<ReturnType<typeof rpc.dashboard.storage.directories>['get']>['files'][number]
 }
 
@@ -36,7 +37,7 @@ export function StorageFileLinkCopy({ children, file }: StorageFileLinkCopyProps
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+      <DropdownMenuTrigger render={children} />
       <DropdownMenuContent align="end" className="max-w-xs md:max-w-md">
         {links.map(({ label, value }, index) => (
           <DropdownMenuItem

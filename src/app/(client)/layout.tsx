@@ -7,17 +7,16 @@ import { Container } from '@/components/static/container'
 import { Header } from '@/components/static/header'
 import { Logo } from '@/components/static/logo'
 import { ScrollToTop } from '@/components/static/scroll-to-top'
-import { Button } from '@/components/ui/button'
+import { ButtonLink } from '@/components/ui-overwrite/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { ATTRIBUTE } from '@/lib/constants'
-import { Live2DContent, Live2DProvider, Live2DToggleButton } from '@/providers/live2d'
-import { ThemeToggleButton } from '@/providers/theme'
+import { DropdownMenuRadioTheme } from '@/providers/theme'
 
 import { AuthButton } from './_components/auth-button'
 
 export default function Layout({ children }: React.PropsWithChildren) {
   return (
-    <Live2DProvider>
+    <>
       <Header>
         <Container className="flex h-full items-center gap-4">
           <Link aria-label="to home page" className="focus-visible:ring-3" href="/">
@@ -28,18 +27,13 @@ export default function Layout({ children }: React.PropsWithChildren) {
             <ScrollToTop showOnScrollYOverflow={500} variant="outline" />
           </DisplayByBreakPoint>
           <Tooltip>
-            <TooltipTrigger asChild>
-              <Button asChild aria-label="toolbox" size="icon" variant="outline">
-                <Link href="/toolbox">
-                  <ToolCaseIcon />
-                </Link>
-              </Button>
+            <TooltipTrigger render={<ButtonLink aria-label="toolbox" href="/toolbox" size="icon" variant="outline" />}>
+              <ToolCaseIcon />
             </TooltipTrigger>
             <TooltipContent>工具箱</TooltipContent>
           </Tooltip>
           <hr className="bg-divide h-4 w-0.5 rounded-full" />
-          <Live2DToggleButton />
-          <ThemeToggleButton />
+          <DropdownMenuRadioTheme />
           <AuthButton />
         </Container>
       </Header>
@@ -61,9 +55,6 @@ export default function Layout({ children }: React.PropsWithChildren) {
       <footer className="dark:bg-root/80 h-footer fixed inset-x-0 bottom-0 flex items-center justify-center bg-white/70">
         <About />
       </footer>
-      <aside>
-        <Live2DContent />
-      </aside>
-    </Live2DProvider>
+    </>
   )
 }

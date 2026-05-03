@@ -21,7 +21,8 @@ const eslintRules: Rules = {
       paths: ['next/router'],
       patterns: [
         {
-          group: ['@radix-ui/*', '!@radix-ui/react-slot']
+          allowImportNames: ['useRender', 'mergeProps'],
+          group: ['@base-ui']
         },
         {
           allowImportNamePattern: '^(.*Icon|LucideProps)$',

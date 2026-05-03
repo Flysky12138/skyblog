@@ -47,7 +47,7 @@ export default function Page() {
   }, [])
 
   return (
-    <Card className="p-card w-full max-w-sm rounded-xl">
+    <Card className="p-card w-full max-w-sm">
       <FieldSet disabled={loading}>
         <FieldLegend>忘记密码</FieldLegend>
         <FieldDescription>请输入您的邮箱地址以重置密码</FieldDescription>

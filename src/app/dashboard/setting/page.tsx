@@ -3,7 +3,7 @@ import { NeteaseCloudMusic } from './_components/netease-cloud-music'
 
 export default function Page() {
   return (
-    <div className="gap-card-large flex flex-col">
+    <div className="gap-bp-4 flex flex-col">
       <Live2D />
       <NeteaseCloudMusic />
     </div>

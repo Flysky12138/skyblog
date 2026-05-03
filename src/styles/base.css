@@ -1,6 +1,6 @@
 * {
   -webkit-tap-highlight-color: transparent;
-  @apply border-border ring-ring/50 outline-none;
+  @apply border-border outline-ring/50 ring-ring/50 outline-none;
 }
 
 html {
@@ -41,7 +41,7 @@ code {
 }
 
 a {
-  @apply break-all focus-visible:ring-3;
+  @apply break-all;
 }
 
 button:not(:disabled),

@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils'
 
 import { PostSearchParamsType } from '../utils'
 
-const SORTORD_LIST: { label: string; value: PostSearchParamsType['sortord'] }[] = [
+const items: { label: string; value: PostSearchParamsType['sortord'] }[] = [
   { label: '创建时间', value: 'createdAt' },
   { label: '更新时间', value: 'updatedAt' },
   { label: '浏览次数', value: 'viewCount' }
@@ -36,36 +36,36 @@ export function PostSort({ className, order, sortord }: PostSortProps) {
   return (
     <div className={cn('flex items-center gap-2', className)}>
       <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={() => {
-              handleClick({ order: order == 'desc' ? 'asc' : 'desc', sortord })
-            }}
-          >
-            {order == 'desc' ? <ArrowDownWideNarrowIcon /> : <ArrowDownNarrowWideIcon />}
-          </Button>
+        <TooltipTrigger
+          render={
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={() => {
+                handleClick({ order: order == 'desc' ? 'asc' : 'desc', sortord })
+              }}
+            />
+          }
+        >
+          {order == 'desc' ? <ArrowDownWideNarrowIcon /> : <ArrowDownNarrowWideIcon />}
         </TooltipTrigger>
         <TooltipContent>{order == 'desc' ? '降序' : '升序'}</TooltipContent>
       </Tooltip>
 
       <Select
-        defaultValue={sortord}
-        onValueChange={(sortord: (typeof SORTORD_LIST)[number]['value']) => {
-          handleClick({ order, sortord })
+        items={items}
+        value={sortord}
+        onValueChange={value => {
+          if (!value) return
+          handleClick({ order, sortord: value })
         }}
       >
-        <SelectTrigger className="bg-background hover:bg-accent w-32">
+        <SelectTrigger render={({ className, ...props }) => <Button className="w-32" variant="outline" {...props} />}>
           <SelectValue placeholder="排序方式" />
         </SelectTrigger>
-        <SelectContent
-          onCloseAutoFocus={event => {
-            event.preventDefault()
-          }}
-        >
+        <SelectContent className="min-w-0">
           <SelectGroup>
-            {SORTORD_LIST.map(item => (
+            {items.map(item => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}
               </SelectItem>

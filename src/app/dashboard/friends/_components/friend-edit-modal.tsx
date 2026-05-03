@@ -14,7 +14,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { rpc } from '@/lib/http/rpc'
 
-interface FriendEditModalProps extends React.PropsWithChildren {
+interface FriendEditModalProps {
+  children: React.ReactElement
   value?: Treaty.Data<typeof rpc.dashboard.friends.get>[number]
   onSubmit: (payload: FriendCreateBodyType) => Promise<void>
 }
@@ -35,7 +36,7 @@ export function FriendEditModal({ children, value, onSubmit }: FriendEditModalPr
         }
       }}
     >
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger render={children} />
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>友链</DialogTitle>

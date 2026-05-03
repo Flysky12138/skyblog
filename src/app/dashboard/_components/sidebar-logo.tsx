@@ -8,11 +8,12 @@ export function SidebarLogo() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <SidebarMenuButton asChild tooltip={process.env.NEXT_PUBLIC_TITLE}>
-          <Link aria-label="to home page" className="focus-visible:ring-3" href="/">
-            <Icon className="size-5" />
-            <Logo />
-          </Link>
+        <SidebarMenuButton
+          render={<Link aria-label="to home page" className="focus-visible:ring-2" href="/" />}
+          tooltip={process.env.NEXT_PUBLIC_TITLE}
+        >
+          <Icon className="size-5" />
+          <Logo />
         </SidebarMenuButton>
       </SidebarMenuItem>
     </SidebarMenu>

@@ -3,9 +3,8 @@
 import './index.css'
 
 import loader, { Monaco } from '@monaco-editor/loader'
-import { Root, SlotProps } from '@radix-ui/react-slot'
 import { shikiToMonaco } from '@shikijs/monaco'
-import { toMerged } from 'es-toolkit'
+import { once } from 'es-toolkit'
 import { editor, IDisposable } from 'monaco-editor'
 import React from 'react'
 import { createHighlighter } from 'shiki'
@@ -13,7 +12,7 @@ import { createHighlighter } from 'shiki'
 import { useTheme } from '@/hooks/use-theme'
 import { cn } from '@/lib/utils'
 
-import { langs, monacoEditorDefaultOptions, themes } from './options'
+import { createMonacoEditorInitialOptions, langs, themes } from './options'
 
 export interface LanguageConfig {
   /** 内容语言 */
@@ -28,19 +27,20 @@ export interface MonacoEditorRef {
   format: () => Promise<void> | undefined
 }
 
-interface MonacoEditorProps extends LanguageConfig, Omit<SlotProps, 'children' | 'onChange'> {
-  asChild?: boolean
+interface MonacoEditorProps extends ElementPropsWithoutEvents<HTMLDivElement>, LanguageConfig {
+  className?: string
   /** 是否为对比模式 */
   isDiffMode?: boolean
   options?: Omit<editor.IStandaloneEditorConstructionOptions, 'language' | 'theme' | 'value'>
   originalValue?: string
   ref?: React.RefObject<MonacoEditorRef | null>
+  /** 是否禁用默认样式 */
+  unstyled?: boolean
   value?: string
   onChange?: (value: string) => void
 }
 
 export function MonacoEditor({
-  asChild,
   className,
   isDiffMode,
   language,
@@ -48,13 +48,12 @@ export function MonacoEditor({
   originalValue = '',
   ref,
   registerEvents,
+  unstyled,
   value = '',
   onChange,
   ...props
 }: MonacoEditorProps) {
-  const Comp = asChild ? Root : 'div'
-
-  const rootRef = React.useRef<HTMLDivElement>(null)
+  const containerRef = React.useRef<HTMLDivElement>(null)
   const monacoRef = React.useRef<Monaco>(undefined)
   const editorRef = React.useRef<editor.IStandaloneCodeEditor>(undefined)
   const diffEditorRef = React.useRef<editor.IStandaloneDiffEditor>(undefined)
@@ -66,7 +65,7 @@ export function MonacoEditor({
   const theme = themes[isDark ? 0 : 1]
 
   // 配置
-  const _options = React.useMemo(() => toMerged(monacoEditorDefaultOptions, { ...options, language, theme }), [language, options, theme])
+  const _options = React.useMemo(() => createMonacoEditorInitialOptions({ ...options, language, theme }), [language, options, theme])
 
   // 销毁编辑器
   const destroyMonacoEditor = React.useEffectEvent(() => {
@@ -75,7 +74,7 @@ export function MonacoEditor({
   })
   // 创建编辑器
   const createMonacoEditor = React.useEffectEvent((monaco?: Monaco) => {
-    if (!rootRef.current) {
+    if (!containerRef.current) {
       console.warn('Monaco Editor root element not found')
       return
     }
@@ -84,13 +83,13 @@ export function MonacoEditor({
     destroyMonacoEditor()
 
     if (isDiffMode) {
-      diffEditorRef.current = monaco.editor.createDiffEditor(rootRef.current, _options)
+      diffEditorRef.current = monaco.editor.createDiffEditor(containerRef.current, _options)
       diffEditorRef.current!.setModel({
         modified: monaco.editor.createModel(value, language),
         original: monaco.editor.createModel(originalValue, language)
       })
     } else {
-      editorRef.current = monaco.editor.create(rootRef.current, _options)
+      editorRef.current = monaco.editor.create(containerRef.current, _options)
       editorRef.current!.setModel(monaco.editor.createModel(value, language))
     }
 
@@ -113,13 +112,13 @@ export function MonacoEditor({
 
       setIDisposables(registerEvents?.(monaco) ?? [])
 
-      const highlighter = await createHighlighter({ langs, themes })
+      const highlighter = await createHighlighterOnce({ langs, themes })
       langs.forEach(id => monaco.languages.register({ id }))
       shikiToMonaco(highlighter, monaco)
 
-      setIsMounted(true)
-
       createMonacoEditor(monaco)
+
+      setIsMounted(true)
     })
 
     return destroyMonacoEditor
@@ -162,23 +161,32 @@ export function MonacoEditor({
   }))
 
   return (
-    <Comp
-      ref={rootRef}
+    <section
       aria-label="monaco editor"
       className={cn(
-        'h-full overflow-hidden',
-        'aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40',
+        'relative h-full overflow-hidden',
+        !unstyled && [
+          'border-input rounded-md border shadow-xs transition-[color,box-shadow]',
+          'has-[.focused]:border-ring has-[.focused]:ring-ring/50 has-[.focused]:ring-3',
+          'aria-invalid:border-destructive aria-invalid:ring-destructive/20 aria-invalid:ring-3',
+          'dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40'
+        ],
         className
       )}
-      onKeyDown={event => {
-        if (event.key == 's' && (event.ctrlKey || event.metaKey)) {
-          event.preventDefault()
-        }
-      }}
+      data-slot="monaco-editor"
       {...props}
     >
-      {!isMounted && <div className="font-code flex size-full items-center justify-center">Loading...</div>}
-    </Comp>
+      <div
+        ref={containerRef}
+        className="size-full"
+        onKeyDown={event => {
+          if (event.key == 's' && (event.ctrlKey || event.metaKey)) {
+            event.preventDefault()
+          }
+        }}
+      />
+      {!isMounted && <div className="font-code absolute inset-0 flex items-center justify-center">Loading...</div>}
+    </section>
   )
 }
 
@@ -192,3 +200,5 @@ loader.config({
     }
   }
 })
+
+const createHighlighterOnce = once(createHighlighter)
