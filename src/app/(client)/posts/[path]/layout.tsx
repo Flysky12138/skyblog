@@ -1,3 +1,3 @@
 export default function Layout({ children }: React.PropsWithChildren) {
-  return <div className="gap-card flex flex-col">{children}</div>
+  return <div className="gap-bp-3 flex flex-col">{children}</div>
 }

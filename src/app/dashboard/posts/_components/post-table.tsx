@@ -109,15 +109,14 @@ export function PostTable() {
       },
       cell: ({ row }) => (
         <div className="flex justify-end gap-2">
-          <DataTableRowActionButton asChild>
-            <Link className="cursor-pointer" href={`/posts/${row.original.slug ?? row.original.id}`} target="_blank">
-              <EyeIcon />
-            </Link>
+          <DataTableRowActionButton
+            nativeButton={false}
+            render={<Link className="cursor-pointer" href={`/posts/${row.original.slug ?? row.original.id}`} target="_blank" />}
+          >
+            <EyeIcon />
           </DataTableRowActionButton>
-          <DataTableRowActionButton asChild>
-            <Link className="cursor-pointer" href={`/dashboard/posts/${row.original.id}`}>
-              <PencilIcon />
-            </Link>
+          <DataTableRowActionButton nativeButton={false} render={<Link className="cursor-pointer" href={`/dashboard/posts/${row.original.id}`} />}>
+            <PencilIcon />
           </DataTableRowActionButton>
           <DataTableRowDeleteButton
             title={row.original.title}

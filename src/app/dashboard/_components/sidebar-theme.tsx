@@ -3,25 +3,28 @@
 import { SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
-import { useMounted } from '@/hooks/use-mounted'
 import { useTheme } from '@/hooks/use-theme'
+import { DropdownMenuRadioTheme } from '@/providers/theme'
 
 export function SidebarTheme() {
-  const { isDark, themeIcon, toggleTheme } = useTheme()
-  const isMounted = useMounted()
-
-  if (!isMounted) return <Skeleton className="h-8" />
+  const { isDark, ThemeIcon } = useTheme()
 
   return (
     <SidebarMenu>
-      <SidebarMenuItem onClick={toggleTheme}>
-        <SidebarMenuButton tooltip="深色模式">{themeIcon} 深色模式</SidebarMenuButton>
-        <SidebarMenuAction asChild>
-          <div className="pointer-events-none justify-end!">
-            <Switch checked={isDark} tabIndex={-1} />
-          </div>
-        </SidebarMenuAction>
-      </SidebarMenuItem>
+      <DropdownMenuRadioTheme
+        nativeButton={false}
+        render={
+          <SidebarMenuItem tabIndex={-1}>
+            <SidebarMenuButton tooltip="深色模式">
+              <ThemeIcon /> 深色模式
+            </SidebarMenuButton>
+            <SidebarMenuAction className="mr-2" tabIndex={-1}>
+              <Switch checked={isDark} tabIndex={-1} />
+            </SidebarMenuAction>
+          </SidebarMenuItem>
+        }
+        skeleton={<Skeleton className="h-8" />}
+      />
     </SidebarMenu>
   )
 }

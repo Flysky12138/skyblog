@@ -9,14 +9,14 @@ import { Controller, useForm } from 'react-hook-form'
 import { CronCreateBodySchema, CronCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/crons/model'
 import { MonacoEditor } from '@/components/monaco-editor'
 import { tsCronConfig } from '@/components/monaco-editor/languages/ts-cron'
-import { Card } from '@/components/static/card'
 import { Button } from '@/components/ui-overwrite/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { rpc } from '@/lib/http/rpc'
 
-interface CronEditModalProps extends React.PropsWithChildren {
+interface CronEditModalProps {
+  children: React.ReactElement
   value?: Treaty.Data<typeof rpc.dashboard.crons.get>[number]
   onSubmit: (payload: CronCreateBodyType) => Promise<void>
 }
@@ -37,7 +37,7 @@ export function CronEditModal({ children, value, onSubmit }: CronEditModalProps)
         }
       }}
     >
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger render={children} />
       <DialogContent className="max-w-7xl lg:h-[calc(100vh-120px)]">
         <DialogHeader>
           <DialogTitle>Cron 配置</DialogTitle>
@@ -53,9 +53,14 @@ export function CronEditModal({ children, value, onSubmit }: CronEditModalProps)
                   <FieldLabel className="sr-only" htmlFor={field.name}>
                     内容
                   </FieldLabel>
-                  <Card asChild className="rounded-sm not-lg:h-80">
-                    <MonacoEditor aria-invalid={fieldState.invalid} id={field.name} value={field.value} onChange={field.onChange} {...tsCronConfig} />
-                  </Card>
+                  <MonacoEditor
+                    aria-invalid={fieldState.invalid}
+                    className="not-lg:h-80"
+                    id={field.name}
+                    value={field.value}
+                    onChange={field.onChange}
+                    {...tsCronConfig}
+                  />
                 </Field>
               )}
             />

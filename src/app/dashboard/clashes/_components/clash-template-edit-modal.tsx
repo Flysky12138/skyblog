@@ -9,7 +9,6 @@ import { Controller, useForm } from 'react-hook-form'
 import { ClashTemplateCreateBodySchema, ClashTemplateCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/clashes/templates/model'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { MonacoEditor } from '@/components/monaco-editor'
-import { Card } from '@/components/static/card'
 import { Button } from '@/components/ui-overwrite/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Badge } from '@/components/ui/badge'
@@ -19,7 +18,8 @@ import { rpc } from '@/lib/http/rpc'
 
 import { getVariablesNames } from './utils'
 
-interface ClashTemplateEditModalProps extends React.PropsWithChildren {
+interface ClashTemplateEditModalProps {
+  children: React.ReactElement
   value?: Treaty.Data<typeof rpc.dashboard.clashes.templates.get>[number]
   onSubmit: (payload: ClashTemplateCreateBodyType) => Promise<void>
 }
@@ -43,7 +43,7 @@ export function ClashTemplateEditModal({ children, value, onSubmit }: ClashTempl
         }
       }}
     >
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger render={children} />
       <DialogContent className="max-w-7xl lg:h-[calc(100vh-120px)]">
         <DialogHeader>
           <DialogTitle>通用模板</DialogTitle>
@@ -59,19 +59,18 @@ export function ClashTemplateEditModal({ children, value, onSubmit }: ClashTempl
                   <FieldLabel className="sr-only" htmlFor={field.name}>
                     内容
                   </FieldLabel>
-                  <Card asChild className="rounded-sm not-lg:h-80">
-                    <MonacoEditor
-                      aria-invalid={fieldState.invalid}
-                      id={field.name}
-                      language="yaml"
-                      options={{
-                        lineNumbersMinChars: 3
-                      }}
-                      originalValue={value?.content}
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
-                  </Card>
+                  <MonacoEditor
+                    aria-invalid={fieldState.invalid}
+                    className="not-lg:h-80"
+                    id={field.name}
+                    language="yaml"
+                    options={{
+                      lineNumbersMinChars: 3
+                    }}
+                    originalValue={value?.content}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
                 </Field>
               )}
             />

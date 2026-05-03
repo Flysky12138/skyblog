@@ -1,4 +1,4 @@
-import { Root, SlotProps } from '@radix-ui/react-slot'
+import { useRender } from '@base-ui/react'
 import { cva, VariantProps } from 'class-variance-authority'
 
 import { cn, tw } from '@/lib/utils'
@@ -15,20 +15,17 @@ const toggleVariants = cva('', {
   }
 })
 
-interface ContainerProps extends SlotProps, VariantProps<typeof toggleVariants> {
-  asChild?: boolean
-  className?: string
-}
-
-export function Container({ asChild, className, variant, ...props }: ContainerProps) {
-  const Comp = asChild ? Root : 'section'
-
-  return (
-    <Comp
-      aria-label="container"
-      className={cn('container mx-auto max-w-7xl', toggleVariants({ variant }), className)}
-      data-slot="container"
-      {...props}
-    />
-  )
+export function Container({ className, render, variant, ...props }: useRender.ComponentProps<'section'> & VariantProps<typeof toggleVariants>) {
+  return useRender({
+    defaultTagName: 'section',
+    render,
+    props: {
+      'aria-label': 'container',
+      className: cn('container mx-auto max-w-7xl', toggleVariants({ className, variant })),
+      ...props
+    },
+    state: {
+      slot: 'container'
+    }
+  })
 }

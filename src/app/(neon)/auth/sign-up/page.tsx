@@ -48,7 +48,7 @@ export default function Page() {
   }, [])
 
   return (
-    <Card className="p-card w-full max-w-sm rounded-xl">
+    <Card className="p-card w-full max-w-sm">
       <FieldSet disabled={loading}>
         <FieldLegend>注册</FieldLegend>
         <FieldDescription>请输入您的信息以创建帐户</FieldDescription>

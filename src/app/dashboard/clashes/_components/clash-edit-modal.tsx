@@ -10,19 +10,19 @@ import useSWR from 'swr'
 import { ClashCreateBodySchema, ClashCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/clashes/model'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { MonacoEditor } from '@/components/monaco-editor'
-import { Card } from '@/components/static/card'
 import { Button } from '@/components/ui-overwrite/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { randomString } from '@/lib/utils'
 
 import { getVariablesNames, replaceVariables, SWR_KEY_CLASH_TEMPLATES } from './utils'
 
-interface ClashEditModalProps extends React.PropsWithChildren {
+interface ClashEditModalProps {
+  children: React.ReactElement
   value?: Treaty.Data<typeof rpc.dashboard.clashes.get>[number]
   onSubmit: (payload: ClashCreateBodyType) => Promise<void>
 }
@@ -41,6 +41,7 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
   const { data: clashTemplates, isLoading } = useSWR(SWR_KEY_CLASH_TEMPLATES, () => rpc.dashboard.clashes.templates.get().then(unwrap), {
     fallbackData: []
   })
+  const items = [{ label: '自定义', value: 'custom' }].concat(clashTemplates.map(item => ({ label: item.name, value: item.id })))
 
   // 选中的模板
   const selectedClashTemplate = React.useMemo(() => clashTemplates?.find(it => it.id == templateId), [clashTemplates, templateId])
@@ -69,7 +70,7 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
         }
       }}
     >
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger render={children} />
       <DialogContent className="max-w-7xl lg:h-[calc(100vh-120px)]">
         <DialogHeader>
           <DialogTitle>共享配置</DialogTitle>
@@ -85,20 +86,19 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
                   <FieldLabel className="sr-only" htmlFor={field.name}>
                     内容
                   </FieldLabel>
-                  <Card asChild className="rounded-sm not-lg:h-80">
-                    <MonacoEditor
-                      aria-invalid={fieldState.invalid}
-                      id={field.name}
-                      isDiffMode={isUseTemplate}
-                      language="yaml"
-                      options={{
-                        readOnly: isUseTemplate
-                      }}
-                      originalValue={isUseTemplate ? selectedClashTemplate?.content : value?.content}
-                      value={isUseTemplate ? realTemplateContent : field.value}
-                      onChange={field.onChange}
-                    />
-                  </Card>
+                  <MonacoEditor
+                    aria-invalid={fieldState.invalid}
+                    className="not-lg:h-80"
+                    id={field.name}
+                    isDiffMode={isUseTemplate}
+                    language="yaml"
+                    options={{
+                      readOnly: isUseTemplate
+                    }}
+                    originalValue={isUseTemplate ? selectedClashTemplate?.content : value?.content}
+                    value={isUseTemplate ? realTemplateContent : field.value}
+                    onChange={field.onChange}
+                  />
                 </Field>
               )}
             />
@@ -148,6 +148,7 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
                   <FieldLabel htmlFor={field.name}>模板</FieldLabel>
                   <Select
                     disabled={clashTemplates?.length == 0 || isLoading}
+                    items={items}
                     value={field.value || 'custom'}
                     onValueChange={id => {
                       field.onChange(id == 'custom' ? null : id)
@@ -157,12 +158,13 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
                       <SelectValue placeholder="选择模板" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="custom">自定义</SelectItem>
-                      {clashTemplates?.map(({ id, name }) => (
-                        <SelectItem key={id} value={id}>
-                          {name}
-                        </SelectItem>
-                      ))}
+                      <SelectGroup>
+                        {items.map(item => (
+                          <SelectItem key={item.value} value={item.value}>
+                            {item.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
                     </SelectContent>
                   </Select>
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

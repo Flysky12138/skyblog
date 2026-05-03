@@ -5,7 +5,9 @@ import React from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-overwrite/dialog'
 import { Textarea } from '@/components/ui/textarea'
 
-interface TranscoderModalProps extends React.PropsWithChildren {}
+interface TranscoderModalProps {
+  children: React.ReactElement
+}
 
 export function TranscoderModal({ children }: TranscoderModalProps) {
   const [unicode, setUnicode] = React.useState('')
@@ -13,13 +15,8 @@ export function TranscoderModal({ children }: TranscoderModalProps) {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent
-        className="max-w-5xl"
-        onCloseAutoFocus={event => {
-          event.preventDefault()
-        }}
-      >
+      <DialogTrigger render={children} />
+      <DialogContent className="max-w-5xl">
         <DialogHeader>
           <DialogTitle>转码器</DialogTitle>
           <DialogDescription className="hidden" />

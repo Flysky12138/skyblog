@@ -99,7 +99,7 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
           {/* 加载状态 */}
           <DisplayByConditional condition={isLoading || isEmpty}>
             <TableRow>
-              <TableCell className="font-title cursor-default text-center" colSpan={5}>
+              <TableCell className="font-heading cursor-default text-center" colSpan={5}>
                 {isEmpty ? '内容为空' : 'Loading...'}
               </TableCell>
             </TableRow>
@@ -154,11 +154,14 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
               <TableCell>{FileHelper.formatFileSize(Number(file.size))}</TableCell>
               <TableCell>{TimeHelper.formatDate(file.updatedAt)}</TableCell>
               <TableCell className="space-x-2 text-right">
-                <StorageFileView asChild file={file}>
-                  <DataTableRowActionButton>
-                    <EyeIcon />
-                  </DataTableRowActionButton>
-                </StorageFileView>
+                <StorageFileView
+                  file={file}
+                  render={
+                    <DataTableRowActionButton>
+                      <EyeIcon />
+                    </DataTableRowActionButton>
+                  }
+                />
                 <StorageFileLinkCopy file={file}>
                   <DataTableRowActionButton>
                     <LinkIcon />

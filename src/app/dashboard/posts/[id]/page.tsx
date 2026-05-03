@@ -22,11 +22,11 @@ import { toastPromise } from '@/lib/toast'
 
 import { EditorToolbar, EditorToolbarProps } from './_components/editor-toolbar'
 import {
-  DEFAULT_POST,
-  DefaultPostType,
+  createInitialPost,
   MessageEventDataPostPreviewMounted,
   MessageEventDataPostUpdate,
-  POST_PREVIEW_BROADCAST_CHANNEL_ID
+  POST_PREVIEW_BROADCAST_CHANNEL_ID,
+  PostType
 } from './utils'
 
 export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
@@ -39,10 +39,10 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   const isCreate = id == 'create'
 
   // 文章数据
-  const [post, setPost] = useImmer(DEFAULT_POST)
+  const [post, setPost] = useImmer(createInitialPost())
   const [oldValue, setOldValue] = useImmer({
     code: '',
-    post: DEFAULT_POST
+    post: createInitialPost()
   })
 
   // Diff 对比模式
@@ -56,7 +56,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   const editorRef = React.useRef<MonacoEditorRef>(null)
 
   // 初始化数据
-  const initData = React.useEffectEvent((data: DefaultPostType | null) => {
+  const initData = React.useEffectEvent((data: null | PostType) => {
     if (!data) return
     setPost(data)
     setOldValue(draft => {
@@ -189,6 +189,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
         <ResizablePanel defaultSize={60}>
           <MonacoEditor
             ref={editorRef}
+            unstyled
             isDiffMode={isCompare}
             originalValue={oldValue.code}
             value={post.content || ''}
@@ -210,7 +211,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
                 </div>
               )}
             >
-              <article className="bg-card min-h-screen max-w-none p-5 pb-[80vh]">
+              <article className="bg-card min-h-screen max-w-none p-5 pb-[60vh]">
                 <MDXClient source={previewContent || ''} />
               </article>
             </ErrorBoundary>

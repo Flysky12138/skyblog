@@ -22,7 +22,8 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input'
 import { rpc } from '@/lib/http/rpc'
 
-interface PostCategoryEditModalProps extends React.PropsWithChildren {
+interface PostCategoryEditModalProps {
+  children: React.ReactElement
   value?: Treaty.Data<typeof rpc.dashboard.posts.categories.get>[number]
   onSubmit: (payload: CategoryCreateBodyType) => Promise<void>
 }
@@ -43,7 +44,7 @@ export function PostCategoryEditModal({ children, value, onSubmit }: PostCategor
         }
       }}
     >
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger render={children} />
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>分类</DialogTitle>
@@ -66,9 +67,7 @@ export function PostCategoryEditModal({ children, value, onSubmit }: PostCategor
             />
           </FieldGroup>
           <DialogFooter className="mt-6">
-            <DialogClose asChild>
-              <Button variant="outline">取消</Button>
-            </DialogClose>
+            <DialogClose render={<Button variant="outline" />}>取消</DialogClose>
             <Button className="min-w-32" loading={form.formState.isSubmitting} type="submit">
               {value ? '保存' : '更新'}
             </Button>

@@ -12,18 +12,16 @@ export function CardGuestInfo() {
   if (!ipinfo) return null
 
   return (
-    <Card asChild className="p-card space-y-3 overflow-hidden! will-change-auto">
-      <TransitionCollapse>
-        <div>访客信息</div>
-        <div className="flex flex-col gap-1">
-          {Object.entries(ipinfo).map(([label, content]) => (
-            <div key={label} className="flex gap-3 text-sm">
-              <span className="text-secondary-foreground shrink-0">{label}:</span>
-              <span className="text-muted-foreground grow text-end break-all">{String(content)}</span>
-            </div>
-          ))}
-        </div>
-      </TransitionCollapse>
+    <Card className="p-card space-y-3" render={<TransitionCollapse />}>
+      <div>访客信息</div>
+      <div className="space-y-1">
+        {Object.entries(ipinfo).map(([label, content]) => (
+          <div key={label} className="flex gap-3 text-sm">
+            <span className="text-secondary-foreground shrink-0">{label}:</span>
+            <span className="text-muted-foreground grow text-end break-all">{String(content)}</span>
+          </div>
+        ))}
+      </div>
     </Card>
   )
 }

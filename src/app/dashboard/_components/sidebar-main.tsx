@@ -13,7 +13,6 @@ import {
   UserRoundSearchIcon,
   WebhookIcon
 } from 'lucide-react'
-import { Route } from 'next'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -102,16 +101,16 @@ export const SidebarMain = () => {
                 hidden: !isUndefined(item.onlyShow) && { collapsed: true, expanded: false }[item.onlyShow] == open
               })}
             >
-              <SidebarMenuButton asChild isActive={item.href == pathname} tooltip={item.name}>
-                <Link href={item.href as Route} onNavigate={handleCloseSidebarMobile}>
-                  {item.icon} {item.name}
-                </Link>
+              <SidebarMenuButton
+                isActive={item.href == pathname}
+                render={<Link href={item.href} onNavigate={handleCloseSidebarMobile} />}
+                tooltip={item.name}
+              >
+                {item.icon} {item.name}
               </SidebarMenuButton>
               {item.action && (
-                <SidebarMenuAction asChild>
-                  <Link href={item.action.href as Route} onNavigate={handleCloseSidebarMobile}>
-                    {item.action.icon}
-                  </Link>
+                <SidebarMenuAction render={<Link href={item.action.href} onNavigate={handleCloseSidebarMobile} />}>
+                  {item.action.icon}
                 </SidebarMenuAction>
               )}
             </SidebarMenuItem>

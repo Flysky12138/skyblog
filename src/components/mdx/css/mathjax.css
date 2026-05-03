@@ -1,4 +1,4 @@
-@reference '../../../globals.css';
+@reference '#globals.css';
 
 mjx-container {
   &[display] {

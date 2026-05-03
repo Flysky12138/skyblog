@@ -25,44 +25,43 @@ export function StorageBreadcrumb({ id, onChange }: StorageBreadcrumbProps) {
   )
 
   if (isLoading && paths.length == 0) {
-    return (
-      <Card asChild className="h-9.5 rounded-sm">
-        <Skeleton />
-      </Card>
-    )
+    return <Skeleton className="h-9 w-60" />
   }
 
   return (
-    <Card asChild className="rounded-sm border-0 px-3 py-2">
-      <Breadcrumb>
-        <BreadcrumbList>
-          {paths.map((path, index) => (
-            <React.Fragment key={path.id}>
-              <DisplayByConditional condition={index > 0}>
-                <BreadcrumbSeparator />
-              </DisplayByConditional>
-              <BreadcrumbItem>
-                <DisplayByConditional
-                  condition={index == paths.length - 1}
-                  fallback={
-                    <BreadcrumbLink
-                      asChild
-                      className="cursor-pointer"
-                      onClick={() => {
-                        onChange?.(path.id)
-                      }}
-                    >
-                      <span>{path.name}</span>
-                    </BreadcrumbLink>
-                  }
-                >
-                  <BreadcrumbPage className="break-all">{path.name}</BreadcrumbPage>
+    <Card
+      className="w-fit rounded-sm border-none px-3 py-2 dark:ring-0"
+      render={
+        <Breadcrumb>
+          <BreadcrumbList>
+            {paths.map((path, index) => (
+              <React.Fragment key={path.id}>
+                <DisplayByConditional condition={index > 0}>
+                  <BreadcrumbSeparator />
                 </DisplayByConditional>
-              </BreadcrumbItem>
-            </React.Fragment>
-          ))}
-        </BreadcrumbList>
-      </Breadcrumb>
-    </Card>
+                <BreadcrumbItem>
+                  <DisplayByConditional
+                    condition={index == paths.length - 1}
+                    fallback={
+                      <BreadcrumbLink
+                        className="cursor-pointer"
+                        render={<span />}
+                        onClick={() => {
+                          onChange?.(path.id)
+                        }}
+                      >
+                        {path.name}
+                      </BreadcrumbLink>
+                    }
+                  >
+                    <BreadcrumbPage className="break-all">{path.name}</BreadcrumbPage>
+                  </DisplayByConditional>
+                </BreadcrumbItem>
+              </React.Fragment>
+            ))}
+          </BreadcrumbList>
+        </Breadcrumb>
+      }
+    />
   )
 }

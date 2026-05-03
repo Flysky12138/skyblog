@@ -1,4 +1,4 @@
-export const DEFAULT_OPTION = `
+export const ECHARTS_TEMPLATE = `
 option = {
   tooltip: {},
   angleAxis: [

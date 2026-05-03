@@ -19,14 +19,12 @@ export default async function Page() {
   ])
 
   return (
-    <div className="mx-auto max-w-md space-y-10 p-4">
-      <div className="mt-4 sm:mt-10">
-        <Alert>
-          <AlertCircleIcon />
-          <AlertTitle>禁止浏览器访问</AlertTitle>
-          <AlertDescription>这是 Clash 的订阅地址，请直接在客户端中添加订阅，不要用浏览器打开。</AlertDescription>
-        </Alert>
-      </div>
+    <div className="mx-auto mt-4 max-w-md space-y-10 p-4 sm:mt-10">
+      <Alert>
+        <AlertCircleIcon />
+        <AlertTitle>禁止浏览器访问</AlertTitle>
+        <AlertDescription>这是 Clash 的订阅地址，请直接在客户端中添加订阅，不要用浏览器打开</AlertDescription>
+      </Alert>
 
       <FieldSet>
         <FieldLegend>客户端下载</FieldLegend>
@@ -34,28 +32,24 @@ export default async function Page() {
         <FieldGroup>
           <Field>
             <FieldLabel>Android</FieldLabel>
-            <Item asChild size="sm" variant="outline">
-              <a href={release1.html_url} target="_blank">
-                <ItemContent>
-                  <ItemTitle>ClashMetaForAndroid@{release1.tag_name}</ItemTitle>
-                </ItemContent>
-                <ItemActions>
-                  <ChevronRightIcon className="size-4" />
-                </ItemActions>
-              </a>
+            <Item render={<a href={release1.html_url} target="_blank" />} size="sm" variant="outline">
+              <ItemContent>
+                <ItemTitle>ClashMetaForAndroid@{release1.tag_name}</ItemTitle>
+              </ItemContent>
+              <ItemActions>
+                <ChevronRightIcon className="size-4" />
+              </ItemActions>
             </Item>
           </Field>
           <Field>
             <FieldLabel>Windows / macOS / Linux</FieldLabel>
-            <Item asChild size="sm" variant="outline">
-              <a href={release2.html_url} target="_blank">
-                <ItemContent>
-                  <ItemTitle>clash-verge-rev@{release2.tag_name}</ItemTitle>
-                </ItemContent>
-                <ItemActions>
-                  <ChevronRightIcon className="size-4" />
-                </ItemActions>
-              </a>
+            <Item render={<a href={release2.html_url} target="_blank" />} size="sm" variant="outline">
+              <ItemContent>
+                <ItemTitle>clash-verge-rev@{release2.tag_name}</ItemTitle>
+              </ItemContent>
+              <ItemActions>
+                <ChevronRightIcon className="size-4" />
+              </ItemActions>
             </Item>
           </Field>
         </FieldGroup>

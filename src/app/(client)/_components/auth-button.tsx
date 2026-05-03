@@ -1,9 +1,8 @@
 'use client'
 
 import { LayoutDashboardIcon, LogInIcon, UserRoundCogIcon } from 'lucide-react'
-import Link from 'next/link'
 
-import { Button } from '@/components/ui/button'
+import { ButtonLink } from '@/components/ui-overwrite/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { authClient } from '@/lib/auth/client'
@@ -16,12 +15,8 @@ export function AuthButton() {
   if (!session) {
     return (
       <Tooltip>
-        <TooltipTrigger asChild>
-          <Button asChild aria-label="login" size="icon" variant="outline">
-            <Link href="/auth/sign-in">
-              <LogInIcon />
-            </Link>
-          </Button>
+        <TooltipTrigger render={<ButtonLink aria-label="login" href="/auth/sign-in" size="icon" variant="outline" />}>
+          <LogInIcon />
         </TooltipTrigger>
         <TooltipContent>登录</TooltipContent>
       </Tooltip>
@@ -30,22 +25,16 @@ export function AuthButton() {
 
   if (session.user.role == 'admin') {
     return (
-      <Button asChild aria-label="dashboard" size="icon" variant="outline">
-        <Link href="/dashboard">
-          <LayoutDashboardIcon />
-        </Link>
-      </Button>
+      <ButtonLink aria-label="dashboard" href="/dashboard" size="icon" variant="outline">
+        <LayoutDashboardIcon />
+      </ButtonLink>
     )
   }
 
   return (
     <Tooltip>
-      <TooltipTrigger asChild>
-        <Button asChild aria-label="logout" size="icon" variant="outline">
-          <Link href="/account/settings">
-            <UserRoundCogIcon />
-          </Link>
-        </Button>
+      <TooltipTrigger render={<ButtonLink aria-label="logout" href="/account/settings" size="icon" variant="outline" />}>
+        <UserRoundCogIcon />
       </TooltipTrigger>
       <TooltipContent>个人资料</TooltipContent>
     </Tooltip>

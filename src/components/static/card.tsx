@@ -1,13 +1,30 @@
-import { Root, SlotProps } from '@radix-ui/react-slot'
+import { useRender } from '@base-ui/react'
+import { cva, VariantProps } from 'class-variance-authority'
 
-import { cn } from '@/lib/utils'
+import { cn, tw } from '@/lib/utils'
 
-interface CardProps extends SlotProps {
-  asChild?: boolean
-}
+const cardVariants = cva(tw`overflow-hidden rounded-xl bg-card text-card-foreground shadow-xs`, {
+  defaultVariants: {
+    variant: 'default'
+  },
+  variants: {
+    variant: {
+      button: tw`border rounded-md`,
+      default: tw`ring-1 ring-foreground/10 dark:ring-zinc-700`
+    }
+  }
+})
 
-export function Card({ asChild, className, ...props }: CardProps) {
-  const Comp = asChild ? Root : 'div'
-
-  return <Comp className={cn('bg-card light:border-transparent rounded-lg border border-zinc-700 shadow-sm', className)} {...props} />
+export function Card({ className, render, variant = 'default', ...props }: useRender.ComponentProps<'div'> & VariantProps<typeof cardVariants>) {
+  return useRender({
+    defaultTagName: 'div',
+    render,
+    props: {
+      className: cn(cardVariants({ className, variant })),
+      ...props
+    },
+    state: {
+      slot: 'card'
+    }
+  })
 }

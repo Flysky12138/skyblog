@@ -4,17 +4,17 @@ import React from 'react'
 import { useMount } from 'react-use'
 
 import {
-  DefaultPostType,
   MessageEventDataPostPreviewMounted,
   MessageEventDataPostUpdate,
-  POST_PREVIEW_BROADCAST_CHANNEL_ID
+  POST_PREVIEW_BROADCAST_CHANNEL_ID,
+  PostType
 } from '@/app/dashboard/posts/[id]/utils'
 import { MDXClient } from '@/components/mdx/client'
 import { Card } from '@/components/static/card'
 import { useBroadcastChannel } from '@/hooks/use-broadcast-channel'
 
 export default function Page() {
-  const [post, setPost] = React.useState<DefaultPostType>()
+  const [post, setPost] = React.useState<PostType>()
 
   const { postMessage } = useBroadcastChannel<MessageEventDataPostUpdate, MessageEventDataPostPreviewMounted>(
     POST_PREVIEW_BROADCAST_CHANNEL_ID,
@@ -31,10 +31,8 @@ export default function Page() {
   if (!post?.content) return null
 
   return (
-    <Card asChild>
-      <article className="p-card max-w-none">
-        <MDXClient source={post.content} />
-      </article>
+    <Card className="p-card max-w-none" render={<article />}>
+      <MDXClient source={post.content} />
     </Card>
   )
 }

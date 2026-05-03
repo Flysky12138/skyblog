@@ -39,11 +39,9 @@ export function Tabs({ children, ...props }: TabsProps) {
   })
 
   return (
-    <TabsPrimitive.Tabs asChild defaultValue="0" {...props}>
-      <figure>
-        <TabsPrimitive.TabsList>{tabsTrigger}</TabsPrimitive.TabsList>
-        {tabsContent}
-      </figure>
+    <TabsPrimitive.Tabs defaultValue="0" render={<figure />} {...props}>
+      <TabsPrimitive.TabsList>{tabsTrigger}</TabsPrimitive.TabsList>
+      {tabsContent}
     </TabsPrimitive.Tabs>
   )
 }

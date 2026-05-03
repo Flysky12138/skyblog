@@ -2,7 +2,7 @@
 
 import { ColumnDef, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 import { produce } from 'immer'
-import { PencilIcon, PlusIcon, Share2Icon } from 'lucide-react'
+import { CopyIcon, PencilIcon, PlusIcon } from 'lucide-react'
 import { useCopyToClipboard } from 'react-use'
 import { toast } from 'sonner'
 import useSWR from 'swr'
@@ -99,7 +99,7 @@ export function ClashTable() {
               toast.success('复制成功')
             }}
           >
-            <Share2Icon />
+            <CopyIcon />
           </DataTableRowActionButton>
           <ClashEditModal
             value={row.original}

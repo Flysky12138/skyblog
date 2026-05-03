@@ -25,7 +25,14 @@ export default async function Layout({ children }: React.PropsWithChildren) {
   const defaultOpen = cookieStore.has('sidebar_state') ? cookieStore.get('sidebar_state')?.value == 'true' : true
 
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
+    <SidebarProvider
+      defaultOpen={defaultOpen}
+      style={
+        {
+          '--sidebar-width': '14rem'
+        } as React.CSSProperties
+      }
+    >
       <Sidebar className="text-nowrap break-keep" collapsible="icon">
         <SidebarHeader>
           <SidebarLogo />

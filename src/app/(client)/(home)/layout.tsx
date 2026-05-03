@@ -11,12 +11,12 @@ export default function Layout({ children }: React.PropsWithChildren) {
   return (
     <>
       <h1 className="sr-only">{process.env.NEXT_PUBLIC_TITLE}</h1>
-      <div className="gap-card-large flex flex-col gap-y-(--py) sm:flex-row">
-        <div className="gap-card relative flex grow flex-col">
-          <Card className="font-title p-5 text-center text-base tracking-widest">开发中</Card>
+      <div className="gap-bp-4 flex flex-col gap-y-(--py) sm:flex-row">
+        <div className="gap-bp-3 relative flex grow flex-col">
+          <Card className="font-heading p-5 text-center text-base tracking-widest">开发中</Card>
           {children}
         </div>
-        <div className="gap-card flex shrink-0 flex-col sm:w-56 md:w-64">
+        <div className="gap-bp-3 flex shrink-0 flex-col sm:w-56 md:w-64">
           <CardDeveloper />
           <CardWolf />
           <React.Suspense>

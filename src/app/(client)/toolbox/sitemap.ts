@@ -1,9 +1,9 @@
 import { MetadataRoute } from 'next'
 
-import { toolGroup } from './utils'
+import { tools } from './utils'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const hrefs = toolGroup.flatMap(group => group.children.map(child => child.href))
+  const hrefs = tools.flatMap(group => group.children.map(child => child.href))
 
   return hrefs.map(href => ({
     changeFrequency: 'daily',

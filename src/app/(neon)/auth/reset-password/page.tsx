@@ -55,7 +55,7 @@ export default function Page() {
   }, [error, router])
 
   return (
-    <Card className="p-card w-full max-w-sm rounded-xl">
+    <Card className="p-card w-full max-w-sm">
       <FieldSet disabled={loading}>
         <FieldLegend>重置密码</FieldLegend>
         <FieldDescription>请在下方输入您的新密码</FieldDescription>

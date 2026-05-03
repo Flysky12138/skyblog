@@ -14,7 +14,7 @@ import { MDXPickHeading } from '@/components/mdx/pick-heading'
 import { MDXServer } from '@/components/mdx/server'
 import { Card } from '@/components/static/card'
 import { Style } from '@/components/style'
-import { Button } from '@/components/ui/button'
+import { ButtonLink } from '@/components/ui-overwrite/button'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item'
 import { ATTRIBUTE, CACHE_TAG, POST_CARD_VISIBILITY_MASK } from '@/lib/constants'
 import { cn } from '@/lib/utils'
@@ -94,73 +94,85 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
       <Style>{`html { scroll-padding-top: 60px }`}</Style>
 
       <DisplayByConditional condition={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.HEADER) == POST_CARD_VISIBILITY_MASK.HEADER}>
-        <Card aria-label="post abstract" className="relative flex flex-col gap-2 p-3 md:p-5" data-slot="post-abstract">
+        <Card aria-label="post abstract" className="relative space-y-2 p-3 md:p-5" data-slot="post-abstract">
           <DisplayByAuth role="admin">
-            <Button asChild className="absolute top-3 right-3 md:top-5 md:right-5" size="icon" variant="ghost">
-              <Link href={`/dashboard/posts/${post.id}`} target="_blank">
-                <PencilLineIcon />
-              </Link>
-            </Button>
+            <ButtonLink
+              className="absolute top-3 right-3 md:top-5 md:right-5"
+              href={`/dashboard/posts/${post.id}`}
+              size="icon"
+              target="_blank"
+              variant="ghost"
+            >
+              <PencilLineIcon />
+            </ButtonLink>
           </DisplayByAuth>
-          <h1 className="font-title text-2xl font-normal md:text-3xl">{post.title}</h1>
+          <h1 className="font-heading text-2xl font-normal md:text-3xl">{post.title}</h1>
           {post.summary && <p className="text-secondary-foreground">{post.summary}</p>}
           <PostInfo defaultValue={post} id={post.id} />
         </Card>
       </DisplayByConditional>
 
       {post.content && (
-        <div className="gap-card-small flex">
-          <div className="gap-card-large grid w-full">
-            <Card asChild aria-label="post content">
-              <article className="group/article relative max-w-none px-3 py-5 md:px-5" id={ATTRIBUTE.ID.POST_CONTAINER}>
-                <PostResizeButton
-                  className={cn(
-                    'opacity-0 group-hover/article:opacity-100',
-                    'absolute top-1 right-1 z-10 inline-flex [&+*]:mt-0',
-                    'aria-pressed:fixed aria-pressed:right-[calc(var(--scrollbar-width)+--spacing(1))]'
-                  )}
-                  tabIndex={-1}
-                />
-                <MDXServer source={post.content} />
-              </article>
+        <div className="gap-bp-2 flex">
+          <div className="gap-bp-4 grid w-full">
+            <Card
+              aria-label="post content"
+              className="group/article relative max-w-none p-3 md:p-5"
+              id={ATTRIBUTE.ID.POST_CONTAINER}
+              render={<article />}
+            >
+              <PostResizeButton
+                className={cn(
+                  'opacity-0 group-hover/article:opacity-100',
+                  'absolute top-1 right-1 z-10 inline-flex [&+*]:mt-0',
+                  'aria-pressed:fixed aria-pressed:right-[calc(var(--scrollbar-width)+--spacing(1))]'
+                )}
+                tabIndex={-1}
+              />
+              <MDXServer source={post.content} />
             </Card>
 
             <DisplayByConditional condition={!!prev || !!next}>
-              <div className="gap-card-small grid sm:grid-cols-2">
+              <div className="gap-bp-2 grid sm:grid-cols-2">
                 {prev && (
-                  <Card asChild aria-label="previous post">
-                    <Item asChild variant="muted">
-                      <Link href={`/posts/${prev.slug ?? prev.id}`}>
+                  <Card
+                    className="not-hover:bg-transparent"
+                    render={
+                      <Item aria-label="previous post" render={<Link href={`/posts/${prev.slug ?? prev.id}`} />}>
                         <ItemContent>
                           <ItemDescription>上一页</ItemDescription>
                           <ItemTitle>{prev.title}</ItemTitle>
                         </ItemContent>
-                      </Link>
-                    </Item>
-                  </Card>
+                      </Item>
+                    }
+                  />
                 )}
                 {next && (
-                  <Card asChild aria-label="next post" className="sm:col-start-2">
-                    <Item asChild variant="muted">
-                      <Link href={`/posts/${next.slug ?? next.id}`}>
+                  <Card
+                    className="not-hover:bg-transparent"
+                    render={
+                      <Item aria-label="next post" className="sm:col-start-2" render={<Link href={`/posts/${next.slug ?? next.id}`} />}>
                         <ItemContent className="items-end">
                           <ItemDescription>下一页</ItemDescription>
                           <ItemTitle>{next.title}</ItemTitle>
                         </ItemContent>
-                      </Link>
-                    </Item>
-                  </Card>
+                      </Item>
+                    }
+                  />
                 )}
               </div>
             </DisplayByConditional>
           </div>
 
           <DisplayByConditional condition={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.TOC) == POST_CARD_VISIBILITY_MASK.TOC}>
-            <Card asChild aria-label="post toc">
-              <PostToc>
-                <MDXPickHeading headingComponent={PostTocHeading} source={post.content} />
-              </PostToc>
-            </Card>
+            <Card
+              aria-label="post toc"
+              render={
+                <PostToc>
+                  <MDXPickHeading headingComponent={PostTocHeading} source={post.content} />
+                </PostToc>
+              }
+            />
           </DisplayByConditional>
         </div>
       )}

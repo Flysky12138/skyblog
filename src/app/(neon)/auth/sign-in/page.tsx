@@ -43,7 +43,7 @@ export default function Page() {
   }, [])
 
   return (
-    <Card className="p-card w-full max-w-sm rounded-xl">
+    <Card className="p-card w-full max-w-sm">
       <FieldSet disabled={loading}>
         <FieldLegend>登录</FieldLegend>
         <FieldDescription>请在下方输入您的邮箱地址以登录您的帐户</FieldDescription>

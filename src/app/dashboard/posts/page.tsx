@@ -8,7 +8,7 @@ import { PostTagTable } from './_components/post-tag-table'
 
 export default function Page() {
   return (
-    <Tabs className="gap-card-small!" defaultValue="post">
+    <Tabs className="gap-3" defaultValue="post">
       <TabsList>
         <TabsTrigger className="px-4 sm:px-8" value="post">
           <SwatchBookIcon /> Post

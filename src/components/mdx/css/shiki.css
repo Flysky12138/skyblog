@@ -1,4 +1,4 @@
-@reference '../../../globals.css';
+@reference '#globals.css';
 
 /** 
  * 整体上是为 `rehype-pretty-code` 生成的代码块添加样式
@@ -7,9 +7,9 @@
 
 /* 代码块 */
 figure[data-rehype-pretty-code-figure] {
-  @apply overflow-hidden rounded-sm border;
+  @apply overflow-hidden rounded-md border;
   [data-rehype-pretty-code-title] {
-    @apply border-divide font-title m-0 border-b px-3 py-1 shadow-sm;
+    @apply border-divide font-heading m-0 border-b px-3 py-1 shadow-sm;
   }
   [data-rehype-pretty-code-caption] {
     @apply m-0 px-3 py-1 text-xs;

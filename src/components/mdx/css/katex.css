@@ -1,4 +1,4 @@
-@reference '../../../globals.css';
+@reference '#globals.css';
 
 .katex-display {
   @apply my-6 rounded-md p-3 pt-4 backdrop-blur;

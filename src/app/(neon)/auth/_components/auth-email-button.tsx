@@ -1,7 +1,6 @@
 import { MailIcon } from 'lucide-react'
-import Link from 'next/link'
 
-import { Button } from '@/components/ui/button'
+import { ButtonLink } from '@/components/ui-overwrite/button'
 
 interface AuthEmailButtonProps {
   loading?: boolean
@@ -9,11 +8,9 @@ interface AuthEmailButtonProps {
 
 export function AuthEmailButton({ loading }: AuthEmailButtonProps) {
   return (
-    <Button asChild type="button" variant="secondary">
-      <Link aria-disabled={loading} href="/auth/email-otp">
-        <MailIcon />
-        使用邮箱验证码登录
-      </Link>
-    </Button>
+    <ButtonLink aria-disabled={loading} href="/auth/email-otp" variant="secondary">
+      <MailIcon data-icon="inline-start" />
+      使用邮箱验证码登录
+    </ButtonLink>
   )
 }

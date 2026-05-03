@@ -66,7 +66,7 @@ export function StorageTable2({ className, id }: StorageTable2Props) {
           {/* 加载状态 */}
           <DisplayByConditional condition={isLoading || isEmpty}>
             <TableRow>
-              <TableCell className="font-title cursor-default text-center" colSpan={4}>
+              <TableCell className="font-heading cursor-default text-center" colSpan={4}>
                 {isEmpty ? '内容为空' : 'Loading...'}
               </TableCell>
             </TableRow>
