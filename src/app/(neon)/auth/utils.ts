@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const authBaseSchema = z.object({
+export const authSchema = z.object({
   email: z.email({ error: '请输入正确的邮箱地址 ' }),
   name: z.string().min(2, { error: '用户名长度不能小于 2 个字符' }).max(12, { error: '用户名长度不能大于 12 个字符' }),
   otp: z.string().regex(/^\d+$/, { error: 'OTP 必须为数字' }).length(6, { error: 'OTP 长度必须为 6 个字符' }),

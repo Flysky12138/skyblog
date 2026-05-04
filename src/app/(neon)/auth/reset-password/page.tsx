@@ -11,16 +11,15 @@ import { useAsyncFn } from 'react-use'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
-import { Card } from '@/components/static/card'
 import { Button } from '@/components/ui/button'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth/client'
 
 import { AuthSocialButton } from '../_components/auth-social-button'
-import { authBaseSchema } from '../utils'
+import { authSchema } from '../utils'
 
-const formSchema = authBaseSchema.pick({ newPassword: true, token: true })
+const formSchema = authSchema.pick({ newPassword: true, token: true })
 
 export default function Page() {
   const router = useRouter()
@@ -55,48 +54,46 @@ export default function Page() {
   }, [error, router])
 
   return (
-    <Card className="p-card w-full max-w-sm">
-      <FieldSet disabled={loading}>
-        <FieldLegend>重置密码</FieldLegend>
-        <FieldDescription>请在下方输入您的新密码</FieldDescription>
+    <FieldSet disabled={loading} inert={loading}>
+      <FieldLegend>重置密码</FieldLegend>
+      <FieldDescription>请在下方输入您的新密码</FieldDescription>
 
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <FieldGroup>
-            <Controller
-              control={form.control}
-              name="newPassword"
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>新密码</FieldLabel>
-                  <Input {...field} aria-invalid={fieldState.invalid} autoComplete="new-password" id={field.name} placeholder="新密码" />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-            <Field>
-              <Button type="submit">保存新密码</Button>
-            </Field>
-          </FieldGroup>
-        </form>
-
-        <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card my-0">或者</FieldSeparator>
-
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
+          <Controller
+            control={form.control}
+            name="newPassword"
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>新密码</FieldLabel>
+                <Input {...field} aria-invalid={fieldState.invalid} autoComplete="new-password" id={field.name} placeholder="新密码" />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
           <Field>
-            <AuthSocialButton />
+            <Button type="submit">保存新密码</Button>
           </Field>
         </FieldGroup>
-        <FieldGroup>
-          <Field>
-            <FieldDescription className="flex items-center justify-center gap-1.5">
-              <ArrowLeftIcon size={16} />
-              <Link className="text-foreground" href="/auth/sign-in">
-                返回
-              </Link>
-            </FieldDescription>
-          </Field>
-        </FieldGroup>
-      </FieldSet>
-    </Card>
+      </form>
+
+      <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card my-0">或者</FieldSeparator>
+
+      <FieldGroup>
+        <Field>
+          <AuthSocialButton />
+        </Field>
+      </FieldGroup>
+      <FieldGroup>
+        <Field>
+          <FieldDescription className="flex items-center justify-center gap-1.5">
+            <ArrowLeftIcon size={16} />
+            <Link className="text-foreground" href="/auth/sign-in">
+              返回
+            </Link>
+          </FieldDescription>
+        </Field>
+      </FieldGroup>
+    </FieldSet>
   )
 }

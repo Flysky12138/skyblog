@@ -52,3 +52,7 @@ button:not(:disabled),
 [aria-disabled='true'] {
   @apply pointer-events-none opacity-50;
 }
+
+[inert] :where(:any-link, :enabled, [tabindex], [contenteditable]) {
+  @apply pointer-events-none opacity-50;
+}

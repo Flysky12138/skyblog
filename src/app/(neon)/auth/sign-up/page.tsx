@@ -10,7 +10,6 @@ import { useAsyncFn } from 'react-use'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
-import { Card } from '@/components/static/card'
 import { Button } from '@/components/ui/button'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
@@ -19,9 +18,9 @@ import { authClient } from '@/lib/auth/client'
 
 import { AuthEmailButton } from '../_components/auth-email-button'
 import { AuthSocialButton } from '../_components/auth-social-button'
-import { authBaseSchema } from '../utils'
+import { authSchema } from '../utils'
 
-const formSchema = authBaseSchema.pick({ email: true, name: true, password: true })
+const formSchema = authSchema.pick({ email: true, name: true, password: true })
 
 export default function Page() {
   const [showPassword, setShowPassword] = React.useState(false)
@@ -48,91 +47,89 @@ export default function Page() {
   }, [])
 
   return (
-    <Card className="p-card w-full max-w-sm">
-      <FieldSet disabled={loading}>
-        <FieldLegend>注册</FieldLegend>
-        <FieldDescription>请输入您的信息以创建帐户</FieldDescription>
+    <FieldSet disabled={loading} inert={loading}>
+      <FieldLegend>注册</FieldLegend>
+      <FieldDescription>请输入您的信息以创建帐户</FieldDescription>
 
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <FieldGroup>
-            <Controller
-              control={form.control}
-              name="name"
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>用户名</FieldLabel>
-                  <Input {...field} aria-invalid={fieldState.invalid} autoComplete="name" id={field.name} placeholder="用户名" />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-            <Controller
-              control={form.control}
-              name="email"
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>邮箱</FieldLabel>
-                  <Input {...field} aria-invalid={fieldState.invalid} autoComplete="email" id={field.name} placeholder="m@example.com" />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-            <Controller
-              control={form.control}
-              name="password"
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>密码</FieldLabel>
-                  <InputGroup className="overflow-hidden">
-                    <InputGroupInput
-                      {...field}
-                      aria-invalid={fieldState.invalid}
-                      autoComplete="new-password"
-                      id={field.name}
-                      placeholder="密码"
-                      type={showPassword ? 'text' : 'password'}
-                    />
-                    <InputGroupAddon align="inline-end" className="pl-1">
-                      <InputGroupButton
-                        className="rounded-full"
-                        size="icon-xs"
-                        onClick={() => {
-                          setShowPassword(v => !v)
-                        }}
-                      >
-                        {showPassword ? <EyeIcon /> : <EyeOffIcon />}
-                      </InputGroupButton>
-                    </InputGroupAddon>
-                  </InputGroup>
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-            <Field>
-              <Button type="submit">创建一个帐户</Button>
-              <AuthEmailButton loading={loading} />
-            </Field>
-          </FieldGroup>
-        </form>
-
-        <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card my-0">或者</FieldSeparator>
-
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
+          <Controller
+            control={form.control}
+            name="name"
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>用户名</FieldLabel>
+                <Input {...field} aria-invalid={fieldState.invalid} autoComplete="name" id={field.name} placeholder="用户名" />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+          <Controller
+            control={form.control}
+            name="email"
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>邮箱</FieldLabel>
+                <Input {...field} aria-invalid={fieldState.invalid} autoComplete="email" id={field.name} placeholder="m@example.com" />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+          <Controller
+            control={form.control}
+            name="password"
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>密码</FieldLabel>
+                <InputGroup className="overflow-hidden">
+                  <InputGroupInput
+                    {...field}
+                    aria-invalid={fieldState.invalid}
+                    autoComplete="new-password"
+                    id={field.name}
+                    placeholder="密码"
+                    type={showPassword ? 'text' : 'password'}
+                  />
+                  <InputGroupAddon align="inline-end" className="pl-1">
+                    <InputGroupButton
+                      className="rounded-full"
+                      size="icon-xs"
+                      onClick={() => {
+                        setShowPassword(v => !v)
+                      }}
+                    >
+                      {showPassword ? <EyeIcon /> : <EyeOffIcon />}
+                    </InputGroupButton>
+                  </InputGroupAddon>
+                </InputGroup>
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
           <Field>
-            <AuthSocialButton />
+            <Button type="submit">创建一个帐户</Button>
+            <AuthEmailButton />
           </Field>
         </FieldGroup>
-        <FieldGroup>
-          <Field>
-            <FieldDescription className="text-center">
-              已有账号？
-              <Link aria-disabled={loading} className="text-foreground" href="/auth/sign-in">
-                登录
-              </Link>
-            </FieldDescription>
-          </Field>
-        </FieldGroup>
-      </FieldSet>
-    </Card>
+      </form>
+
+      <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card my-0">或者</FieldSeparator>
+
+      <FieldGroup>
+        <Field>
+          <AuthSocialButton />
+        </Field>
+      </FieldGroup>
+      <FieldGroup>
+        <Field>
+          <FieldDescription className="text-center">
+            已有账号？
+            <Link className="text-foreground" href="/auth/sign-in">
+              登录
+            </Link>
+          </FieldDescription>
+        </Field>
+      </FieldGroup>
+    </FieldSet>
   )
 }

@@ -32,7 +32,7 @@ export default async function Page({ searchParams }: PageProps<'/'>) {
           <h2 className="flex items-center gap-2">
             {post.pinOrder > 0 && <AwardIcon size={20} />}
             <Link
-              className="font-heading hover:text-link-foreground focus-within:text-link-foreground text-xl active:opacity-50"
+              className="font-heading hover:text-link-foreground focus-within:text-link-foreground text-xl"
               href={`/posts/${post.slug ?? post.id}`}
             >
               {post.title}
