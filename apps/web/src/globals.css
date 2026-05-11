@@ -1,0 +1,14 @@
+@import '@repo/ui/globals.css';
+
+@import '@repo/font-split/fzsj-zhuzayte.css';
+@import '@repo/font-split/noto-color-emoji-regular.css';
+
+@import '@repo/mdx/styles.css';
+@import '@repo/monaco-editor/styles.css';
+
+/** Fancybox 图片预览弹窗会隐藏滚动条；避免页面抖动 */
+body.hide-scrollbar {
+  header {
+    padding-inline-end: var(--f-scrollbar-compensate, 15px);
+  }
+}

@@ -1,0 +1,15 @@
+@import '@repo/ui/globals.css';
+
+@plugin '@tailwindcss/typography';
+
+/* import 'katex/dist/katex.min.css' */
+/* import './katex.css' */
+@import './mathjax.css';
+@import './shiki.css';
+
+/* 放 components 层，方便标签上的 utility 层样式覆盖 */
+@layer components {
+  [data-slot='mdx-root'] {
+    @apply prose prose-sm prose-sky dark:prose-invert md:prose-base;
+  }
+}

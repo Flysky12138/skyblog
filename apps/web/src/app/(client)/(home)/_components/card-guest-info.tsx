@@ -1,0 +1,27 @@
+'use client'
+
+import { Card } from '@repo/ui/components-self/card'
+import useSWR from 'swr'
+
+import { TransitionCollapse } from '@/components/transition/transition-collapse'
+import { rpc, unwrap } from '@/lib/http/rpc'
+
+export function CardGuestInfo() {
+  const { data: ipinfo } = useSWR('0198eb97-946a-74df-9214-aebb698e4c11', () => rpc.ipinfo.get().then(unwrap))
+
+  if (!ipinfo) return null
+
+  return (
+    <Card className="space-y-3 p-card" render={<TransitionCollapse />}>
+      <div>访客信息</div>
+      <div className="space-y-1">
+        {Object.entries(ipinfo).map(([label, content]) => (
+          <div key={label} className="flex gap-3 text-sm">
+            <span className="shrink-0 text-secondary-foreground">{label}:</span>
+            <span className="grow text-end break-all text-muted-foreground">{String(content)}</span>
+          </div>
+        ))}
+      </div>
+    </Card>
+  )
+}

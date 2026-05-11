@@ -1,0 +1,2 @@
+/* 唯一用处，触发 tailwindcss 的样式提示 */
+@import './src/styles/globals.css';

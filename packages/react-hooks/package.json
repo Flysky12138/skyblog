@@ -1,0 +1,26 @@
+{
+  "name": "@repo/react-hooks",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "eslint --fix --max-warnings 0",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "echarts": "catalog:",
+    "es-toolkit": "catalog:",
+    "immer": "^11.1.8",
+    "react": "catalog:",
+    "react-use": "^17.6.0",
+    "use-immer": "^0.11.0"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:"
+  }
+}

@@ -1,0 +1,54 @@
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarProvider, SidebarRail } from '@repo/ui/components/sidebar'
+import { Metadata } from 'next'
+import { cookies } from 'next/headers'
+
+import { Header } from './_components/header'
+import { SidebarLogo } from './_components/sidebar-logo'
+import { SidebarMain } from './_components/sidebar-main'
+import { SidebarTheme } from './_components/sidebar-theme'
+import { SidebarUser } from './_components/sidebar-user'
+
+export const metadata: Metadata = {
+  robots: {
+    follow: false,
+    index: false
+  },
+  title: {
+    default: 'Dashboard',
+    template: '%s | Dashboard'
+  }
+}
+
+export default async function Layout({ children }: React.PropsWithChildren) {
+  const cookieStore = await cookies()
+  const defaultOpen = cookieStore.has('sidebar_state') ? cookieStore.get('sidebar_state')?.value == 'true' : true
+
+  return (
+    <SidebarProvider
+      defaultOpen={defaultOpen}
+      style={
+        {
+          '--sidebar-width': '14rem'
+        } as React.CSSProperties
+      }
+    >
+      <Sidebar className="text-nowrap break-keep" collapsible="icon">
+        <SidebarHeader>
+          <SidebarLogo />
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarMain />
+        </SidebarContent>
+        <SidebarFooter>
+          <SidebarTheme />
+          <SidebarUser />
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
+      <div className="flex grow flex-col overflow-auto">
+        <Header className="shrink-0 md:hidden" />
+        <main className="h-full bg-root p-4 md:p-8">{children}</main>
+      </div>
+    </SidebarProvider>
+  )
+}

@@ -1,0 +1,70 @@
+@import 'tailwindcss';
+
+@source '../../../../apps/**/*.{ts,tsx}';
+@source '../../../../packages/**/*.{ts,tsx}';
+
+@custom-variant dark (&:is(.dark, .dark *));
+@custom-variant light (&:is(.light, .light *));
+
+@import './shadcn.css';
+
+@import './base.css' layer(base);
+@import './utilities.css';
+
+:root {
+  --root: oklch(0.98 0 0);
+  --divide: oklch(0.93 0.01 0);
+  --link: var(--color-slate-200);
+  --link-foreground: var(--color-sky-500);
+  --sheet: oklch(97.893% 0.00298 264.796);
+  /* shadcn variables */
+  --card: var(--color-white);
+}
+
+.dark {
+  --root: oklch(0.19 0.01 285.45);
+  --divide: var(--color-slate-700);
+  --link: var(--color-slate-700);
+  --link-foreground: var(--color-sky-500);
+  --sheet: oklch(21.516% 0.00781 285.688);
+  /* shadcn variables */
+  --card: oklch(24.61% 0.01133 285.511);
+}
+
+@theme inline {
+  /* override default variables */
+  --font-*: initial;
+  /* shadcn variables */
+  --font-heading: var(--font-heading);
+  /* static variables */
+  --font-root: 'FZSJ-ZHUZAYTE';
+  --font-emoji: 'Noto Color Emoji';
+  --font-article: 'Microsoft Yahei', '微软雅黑';
+  --font-code: var(--font-emoji), var(--font-code);
+  --height-header: 3.125rem;
+  --height-main: calc(100dvh - var(--height-header));
+  --height-footer: 9.375rem;
+  /* dark & light variables */
+  --color-root: var(--root);
+  --color-divide: var(--divide);
+  --color-link: var(--link);
+  --color-link-foreground: var(--link-foreground);
+  --color-sheet: var(--sheet);
+}
+
+/** shadcn label component */
+[data-slot='label'],
+[data-slot='field-label'] {
+  &[aria-required='true'] {
+    @apply relative self-start;
+    &::after {
+      content: '*';
+      @apply absolute top-0 -left-2.5 text-rose-500;
+    }
+  }
+}
+
+/** shadcn slider component */
+[data-slot='slider-track'] {
+  @apply cursor-pointer;
+}

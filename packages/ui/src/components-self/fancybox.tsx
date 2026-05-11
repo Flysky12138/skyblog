@@ -1,0 +1,44 @@
+'use client'
+
+import '@fancyapps/ui/dist/fancybox/fancybox.css'
+import { Fancybox } from '@fancyapps/ui'
+import React from 'react'
+
+import { useTheme } from '../hooks/use-theme'
+
+export const itemSelector = '[data-fancybox]'
+
+export { Fancybox } from '@fancyapps/ui'
+
+/**
+ * 图片预览
+ *
+ * @see https://fancyapps.com/fancybox/
+ */
+export function FancyboxRegister() {
+  const { isDark } = useTheme()
+
+  React.useEffect(() => {
+    Fancybox.getDefaults().theme = isDark ? 'dark' : 'light'
+  }, [isDark])
+
+  React.useEffect(() => {
+    Fancybox.bind(itemSelector, {
+      Carousel: {
+        Toolbar: {
+          display: {
+            left: ['counter'],
+            middle: ['rotateCCW', 'rotateCW', 'flipX', 'flipY', 'reset'],
+            right: ['thumbs', 'close']
+          }
+        }
+      }
+    })
+
+    return () => {
+      Fancybox.unbind(itemSelector)
+    }
+  }, [])
+
+  return null
+}

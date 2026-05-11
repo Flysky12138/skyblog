@@ -1,0 +1,14 @@
+@import '@repo/ui/globals.css';
+
+.monaco-editor,
+.monaco-diff-editor,
+.monaco-component {
+  --vscode-diffEditor-border: var(--vscode-dropdown-border) !important;
+
+  @apply font-code!;
+
+  @variant dark {
+    --vscode-editor-background: #202026 !important;
+    --vscode-editorGutter-background: #202026 !important;
+  }
+}

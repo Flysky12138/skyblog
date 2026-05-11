@@ -1,4 +1,6 @@
-/** “不可展开”的类型 */
+/**
+ * “不可展开”的类型
+ */
 type Builtin =
   | Date
   | Error
@@ -10,36 +12,56 @@ type Builtin =
   | WeakMap<unknown, unknown>
   | WeakSet<unknown>
 
-/** 元素的属性，但不包含事件 */
+/**
+ * 元素的属性，但不包含事件
+ */
 type ElementPropsWithoutEvents<T extends Element> = Omit<React.HTMLAttributes<T>, PickStartsWith<keyof React.DOMAttributes<T>, 'on'>>
 
-/** 以 `T` 结尾的字符串 */
+/**
+ * 以 `T` 结尾的字符串
+ */
 type EndsWith<T extends string> = `${string}${T}`
 
-/** 选择对象以 `D` 开头的键 */
+/**
+ * 选择对象以 `D` 开头的键
+ */
 type PickStartsWith<T, D extends string> = {
   [K in keyof T as K extends StartsWith<D> ? K : never]: T[K]
 }
 
-/** 将选中的键设置为可选 */
+/**
+ * 将选中的键设置为可选
+ */
 type PratialPick<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
-/** 美化对象的显示 */
+/**
+ * 美化对象的显示
+ */
 type Prettify<T> = T extends Builtin ? T : T extends object ? { [K in keyof T]: Prettify<T[K]> } : T
 
-/** 将选中的键设置为必选 */
+/**
+ * 将选中的键设置为必选
+ */
 type RequiredPick<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
 
-/** 以 `T` 开头的字符串 */
+/**
+ * 以 `T` 开头的字符串
+ */
 type StartsWith<T extends string> = `${T}${string}`
 
-/** 字符串或 `T` */
+/**
+ * 字符串或 `T`
+ */
 type StringLiteralsOrString<T extends string> = (string & {}) | T
 
-/** 取对象值 */
+/**
+ * 取对象值
+ */
 type ValueOf<T> = Required<T>[keyof T]
 
 type Without<T, U> = Partial<Record<Exclude<keyof T, keyof U>, never>>
 
-/** 对象进行异或 */
+/**
+ * 对象进行异或
+ */
 type XOR<T, U> = T | U extends object ? (T & Without<U, T>) | (U & Without<T, U>) : T | U

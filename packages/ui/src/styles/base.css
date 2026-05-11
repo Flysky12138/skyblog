@@ -1,0 +1,38 @@
+* {
+  -webkit-tap-highlight-color: transparent;
+  @apply border-border ring-ring/50 outline-ring/50 outline-none;
+}
+
+html {
+  @apply font-root antialiased;
+}
+
+body {
+  @apply overscroll-none bg-root text-foreground;
+}
+
+img {
+  @apply dark:brightness-80;
+}
+
+pre,
+code {
+  @apply font-code;
+}
+
+a {
+  @apply break-all;
+}
+
+button:not(:disabled),
+[role='button']:not(:disabled) {
+  @apply cursor-pointer;
+}
+
+[aria-disabled='true'] {
+  @apply pointer-events-none opacity-50;
+}
+
+[inert] :where(:any-link, :enabled, [tabindex], [contenteditable]) {
+  @apply pointer-events-none opacity-50;
+}

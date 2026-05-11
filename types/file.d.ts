@@ -1,11 +1,19 @@
-declare module '*?raw' {
-  const content: string
-  export default content
-}
+declare module '*.css' {}
 
 declare module '*.svg' {
   import React from 'react'
-  const content: React.FC<React.SVGProps<SVGSVGElement>>
+  const content: React.FunctionComponent<React.SVGProps<SVGSVGElement>>
+  export default content
+}
+
+declare module '*.mdx' {
+  import React from 'react'
+  const content: React.FunctionComponent
+  export default content
+}
+
+declare module '*?raw' {
+  const content: string
   export default content
 }
 

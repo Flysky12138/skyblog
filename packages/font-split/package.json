@@ -1,0 +1,22 @@
+{
+  "name": "@repo/font-split",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsx ./src/index.ts"
+  },
+  "exports": {
+    "./fzsj-zhuzayte.css": "./dist/fzsj-zhuzayte/result.css",
+    "./noto-color-emoji-regular.css": "./dist/noto-color-emoji-regular/result.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@japont/unicode-range": "^1.0.0",
+    "es-toolkit": "catalog:",
+    "cn-font-split": "6.0.3",
+    "tsx": "catalog:"
+  }
+}

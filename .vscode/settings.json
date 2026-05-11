@@ -4,27 +4,19 @@
     "*.css": "tailwindcss",
     "*.toml": "ini"
   },
-  "editor.formatOnSave": true,
+  "eslint.format.enable": true,
+  "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll": "always",
-    "source.fixAll.eslint": "always",
+    "source.fixAll.eslint": "explicit",
     "source.organizeImports": "never"
   },
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },
-  "tailwindCSS.classFunctions": ["tw"],
-  "tailwindCSS.classAttributes": ["class", "className", "ngClass", "class:list", "\\w+ClassName"],
-  "tailwindCSS.experimental.classRegex": [
-    // 在属性外使用 cn 函数
-    // https://github.com/tailwindlabs/tailwindcss-intellisense/issues/868#issuecomment-2013447372
-    ["cn\\(([^)(]*(?:\\([^)(]*(?:\\([^)(]*(?:\\([^)(]*\\)[^)(]*)*\\)[^)(]*)*\\)[^)(]*)*)\\)", "'([^']*)'"],
-    ["cn\\(([^)(]*(?:\\([^)(]*(?:\\([^)(]*(?:\\([^)(]*\\)[^)(]*)*\\)[^)(]*)*\\)[^)(]*)*)\\)", "\"([^\"]*)\""],
-    ["cn\\(([^)(]*(?:\\([^)(]*(?:\\([^)(]*(?:\\([^)(]*\\)[^)(]*)*\\)[^)(]*)*\\)[^)(]*)*)\\)", "`([^`]*)`"]
-  ],
-  "typescript.tsdk": "node_modules/typescript/lib",
   "json.schemaDownload.trustedDomains": {
     "https://ui.shadcn.com/": true,
-    "https://openapi.vercel.sh/": true
-  }
+    "https://openapi.vercel.sh/": true,
+    "https://turborepo.dev/": true
+  },
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
 }

@@ -9,7 +9,7 @@ declare module 'react' {
    * @template
    * ```tsx
    * <Button variant="outline">
-   *     <IconGitBranch data-icon="inline-start" /> New Branch
+   *    <IconGitBranch data-icon="inline-start" /> New Branch
    * </Button>
    * ```
    */
