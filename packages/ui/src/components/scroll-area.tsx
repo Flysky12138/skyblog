@@ -1,12 +1,13 @@
 "use client"
 
-import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area"
-import { cn } from "@repo/ui/lib/utils"
 import * as React from "react"
+import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area"
+
+import { cn } from "@repo/ui/lib/utils"
 
 function ScrollArea({
-  children,
   className,
+  children,
   ...props
 }: ScrollAreaPrimitive.Root.Props) {
   return (

@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, MotionProps } from 'framer-motion'
+import { motion, MotionProps } from 'motion/react'
 
 interface TransitionCollapseProps extends Omit<MotionProps, 'animate' | 'initial' | 'variants'> {
   /**

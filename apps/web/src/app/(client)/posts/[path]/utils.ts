@@ -1,37 +1,42 @@
 import React from 'react'
 import { z } from 'zod'
 
-import { internal, prisma } from '@/lib/prisma'
+import { internal } from '@/lib/prisma'
 
 import { getPosts } from '../utils'
+
+/**
+ * 获取所有文章的作者
+ */
+const getAuthors = React.cache(async () => {
+  const posts = await getPosts()
+
+  const authors = posts.map(post => post.authorId)
+
+  const users = await internal.user.findMany({
+    where: {
+      id: {
+        in: authors
+      }
+    }
+  })
+
+  return users
+})
 
 /**
  * 获取文章
  */
 export const getPost = React.cache(async (idOrSlug: string) => {
-  const { data: id, success } = await z.uuidv7().safeParseAsync(idOrSlug)
+  const { success: isUuidv7 } = await z.uuidv7().safeParseAsync(idOrSlug)
 
-  const post = await prisma.post.findUnique({
-    where: success ? { id } : { slug: idOrSlug },
-    include: {
-      categories: {
-        include: {
-          category: true
-        }
-      },
-      tags: {
-        include: {
-          tag: true
-        }
-      }
-    }
-  })
+  const posts = await getPosts()
+  const post = posts.find(post => (isUuidv7 ? idOrSlug == post.id : idOrSlug == post.slug))
 
   if (!post) return { post: null, user: null }
 
-  const user = await internal.user.findUnique({
-    where: { id: post.authorId }
-  })
+  const authors = await getAuthors()
+  const user = authors.find(author => author.id == post.authorId)
 
   return {
     post,
@@ -42,7 +47,7 @@ export const getPost = React.cache(async (idOrSlug: string) => {
 /**
  * 获取推荐文章
  */
-export const getPostsRecommendByPostId = async (id: string) => {
+export const getPostsRecommendByPostId = React.cache(async (id: string) => {
   const posts = await getPosts()
 
   const index = posts.findIndex(post => post.id == id)
@@ -58,4 +63,4 @@ export const getPostsRecommendByPostId = async (id: string) => {
     next,
     prev
   }
-}
+})

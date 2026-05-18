@@ -10,11 +10,5 @@ export default defineConfig([
         tsconfigRootDir: import.meta.dirname
       }
     }
-  },
-  {
-    files: ['./src/index.ts'],
-    rules: {
-      'perfectionist/sort-exports': 'off'
-    }
   }
 ])

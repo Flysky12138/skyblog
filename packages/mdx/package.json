@@ -9,16 +9,20 @@
   },
   "exports": {
     ".": "./src/index.ts",
+    "./next": "./src/lib/next.ts",
     "./options": "./src/lib/options.ts",
     "./styles.css": "./src/styles/index.css"
   },
   "dependencies": {
+    "@mdx-js/loader": "^3.1.1",
+    "@mdx-js/react": "^3.1.1",
+    "@next/mdx": "^16.2.6",
     "@repo/react-hooks": "workspace:*",
     "@shikijs/colorized-brackets": "^4.0.2",
     "@shikijs/transformers": "^4.0.2",
     "es-toolkit": "catalog:",
-    "framer-motion": "catalog:",
     "lucide-react": "catalog:",
+    "motion": "catalog:",
     "next": "catalog:",
     "next-mdx-remote-client": "^2.1.10",
     "react": "catalog:",

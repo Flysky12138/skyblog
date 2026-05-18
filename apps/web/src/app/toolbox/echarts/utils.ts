@@ -80,7 +80,7 @@ export const onInit: MonacoEditorProps['onInit'] = (monaco, language) => {
 
         declare let option: import('echarts').EChartsOption;
       `,
-      'monaco://types/echarts.d.ts'
+      'file:///echarts.d.ts'
     )
   })()
 }

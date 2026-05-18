@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { MonacoEditor } from '@repo/monaco-editor'
 import { Button } from '@repo/ui/components/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui/components/dialog'
-import { Field, FieldError, FieldGroup, FieldLabel } from '@repo/ui/components/field'
+import { Field, FieldError, FieldGroup, FieldLabel, FieldTitle } from '@repo/ui/components/field'
 import { Input } from '@repo/ui/components/input'
 import { pick } from 'es-toolkit'
 import React from 'react'
@@ -24,8 +24,12 @@ interface CronEditModalProps {
 
 export function CronEditModal({ children, value, onSubmit }: CronEditModalProps) {
   const form = useForm({
-    defaultValues: { content: '\n\nexport {}\n', isEnabled: true, name: '' },
-    resolver: zodResolver(CronCreateBodySchema)
+    resolver: zodResolver(CronCreateBodySchema),
+    defaultValues: {
+      content: 'return async ({ now, WeCom }: Cron) => {\n  \n}\n',
+      isEnabled: true,
+      name: ''
+    }
   })
 
   return (
@@ -34,7 +38,7 @@ export function CronEditModal({ children, value, onSubmit }: CronEditModalProps)
         form.reset()
         if (!isOpen) return
         if (value) {
-          form.setValues(pick(value, ['content', 'isEnabled', 'name']))
+          form.setValues(pick(value, CronCreateBodySchema.keyof().options))
         }
       }}
     >
@@ -56,9 +60,7 @@ export function CronEditModal({ children, value, onSubmit }: CronEditModalProps)
               name="content"
               render={({ field, fieldState }) => (
                 <Field className="h-full" data-invalid={fieldState.invalid}>
-                  <FieldLabel className="sr-only" htmlFor={field.name}>
-                    内容
-                  </FieldLabel>
+                  <FieldTitle className="sr-only">内容</FieldTitle>
                   <MonacoEditor
                     aria-invalid={fieldState.invalid}
                     className="not-lg:h-80"

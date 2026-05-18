@@ -38,12 +38,12 @@ export function StorageFileLinkCopy({ children, file }: StorageFileLinkCopyProps
   return (
     <DropdownMenu>
       <DropdownMenuTrigger render={children} />
-      <DropdownMenuContent align="end" className="max-w-xs md:max-w-md">
+      <DropdownMenuContent align="end" className="w-full max-w-xs md:max-w-md">
         {links.map(({ label, value }, index) => (
           <DropdownMenuItem
             key={index}
             className="cursor-pointer"
-            onSelect={() => {
+            onClick={() => {
               copy(value)
               toast.success('复制成功')
             }}
@@ -51,7 +51,7 @@ export function StorageFileLinkCopy({ children, file }: StorageFileLinkCopyProps
             <Item className="w-full p-1">
               <ItemContent>
                 <ItemTitle>
-                  <Badge className="rounded-sm">{label}</Badge>
+                  <Badge className="rounded-sm text-primary-foreground!">{label}</Badge>
                 </ItemTitle>
                 <ItemDescription className="line-clamp-none text-wrap break-all">{value}</ItemDescription>
               </ItemContent>

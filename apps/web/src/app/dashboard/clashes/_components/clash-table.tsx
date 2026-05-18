@@ -36,18 +36,13 @@ export function ClashTable() {
   const handleCreate = React.useEffectEvent(async (body: ClashCreateBodyType) => {
     try {
       const data = await toastPromise(rpc.dashboard.clashes.post(body).then(unwrap), {
-        success: '添加成功'
+        success: '创建成功'
       })
-      await mutate(
-        current => {
-          return produce(current, draft => {
-            draft?.unshift(data)
-          })
-        },
-        {
-          revalidate: false
-        }
-      )
+      await mutate(current => {
+        return produce(current, draft => {
+          draft?.unshift(data)
+        })
+      }, false)
     } catch (error) {
       console.error(error)
     }
@@ -56,19 +51,14 @@ export function ClashTable() {
   // 删除
   const handleDelete = React.useEffectEvent(async (row: RowData) => {
     try {
-      await toastPromise(rpc.dashboard.clashes({ id: row.original.id }).delete(), {
+      await toastPromise(rpc.dashboard.clashes({ id: row.original.id }).delete().then(unwrap), {
         success: '删除成功'
       })
-      await mutate(
-        current => {
-          return produce(current, draft => {
-            draft?.splice(row.index, 1)
-          })
-        },
-        {
-          revalidate: false
-        }
-      )
+      await mutate(current => {
+        return produce(current, draft => {
+          draft?.splice(row.index, 1)
+        })
+      }, false)
     } catch (error) {
       console.error(error)
     }
@@ -78,18 +68,13 @@ export function ClashTable() {
   const handleUpdate = React.useEffectEvent(async (row: RowData, body: ClashUpdateBodyType) => {
     try {
       const data = await toastPromise(rpc.dashboard.clashes({ id: row.original.id }).put(body).then(unwrap), {
-        success: '修改成功'
+        success: '更新成功'
       })
-      await mutate(
-        current => {
-          return produce(current, draft => {
-            draft?.splice(row.index, 1, data)
-          })
-        },
-        {
-          revalidate: false
-        }
-      )
+      await mutate(current => {
+        return produce(current, draft => {
+          draft?.splice(row.index, 1, data)
+        })
+      }, false)
     } catch (error) {
       console.error(error)
     }
@@ -99,18 +84,13 @@ export function ClashTable() {
   const handleChangeStatus = React.useEffectEvent(async (row: RowData) => {
     try {
       const clash = await toastPromise(rpc.dashboard.clashes({ id: row.original.id }).put({ isEnabled: !row.original.isEnabled }).then(unwrap), {
-        success: '更新成功'
+        success: '修改成功'
       })
-      await mutate(
-        current => {
-          return produce(current, draft => {
-            draft?.splice(row.index, 1, clash)
-          })
-        },
-        {
-          revalidate: false
-        }
-      )
+      await mutate(current => {
+        return produce(current, draft => {
+          draft?.splice(row.index, 1, clash)
+        })
+      }, false)
     } catch (error) {
       console.error(error)
     }

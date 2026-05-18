@@ -1,11 +1,11 @@
 'use client'
 
-import { ErrorComponent, ErrorComponentProps } from '@/components/static/error-component'
+import { ErrorPage, ErrorProps } from '@/components/static/error'
 
-export default function Error(props: ErrorComponentProps) {
+export default function Error(props: ErrorProps) {
   return (
     <div className="absolute inset-0 flex items-center justify-center">
-      <ErrorComponent {...props} />
+      <ErrorPage {...props} />
     </div>
   )
 }

@@ -34,13 +34,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# serwist
-public/sw*
-public/swe-worker*
-
 # prisma
 src/generated/
 scripts/prisma/backups/
 
 # symlink
 /public/chart-preview
+
+.env*.local

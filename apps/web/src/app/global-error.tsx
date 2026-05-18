@@ -2,14 +2,14 @@
 
 import { ThemeProvider } from '@repo/ui/components-self/theme'
 
-import { ErrorComponent, ErrorComponentProps } from '@/components/static/error-component'
+import { ErrorPage, ErrorProps } from '@/components/static/error'
 
-export default function GlobalError(props: ErrorComponentProps) {
+export default function GlobalError(props: ErrorProps) {
   return (
     <html>
       <body className="flex min-h-screen items-center justify-center">
         <ThemeProvider>
-          <ErrorComponent {...props} />
+          <ErrorPage {...props} />
         </ThemeProvider>
       </body>
     </html>

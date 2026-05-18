@@ -9,6 +9,8 @@ import estreePlugins from 'prettier/plugins/estree'
 import typescriptPlugins from 'prettier/plugins/typescript'
 import { format } from 'prettier/standalone'
 
+import dts from './cron.d.ts?raw'
+
 export const onInit: MonacoEditorProps['onInit'] = (monaco, language) => {
   // 格式化
   monaco.languages.registerDocumentFormattingEditProvider(language, {
@@ -22,30 +24,22 @@ export const onInit: MonacoEditorProps['onInit'] = (monaco, language) => {
     }
   })
 
-  monaco.languages.typescript.typescriptDefaults.addExtraLib(
-    `
-/** 企业微信相关接口 */
-declare abstract class WeCom {
-  static markdown(content: string): Promise<void>
-  static markdown_v2(content: string): Promise<void>
-  static text(
-    content: string,
-    options?: {
-      mentioned_list?: ('@all' | (string & {}))[]
-      mentioned_mobile_list?: ('@all' | (string & {}))[]
-    }
-  ): Promise<void>
-}
+  // 引入自定义类型
+  monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare global { ${dts} } `, 'file:///cron.d.ts')
 
-/** 当前时间 UTC+8 */
-declare const now: () => string
-      `,
-    'monaco://types/cron.d.ts'
-  )
-
+  // 配置
   monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     ...monaco.languages.typescript.typescriptDefaults.getCompilerOptions(),
     module: monaco.languages.typescript.ModuleKind.ESNext,
     target: monaco.languages.typescript.ScriptTarget.ESNext
+  })
+
+  // 关闭语法错误提示
+  // A 'return' statement can only be used within a function body.(1108)
+  monaco.editor.onDidCreateModel(model => {
+    monaco.editor.onDidChangeMarkers(([uri]) => {
+      const markers = monaco.editor.getModelMarkers({ resource: uri }).filter(marker => !['1108', '2304'].includes(marker.code))
+      monaco.editor.setModelMarkers(model, language, markers)
+    })
   })
 }

@@ -1,3 +1,4 @@
+import { status } from 'elysia'
 import { revalidateTag } from 'next/cache'
 
 import { EdgeConfigBodyType } from './model'
@@ -19,7 +20,7 @@ export abstract class Service {
     })
 
     if (!res.ok) {
-      throw new Error('Failed to patch edge config')
+      return status(500, { message: 'Failed to patch edge config' })
     }
 
     const data = (await res.json()) as {
@@ -30,7 +31,7 @@ export abstract class Service {
 
     // https://vercel.com/docs/edge-config/vercel-api#failing-edge-config-patch-requests
     if ('error' in data) {
-      throw new Error(data.error?.message)
+      return status(500, { message: data.error?.message })
     }
 
     for (const cahceTag of cacheTags ?? []) {

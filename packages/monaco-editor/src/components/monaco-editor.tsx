@@ -4,11 +4,11 @@ import loader, { Monaco } from '@monaco-editor/loader'
 import { useTheme } from '@repo/ui/hooks/use-theme'
 import { cn } from '@repo/ui/lib/utils'
 import { shikiToMonaco } from '@shikijs/monaco'
-import { editor } from 'monaco-editor'
+import { editor, IDisposable } from 'monaco-editor'
 import React from 'react'
-import { BundledLanguage, BundledTheme } from 'shiki'
+import { BundledLanguage, BundledTheme, createHighlighter } from 'shiki'
 
-import { createHighlighterOnce, createMonacoEditorInitialOptions } from '../lib/editor'
+import { createMonacoEditorInitialOptions } from '../lib/editor'
 
 export interface MonacoEditorProps extends ElementPropsWithoutEvents<HTMLDivElement> {
   className?: string
@@ -63,10 +63,18 @@ export function MonacoEditor({
   onInit,
   ...props
 }: MonacoEditorProps) {
+  // 容器
   const containerRef = React.useRef<HTMLDivElement>(null)
+  // Monaco
   const monacoRef = React.useRef<Monaco>(undefined)
+  // 模型
+  const modelRef = React.useRef<editor.ITextModel>(undefined)
+  const originalModelRef = React.useRef<editor.ITextModel>(undefined)
+  // 编辑器
   const editorRef = React.useRef<editor.IStandaloneCodeEditor>(undefined)
   const diffEditorRef = React.useRef<editor.IStandaloneDiffEditor>(undefined)
+  // 内容监听器
+  const changeListenerRef = React.useRef<IDisposable>(undefined)
 
   const [isMounted, setIsMounted] = React.useState(false)
 
@@ -77,12 +85,24 @@ export function MonacoEditor({
   // 配置
   const _options = React.useMemo(() => createMonacoEditorInitialOptions({ ...options, language, theme }), [language, options, theme])
 
-  // 销毁编辑器
+  // 销毁
   const handleDestroy = React.useEffectEvent(() => {
+    changeListenerRef.current?.dispose()
+
     editorRef.current?.dispose()
     diffEditorRef.current?.dispose()
+
+    modelRef.current?.dispose()
+    originalModelRef.current?.dispose()
+
+    editorRef.current = undefined
+    diffEditorRef.current = undefined
+    modelRef.current = undefined
+    originalModelRef.current = undefined
+    changeListenerRef.current = undefined
   })
-  // 创建编辑器
+
+  // 创建
   const handleCreate = React.useEffectEvent((monaco?: Monaco) => {
     if (!containerRef.current) {
       console.warn('Monaco Editor root element not found')
@@ -93,17 +113,22 @@ export function MonacoEditor({
     handleDestroy()
 
     if (isDiffMode) {
+      modelRef.current = monaco.editor.createModel(value, language)
+      originalModelRef.current = monaco.editor.createModel(originalValue, language)
       diffEditorRef.current = monaco.editor.createDiffEditor(containerRef.current, _options)
       diffEditorRef.current.setModel({
-        modified: monaco.editor.createModel(value, language),
-        original: monaco.editor.createModel(originalValue, language)
+        modified: modelRef.current,
+        original: originalModelRef.current
       })
     } else {
-      editorRef.current = monaco.editor.create(containerRef.current, _options)
-      editorRef.current.setModel(monaco.editor.createModel(value, language))
+      modelRef.current = monaco.editor.createModel(value, language)
+      editorRef.current = monaco.editor.create(containerRef.current, {
+        ..._options,
+        model: modelRef.current
+      })
     }
 
-    editorRef.current?.onDidChangeModelContent(() => {
+    changeListenerRef.current = editorRef.current?.onDidChangeModelContent(() => {
       const val = editorRef.current!.getValue()
       onChange?.(val)
     })
@@ -111,14 +136,19 @@ export function MonacoEditor({
 
   // 初始化
   React.useEffect(() => {
+    let ignore = false
+
     void (async () => {
       const monaco = await loader.init()
+
+      if (ignore) return
+
       monacoRef.current = monaco
 
       onInit?.(monaco, language)
 
       const langs = [language]
-      const highlighter = await createHighlighterOnce({ langs, themes })
+      const highlighter = await createHighlighter({ langs, themes })
       langs.forEach(id => monaco.languages.register({ id }))
       shikiToMonaco(highlighter, monaco)
 
@@ -127,14 +157,17 @@ export function MonacoEditor({
       setIsMounted(true)
     })()
 
-    return handleDestroy
+    return () => {
+      ignore = true
+      handleDestroy()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // 配置更新
   React.useEffect(() => {
-    diffEditorRef.current?.updateOptions(_options)
     editorRef.current?.updateOptions(_options)
+    diffEditorRef.current?.updateOptions(_options)
   }, [_options])
 
   // 切换编辑器

@@ -31,18 +31,13 @@ export function ClashTemplateTable() {
   const handleCreate = React.useEffectEvent(async (body: ClashTemplateCreateBodyType) => {
     try {
       const data = await toastPromise(rpc.dashboard.clashes.templates.post(body).then(unwrap), {
-        success: '添加成功'
+        success: '创建成功'
       })
-      await mutate(
-        current => {
-          return produce(current, draft => {
-            draft?.unshift(data)
-          })
-        },
-        {
-          revalidate: false
-        }
-      )
+      await mutate(current => {
+        return produce(current, draft => {
+          draft?.unshift(data)
+        })
+      }, false)
     } catch (error) {
       console.error(error)
     }
@@ -51,19 +46,14 @@ export function ClashTemplateTable() {
   // 删除
   const handleDelete = React.useEffectEvent(async (row: RowData) => {
     try {
-      await toastPromise(rpc.dashboard.clashes.templates({ id: row.original.id }).delete(), {
+      await toastPromise(rpc.dashboard.clashes.templates({ id: row.original.id }).delete().then(unwrap), {
         success: '删除成功'
       })
-      await mutate(
-        current => {
-          return produce(current, draft => {
-            draft?.splice(row.index, 1)
-          })
-        },
-        {
-          revalidate: false
-        }
-      )
+      await mutate(current => {
+        return produce(current, draft => {
+          draft?.splice(row.index, 1)
+        })
+      }, false)
     } catch (error) {
       console.error(error)
     }
@@ -73,18 +63,13 @@ export function ClashTemplateTable() {
   const handleUpdate = React.useEffectEvent(async (row: RowData, body: ClashTemplateUpdateBodyType) => {
     try {
       const data = await toastPromise(rpc.dashboard.clashes.templates({ id: row.original.id }).put(body).then(unwrap), {
-        success: '修改成功'
+        success: '更新成功'
       })
-      await mutate(
-        current => {
-          return produce(current, draft => {
-            draft?.splice(row.index, 1, data)
-          })
-        },
-        {
-          revalidate: false
-        }
-      )
+      await mutate(current => {
+        return produce(current, draft => {
+          draft?.splice(row.index, 1, data)
+        })
+      }, false)
     } catch (error) {
       console.error(error)
     }

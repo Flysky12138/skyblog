@@ -2,7 +2,7 @@ import { useRender } from '@base-ui/react'
 
 import { cn, cva, VariantProps } from '../lib/utils'
 
-const cardVariants = cva('overflow-hidden rounded-xl bg-card text-card-foreground shadow-xs', {
+const cardVariants = cva('rounded-xl bg-card text-card-foreground shadow-xs', {
   defaultVariants: {
     variant: 'default'
   },

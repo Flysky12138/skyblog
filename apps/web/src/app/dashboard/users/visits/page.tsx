@@ -92,7 +92,7 @@ export default function Page() {
                 <DialogDescription>访客的详细信息</DialogDescription>
               </DialogHeader>
               <MDXClient
-                className="text-sm [&_span[data-line]]:whitespace-pre-wrap"
+                className="**:data-line:whitespace-pre-wrap [&_code+*]:hidden **:[code]:max-h-none **:[code]:text-sm"
                 loadingRender={<Skeleton className="h-48" />}
                 source={['```json', JSON.stringify(row.original, null, 2), '```'].join('\n')}
               />
@@ -129,7 +129,7 @@ export default function Page() {
           table={table}
           title="访客信息"
           onConfirm={async ({ rows }) => {
-            await toastPromise(rpc.dashboard.users.visits.delete({ ids: rows.map(item => item.id as unknown as number) }), {
+            await toastPromise(rpc.dashboard.users.visits.delete({ ids: rows.map(item => Number(item.id)) }).then(unwrap), {
               success: '删除成功'
             })
             await mutate()

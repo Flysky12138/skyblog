@@ -1,11 +1,7 @@
 import './env.zod'
 
-import createMDX from '@next/mdx'
-import { mdxOptions } from '@repo/mdx/options'
-import withSerwistInit from '@serwist/next'
+import { withMDX } from '@repo/mdx/next'
 import { NextConfig } from 'next'
-
-import { isDev } from '@/lib/utils'
 
 // 内容安全策略 (CSP)
 // CSP 是一种安全机制，用于限制网页的哪些内容可以加载、执行、显示、或使用
@@ -106,7 +102,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     // https://nextjs.org/docs/app/guides/memory-usage#preloading-entries
-    preloadEntriesOnStart: false
+    // preloadEntriesOnStart: false
     // webpackMemoryOptimizations: true
   },
   typescript: {
@@ -115,16 +111,4 @@ const nextConfig: NextConfig = {
   staticPageGenerationTimeout: 600
 }
 
-// https://nextjs.org/docs/app/building-your-application/configuring/mdx
-const withMDX = createMDX({
-  options: mdxOptions
-})
-
-// https://serwist.pages.dev/docs/next/getting-started
-const withSerwist = withSerwistInit({
-  disable: isDev(),
-  swDest: 'public/sw.js',
-  swSrc: 'src/sw.ts'
-})
-
-export default withSerwist(withMDX(nextConfig))
+export default withMDX(nextConfig)

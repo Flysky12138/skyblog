@@ -159,6 +159,7 @@ export function MultiSelect<T extends Record<string, unknown>>({
 
       <PopoverContent align="start" aria-multiselectable={multiple} className="p-0" role="listbox">
         <Command
+          className="**:data-[slot='input-group']:rounded-md!"
           filter={(value, search, keywords) => {
             return keywords?.some(keyword => keyword.toLowerCase().includes(search.trim().toLowerCase())) ? 1 : 0
           }}
@@ -190,7 +191,7 @@ export function MultiSelect<T extends Record<string, unknown>>({
               {mergeOptions.map(option => (
                 <CommandItem
                   key={getValue(option)}
-                  className="cursor-pointer"
+                  className="cursor-pointer rounded-md"
                   data-checked={isSelected(option)}
                   keywords={[getLabel(option)]}
                   role="option"

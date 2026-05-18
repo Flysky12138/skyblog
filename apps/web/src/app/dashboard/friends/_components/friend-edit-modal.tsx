@@ -32,7 +32,7 @@ export function FriendEditModal({ children, value, onSubmit }: FriendEditModalPr
         form.reset()
         if (!isOpen) return
         if (value) {
-          form.setValues(pick(value, ['description', 'name', 'siteUrl']))
+          form.setValues(pick(value, FriendCreateBodySchema.keyof().options))
         }
       }}
     >

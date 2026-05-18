@@ -8,7 +8,9 @@ export const phrase = new Elysia({ prefix: '/phrase' }).get(
   async ({ status }) => {
     const res = await fetch('https://v1.hitokoto.cn')
 
-    if (!res.ok) return status(500, 'Failed to fetch hitokoto')
+    if (!res.ok) {
+      return status(500, { message: 'Failed to fetch hitokoto' })
+    }
 
     const data = (await res.json()) as PhraseDetailResponseType
 
@@ -17,7 +19,7 @@ export const phrase = new Elysia({ prefix: '/phrase' }).get(
   {
     response: {
       200: PhraseDetailResponseSchema,
-      500: z.string()
+      500: z.object({ message: z.string() })
     }
   }
 )

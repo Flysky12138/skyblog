@@ -11,7 +11,10 @@ export const clashes = new Elysia({ prefix: '/clashes' }).use(idModel).get(
   '/:id',
   async ({ params, redirect, request, status }) => {
     const ip = isDev() ? '0.0.0.0' : getRealIp(request)
-    if (!ip) return status(401, '未知访问')
+
+    if (!ip) {
+      return status(401, { message: '未知访问' })
+    }
 
     if (!request.headers.get('user-agent')?.toLowerCase().includes('clash')) {
       return redirect(`${process.env.NEXT_PUBLIC_WEBSITE_URL}/ban/clash`)

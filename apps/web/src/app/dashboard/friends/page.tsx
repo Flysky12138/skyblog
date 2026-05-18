@@ -35,18 +35,13 @@ export default function Page() {
   const handleCreate = React.useEffectEvent(async (body: FriendCreateBodyType) => {
     try {
       const data = await toastPromise(rpc.dashboard.friends.post(body).then(unwrap), {
-        success: '保存成功'
+        success: '创建成功'
       })
-      await mutate(
-        current => {
-          return produce(current, draft => {
-            draft?.push(data)
-          })
-        },
-        {
-          revalidate: false
-        }
-      )
+      await mutate(current => {
+        return produce(current, draft => {
+          draft?.push(data)
+        })
+      }, false)
     } catch (error) {
       console.error(error)
     }
@@ -55,19 +50,14 @@ export default function Page() {
   // 删除
   const handleDelete = React.useEffectEvent(async (id: string, index: number) => {
     try {
-      await toastPromise(rpc.dashboard.friends({ id }).delete(), {
+      await toastPromise(rpc.dashboard.friends({ id }).delete().then(unwrap), {
         success: '删除成功'
       })
-      await mutate(
-        current => {
-          return produce(current, draft => {
-            draft?.splice(index, 1)
-          })
-        },
-        {
-          revalidate: false
-        }
-      )
+      await mutate(current => {
+        return produce(current, draft => {
+          draft?.splice(index, 1)
+        })
+      }, false)
     } catch (error) {
       console.error(error)
     }
@@ -79,16 +69,11 @@ export default function Page() {
       const data = await toastPromise(rpc.dashboard.friends({ id }).put(body).then(unwrap), {
         success: '更新成功'
       })
-      await mutate(
-        current => {
-          return produce(current, draft => {
-            draft?.splice(index, 1, data)
-          })
-        },
-        {
-          revalidate: false
-        }
-      )
+      await mutate(current => {
+        return produce(current, draft => {
+          draft?.splice(index, 1, data)
+        })
+      }, false)
     } catch (error) {
       console.error(error)
     }

@@ -3,8 +3,8 @@
 import { useCopyToClipboard } from '@repo/react-hooks'
 import { Button } from '@repo/ui/components/button'
 import { cn } from '@repo/ui/lib/utils'
-import { AnimatePresence, motion, Variants } from 'framer-motion'
 import { CheckIcon, CopyIcon } from 'lucide-react'
+import { AnimatePresence, motion, Variants } from 'motion/react'
 import React from 'react'
 
 const variants: Variants = {
@@ -40,17 +40,13 @@ export function Pre({ children, className, tabIndex, ...props }: React.Component
   })
 
   return (
-    <pre ref={preRef} className={cn('group/pre relative rounded-none bg-sheet p-0', className)} {...props}>
+    <pre ref={preRef} className={cn('group/pre relative overflow-clip rounded-[inherit] bg-sheet p-0', className)} {...props}>
       {children}
       {copyText && (
         <Button
           aria-label="copy code"
-          className={cn(
-            'text-[initial]',
-            'absolute inset-e-1 top-1 md:inset-e-1.5 md:top-1.5',
-            'opacity-0 group-hover/pre:opacity-100 focus-visible:opacity-100'
-          )}
-          size="icon-sm"
+          className={cn('rounded-sm text-[initial]', 'absolute inset-e-2 top-2', 'opacity-0 group-hover/pre:opacity-100 focus-visible:opacity-100')}
+          size="icon-xs"
           variant="outline"
           onClick={handleCopyClick}
         >

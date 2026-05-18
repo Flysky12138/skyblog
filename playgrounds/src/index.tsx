@@ -25,7 +25,7 @@ function App() {
   }, [])
 
   return (
-    <div className="relative h-dvh w-full p-20">
+    <div className="relative grid min-h-dvh w-full p-20">
       <div className="fixed inset-e-5 inset-bs-5 space-x-3">
         <DropdownMenuThemeRadio />
         <Button

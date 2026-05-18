@@ -1,25 +1,30 @@
 "use client"
 
-import { Popover as PopoverPrimitive } from "@base-ui/react/popover"
-import { cn } from "@repo/ui/lib/utils"
 import * as React from "react"
+import { Popover as PopoverPrimitive } from "@base-ui/react/popover"
+
+import { cn } from "@repo/ui/lib/utils"
 
 function Popover({ ...props }: PopoverPrimitive.Root.Props) {
   return <PopoverPrimitive.Root data-slot="popover" {...props} />
 }
 
+function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
+  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
+}
+
 function PopoverContent({
+  className,
   align = "center",
   alignOffset = 0,
-  className,
   side = "bottom",
   sideOffset = 4,
   ...props
-}: Pick<
+}: PopoverPrimitive.Popup.Props &
+  Pick<
     PopoverPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
-  > &
-  PopoverPrimitive.Popup.Props) {
+  >) {
   return (
     <PopoverPrimitive.Portal>
       <PopoverPrimitive.Positioner
@@ -39,19 +44,6 @@ function PopoverContent({
         />
       </PopoverPrimitive.Positioner>
     </PopoverPrimitive.Portal>
-  )
-}
-
-function PopoverDescription({
-  className,
-  ...props
-}: PopoverPrimitive.Description.Props) {
-  return (
-    <PopoverPrimitive.Description
-      data-slot="popover-description"
-      className={cn("text-muted-foreground", className)}
-      {...props}
-    />
   )
 }
 
@@ -75,8 +67,17 @@ function PopoverTitle({ className, ...props }: PopoverPrimitive.Title.Props) {
   )
 }
 
-function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
-  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
+function PopoverDescription({
+  className,
+  ...props
+}: PopoverPrimitive.Description.Props) {
+  return (
+    <PopoverPrimitive.Description
+      data-slot="popover-description"
+      className={cn("text-muted-foreground", className)}
+      {...props}
+    />
+  )
 }
 
 export {

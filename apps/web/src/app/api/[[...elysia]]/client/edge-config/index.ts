@@ -1,12 +1,18 @@
-import { get, has } from '@vercel/edge-config'
+import { get } from '@vercel/edge-config'
 import { Elysia } from 'elysia'
 
-import { EdgeConfigQuerySchema } from './model'
+import { EdgeConfigDetailResponseSchema, EdgeConfigQuerySchema } from './model'
 
-export const edgeConfig = new Elysia({ prefix: '/edge-config' })
-  .get('/get', ({ query }) => get(query.key), {
-    query: EdgeConfigQuerySchema
-  })
-  .get('/has', ({ query }) => has(query.key), {
-    query: EdgeConfigQuerySchema
-  })
+export const edgeConfig = new Elysia({ prefix: '/edge-config' }).get(
+  '/get',
+  async ({ query }) => ({
+    key: query.key,
+    value: await get(query.key)
+  }),
+  {
+    query: EdgeConfigQuerySchema,
+    response: {
+      200: EdgeConfigDetailResponseSchema
+    }
+  }
+)

@@ -40,7 +40,7 @@ export function PostCategoryEditModal({ children, value, onSubmit }: PostCategor
         form.reset()
         if (!isOpen) return
         if (value) {
-          form.setValues(pick(value, ['name']))
+          form.setValues(pick(value, CategoryCreateBodySchema.keyof().options))
         }
       }}
     >

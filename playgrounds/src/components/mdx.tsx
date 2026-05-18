@@ -3,16 +3,9 @@ import { MDXClient, MDXClientMemoProps } from '@repo/mdx'
 import { Card } from '@repo/ui/components/card'
 import React from 'react'
 
+import template from '../assets/template.mdx?raw'
+
 export function MDXPlayground() {
-  const [value, setValue] = React.useState('')
-
-  React.useEffect(() => {
-    void (async () => {
-      const module = await import('./test.mdx?raw')
-      setValue(module.default)
-    })()
-  }, [])
-
   const handleAfterRender = React.useCallback<NonNullable<MDXClientMemoProps['onAfterRender']>>(isFirstRender => {
     const hash = decodeURIComponent(location.hash.slice(1))
     if (!hash) return
@@ -24,7 +17,7 @@ export function MDXPlayground() {
 
   return (
     <Card className="p-6">
-      <MDXClient source={value} onAfterRender={handleAfterRender} />
+      <MDXClient source={template} onAfterRender={handleAfterRender} />
     </Card>
   )
 }

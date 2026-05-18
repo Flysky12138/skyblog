@@ -1,10 +1,12 @@
 'use client'
 
 import { produce } from '@repo/react-hooks'
-import { ColumnDef, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { PencilIcon } from 'lucide-react'
+import React from 'react'
 import useSWR from 'swr'
 
+import { TagUpdateBodyType } from '@/app/api/[[...elysia]]/dashboard/posts/tags/model'
 import { DataTable } from '@/components/data-table'
 import { DataTableRowActionButton, DataTableRowDeleteButton } from '@/components/data-table/data-table-action'
 import { getColumnConfig } from '@/components/data-table/utils'
@@ -21,6 +23,40 @@ export function PostTagTable() {
     mutate
   } = useSWR(POST_TAG_SWR_KEY, () => rpc.dashboard.posts.tags.get().then(unwrap), {
     fallbackData: []
+  })
+
+  type RowData = Row<(typeof tags)[number]>
+
+  // 更新
+  const handleUpdate = React.useEffectEvent(async (row: RowData, body: TagUpdateBodyType) => {
+    try {
+      const data = await toastPromise(rpc.dashboard.posts.tags({ id: row.original.id }).put(body).then(unwrap), {
+        success: '更新成功'
+      })
+      await mutate(current => {
+        return produce(current, draft => {
+          draft?.splice(row.index, 1, data)
+        })
+      }, false)
+    } catch (error) {
+      console.error(error)
+    }
+  })
+
+  // 删除
+  const handleDelete = React.useEffectEvent(async (row: RowData) => {
+    try {
+      await toastPromise(rpc.dashboard.posts.tags({ id: row.original.id }).delete().then(unwrap), {
+        success: '删除成功'
+      })
+      await mutate(current => {
+        return produce(current, draft => {
+          draft?.splice(row.index, 1)
+        })
+      }, false)
+    } catch (error) {
+      console.error(error)
+    }
   })
 
   const columns: ColumnDef<(typeof tags)[number]>[] = [
@@ -47,19 +83,7 @@ export function PostTagTable() {
           <PostTagEditModal
             value={row.original}
             onSubmit={async body => {
-              const data = await toastPromise(rpc.dashboard.posts.tags({ id: row.original.id }).put(body).then(unwrap), {
-                success: '编辑成功'
-              })
-              await mutate(
-                current => {
-                  return produce(current, draft => {
-                    draft?.splice(row.index, 1, data)
-                  })
-                },
-                {
-                  revalidate: false
-                }
-              )
+              await handleUpdate(row, body)
             }}
           >
             <DataTableRowActionButton>
@@ -69,19 +93,7 @@ export function PostTagTable() {
           <DataTableRowDeleteButton
             title={row.original.name}
             onConfirm={async () => {
-              await toastPromise(rpc.dashboard.posts({ id: row.original.id }).delete(), {
-                success: '删除成功'
-              })
-              await mutate(
-                current => {
-                  return produce(current, draft => {
-                    draft?.splice(row.index, 1)
-                  })
-                },
-                {
-                  revalidate: false
-                }
-              )
+              await handleDelete(row)
             }}
           />
         </div>

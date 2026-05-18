@@ -17,21 +17,21 @@ allowBuilds:
 catalog:
   '@tailwindcss/postcss': ^4.3.0
   '@tailwindcss/vite': ^4.3.0
-  '@types/node': ^25.7.0
+  '@types/node': ^25.8.0
   '@types/react': ^19.2.14
   '@types/react-dom': ^19.2.3
-  '@vitejs/plugin-react': ^6.0.1
+  '@vitejs/plugin-react': ^6.0.2
   echarts: ^6.0.0
   es-toolkit: ^1.46.1
   eslint: ^9.39.4
-  framer-motion: ^12.38.0
-  lucide-react: ^1.14.0
+  lucide-react: ^1.16.0
+  motion: ^12.38.0
   next: ^16.2.6
   react: ^19.2.6
   react-dom: ^19.2.6
   tailwindcss: ^4.3.0
-  tsx: ^4.21.0
-  vite: ^8.0.12
+  tsx: ^4.22.1
+  vite: ^8.0.13
 
 patchedDependencies:
   '@monaco-editor/loader': patches/@monaco-editor__loader.patch

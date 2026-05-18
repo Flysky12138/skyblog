@@ -1,5 +1,9 @@
 "use client"
 
+import * as React from "react"
+import { Command as CommandPrimitive } from "cmdk"
+
+import { cn } from "@repo/ui/lib/utils"
 import {
   Dialog,
   DialogContent,
@@ -11,10 +15,7 @@ import {
   InputGroup,
   InputGroupAddon,
 } from "@repo/ui/components/input-group"
-import { cn } from "@repo/ui/lib/utils"
-import { Command as CommandPrimitive } from "cmdk"
-import { CheckIcon, SearchIcon } from "lucide-react"
-import * as React from "react"
+import { SearchIcon, CheckIcon } from "lucide-react"
 
 function Command({
   className,
@@ -33,18 +34,18 @@ function Command({
 }
 
 function CommandDialog({
+  title = "Command Palette",
+  description = "Search for a command to run...",
   children,
   className,
-  description = "Search for a command to run...",
   showCloseButton = false,
-  title = "Command Palette",
   ...props
 }: Omit<React.ComponentProps<typeof Dialog>, "children"> & {
-  children: React.ReactNode
-  className?: string
-  description?: string
-  showCloseButton?: boolean
   title?: string
+  description?: string
+  className?: string
+  showCloseButton?: boolean
+  children: React.ReactNode
 }) {
   return (
     <Dialog {...props}>
@@ -62,6 +63,45 @@ function CommandDialog({
         {children}
       </DialogContent>
     </Dialog>
+  )
+}
+
+function CommandInput({
+  className,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+  return (
+    <div data-slot="command-input-wrapper" className="p-1 pb-0">
+      <InputGroup className="h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:ps-2!">
+        <CommandPrimitive.Input
+          data-slot="command-input"
+          className={cn(
+            "w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
+            className
+          )}
+          {...props}
+        />
+        <InputGroupAddon>
+          <SearchIcon className="size-4 shrink-0 opacity-50" />
+        </InputGroupAddon>
+      </InputGroup>
+    </div>
+  )
+}
+
+function CommandList({
+  className,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.List>) {
+  return (
+    <CommandPrimitive.List
+      data-slot="command-list"
+      className={cn(
+        "no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none",
+        className
+      )}
+      {...props}
+    />
   )
 }
 
@@ -94,32 +134,22 @@ function CommandGroup({
   )
 }
 
-function CommandInput({
+function CommandSeparator({
   className,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+}: React.ComponentProps<typeof CommandPrimitive.Separator>) {
   return (
-    <div data-slot="command-input-wrapper" className="p-1 pb-0">
-      <InputGroup className="h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:ps-2!">
-        <CommandPrimitive.Input
-          data-slot="command-input"
-          className={cn(
-            "w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
-            className
-          )}
-          {...props}
-        />
-        <InputGroupAddon>
-          <SearchIcon className="size-4 shrink-0 opacity-50" />
-        </InputGroupAddon>
-      </InputGroup>
-    </div>
+    <CommandPrimitive.Separator
+      data-slot="command-separator"
+      className={cn("-mx-1 h-px w-auto bg-border", className)}
+      {...props}
+    />
   )
 }
 
 function CommandItem({
-  children,
   className,
+  children,
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.Item>) {
   return (
@@ -134,35 +164,6 @@ function CommandItem({
       {children}
       <CheckIcon className="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" />
     </CommandPrimitive.Item>
-  )
-}
-
-function CommandList({
-  className,
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive.List>) {
-  return (
-    <CommandPrimitive.List
-      data-slot="command-list"
-      className={cn(
-        "no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none",
-        className
-      )}
-      {...props}
-    />
-  )
-}
-
-function CommandSeparator({
-  className,
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive.Separator>) {
-  return (
-    <CommandPrimitive.Separator
-      data-slot="command-separator"
-      className={cn("-mx-1 h-px w-auto bg-border", className)}
-      {...props}
-    />
   )
 }
 
@@ -185,11 +186,11 @@ function CommandShortcut({
 export {
   Command,
   CommandDialog,
+  CommandInput,
+  CommandList,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
-  CommandList,
-  CommandSeparator,
   CommandShortcut,
+  CommandSeparator,
 }

@@ -11,12 +11,17 @@ export const getPosts = React.cache(async () => {
   return prisma.post.findMany({
     orderBy: POST_ORDER_BY_DESC_INPUT,
     where: POST_WHERE_INPUT,
-    select: {
-      id: true,
-      slug: true,
-      summary: true,
-      title: true,
-      updatedAt: true
+    include: {
+      categories: {
+        include: {
+          category: true
+        }
+      },
+      tags: {
+        include: {
+          tag: true
+        }
+      }
     }
   })
 })

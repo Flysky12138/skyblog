@@ -1,13 +1,16 @@
 'use client'
 
 import { Updater } from '@repo/react-hooks'
+import { FileSelect } from '@repo/ui/components-self/file-select'
 import { MultiSelect } from '@repo/ui/components-self/multi-select'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui/components/dialog'
-import { Field, FieldGroup, FieldLabel } from '@repo/ui/components/field'
+import { Field, FieldGroup, FieldLabel, FieldTitle } from '@repo/ui/components/field'
 import { Input } from '@repo/ui/components/input'
 import { Textarea } from '@repo/ui/components/textarea'
 import { Toggle } from '@repo/ui/components/toggle'
 import { cn } from '@repo/ui/lib/utils'
+import { noop } from '@tanstack/react-table'
+import { ImageIcon } from 'lucide-react'
 import useSWR from 'swr'
 import { uuidv7 } from 'uuidv7'
 
@@ -84,7 +87,7 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
               />
             </Field>
             <Field>
-              <FieldLabel>分类</FieldLabel>
+              <FieldTitle>分类</FieldTitle>
               <MultiSelect
                 multiple
                 fieldNames={{ label: 'name', value: 'id' }}
@@ -99,7 +102,7 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
               />
             </Field>
             <Field>
-              <FieldLabel>标签</FieldLabel>
+              <FieldTitle>标签</FieldTitle>
               <MultiSelect
                 multiple
                 fieldNames={{ label: 'name', value: 'id' }}
@@ -117,10 +120,11 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
 
           <FieldGroup>
             <Field>
-              <FieldLabel>封面</FieldLabel>
+              <FieldTitle>封面</FieldTitle>
+              <FileSelect logo={ImageIcon} title="选择图片" onChange={noop} />
             </Field>
             <Field>
-              <FieldLabel>区块显示</FieldLabel>
+              <FieldTitle>区块显示</FieldTitle>
               <div className="grid grid-cols-10 gap-3">
                 <RadioArea
                   className="col-span-full h-10"

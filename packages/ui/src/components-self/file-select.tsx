@@ -1,20 +1,20 @@
 'use client'
 
+import { useRender } from '@base-ui/react'
 import { useAccessibleClick, useDropArea } from '@repo/react-hooks'
 import { LucideIcon } from 'lucide-react'
 
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '../components/empty'
-import { FieldLabel } from '../components/field'
 import { Input } from '../components/input'
 import { cn } from '../lib/utils'
 
-interface FileSelectBaseProps extends React.ComponentProps<'label'>, React.PropsWithChildren {
+interface FileSelectBaseProps extends useRender.ComponentProps<'div'> {
   description?: string
   logo: LucideIcon
   title: string
 }
 
-interface FileSelectProps extends Pick<FileSelectBaseProps, 'className' | 'description' | 'logo' | 'title'> {
+interface FileSelectProps extends Omit<FileSelectBaseProps, 'onChange'> {
   /**
    * 接受的文件类型
    *
@@ -48,11 +48,13 @@ export function FileSelect({ accept, className, multiple, type, onChange, ...pro
   return (
     <FileSelectBase
       className={cn(
+        'block',
         {
           'border-green-500/75': state.over
         },
         className
       )}
+      render={<label />}
       {...props}
       {...accessibleProps}
       {...bond}
@@ -71,27 +73,32 @@ export function FileSelect({ accept, className, multiple, type, onChange, ...pro
   )
 }
 
-export function FileSelectBase({ children, className, description, logo: Logo, title, ...props }: FileSelectBaseProps) {
-  return (
-    <FieldLabel
-      className={cn(
-        'mx-auto w-full max-w-2xl cursor-pointer rounded-lg border border-dashed bg-card transition-all',
+export function FileSelectBase({ children, className, description, logo: Logo, render, title, ...props }: FileSelectBaseProps) {
+  return useRender({
+    defaultTagName: 'div',
+    render,
+    props: {
+      children: (
+        <>
+          <Empty className="pointer-events-none">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <Logo />
+              </EmptyMedia>
+              <EmptyTitle>{title}</EmptyTitle>
+              {description && <EmptyDescription>{description}</EmptyDescription>}
+            </EmptyHeader>
+          </Empty>
+          {children}
+        </>
+      ),
+      className: cn(
+        'mx-auto w-full max-w-2xl cursor-pointer rounded-lg border border-dashed bg-transparent transition-all dark:bg-input/30',
         'hover:border-blue-500/75',
         'focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50',
         className
-      )}
-      {...props}
-    >
-      <Empty className="pointer-events-none">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <Logo />
-          </EmptyMedia>
-          <EmptyTitle>{title}</EmptyTitle>
-          {description && <EmptyDescription>{description}</EmptyDescription>}
-        </EmptyHeader>
-      </Empty>
-      {children}
-    </FieldLabel>
-  )
+      ),
+      ...props
+    }
+  })
 }

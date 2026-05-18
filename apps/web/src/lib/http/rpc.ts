@@ -14,48 +14,12 @@ const url = isBrowser() ? process.env.NEXT_PUBLIC_WEBSITE_URL : `http://localhos
  */
 export const rpc = treaty<typeof app>(url, {
   onResponse: async response => {
-    try {
-      const contentType = response.headers.get('Content-Type')
+    const ivJwk = response.headers.get(HEADER_KEY.AES_GCM_IVJWK)
+    const contentType = response.headers.get('Content-Type')
 
-      if (!response.ok) {
-        if (contentType?.includes('text/plain')) {
-          throw new Error(await response.text())
-        }
-        if (contentType?.includes('application/json')) {
-          throw new Error(JSON.stringify(await response.json()))
-        }
-        throw new Error(response.statusText)
-      }
-
-      // AES-GCM
-      const ivJwk = response.headers.get(HEADER_KEY.AES_GCM_IVJWK)
-      if (ivJwk && contentType?.includes('application/octet-stream')) {
-        const buffer = await response.arrayBuffer()
-        return await AesGcm.decrypt(buffer, ivJwk)
-      }
-
-      // JSON
-      if (contentType?.includes('application/json')) {
-        return (await response.json()) as object
-      }
-
-      // Text
-      if (contentType?.includes('text/plain')) {
-        return await response.text()
-      }
-
-      // Blob
-      return await response.blob()
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error)
-
-      if (isBrowser()) {
-        if (window.location.pathname.startsWith('/dashboard')) {
-          toast.error(message, { id: message, richColors: true })
-        }
-      }
-
-      return Promise.reject(new Error(message, { cause: error }))
+    if (ivJwk && contentType?.includes('application/octet-stream')) {
+      const buffer = await response.arrayBuffer()
+      return AesGcm.decrypt(buffer, ivJwk)
     }
   }
 }).api
@@ -63,7 +27,17 @@ export const rpc = treaty<typeof app>(url, {
 export const unwrap = <T extends Treaty.TreatyResponse<{}>>({ data, error }: T) => {
   if (error) {
     console.error(error.status, error.value)
-    return Promise.reject(new Error(JSON.stringify((error.value as { message?: string }).message ?? error.value, null, 2)))
+
+    const message = typeof error.value == 'string' ? error.value : JSON.stringify(error.value, null, 2)
+
+    if (isBrowser() && location.pathname.startsWith('/dashboard')) {
+      toast.error(message, {
+        closeButton: true,
+        richColors: true
+      })
+    }
+
+    throw new Error(message)
   }
   return data as Treaty.Data<T>
 }

@@ -8,7 +8,9 @@ import { Service } from './service'
 export const visits = new Elysia({ prefix: '/visits' }).post('/', ({ cookie, request, set, status }) => {
   const VISITED = 'visited'
 
-  if (VISITED in cookie) return status(200, 'OK')
+  if (VISITED in cookie) {
+    return status(200, { message: '已访问' })
+  }
 
   after(async () => {
     const visitInfo = getUserVisitInfo(request)
@@ -25,5 +27,5 @@ export const visits = new Elysia({ prefix: '/visits' }).post('/', ({ cookie, req
     }
   }
 
-  return status(201, 'Created')
+  return status(201, { message: '访问成功' })
 })

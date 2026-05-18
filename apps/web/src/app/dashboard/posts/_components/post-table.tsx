@@ -41,21 +41,33 @@ export function PostTable() {
 
   type RowData = Row<NonNullable<typeof data>['posts'][number]>
 
+  // 更新
   const handleUpdate = React.useEffectEvent(async (row: RowData) => {
     try {
       const post = await toastPromise(rpc.dashboard.posts({ id: row.original.id }).put({ isPublished: !row.original.isPublished }).then(unwrap), {
         success: '更新成功'
       })
-      await mutate(
-        current => {
-          return produce(current, draft => {
-            draft?.posts.splice(row.index, 1, post)
-          })
-        },
-        {
-          revalidate: false
-        }
-      )
+      await mutate(current => {
+        return produce(current, draft => {
+          draft?.posts.splice(row.index, 1, post)
+        })
+      }, false)
+    } catch (error) {
+      console.error(error)
+    }
+  })
+
+  // 删除
+  const handleDelete = React.useEffectEvent(async (row: RowData) => {
+    try {
+      await toastPromise(rpc.dashboard.posts({ id: row.original.id }).delete().then(unwrap), {
+        success: '删除成功'
+      })
+      await mutate(current => {
+        return produce(current, draft => {
+          draft?.posts.splice(row.index, 1)
+        })
+      }, data?.posts.length == 1)
     } catch (error) {
       console.error(error)
     }
@@ -130,17 +142,7 @@ export function PostTable() {
           <DataTableRowDeleteButton
             title={row.original.title}
             onConfirm={async () => {
-              await toastPromise(rpc.dashboard.posts({ id: row.original.id }).delete().then(unwrap), {
-                success: '删除成功'
-              })
-              await mutate(
-                produce<typeof data>(draft => {
-                  draft?.posts.splice(row.index, 1)
-                }),
-                {
-                  revalidate: data?.posts.length == 1
-                }
-              )
+              await handleDelete(row)
             }}
           />
         </div>

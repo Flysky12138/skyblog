@@ -1,6 +1,7 @@
 "use client"
 
 import { Switch as SwitchPrimitive } from "@base-ui/react/switch"
+
 import { cn } from "@repo/ui/lib/utils"
 
 function Switch({
@@ -8,7 +9,7 @@ function Switch({
   size = "default",
   ...props
 }: SwitchPrimitive.Root.Props & {
-  size?: "default" | "sm"
+  size?: "sm" | "default"
 }) {
   return (
     <SwitchPrimitive.Root

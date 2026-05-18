@@ -1,7 +1,7 @@
 'use client'
 
 import { Card } from '@repo/ui/components-self/card'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import React from 'react'
 
 const GAP = 0.2

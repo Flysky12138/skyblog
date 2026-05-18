@@ -4,9 +4,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev:chart-preview": "VITE_APP_PACKAGE=chart-preview vite --open",
-    "dev:mdx": "VITE_APP_PACKAGE=mdx vite --open",
-    "dev:monaco-editor": "VITE_APP_PACKAGE=monaco-editor vite --open"
+    "dev:chart-preview": "cross-env VITE_APP_PACKAGE=chart-preview vite --open",
+    "dev:mdx": "cross-env VITE_APP_PACKAGE=mdx vite --open",
+    "dev:monaco-editor": "cross-env VITE_APP_PACKAGE=monaco-editor vite --open"
   },
   "devDependencies": {
     "@repo/chart-preview": "workspace:*",
@@ -18,6 +18,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
+    "cross-env": "^10.1.0",
     "lucide-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

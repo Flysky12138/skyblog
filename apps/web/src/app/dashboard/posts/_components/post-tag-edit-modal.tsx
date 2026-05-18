@@ -40,7 +40,7 @@ export function PostTagEditModal({ children, value, onSubmit }: PostTagEditModal
         form.reset()
         if (!isOpen) return
         if (value) {
-          form.setValues(pick(value, ['name']))
+          form.setValues(pick(value, TagCreateBodySchema.keyof().options))
         }
       }}
     >

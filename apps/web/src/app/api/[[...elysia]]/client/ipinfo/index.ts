@@ -6,11 +6,14 @@ import { isDev } from '@/lib/utils'
 
 export const ipinfo = new Elysia({ prefix: '/ipinfo' }).get('/', async ({ request, status }) => {
   const ip = isDev() ? '0.0.0.0' : getRealIp(request)
-  if (!ip) return status(400, '未知访问')
+
+  if (!ip) {
+    return status(400, { message: '未知访问' })
+  }
 
   try {
     if (!process.env.TOKEN_IPINFO) {
-      throw new Error('TOKEN_IPINFO 值缺失')
+      return status(500, { message: 'TOKEN_IPINFO 值缺失' })
     }
 
     const res = await fetch(`https://ipinfo.io/${ip}?token=${process.env.TOKEN_IPINFO}`, {
@@ -20,7 +23,7 @@ export const ipinfo = new Elysia({ prefix: '/ipinfo' }).get('/', async ({ reques
     })
 
     if (!res.ok) {
-      throw new Error('获取 IP 信息失败')
+      return status(500, { message: '获取 IP 信息失败' })
     }
 
     const data = (await res.json()) as object

@@ -87,7 +87,16 @@ export const baseConfig = defineConfig([
       // 关闭，使用 react/jsx-sort-props 规则
       'perfectionist/sort-jsx-props': 'off',
       'perfectionist/sort-object-types': sortObjectRulesEntry,
-      'perfectionist/sort-objects': sortObjectRulesEntry
+      'perfectionist/sort-objects': sortObjectRulesEntry,
+      'perfectionist/sort-exports': [
+        'error',
+        {
+          groups: ['type-export', { newlinesBetween: 1 }],
+          order: 'asc',
+          partitionByComment: true,
+          type: 'natural'
+        }
+      ]
     }
   }
 ])

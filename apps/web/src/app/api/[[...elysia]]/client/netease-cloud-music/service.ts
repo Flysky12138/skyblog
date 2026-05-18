@@ -44,7 +44,7 @@ export abstract class Service {
         })
       }
     } catch (error) {
-      throw new Error(error.body.message, { cause: error })
+      return status(500, { message: error.body.message })
     }
   }
 
@@ -63,7 +63,7 @@ export abstract class Service {
         lrcText: res.body.lrc.lyric
       }
     } catch (error) {
-      throw new Error(error.body.message, { cause: error })
+      return status(500, { message: error.body.message })
     }
   }
 
@@ -83,7 +83,7 @@ export abstract class Service {
         songs: res.body.playlist.tracks
       }
     } catch (error) {
-      throw new Error(error.body.message, { cause: error })
+      return status(500, { message: error.body.message })
     }
   }
 
@@ -103,7 +103,7 @@ export abstract class Service {
         songs: res.body.result.songs
       }
     } catch (error) {
-      throw new Error(error.body.message, { cause: error })
+      return status(500, { message: error.body.message })
     }
   }
 
@@ -119,7 +119,7 @@ export abstract class Service {
       const res = await song_url_v1({ cookie: await getNeteaseCloudMusicCookie(), id, level })
       return res.body.data
     } catch (error) {
-      throw new Error(error.body.message, { cause: error })
+      return status(500, { message: error.body.message })
     }
   }
 }

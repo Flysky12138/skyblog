@@ -36,24 +36,23 @@ export function PostInfo({ defaultValue, id }: PostInfoProps) {
     if (isPending) return
     if (session?.user.role == 'admin') return
 
+    let ignore = false
+
     const timer = setTimeout(() => {
       void (async () => {
         const { viewCount } = await rpc.posts({ id }).patch().then(unwrap)
-        await mutate(
-          current => {
-            return produce(current!, draft => {
-              draft.viewCount = viewCount
-            })
-          },
-          {
-            revalidate: false
-          }
-        )
+        if (ignore) return
+        await mutate(current => {
+          return produce(current!, draft => {
+            draft.viewCount = viewCount
+          })
+        }, false)
         setViewed(true)
       })()
     }, 5 * 1000)
 
     return () => {
+      ignore = true
       clearTimeout(timer)
     }
   }, [session?.user.role, id, isPending, mutate, post?.isPublished, setViewed, viewed])

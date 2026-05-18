@@ -39,7 +39,7 @@ export function DataTable<TData extends RowData>({ table }: DataTableProps<TData
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map(row => (
-              <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+              <TableRow key={row.id} data-state={row.getIsSelected() ? 'selected' : undefined}>
                 {row.getVisibleCells().map(cell => (
                   <TableCell key={cell.id} className={cn('', getAlignClassName(cell.column.columnDef.meta?.align))}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -49,7 +49,7 @@ export function DataTable<TData extends RowData>({ table }: DataTableProps<TData
             ))
           ) : (
             <TableRow>
-              <TableCell className="text-center" colSpan={table.getAllColumns().length}>
+              <TableCell className="text-center" colSpan={table.getVisibleLeafColumns().length}>
                 {table.options.meta?.isLoading ? 'Loading...' : 'No results.'}
               </TableCell>
             </TableRow>

@@ -8,11 +8,10 @@ import { toast } from '@repo/ui/base'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@repo/ui/components/resizable'
 import { ScrollArea } from '@repo/ui/components/scroll-area'
 import { isEqual } from 'es-toolkit'
-import { ErrorBoundary } from 'next/dist/client/components/error-boundary'
 import { useRouter } from 'nextjs-toploader/app'
 import React from 'react'
 
-import { ErrorComponent } from '@/components/static/error-component'
+import { ErrorBoundary } from '@/components/static/error'
 import { authClient } from '@/lib/auth/client'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
@@ -190,7 +189,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
       />
 
       <ResizablePanelGroup orientation={width < 1200 ? 'vertical' : 'horizontal'}>
-        <ResizablePanel defaultSize={60}>
+        <ResizablePanel defaultSize="60%" maxSize="80%" minSize="20%">
           <MonacoEditor
             ref={editorRef}
             unstyled
@@ -207,16 +206,10 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
           />
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={40}>
-          <ScrollArea className="h-full *:data-[slot=scroll-area-viewport]:*:block!">
-            <ErrorBoundary
-              errorComponent={props => (
-                <div className="flex justify-center p-5">
-                  <ErrorComponent {...props} />
-                </div>
-              )}
-            >
-              <MDXClient className="min-h-screen max-w-none bg-card p-5 pb-[60vh]" source={previewContent ?? ''} />
+        <ResizablePanel defaultSize="40%">
+          <ScrollArea className="h-full">
+            <ErrorBoundary className="mx-auto mt-16 w-[calc(100%-4rem)]">
+              <MDXClient className="min-h-screen bg-card p-5 pb-[60vh]" source={previewContent ?? ''} />
             </ErrorBoundary>
           </ScrollArea>
         </ResizablePanel>

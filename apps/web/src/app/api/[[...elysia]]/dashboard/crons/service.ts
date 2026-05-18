@@ -1,5 +1,7 @@
 import dayjs from 'dayjs'
+import { status } from 'elysia'
 import { limitAsync } from 'es-toolkit'
+import { transform } from 'sucrase'
 
 import { WeCom } from '@/lib/http/wecom'
 import { prisma } from '@/lib/prisma'
@@ -49,17 +51,26 @@ export abstract class Service {
       where: { id }
     })
 
-    if (!isEnabled) throw new Error('Cron is disabled')
+    if (!isEnabled) {
+      return status(400, { message: 'Cron is disabled' })
+    }
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unsafe-member-access
-      const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor as AsyncFunctionConstructor
-      const fn = new AsyncFunction('WeCom', 'now', content.replace(/^\s*export\s+{\s*?}/m, ''))
-      await fn(WeCom, now)
+      type AsyncFn = (payload: { now: typeof now; WeCom: WeCom }) => Promise<unknown>
+
+      const { code } = transform(content, { transforms: ['typescript'] })
+
+      // eslint-disable-next-line @typescript-eslint/no-implied-eval
+      const createFn = new Function(code) as () => AsyncFn
+      const runtimeFn = createFn()
+
+      return await runtimeFn({ now, WeCom })
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
+
       await WeCom.markdown_v2([`# ${name} - Error`, now(), '```json', message, '```'].join('\n'))
-      throw new Error(message, { cause: error })
+
+      return status(500, { message })
     }
   }
 
@@ -69,14 +80,14 @@ export abstract class Service {
    * @default concurrency = 10
    */
   static async runAll(concurrency = 10) {
-    const crons = await prisma.cron.findMany()
+    const crons = await prisma.cron.findMany({
+      where: {
+        isEnabled: true
+      }
+    })
     const limit = limitAsync(this.run.bind(Service), concurrency)
-    return Promise.allSettled(
-      Array.from(
-        crons.filter(cron => cron.isEnabled),
-        cron => limit(cron.id)
-      )
-    )
+
+    return Promise.allSettled(Array.from(crons, cron => limit(cron.id)))
   }
 
   /**
@@ -90,6 +101,9 @@ export abstract class Service {
   }
 }
 
+/**
+ * 获取当前时间
+ */
 const now = () => {
   return dayjs().tz('Asia/Shanghai').format('YYYY年MM月DD日，星期dd，HH:mm:ss')
 }

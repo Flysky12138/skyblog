@@ -42,7 +42,7 @@ export default function Page() {
 
   return (
     <ResizablePanelGroup orientation={width < 1024 ? 'vertical' : 'horizontal'}>
-      <ResizablePanel defaultSize={50}>
+      <ResizablePanel defaultSize="50%" maxSize="80%" minSize="20%">
         <MonacoEditor
           unstyled
           language="typescript"
@@ -57,7 +57,7 @@ export default function Page() {
         />
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={50}>
+      <ResizablePanel defaultSize="50%">
         <ChartPreview cdnUrl={cdnUrl} content={options} />
       </ResizablePanel>
     </ResizablePanelGroup>

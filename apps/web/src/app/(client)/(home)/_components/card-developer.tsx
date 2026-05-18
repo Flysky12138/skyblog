@@ -8,16 +8,21 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui/components/too
 import { cn } from '@repo/ui/lib/utils'
 import { MailIcon } from 'lucide-react'
 import { cacheLife } from 'next/cache'
+import React from 'react'
 
 import Github from '@/assets/svg/github.svg'
 import LeetCode from '@/assets/svg/leetcode.svg'
 import Spotify from '@/assets/svg/spotify.svg'
 
+const getUser = React.cache(async () => {
+  const octokit = new Octokit()
+  return octokit.users.getByUsername({ username: process.env.NEXT_PUBLIC_GITHUB_NAME })
+})
+
 export async function CardDeveloper() {
   cacheLife('weeks')
 
-  const octokit = new Octokit()
-  const { data } = await octokit.users.getByUsername({ username: process.env.NEXT_PUBLIC_GITHUB_NAME })
+  const { data } = await getUser()
 
   return (
     <Card className="flex flex-col items-center p-card">

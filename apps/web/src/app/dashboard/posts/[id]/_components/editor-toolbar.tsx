@@ -16,7 +16,6 @@ import {
 import { Button } from '@repo/ui/components/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui/components/tooltip'
 import { cn } from '@repo/ui/lib/utils'
-import { motion, useDragControls } from 'framer-motion'
 import {
   AppWindowIcon,
   BinaryIcon,
@@ -29,6 +28,7 @@ import {
   SaveIcon,
   WandSparklesIcon
 } from 'lucide-react'
+import { motion, useDragControls } from 'motion/react'
 import React from 'react'
 
 import { StorageUploadModal } from '@/app/dashboard/storage/_components/storage-upload-modal'

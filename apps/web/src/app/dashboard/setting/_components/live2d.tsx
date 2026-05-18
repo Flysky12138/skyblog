@@ -15,22 +15,20 @@ import { toastPromise } from '@/lib/toast'
 export function Live2D() {
   const id = React.useId()
 
-  const {
-    data: src,
-    isLoading,
-    mutate
-  } = useSWR(
+  const { data, isLoading, mutate } = useSWR(
     '0198eb99-8641-71ad-be7d-5ef3f52eda9b',
-    () => rpc['edge-config'].get.get({ query: { key: VERCEL_EDGE_CONFIG_KEY.LIVE2D_SRC } }).then(unwrap) as Promise<string>,
+    () => rpc['edge-config'].get.get({ query: { key: VERCEL_EDGE_CONFIG_KEY.LIVE2D_SRC } }).then(unwrap),
     {
-      fallbackData: ''
+      fallbackData: {
+        value: ''
+      }
     }
   )
 
   const [{ loading }, handleUpdate] = useAsyncFn(async (value: string) => {
     try {
       await toastPromise(
-        rpc.dashboard['edge-config'].action.patch({ items: [{ key: VERCEL_EDGE_CONFIG_KEY.LIVE2D_SRC, operation: 'upsert', value }] }),
+        rpc.dashboard['edge-config'].action.patch({ items: [{ key: VERCEL_EDGE_CONFIG_KEY.LIVE2D_SRC, operation: 'upsert', value }] }).then(unwrap),
         {
           success: '修改成功'
         }
@@ -53,18 +51,16 @@ export function Live2D() {
             disabled={disabled}
             id={id}
             placeholder=".json or .zip"
-            value={src}
+            value={data.value}
             onChange={event => {
-              void mutate(event.target.value, {
-                revalidate: false
-              })
+              void mutate({ value: event.target.value }, false)
             }}
           />
           <Button
             disabled={disabled}
             variant="outline"
             onClick={() => {
-              void handleUpdate(src)
+              void handleUpdate(data.value ?? '')
             }}
           >
             修改

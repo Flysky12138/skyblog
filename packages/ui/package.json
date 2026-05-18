@@ -8,16 +8,16 @@
     "typecheck": "tsc --noEmit"
   },
   "exports": {
+    "./components/button": "./src/components-override/button.tsx",
+    "./components/dialog": "./src/components-override/dialog.tsx",
+    "./components/sonner": "./src/components-override/sonner.tsx",
+    "./components-self/*": "./src/components-self/*.tsx",
+    "./base": "./src/base.ts",
     "./globals.css": "./src/styles/globals.css",
     "./postcss.config": "./postcss.config.mjs",
     "./lib/*": "./src/lib/*.ts",
     "./components/*": "./src/components/*.tsx",
-    "./hooks/*": "./src/hooks/*.ts",
-    "./base": "./src/base.ts",
-    "./components/button": "./src/components-override/button.tsx",
-    "./components/dialog": "./src/components-override/dialog.tsx",
-    "./components/sonner": "./src/components-override/sonner.tsx",
-    "./components-self/*": "./src/components-self/*.tsx"
+    "./hooks/*": "./src/hooks/*.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

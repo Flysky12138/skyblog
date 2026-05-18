@@ -62,7 +62,11 @@ export default function Layout({ children }: React.PropsWithChildren) {
     <html suppressHydrationWarning dir="ltr" lang="zh-CN">
       <body className={cn(heading.variable, code.variable)}>
         <ThemeProvider>
-          <SWRConfig>
+          <SWRConfig
+            value={{
+              errorRetryCount: 3
+            }}
+          >
             <TooltipProvider>{children}</TooltipProvider>
             <DisplayByEnv env="production">
               <Report />

@@ -1,8 +1,6 @@
 'use client'
 
-import { useEvent } from '@repo/react-hooks'
 import { cn } from '@repo/ui/lib/utils'
-import { debounce, inRange } from 'es-toolkit'
 import Link from 'next/link'
 import React from 'react'
 
@@ -15,49 +13,88 @@ interface PostTocProps extends React.ComponentProps<'section'> {
 export function PostToc({ className, ref, ...props }: PostTocProps) {
   const ulRef = React.useRef<HTMLUListElement>(null)
 
+  const activeIndexRef = React.useRef(-1)
+
   const setActiveItemStyle = React.useEffectEvent((activeIndex: number) => {
+    if (activeIndexRef.current == activeIndex) return
+    activeIndexRef.current = activeIndex
+
     const ul = ulRef.current
     if (!ul) return
-    Array.from(ul.querySelectorAll('a[href^="#"]')).forEach((el, i) => {
-      activeIndex == i ? el.setAttribute('data-active', '') : el.removeAttribute('data-active')
-      if (activeIndex != i) return
-      const { offsetHeight: parentHeight, scrollTop } = ul
-      const { offsetHeight, offsetTop } = el as HTMLElement
-      const minimum = offsetHeight + 20
-      const maximum = parentHeight - minimum
-      if (minimum >= maximum) return
-      // 判断是否在可视范围内
-      if (!inRange(offsetTop - scrollTop, minimum, maximum)) {
-        ul.scroll({ behavior: 'smooth', top: offsetTop - parentHeight * 0.5 })
+
+    const links = Array.from(ul.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'))
+
+    links.forEach((el, i) => {
+      if (i == activeIndex) {
+        el.setAttribute('data-active', '')
+      } else {
+        el.removeAttribute('data-active')
       }
     })
+
+    const activeEl = links[activeIndex]
+    if (!activeEl) return
+
+    const { offsetHeight: parentHeight, scrollTop } = ul
+    const { offsetHeight, offsetTop } = activeEl
+
+    const minimum = offsetHeight + 20
+    const maximum = parentHeight - minimum
+
+    if (minimum >= maximum) return
+
+    const current = offsetTop - scrollTop
+
+    if (current < minimum || current > maximum) {
+      ul.scroll({
+        behavior: 'smooth',
+        top: offsetTop - parentHeight * 0.5
+      })
+    }
   })
 
-  const handleFindActiveItem = React.useEffectEvent(
-    debounce(() => {
-      const article = document.getElementById(ATTRIBUTE.ID.POST_CONTAINER)
-      if (!article) return
-      const rects = Array.from(article.querySelectorAll<HTMLHeadingElement>('h1,h2,h3,h4,h5,h6'), it => it.getBoundingClientRect())
-      const [min, max] = [0, 200]
-      for (let i = 0; i < rects.length; i++) {
-        if (
-          // 第一个标题大于最大范围
-          (i == 0 && rects[i].top > max) ||
-          // 范围内
-          inRange(rects[i].top, min, max) ||
-          // 指定的范围在两标题之间
-          (i + 1 < rects.length && rects[i].top < min && rects[i + 1].top > max) ||
-          // 最后一个标题小于最小范围
-          (i + 1 == rects.length && rects[i].top < min)
-        ) {
-          setActiveItemStyle(i)
-          break
-        }
-      }
-    }, 60)
-  )
+  React.useEffect(() => {
+    const article = document.getElementById(ATTRIBUTE.ID.POST_CONTAINER)
+    if (!article) return
 
-  useEvent('scroll', handleFindActiveItem)
+    const headings = Array.from(article.querySelectorAll('h1,h2,h3,h4,h5,h6'))
+
+    if (!headings.length) return
+
+    const visible = new Map<number, number>()
+
+    const observer = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          const index = headings.indexOf(entry.target)
+
+          if (entry.isIntersecting) {
+            visible.set(index, entry.boundingClientRect.top)
+          } else {
+            visible.delete(index)
+          }
+        }
+
+        if (!visible.size) return
+
+        const activeIndex = [...visible.entries()].sort((a, b) => a[1] - b[1])[0][0]
+
+        requestAnimationFrame(() => {
+          setActiveItemStyle(activeIndex)
+        })
+      },
+      {
+        rootMargin: '-80px 0px -70% 0px',
+        threshold: 0
+      }
+    )
+
+    headings.forEach(it => observer.observe(it))
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   return (
     <ul

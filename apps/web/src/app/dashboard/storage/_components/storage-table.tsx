@@ -62,16 +62,11 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
                     return
                   }
                   if (data.parentDirectory.id != payload.directoryId) return
-                  await mutate(
-                    current => {
-                      return produce(current, draft => {
-                        draft?.files.push(payload)
-                      })
-                    },
-                    {
-                      revalidate: false
-                    }
-                  )
+                  await mutate(current => {
+                    return produce(current, draft => {
+                      draft?.files.push(payload)
+                    })
+                  }, false)
                 }}
               >
                 <DataTableRowActionButton>
@@ -129,20 +124,15 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
                 <DataTableRowDeleteButton
                   title={directory.name}
                   onConfirm={async () => {
-                    await toastPromise(rpc.dashboard.storage.directories({ id: directory.id }).delete(), {
+                    await toastPromise(rpc.dashboard.storage.directories({ id: directory.id }).delete().then(unwrap), {
                       description: directory.name,
                       success: '删除成功'
                     })
-                    await mutate(
-                      current => {
-                        return produce(current, draft => {
-                          draft?.directories.splice(index, 1)
-                        })
-                      },
-                      {
-                        revalidate: false
-                      }
-                    )
+                    await mutate(current => {
+                      return produce(current, draft => {
+                        draft?.directories.splice(index, 1)
+                      })
+                    }, false)
                   }}
                 />
               </TableCell>
@@ -178,16 +168,11 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
                       description: file.name,
                       success: '删除成功'
                     })
-                    await mutate(
-                      current => {
-                        return produce(current, draft => {
-                          draft?.files.splice(index, 1)
-                        })
-                      },
-                      {
-                        revalidate: false
-                      }
-                    )
+                    await mutate(current => {
+                      return produce(current, draft => {
+                        draft?.files.splice(index, 1)
+                      })
+                    }, false)
                   }}
                 />
               </TableCell>

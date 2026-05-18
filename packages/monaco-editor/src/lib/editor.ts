@@ -1,7 +1,6 @@
 import loader from '@monaco-editor/loader'
-import { once, toMerged } from 'es-toolkit'
+import { toMerged } from 'es-toolkit'
 import { editor } from 'monaco-editor'
-import { createHighlighter } from 'shiki'
 
 /**
  * `monaco-editor` 初始配置
@@ -35,15 +34,10 @@ export const createMonacoEditorInitialOptions = (options: editor.IStandaloneEdit
       scrollbar: {
         alwaysConsumeMouseWheel: true
       }
-    },
+    } satisfies editor.IStandaloneEditorConstructionOptions,
     options
   )
 }
-
-/**
- * 创建高亮器
- */
-export const createHighlighterOnce = once(createHighlighter)
 
 /**
  * 初始化语言

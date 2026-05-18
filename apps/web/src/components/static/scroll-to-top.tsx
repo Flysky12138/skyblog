@@ -3,8 +3,8 @@
 import { useMounted, useWindowScrollState } from '@repo/react-hooks'
 import { Button } from '@repo/ui/components/button'
 import { cn } from '@repo/ui/lib/utils'
-import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronUpIcon } from 'lucide-react'
+import { AnimatePresence, motion } from 'motion/react'
 import React from 'react'
 
 interface ScrollToTopProps extends React.ComponentProps<typeof Button> {

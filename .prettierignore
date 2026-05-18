@@ -4,8 +4,9 @@ node_modules/
 public/
 .pnpm-store/
 
-pnpm-lock.yaml
 *.min.js
+
+pnpm-lock.yaml
 next-env.d.ts
 
 apps/web/src/assets/

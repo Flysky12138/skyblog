@@ -6,7 +6,7 @@ import { MonacoEditor } from '@repo/monaco-editor'
 import { Badge } from '@repo/ui/components/badge'
 import { Button } from '@repo/ui/components/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui/components/dialog'
-import { Field, FieldError, FieldGroup, FieldLabel } from '@repo/ui/components/field'
+import { Field, FieldError, FieldGroup, FieldLabel, FieldTitle } from '@repo/ui/components/field'
 import { Input } from '@repo/ui/components/input'
 import { pick } from 'es-toolkit'
 import React from 'react'
@@ -39,7 +39,7 @@ export function ClashTemplateEditModal({ children, value, onSubmit }: ClashTempl
         form.reset()
         if (!isOpen) return
         if (value) {
-          form.setValues(pick(value, ['content', 'name']))
+          form.setValues(pick(value, ClashTemplateCreateBodySchema.keyof().options))
         }
       }}
     >
@@ -61,9 +61,7 @@ export function ClashTemplateEditModal({ children, value, onSubmit }: ClashTempl
               name="content"
               render={({ field, fieldState }) => (
                 <Field className="h-full" data-invalid={fieldState.invalid}>
-                  <FieldLabel className="sr-only" htmlFor={field.name}>
-                    内容
-                  </FieldLabel>
+                  <FieldTitle className="sr-only">内容</FieldTitle>
                   <MonacoEditor
                     aria-invalid={fieldState.invalid}
                     className="not-lg:h-80"

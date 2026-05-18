@@ -15,25 +15,25 @@ import { toastPromise } from '@/lib/toast'
 export function NeteaseCloudMusic() {
   const id = React.useId()
 
-  const {
-    data: cookie,
-    isLoading,
-    mutate
-  } = useSWR(
+  const { data, isLoading, mutate } = useSWR(
     '0198eb7d-3b40-742f-92ae-219524cbafa9',
-    () => rpc['edge-config'].get.get({ query: { key: VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE } }).then(unwrap) as Promise<string>,
+    () => rpc['edge-config'].get.get({ query: { key: VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE } }).then(unwrap),
     {
-      fallbackData: ''
+      fallbackData: {
+        value: ''
+      }
     }
   )
 
   const [{ loading }, handleUpdate] = useAsyncFn(async (value: string) => {
     try {
       await toastPromise(
-        rpc.dashboard['edge-config'].action.patch({
-          cacheTags: [CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE],
-          items: [{ key: VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE, operation: 'upsert', value }]
-        }),
+        rpc.dashboard['edge-config'].action
+          .patch({
+            cacheTags: [CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE],
+            items: [{ key: VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE, operation: 'upsert', value }]
+          })
+          .then(unwrap),
         {
           success: '修改成功'
         }
@@ -56,18 +56,16 @@ export function NeteaseCloudMusic() {
             disabled={disabled}
             id={id}
             placeholder="网易云音乐 Cookie"
-            value={cookie}
+            value={data.value}
             onChange={event => {
-              void mutate(event.target.value, {
-                revalidate: false
-              })
+              void mutate({ value: event.target.value }, false)
             }}
           />
           <Button
             disabled={disabled}
             variant="outline"
             onClick={() => {
-              void handleUpdate(cookie)
+              void handleUpdate(data.value ?? '')
             }}
           >
             修改
