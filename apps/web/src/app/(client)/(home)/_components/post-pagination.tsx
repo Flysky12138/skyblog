@@ -40,12 +40,12 @@ export function PostPagination({ currentPage, pageCount }: PostPaginationProps) 
       <div className="grid grid-cols-2">
         {prev && (
           <ButtonLink className="justify-self-start" href={prev} variant="outline">
-            <ArrowLeftIcon data-icon="inline-start" /> 上一页
+            <ArrowLeftIcon /> 上一页
           </ButtonLink>
         )}
         {next && (
           <ButtonLink className="col-start-2 justify-self-end" href={next} variant="outline">
-            下一页 <ArrowRightIcon data-icon="inline-end" />
+            下一页 <ArrowRightIcon />
           </ButtonLink>
         )}
       </div>

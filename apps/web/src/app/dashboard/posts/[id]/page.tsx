@@ -189,7 +189,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
       />
 
       <ResizablePanelGroup orientation={width < 1200 ? 'vertical' : 'horizontal'}>
-        <ResizablePanel defaultSize="60%" maxSize="80%" minSize="20%">
+        <ResizablePanel defaultSize="60%" maxSize="70%" minSize="30%">
           <MonacoEditor
             ref={editorRef}
             unstyled
@@ -207,9 +207,19 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize="40%">
-          <ScrollArea className="h-full">
+          <ScrollArea className="h-full bg-card">
             <ErrorBoundary className="mx-auto mt-16 w-[calc(100%-4rem)]">
-              <MDXClient className="min-h-screen bg-card p-5 pb-[60vh]" source={previewContent ?? ''} />
+              <MDXClient
+                componentsProps={{
+                  code: {
+                    forceExpand: false
+                  },
+                  wrapper: {
+                    className: 'min-h-screen p-5 pb-[60vh]'
+                  }
+                }}
+                source={previewContent}
+              />
             </ErrorBoundary>
           </ScrollArea>
         </ResizablePanel>

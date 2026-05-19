@@ -1,19 +1,14 @@
-'use server'
-
 import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote-client/rsc'
 
 import { mdxOptions } from '../lib/options'
-import { components } from './elements'
-import { MDXRoot } from './mdx-root'
+import { withComponentProps } from '../lib/utils'
+import { components, ComponentsProps } from './elements'
 
-export interface MDXServerProps extends React.ComponentProps<typeof MDXRoot> {
+export interface MDXServerProps {
+  componentsProps?: ComponentsProps
   source: MDXRemoteProps['source']
 }
 
-export async function MDXServer({ source, ...props }: MDXServerProps) {
-  return (
-    <MDXRoot {...props}>
-      <MDXRemote components={components} options={{ mdxOptions }} source={source} />
-    </MDXRoot>
-  )
+export async function MDXServer({ componentsProps, ...props }: MDXServerProps) {
+  return <MDXRemote components={withComponentProps(components, componentsProps)} options={{ mdxOptions }} {...props} />
 }

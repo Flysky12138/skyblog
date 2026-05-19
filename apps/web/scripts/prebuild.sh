@@ -2,7 +2,6 @@
 set -euo pipefail
 
 rm -rf public/chart-preview
-mkdir -p public/chart-preview
 cp -a node_modules/@repo/chart-preview/dist/. public/chart-preview/
 
 pnpm run db:generate

@@ -30,7 +30,6 @@ export const breakpoints = {
  * }
  * ```
  *
- * @returns 接近屏幕宽度的最小值\
- * if `window.innerWidth` is `700`, return `sm` (640)
+ * @returns 接近屏幕宽度的最小值，if `window.innerWidth` is `700`, return `sm` (640)
  */
 export const useBreakpoint = createBreakpoint(breakpoints) as () => keyof typeof breakpoints

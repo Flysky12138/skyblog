@@ -6,24 +6,29 @@ import { evaluate, EvaluateResult } from 'next-mdx-remote-client/rsc'
 import React from 'react'
 
 import { mdxOptions } from '../lib/options'
-import { components } from './elements'
-import { MDXRoot } from './mdx-root'
+import { withComponentProps } from '../lib/utils'
+import { components, ComponentsProps } from './elements'
 
-export interface MDXClientMemoProps {
-  loadingRender?: React.ReactNode
-  source?: string
+export interface MDXClientProps {
+  componentsProps?: ComponentsProps
+  loading?: React.ReactNode
+  source?: null | string
   onAfterRender?: (isFirstRender: boolean) => void
 }
 
-const MDXClientMemo = React.memo(function MDXClientInner({ loadingRender, source = '', onAfterRender }: MDXClientMemoProps) {
+export const MDXClient = React.memo(function MDXClientInner({ componentsProps, loading, source = '', onAfterRender }: MDXClientProps) {
   const isFirstRenderRef = React.useRef(true)
 
   const [{ content, error }, setEvaluateResult] = useImmer<Partial<EvaluateResult>>({})
 
-  const { loading } = useAsync(async () => {
+  const { loading: isLoading } = useAsync(async () => {
     if (!source) return
 
-    const result = await evaluate({ components, options: { mdxOptions }, source })
+    const result = await evaluate({
+      components: withComponentProps(components, componentsProps),
+      options: { mdxOptions },
+      source
+    })
     setEvaluateResult(result)
 
     const isFirstRender = isFirstRenderRef.current
@@ -36,10 +41,9 @@ const MDXClientMemo = React.memo(function MDXClientInner({ loadingRender, source
     })
   }, [source])
 
-  // eslint-disable-next-line react-hooks/refs
-  if (loading && isFirstRenderRef.current) {
+  if (isLoading && isFirstRenderRef.current) {
     return (
-      loadingRender ?? (
+      loading ?? (
         <div className="flex h-48 items-center justify-center">
           <Spinner className="size-10" />
         </div>
@@ -51,11 +55,3 @@ const MDXClientMemo = React.memo(function MDXClientInner({ loadingRender, source
 
   return content
 })
-
-export function MDXClient({ loadingRender, source, onAfterRender, ...props }: MDXClientMemoProps & React.ComponentProps<typeof MDXRoot>) {
-  return (
-    <MDXRoot {...props}>
-      <MDXClientMemo loadingRender={loadingRender} source={source} onAfterRender={onAfterRender} />
-    </MDXRoot>
-  )
-}

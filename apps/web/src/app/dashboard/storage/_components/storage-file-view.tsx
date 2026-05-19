@@ -22,10 +22,10 @@ export function StorageFileView({ file, render, onClick, ...props }: StorageFile
       onClick?.(event)
       switch (type) {
         case 'image':
-          Fancybox.show([{ src: getPublicUrl(file.s3Object.objectKey) }])
+          Fancybox.show([{ src: getPublicUrl(file.id) }])
           break
         case 'pdf':
-          window.open(getPublicUrl(file.s3Object.objectKey), '_blank')
+          window.open(getPublicUrl(file.id), '_blank')
           break
       }
     }

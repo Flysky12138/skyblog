@@ -1,4 +1,21 @@
+import { mapValues, toMerged } from 'es-toolkit'
 import React from 'react'
+
+import { Components, ComponentsProps } from '../components/elements'
+
+/**
+ * 添加组件默认属性
+ */
+export const withComponentProps = (components: Components, componentsProps: ComponentsProps = {}) => {
+  return mapValues(components, (Component, name) => {
+    if (!componentsProps[name]) return Component
+
+    // eslint-disable-next-line react/display-name
+    return function (props: any) {
+      return <Component {...toMerged(props, componentsProps[name] ?? {})} />
+    }
+  })
+}
 
 /**
  * 递归遍历 react 标签

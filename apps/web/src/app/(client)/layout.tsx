@@ -33,10 +33,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
           <AuthButton />
         </Container>
       </Header>
-      <main
-        className="relative z-10 mt-(--height-header) mb-(--height-footer) min-h-main border-b border-divide bg-root"
-        data-vaul-drawer-wrapper="true"
-      >
+      <main className="relative z-10 mt-(--height-header) mb-(--height-footer) min-h-main border-b border-divide bg-root">
         <Container className="py-(--py) [--py:1.25rem] sm:[--py:1.75rem] md:[--py:2.25rem]">{children}</Container>
       </main>
       <aside className="fixed inset-x-0 bottom-[calc(var(--height-footer)+(--spacing(12)))] z-20">

@@ -1,6 +1,7 @@
 import { Card } from '@repo/ui/components-self/card'
 import { Skeleton } from '@repo/ui/components/skeleton'
 import { cn } from '@repo/ui/lib/utils'
+import { range } from 'es-toolkit'
 
 export default function Loading() {
   return (
@@ -9,7 +10,7 @@ export default function Loading() {
         <Card className="w-9" variant="button" />
         <Card className="w-32" variant="button" />
       </div>
-      {Array.from({ length: 4 }).map((_, index) => (
+      {range(4).map(index => (
         <Card
           key={index}
           className={cn('space-y-3 p-card lg:space-y-4', {

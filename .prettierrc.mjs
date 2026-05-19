@@ -8,7 +8,7 @@ export default {
   singleQuote: true,
   tailwindFunctions: ['cn', 'cva'],
   tailwindAttributes: ['class', 'className', '\\w+ClassName'],
-  tailwindStylesheet: 'packages/ui/src/styles/globals.css',
+  tailwindStylesheet: './packages/ui/src/styles/globals.css',
   trailingComma: 'none',
   useTabs: false
 }

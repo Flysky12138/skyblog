@@ -1,6 +1,6 @@
 'use client'
 
-import { produce, useCopyToClipboard } from '@repo/react-hooks'
+import { produce, useCopy } from '@repo/react-hooks'
 import { toast } from '@repo/ui/base'
 import { Switch } from '@repo/ui/components/switch'
 import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
@@ -19,7 +19,11 @@ import { toastPromise } from '@/lib/toast'
 import { ClashEditModal } from './clash-edit-modal'
 
 export function ClashTable() {
-  const [_, copy] = useCopyToClipboard()
+  const { copy } = useCopy({
+    onCopy: () => {
+      toast.success('复制成功')
+    }
+  })
 
   const {
     data: clashes,
@@ -150,7 +154,6 @@ export function ClashTable() {
             tooltip="复制"
             onClick={() => {
               copy(new URL(`/api/clashes/${row.original.id}`, window.origin).href)
-              toast.success('复制成功')
             }}
           >
             <CopyIcon />

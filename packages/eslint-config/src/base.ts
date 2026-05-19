@@ -22,7 +22,7 @@ const sortObjectRulesEntry: FlatConfig.RuleEntry = [
 ]
 
 export const baseConfig = defineConfig([
-  globalIgnores(['**/*.mjs']),
+  globalIgnores(['dist', '**/*.mjs']),
 
   js.configs.recommended,
 

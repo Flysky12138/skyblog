@@ -5,39 +5,41 @@ import { cacheLife } from 'next/cache'
 
 import packageJson from '~/package.json'
 
+import { getPackageInfo } from './utils'
+
 export default async function Page() {
   cacheLife('max')
 
   const dataSource = [
-    { label: 'dependencies', value: await getPackagesInfo(packageJson.dependencies) },
-    { label: 'devDependencies', value: await getPackagesInfo(packageJson.devDependencies) }
+    { label: 'dependencies', pkgs: Object.entries(packageJson.dependencies).map(getPackageInfo) },
+    { label: 'devDependencies', pkgs: Object.entries(packageJson.devDependencies).map(getPackageInfo) }
   ]
 
   return (
     <div className="flex flex-col gap-(--py)">
-      {dataSource.map(item => (
-        <div key={item.label} className="space-y-3">
+      {dataSource.map(({ label, pkgs }) => (
+        <div key={label} className="space-y-3">
           <h2
             dangerouslySetInnerHTML={{
               __html: makeBadge({
-                label: item.label,
-                message: item.value.length.toString(),
+                label,
+                message: pkgs.length.toString(),
                 style: 'social'
               })
             }}
           />
           <div
             dangerouslySetInnerHTML={{
-              __html: item.value
-                .map(({ name, pkg, version }) =>
+              __html: pkgs
+                .map(({ homepage, name, version }) =>
                   makeBadge({
                     color: 'blue',
                     label: name,
                     message: version,
                     style: 'flat-square',
-                    ...(pkg.homepage
+                    ...(homepage
                       ? {
-                          links: [pkg.homepage]
+                          links: [homepage]
                         }
                       : {})
                   })
@@ -49,16 +51,5 @@ export default async function Page() {
         </div>
       ))}
     </div>
-  )
-}
-
-const getPackagesInfo = async (json: Record<string, string>) => {
-  return Promise.all(
-    Object.entries(json).map(async ([name, version]) => {
-      const pkg = (await import(`~/node_modules/${name}/package.json`)) as {
-        homepage?: string
-      }
-      return { name, pkg, version }
-    })
   )
 }

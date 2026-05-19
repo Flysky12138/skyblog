@@ -31,7 +31,7 @@ export function AuthSocialButton() {
     }
   })
 
-  const handleClick2 = React.useEffectEvent<typeof handleLogin>(async (...params) => {
+  const handleClick = React.useEffectEvent<typeof handleLogin>(async (...params) => {
     try {
       await toastPromise(handleLogin(...params), {
         loading: '登录中...',
@@ -49,18 +49,18 @@ export function AuthSocialButton() {
       <Button
         variant="outline"
         onClick={event => {
-          void handleClick2(event, 'github')
+          void handleClick(event, 'github')
         }}
       >
-        <Github data-icon="inline-start" /> 使用 GitHub 登录
+        <Github /> 使用 GitHub 登录
       </Button>
       <Button
         variant="outline"
         onClick={event => {
-          void handleClick2(event, 'google')
+          void handleClick(event, 'google')
         }}
       >
-        <Google data-icon="inline-start" /> 使用 Google 登录
+        <Google /> 使用 Google 登录
       </Button>
     </>
   )

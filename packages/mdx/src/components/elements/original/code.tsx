@@ -7,12 +7,24 @@ import React from 'react'
 
 import { DATA_IS_BLOCK } from '../../../plugins/rehype/rehype-code'
 
-export function Code(props: React.ComponentProps<'code'>) {
+const MAX_LINES = 30
+
+interface CodeProps extends React.ComponentProps<'code'> {
+  /**
+   * @default true
+   */
+  forceExpand?: boolean
+}
+
+export function Code(props: CodeProps) {
   const Comp = Reflect.has(props, DATA_IS_BLOCK) ? CodeBlock : CodeInline
   return <Comp {...props} />
 }
 
-function CodeBlock({ children, className, ...props }: React.ComponentProps<'code'>) {
+/**
+ * 代码块
+ */
+function CodeBlock({ children, className, forceExpand = true, style, ...props }: CodeProps) {
   const [isExpanded, setIsExpanded] = React.useState(false)
 
   const btnRef = React.useRef<HTMLButtonElement>(null)
@@ -31,7 +43,6 @@ function CodeBlock({ children, className, ...props }: React.ComponentProps<'code
     if (isExpanded) {
       requestAnimationFrame(() => {
         const afterTop = btnRef.current!.getBoundingClientRect().top
-
         window.scrollBy({
           behavior: 'auto',
           top: afterTop - beforeTop
@@ -46,20 +57,26 @@ function CodeBlock({ children, className, ...props }: React.ComponentProps<'code
         className={cn(
           'relative no-scrollbar overflow-x-auto py-2.5 text-sm font-semibold',
           {
-            'max-h-125 overflow-y-hidden': !isExpanded
+            'max-h-(--max-h) overflow-y-hidden': !isExpanded && !forceExpand
           },
           className
         )}
         data-lines={lineCount}
+        style={
+          {
+            '--max-h': `calc(var(--spacing)*${5 * MAX_LINES})`,
+            ...style
+          } as React.CSSProperties
+        }
         tabIndex={-1}
         {...props}
       >
         {children}
       </code>
-      {lineCount >= 25 && (
+      {!forceExpand && lineCount >= MAX_LINES && (
         <div
           className={cn(
-            'sticky bottom-0 flex cursor-pointer justify-center rounded-b-[inherit] py-1 text-foreground',
+            'sticky bottom-0 flex cursor-pointer justify-center py-1 text-foreground',
             'border-t border-dashed bg-sheet/80 backdrop-blur-[2px]'
           )}
           onClick={handleToggle}
@@ -73,7 +90,10 @@ function CodeBlock({ children, className, ...props }: React.ComponentProps<'code
   )
 }
 
-function CodeInline({ className, ...props }: React.ComponentProps<'code'>) {
+/**
+ * 行内代码
+ */
+function CodeInline({ className, forceExpand, ...props }: CodeProps) {
   return (
     <code
       className={cn('rounded-sm border bg-muted px-1.5 py-0.5 font-semibold break-all', 'before:content-none after:content-none', className)}

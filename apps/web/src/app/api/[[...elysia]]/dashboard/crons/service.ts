@@ -1,6 +1,5 @@
 import dayjs from 'dayjs'
 import { status } from 'elysia'
-import { limitAsync } from 'es-toolkit'
 import { transform } from 'sucrase'
 
 import { WeCom } from '@/lib/http/wecom'
@@ -56,7 +55,7 @@ export abstract class Service {
     }
 
     try {
-      type AsyncFn = (payload: { now: typeof now; WeCom: WeCom }) => Promise<unknown>
+      type AsyncFn = (payload: { now: typeof now; WeCom: WeCom }) => Promise<object | string>
 
       const { code } = transform(content, { transforms: ['typescript'] })
 
@@ -64,7 +63,9 @@ export abstract class Service {
       const createFn = new Function(code) as () => AsyncFn
       const runtimeFn = createFn()
 
-      return await runtimeFn({ now, WeCom })
+      const data = await runtimeFn({ now, WeCom })
+
+      return { data }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
 
@@ -72,22 +73,6 @@ export abstract class Service {
 
       return status(500, { message })
     }
-  }
-
-  /**
-   * 运行所有 Cron
-   *
-   * @default concurrency = 10
-   */
-  static async runAll(concurrency = 10) {
-    const crons = await prisma.cron.findMany({
-      where: {
-        isEnabled: true
-      }
-    })
-    const limit = limitAsync(this.run.bind(Service), concurrency)
-
-    return Promise.allSettled(Array.from(crons, cron => limit(cron.id)))
   }
 
   /**

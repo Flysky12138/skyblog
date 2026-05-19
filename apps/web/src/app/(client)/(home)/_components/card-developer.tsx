@@ -8,21 +8,16 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui/components/too
 import { cn } from '@repo/ui/lib/utils'
 import { MailIcon } from 'lucide-react'
 import { cacheLife } from 'next/cache'
-import React from 'react'
 
 import Github from '@/assets/svg/github.svg'
 import LeetCode from '@/assets/svg/leetcode.svg'
 import Spotify from '@/assets/svg/spotify.svg'
 
-const getUser = React.cache(async () => {
-  const octokit = new Octokit()
-  return octokit.users.getByUsername({ username: process.env.NEXT_PUBLIC_GITHUB_NAME })
-})
-
 export async function CardDeveloper() {
   cacheLife('weeks')
 
-  const { data } = await getUser()
+  const octokit = new Octokit()
+  const { data } = await octokit.users.getByUsername({ username: process.env.NEXT_PUBLIC_GITHUB_NAME })
 
   return (
     <Card className="flex flex-col items-center p-card">
@@ -32,7 +27,7 @@ export async function CardDeveloper() {
       </Avatar>
       <p className="mt-2 text-center font-heading text-sm whitespace-pre-line text-muted-foreground">{process.env.NEXT_PUBLIC_DESCRIPTION}</p>
       <ButtonLink className="mt-4 w-full max-w-56 font-bold" href={data.html_url} rel="noreferrer nofollow" target="_blank">
-        <Github data-icon="inline-start" /> {data.login}
+        <Github /> {data.login}
       </ButtonLink>
       <div className="mt-4 flex gap-4">
         <Tooltip>

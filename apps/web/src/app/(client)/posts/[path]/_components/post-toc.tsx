@@ -22,13 +22,13 @@ export function PostToc({ className, ref, ...props }: PostTocProps) {
     const ul = ulRef.current
     if (!ul) return
 
-    const links = Array.from(ul.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'))
+    const links = Array.from(ul.querySelectorAll<HTMLAnchorElement>('a[data-level]'))
 
-    links.forEach((el, i) => {
+    links.forEach((link, i) => {
       if (i == activeIndex) {
-        el.setAttribute('data-active', '')
+        link.setAttribute('data-active', '')
       } else {
-        el.removeAttribute('data-active')
+        link.removeAttribute('data-active')
       }
     })
 
@@ -89,7 +89,7 @@ export function PostToc({ className, ref, ...props }: PostTocProps) {
       }
     )
 
-    headings.forEach(it => observer.observe(it))
+    headings.forEach(heading => observer.observe(heading))
 
     return () => {
       observer.disconnect()

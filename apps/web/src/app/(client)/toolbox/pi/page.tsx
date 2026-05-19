@@ -1,6 +1,5 @@
 'use client'
 
-import { MDXRoot } from '@repo/mdx'
 import { useImmer } from '@repo/react-hooks'
 import { Card } from '@repo/ui/components-self/card'
 import { Alert, AlertTitle } from '@repo/ui/components/alert'
@@ -113,7 +112,7 @@ export default function Page() {
             <DialogTrigger className="min-w-28 grow" render={<Button />}>
               源码
             </DialogTrigger>
-            <DialogContent className="max-w-2xl bg-transparent p-0! text-sm *:[figure]:rounded-lg!" showCloseButton={false}>
+            <DialogContent className="max-w-2xl bg-transparent p-0 text-sm **:[figure]:rounded-lg!" showCloseButton={false}>
               <DialogHeader className="sr-only">
                 <DialogTitle>{form.mode}</DialogTitle>
                 <DialogDescription />
@@ -192,11 +191,11 @@ export default function Page() {
         </DisplayByConditional>
       )}
 
-      <MDXRoot className="mt-10">
+      <div className="mt-10">
         {form.mode == 'arctan' && <Arctan />}
         {form.mode == 'chudnovsky' && <Chudnovsky />}
         {form.mode == 'chudnovsky-bs' && <ChudnovskyBs />}
-      </MDXRoot>
+      </div>
     </Card>
   )
 }

@@ -50,11 +50,13 @@ export enum POST_CARD_VISIBILITY_MASK {
  * 缓存标签
  */
 export const CACHE_TAG = {
+  AUTHORS: 'authors',
   FRIENDS: 'friends',
   POSTS: 'posts',
   EDGE_CONFIG: {
     NETEASE_CLOUD_MUSIC_COOKIE: 'netease-cloud-music-cookie'
   },
+  AUTHOR: (id: string) => `authors:${id}` as const,
   FRIEND: (id: string) => `friends:${id}` as const,
   POST: (id: string) => `posts:${id}` as const
 } as const

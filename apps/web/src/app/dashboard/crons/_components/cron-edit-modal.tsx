@@ -43,7 +43,7 @@ export function CronEditModal({ children, value, onSubmit }: CronEditModalProps)
       }}
     >
       <DialogTrigger render={children} />
-      <DialogContent className="max-w-7xl lg:h-[calc(100vh-120px)]">
+      <DialogContent className="max-w-7xl lg:h-[calc(100vh-120px)]" fullScreen="lg">
         <DialogHeader>
           <DialogTitle>Cron 配置</DialogTitle>
           <DialogDescription>默认执行时间 08:00 UTC+8，可修改 vercel.json 后再部署</DialogDescription>
@@ -63,9 +63,14 @@ export function CronEditModal({ children, value, onSubmit }: CronEditModalProps)
                   <FieldTitle className="sr-only">内容</FieldTitle>
                   <MonacoEditor
                     aria-invalid={fieldState.invalid}
-                    className="not-lg:h-80"
+                    className="not-lg:min-h-120"
                     id={field.name}
                     language="typescript"
+                    options={{
+                      minimap: {
+                        enabled: false
+                      }
+                    }}
                     value={field.value}
                     onChange={field.onChange}
                     onInit={onInit}

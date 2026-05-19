@@ -21,7 +21,7 @@ export const reactConfig = defineConfig([
 
   // https://github.com/jsx-eslint/eslint-plugin-react
   {
-    files: ['**/*.{jsx,tsx}'],
+    files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
       ...reactPlugin.configs.flat.recommended.languageOptions,
       globals: {
@@ -64,7 +64,7 @@ export const reactConfig = defineConfig([
   },
 
   {
-    files: ['**/*.{jsx,tsx}'],
+    files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
       // @ts-ignore
       'react-hooks': reactHooksPlugin
@@ -72,6 +72,25 @@ export const reactConfig = defineConfig([
     rules: {
       ...reactHooksPlugin.configs.recommended.rules,
       'react-hooks/incompatible-library': 'off'
+    }
+  },
+
+  // https://eslint.org.cn/docs/latest/rules
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      // 当通过 import 加载时，禁用指定的模块
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              allowImportNamePattern: '^(.*Icon|LucideProps)$',
+              group: ['lucide-react']
+            }
+          ]
+        }
+      ]
     }
   }
 ])

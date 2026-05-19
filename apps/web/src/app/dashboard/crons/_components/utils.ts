@@ -9,8 +9,6 @@ import estreePlugins from 'prettier/plugins/estree'
 import typescriptPlugins from 'prettier/plugins/typescript'
 import { format } from 'prettier/standalone'
 
-import dts from './cron.d.ts?raw'
-
 export const onInit: MonacoEditorProps['onInit'] = (monaco, language) => {
   // 格式化
   monaco.languages.registerDocumentFormattingEditProvider(language, {
@@ -25,7 +23,7 @@ export const onInit: MonacoEditorProps['onInit'] = (monaco, language) => {
   })
 
   // 引入自定义类型
-  monaco.languages.typescript.typescriptDefaults.addExtraLib(`declare global { ${dts} } `, 'file:///cron.d.ts')
+  monaco.languages.typescript.typescriptDefaults.addExtraLib(dts, 'file:///cron.d.ts')
 
   // 配置
   monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
@@ -35,11 +33,40 @@ export const onInit: MonacoEditorProps['onInit'] = (monaco, language) => {
   })
 
   // 关闭语法错误提示
-  // A 'return' statement can only be used within a function body.(1108)
-  monaco.editor.onDidCreateModel(model => {
-    monaco.editor.onDidChangeMarkers(([uri]) => {
-      const markers = monaco.editor.getModelMarkers({ resource: uri }).filter(marker => !['1108', '2304'].includes(marker.code))
-      monaco.editor.setModelMarkers(model, language, markers)
-    })
+  const ignoreCodes = new Set(['1108', '2304'])
+  monaco.editor.onDidChangeMarkers(uris => {
+    for (const uri of uris) {
+      const model = monaco.editor.getModel(uri)
+      if (!model) continue
+      const markers = monaco.editor.getModelMarkers({ resource: uri }).filter(marker => {
+        const code = typeof marker.code == 'string' ? marker.code : String(marker.code?.value)
+        return !ignoreCodes.has(code)
+      })
+      monaco.editor.setModelMarkers(model, 'typescript', markers)
+    }
   })
 }
+
+const dts = `
+interface Cron {
+  /**
+   * 企业微信
+   */
+  WeCom: {
+    markdown(content: string): Promise<void>
+    markdown_v2(content: string): Promise<void>
+    text(
+      content: string,
+      options?: {
+        mentioned_list?: ('@all' | (string & {}))[]
+        mentioned_mobile_list?: ('@all' | (string & {}))[]
+      }
+    ): Promise<void>
+  }
+
+  /**
+   * 当前时间 UTC+8
+   */
+  now: () => string
+}
+`

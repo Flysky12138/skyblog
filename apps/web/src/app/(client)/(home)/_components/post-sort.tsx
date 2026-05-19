@@ -9,7 +9,7 @@ import React from 'react'
 
 import { PostSearchParamsType } from '../utils'
 
-const items: { label: string; value: PostSearchParamsType['sortord'] }[] = [
+const items: { label: string; value: PostSearchParamsType['field'] }[] = [
   { label: '创建时间', value: 'createdAt' },
   { label: '更新时间', value: 'updatedAt' },
   { label: '浏览次数', value: 'viewCount' }
@@ -17,17 +17,17 @@ const items: { label: string; value: PostSearchParamsType['sortord'] }[] = [
 
 interface PostSortProps {
   className?: string
-  order: PostSearchParamsType['order']
-  sortord: PostSearchParamsType['sortord']
+  direction: PostSearchParamsType['direction']
+  field: PostSearchParamsType['field']
 }
 
-export function PostSort({ className, order, sortord }: PostSortProps) {
+export function PostSort({ className, direction, field }: PostSortProps) {
   const router = useRouter()
 
-  const handleClick = React.useEffectEvent(({ order, sortord }: RequiredPick<PostSortProps, 'order' | 'sortord'>) => {
+  const handleClick = React.useEffectEvent(({ direction, field }: RequiredPick<PostSortProps, 'direction' | 'field'>) => {
     const url = new URL(window.location.href)
-    url.searchParams.set('order', order)
-    url.searchParams.set('sortord', sortord)
+    url.searchParams.set('field', field)
+    url.searchParams.set('direction', direction)
     router.push(url.href)
   })
 
@@ -37,18 +37,18 @@ export function PostSort({ className, order, sortord }: PostSortProps) {
         size="icon"
         variant="outline"
         onClick={() => {
-          handleClick({ order: order == 'desc' ? 'asc' : 'desc', sortord })
+          handleClick({ direction: direction == 'desc' ? 'asc' : 'desc', field })
         }}
       >
-        {order == 'desc' ? <ArrowDownWideNarrowIcon /> : <ArrowDownNarrowWideIcon />}
+        {direction == 'desc' ? <ArrowDownWideNarrowIcon /> : <ArrowDownNarrowWideIcon />}
       </Button>
 
       <Select
         items={items}
-        value={sortord}
+        value={field}
         onValueChange={value => {
           if (!value) return
-          handleClick({ order, sortord: value })
+          handleClick({ direction, field: value })
         }}
       >
         <SelectTrigger render={({ className, ...props }) => <Button className="w-32" variant="outline" {...props} />}>

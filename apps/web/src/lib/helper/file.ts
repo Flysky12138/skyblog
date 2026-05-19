@@ -1,3 +1,5 @@
+import { createSHA1, createSHA256, createSHA384, createSHA512 } from 'hash-wasm'
+
 export abstract class FileHelper {
   /**
    * 创建文件对象
@@ -60,14 +62,50 @@ export abstract class FileHelper {
   }
 
   /**
-   * 获取文件的哈希值（MD5）
-   *
-   * @default algorithm = 'SHA-256'
+   * 获取文件的哈希值
    */
-  static async getFileHash(file: File, algorithm: 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512' = 'SHA-256'): Promise<string> {
-    const buffer = await this.readFileAsArrayBuffer(file)
-    const hashBuffer = await crypto.subtle.digest(algorithm.replace('-', ''), buffer)
-    return Array.from(new Uint8Array(hashBuffer), b => b.toString(16).padStart(2, '0')).join('')
+  static async getFileHash(
+    file: File,
+    /**
+     * @default 'SHA-256'
+     */
+    algorithm: 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512' = 'SHA-256',
+    /**
+     * 进度回调，大文件才会触发
+     */
+    onProgress?: (progress: number) => void
+  ): Promise<string> {
+    if (file.size <= 50 * 1024 * 1024) {
+      const buffer = await this.readFileAsArrayBuffer(file)
+      const hashBuffer = await crypto.subtle.digest(algorithm, buffer)
+      return Array.from(new Uint8Array(hashBuffer), b => b.toString(16).padStart(2, '0')).join('')
+    } else {
+      const hashFactoryMap = { 'SHA-1': createSHA1, 'SHA-256': createSHA256, 'SHA-384': createSHA384, 'SHA-512': createSHA512 } satisfies Record<
+        typeof algorithm,
+        Function
+      >
+
+      const hasher = await hashFactoryMap[algorithm]()
+      hasher.init()
+
+      let loaded = 0
+      let lastYieldTime = performance.now()
+
+      for await (const chunk of file.stream()) {
+        hasher.update(chunk)
+
+        loaded += chunk.byteLength
+        onProgress?.((loaded / file.size) * 100)
+
+        // 每帧让出一次主线程，避免明显的卡顿。最好还是使用 worker
+        if (performance.now() - lastYieldTime > 16) {
+          lastYieldTime = performance.now()
+          await new Promise(requestAnimationFrame)
+        }
+      }
+
+      return hasher.digest()
+    }
   }
 
   /**
@@ -99,8 +137,10 @@ export abstract class FileHelper {
 
     return new Promise((resolve, reject) => {
       image.onload = () => {
-        const { height, width } = image
-        resolve({ height, width })
+        resolve({
+          height: image.height,
+          width: image.width
+        })
         URL.revokeObjectURL(url)
       }
       image.onerror = () => {

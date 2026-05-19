@@ -24,11 +24,11 @@ export async function CardButtons() {
     <Card className="grid grid-cols-2 gap-3 p-card sm:grid-cols-1">
       <DisplayByConditional condition={friendCount > 0}>
         <ButtonLink href="/friends" variant="outline">
-          <HandshakeIcon data-icon="inline-start" /> 友链（{friendCount}）
+          <HandshakeIcon /> 友链（{friendCount}）
         </ButtonLink>
       </DisplayByConditional>
       <ButtonLink href="/packages" variant="outline">
-        <PackageIcon data-icon="inline-start" /> 项目依赖（{pkgCount}）
+        <PackageIcon /> 项目依赖（{pkgCount}）
       </ButtonLink>
     </Card>
   )

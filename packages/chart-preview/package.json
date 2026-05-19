@@ -4,13 +4,12 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "vite build",
+    "build": "tsdown",
     "lint": "eslint --fix --max-warnings 0",
     "typecheck": "tsc --noEmit"
   },
   "exports": {
-    ".": "./src/index.ts",
-    "./dist/*": "./dist/*"
+    ".": "./src/index.ts"
   },
   "dependencies": {
     "@repo/react-hooks": "workspace:*",
@@ -20,8 +19,8 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/ui": "workspace:*",
+    "@types/node": "catalog:",
     "@types/react": "catalog:",
-    "tailwindcss": "catalog:",
-    "vite": "catalog:"
+    "tsdown": "catalog:"
   }
 }

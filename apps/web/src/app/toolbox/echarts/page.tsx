@@ -1,7 +1,6 @@
 'use client'
 
 import { ChartPreview } from '@repo/chart-preview'
-import manifest from '@repo/chart-preview/dist/.vite/manifest.json'
 import { MonacoEditor } from '@repo/monaco-editor'
 import { useDebounce, useMounted, useWindowSize } from '@repo/react-hooks'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@repo/ui/components/resizable'
@@ -11,7 +10,7 @@ import { transform } from 'sucrase'
 import { ECHARTS_TEMPLATE, onInit } from './utils'
 
 // predev 时创建软连接，prebuild 时复制
-const cdnUrl = new URL(`/chart-preview/${manifest['src/iframe/index.ts'].file}`, process.env.NEXT_PUBLIC_WEBSITE_URL).href
+const cdnUrl = new URL('/chart-preview/index.iife.js', process.env.NEXT_PUBLIC_WEBSITE_URL).href
 
 export default function Page() {
   const [code, setCode] = React.useState(ECHARTS_TEMPLATE)

@@ -175,7 +175,9 @@ function DataTableRowRunButton({ row }: { row: Treaty.Data<ReturnType<typeof rpc
   const [{ loading }, handleRun] = useAsyncFn(async () => {
     try {
       await toastPromise(rpc.dashboard.crons({ id: row.id }).run.post().then(unwrap), {
-        success: '执行成功'
+        descriptionClassName: 'whitespace-pre-wrap mt-2',
+        success: '执行成功',
+        description: ({ data }) => (typeof data == 'object' ? JSON.stringify(data, null, 4) : String(data))
       })
     } catch (error) {
       console.error(error)

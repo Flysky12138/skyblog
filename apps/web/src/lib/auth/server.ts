@@ -1,24 +1,12 @@
-'use server'
+import { createNeonAuth } from '@neondatabase/auth/next/server'
 
-import { createAuthServer } from '@neondatabase/auth/next/server'
+import { isDev } from '../utils'
 
-export const authServer: () => Promise<ReturnType<typeof createAuthServer>> = async () => createAuthServer()
-
-/**
- * 验证权限
- */
-export const checkRole = async (role: 'admin' | 'user') => {
-  const auth = await authServer()
-  const session = await auth.getSession()
-
-  return session.data?.user.role == role
-}
-
-/**
- * 是否是管理员
- */
-export const assertAdminRole = async () => {
-  if (!(await checkRole('admin'))) {
-    throw new Error('Unauthorized')
+export const authServer = createNeonAuth({
+  baseUrl: process.env.NEON_AUTH_BASE_URL,
+  cookies: {
+    domain: isDev() ? undefined : process.env.NEXT_PUBLIC_WEBSITE_URL.replace(/https?:\/\//, ''),
+    secret: process.env.NEON_AUTH_COOKIE_SECRET,
+    sessionDataTtl: 300
   }
-}
+})

@@ -25,7 +25,7 @@ export const clashes = new Elysia({ prefix: '/clashes' }).use(idModel).get(
 
     return new Response(yaml, {
       headers: {
-        'content-disposition': `attachment; filename=${res.name}.yaml`,
+        'content-disposition': `attachment; filename*=UTF-8''${encodeURIComponent(res.name)}.yaml`,
         'content-type': 'text/plain; charset=utf8'
       }
     })

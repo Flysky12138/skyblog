@@ -9,22 +9,21 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./styles.css": "./src/styles/index.css"
+    "./style.css": "./src/index.css"
   },
   "dependencies": {
-    "@monaco-editor/loader": "^1.7.0",
-    "@repo/react-hooks": "workspace:*",
-    "@shikijs/monaco": "^4.0.2",
+    "@monaco-editor/loader": "catalog:",
+    "@shikijs/monaco": "catalog:",
     "es-toolkit": "catalog:",
-    "monaco-editor": "0.55.1",
+    "monaco-editor": "catalog:",
     "react": "catalog:",
-    "shiki": "^4.0.2"
+    "shiki": "catalog:",
+    "tm-grammars": "catalog:"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/ui": "workspace:*",
     "@types/node": "catalog:",
-    "@types/react": "catalog:",
-    "tailwindcss": "catalog:"
+    "@types/react": "catalog:"
   }
 }

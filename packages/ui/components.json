@@ -11,14 +11,15 @@
     "prefix": ""
   },
   "iconLibrary": "lucide",
+  "rtl": true,
+  "menuColor": "default",
+  "menuAccent": "subtle",
   "aliases": {
     "components": "@repo/ui/components",
     "utils": "@repo/ui/lib/utils",
-    "hooks": "@repo/ui/hooks",
+    "ui": "@repo/ui/components",
     "lib": "@repo/ui/lib",
-    "ui": "@repo/ui/components"
+    "hooks": "@repo/ui/hooks"
   },
-  "rtl": true,
-  "menuColor": "default",
-  "menuAccent": "subtle"
+  "registries": {}
 }

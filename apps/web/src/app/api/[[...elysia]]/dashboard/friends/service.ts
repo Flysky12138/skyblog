@@ -1,3 +1,4 @@
+import { status } from 'elysia'
 import { revalidateTag } from 'next/cache'
 
 import { CACHE_TAG } from '@/lib/constants'
@@ -29,6 +30,41 @@ export abstract class Service {
     revalidateTag(CACHE_TAG.FRIENDS, 'max')
 
     return res
+  }
+
+  /**
+   * 生成友链封面
+   *
+   * @description 未完成，需修改
+   */
+  static async generateCover(id: string) {
+    const friend = await prisma.friend.findUnique({ where: { id } })
+
+    if (!friend) {
+      return status(404)
+    }
+
+    const res = await fetch(`https://production-sfo.browserless.io/edge/screenshot?token=${process.env.TOKEN_BROWSERLESS}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        url: friend.siteUrl,
+        options: {
+          type: 'webp'
+        },
+        viewport: {
+          deviceScaleFactor: 2,
+          height: 900,
+          isMobile: false,
+          width: 1600
+        }
+      }),
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Content-Type': 'application/json'
+      }
+    })
+
+    return res.arrayBuffer()
   }
 
   /**

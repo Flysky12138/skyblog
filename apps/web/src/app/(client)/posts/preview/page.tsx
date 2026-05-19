@@ -3,7 +3,6 @@
 import { MDXClient } from '@repo/mdx'
 import { useBroadcastChannel } from '@repo/react-hooks'
 import { useMount } from '@repo/react-hooks'
-import { Card } from '@repo/ui/components-self/card'
 import React from 'react'
 
 import {
@@ -31,8 +30,13 @@ export default function Page() {
   if (!post?.content) return null
 
   return (
-    <Card className="max-w-none p-card" render={<article />}>
-      <MDXClient source={post.content} />
-    </Card>
+    <MDXClient
+      componentsProps={{
+        wrapper: {
+          className: 'max-w-none p-card'
+        }
+      }}
+      source={post.content}
+    />
   )
 }

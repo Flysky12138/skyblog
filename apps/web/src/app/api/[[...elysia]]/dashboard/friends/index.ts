@@ -17,3 +17,6 @@ export const friends = new Elysia({ prefix: '/friends' })
   .delete('/:id', ({ params }) => Service.delete(params.id), {
     params: 'uuidv7'
   })
+  .post('/:id/cover', ({ params }) => Service.generateCover(params.id), {
+    params: 'uuidv7'
+  })

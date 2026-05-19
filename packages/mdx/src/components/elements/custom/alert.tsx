@@ -16,7 +16,7 @@ export function Alert({ children, className, title, ...props }: React.ComponentP
     >
       <TerminalIcon className="size-4" />
       {title && <AlertPrimitive.AlertTitle>{title}</AlertPrimitive.AlertTitle>}
-      <div className="text-sm text-balance text-muted-foreground *:first:mbs-0 *:last:mbe-0 md:text-pretty" data-slot="alert-description">
+      <div className="text-sm text-balance text-muted-foreground *:first:mt-0 *:last:mb-0 md:text-pretty" data-slot="alert-description">
         {children}
       </div>
     </AlertPrimitive.Alert>

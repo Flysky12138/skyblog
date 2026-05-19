@@ -4,7 +4,7 @@ declare namespace NodeJS {
      * neon database url
      *
      * @example
-     * "postgresql://neondb_owner:xxxxx@ep-ancient-river-xxxxx-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+     * "postgresql://neondb_owner:xxxxx@ep-ancient-river-xxxxx-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&pgbouncer=true&connect_timeout=30&pool_timeout=30"
      */
     DATABASE_URL: string
     /**
@@ -14,6 +14,13 @@ declare namespace NodeJS {
      * "ecfg_7bhjqwklveuyz9ix4n2tr3mfa5gd8sp"
      */
     EDGE_ID: string
+    /**
+     * neon auth base url
+     *
+     * @example
+     * "https://ep-damp-breeze-xxxx.neonauth.ap-southeast-1.aws.neon.tech/neondb/auth"
+     */
+    NEON_AUTH_BASE_URL: string
     /**
      * neon auth cookie secret
      *

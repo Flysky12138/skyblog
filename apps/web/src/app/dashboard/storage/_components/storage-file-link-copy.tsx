@@ -1,7 +1,7 @@
 'use client'
 
 import { Treaty } from '@elysiajs/eden'
-import { useCopyToClipboard } from '@repo/react-hooks'
+import { useCopy } from '@repo/react-hooks'
 import { toast } from '@repo/ui/base'
 import { Badge } from '@repo/ui/components/badge'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@repo/ui/components/dropdown-menu'
@@ -19,17 +19,21 @@ interface StorageFileLinkCopyProps {
 }
 
 export function StorageFileLinkCopy({ children, file }: StorageFileLinkCopyProps) {
-  const [_, copy] = useCopyToClipboard()
+  const { copy } = useCopy({
+    onCopy: () => {
+      toast.success('复制成功')
+    }
+  })
 
-  const links = [{ label: '直链', value: getPublicUrl(file.s3Object.objectKey) }]
+  const links = [{ label: '直链', value: getPublicUrl(file.id) }]
 
   switch (FileHelper.getFileType(file.mimeType)) {
     case 'image':
       links.push(
-        { label: 'Markdown', value: `![${file.name}](${getPublicUrl(file.s3Object.objectKey)})` },
+        { label: 'Markdown', value: `![${file.name}](${getPublicUrl(file.id)})` },
         {
           label: 'HTML',
-          value: `::img{alt="${file.name}" src="${getPublicUrl(file.s3Object.objectKey)}" width="${file.metadata.width}" height="${file.metadata.height}"}`
+          value: `::img{alt="${file.name}" src="${getPublicUrl(file.id)}" width="${file.metadata.width}" height="${file.metadata.height}"}`
         }
       )
       break
@@ -45,7 +49,6 @@ export function StorageFileLinkCopy({ children, file }: StorageFileLinkCopyProps
             className="cursor-pointer"
             onClick={() => {
               copy(value)
-              toast.success('复制成功')
             }}
           >
             <Item className="w-full p-1">

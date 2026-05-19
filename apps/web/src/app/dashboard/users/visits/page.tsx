@@ -1,10 +1,10 @@
 'use client'
 
+import { MDXCode } from '@repo/mdx'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui/components/dialog'
 import { Skeleton } from '@repo/ui/components/skeleton'
 import { ColumnDef, getCoreRowModel, getPaginationRowModel, getSortedRowModel, PaginationState, useReactTable } from '@tanstack/react-table'
 import { EyeIcon } from 'lucide-react'
-import dynamic from 'next/dynamic'
 import React from 'react'
 import useSWR from 'swr'
 
@@ -14,11 +14,6 @@ import { DataTablePagination } from '@/components/data-table/data-table-paginati
 import { getColumnConfig } from '@/components/data-table/utils'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
-
-const MDXClient = dynamic(() => import('@repo/mdx').then(it => it.MDXClient), {
-  ssr: false,
-  loading: () => <Skeleton className="h-48" />
-})
 
 export default function Page() {
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -86,15 +81,20 @@ export default function Page() {
             <DialogTrigger render={<DataTableRowActionButton />}>
               <EyeIcon />
             </DialogTrigger>
-            <DialogContent className="max-w-3xl">
+            <DialogContent className="max-w-3xl" fullScreen="sm">
               <DialogHeader>
                 <DialogTitle>访客</DialogTitle>
                 <DialogDescription>访客的详细信息</DialogDescription>
               </DialogHeader>
-              <MDXClient
-                className="**:data-line:whitespace-pre-wrap [&_code+*]:hidden **:[code]:max-h-none **:[code]:text-sm"
-                loadingRender={<Skeleton className="h-48" />}
-                source={['```json', JSON.stringify(row.original, null, 2), '```'].join('\n')}
+              <MDXCode
+                componentsProps={{
+                  wrapper: {
+                    className: '**:data-line:whitespace-pre-wrap'
+                  }
+                }}
+                language="json"
+                loading={<Skeleton className="h-48" />}
+                source={JSON.stringify(row.original, null, 2)}
               />
             </DialogContent>
           </Dialog>

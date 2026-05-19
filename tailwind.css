@@ -1,2 +1,2 @@
 /* 唯一用处，触发 tailwindcss 的样式提示 */
-@import '@repo/ui/globals.css';
+@import './packages/ui/src/styles/globals.css';

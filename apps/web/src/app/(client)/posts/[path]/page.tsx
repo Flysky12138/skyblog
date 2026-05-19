@@ -1,6 +1,6 @@
 'use cache'
 
-import { MDXPickHeading, MDXServer } from '@repo/mdx'
+import { MDXHeading, MDXServer } from '@repo/mdx'
 import { Card } from '@repo/ui/components-self/card'
 import { JsonLD } from '@repo/ui/components-self/json-ld'
 import { ButtonLink } from '@repo/ui/components/button'
@@ -17,11 +17,11 @@ import { DisplayByConditional } from '@/components/display/display-by-conditiona
 import { Style } from '@/components/style'
 import { ATTRIBUTE, CACHE_TAG, POST_CARD_VISIBILITY_MASK } from '@/lib/constants'
 
-import { getPosts } from '../utils'
+import { getPosts, getPrevNextPost } from '../utils'
 import { PostInfo } from './_components/post-info'
 import { PostResizeButton } from './_components/post-resize-button'
 import { PostToc, PostTocHeading } from './_components/post-toc'
-import { getPost, getPostsRecommendByPostId } from './utils'
+import { getPost } from './utils'
 
 export const generateStaticParams = async (): Promise<Awaited<PageProps<'/posts/[path]'>['params']>[]> => {
   const posts = await getPosts()
@@ -64,7 +64,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
 
   cacheTag(CACHE_TAG.POST(post.id))
 
-  const { next, prev } = await getPostsRecommendByPostId(post.id)
+  const { next, prev } = await getPrevNextPost(post)
 
   return (
     <>
@@ -113,7 +113,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
       {post.content && (
         <div className="flex gap-bp-2">
           <div className="grid w-full gap-bp-4">
-            <Card aria-label="post content" className="group/article relative p-3 md:p-5" id={ATTRIBUTE.ID.POST_CONTAINER}>
+            <Card aria-label="post content" className="group/article relative px-3 py-5 md:px-5 md:py-8" id={ATTRIBUTE.ID.POST_CONTAINER}>
               <PostResizeButton
                 className={cn(
                   'opacity-0 group-hover/article:opacity-100',
@@ -122,7 +122,14 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
                 )}
                 tabIndex={-1}
               />
-              <MDXServer source={post.content} />
+              <MDXServer
+                componentsProps={{
+                  code: {
+                    forceExpand: false
+                  }
+                }}
+                source={post.content}
+              />
             </Card>
 
             <DisplayByConditional condition={!!prev || !!next}>
@@ -162,7 +169,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
               aria-label="post toc"
               render={
                 <PostToc>
-                  <MDXPickHeading headingComponent={PostTocHeading} source={post.content} />
+                  <MDXHeading component={PostTocHeading} source={post.content} />
                 </PostToc>
               }
             />

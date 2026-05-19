@@ -33,25 +33,6 @@ const headers: NextConfig['headers'] = () => [
       { key: 'X-Frame-Options', value: 'DENY' },
       { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' }
     ]
-  },
-  {
-    headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, s-maxage=2592000, immutable' }],
-    source: '/(embed|live2d)/:path*'
-  },
-  {
-    source: '/sw.js',
-    headers: [
-      { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
-      {
-        key: 'Content-Security-Policy',
-        value: [
-          "default-src 'self'",
-          `connect-src 'self' https://avatars.githubusercontent.com/u/ ${process.env.NEXT_PUBLIC_CDN_FFMPEG} ${cspSrc}`,
-          "script-src 'self' 'unsafe-eval'"
-        ].join('; ')
-      },
-      { key: 'Content-Type', value: 'application/javascript; charset=utf-8' }
-    ]
   }
 ]
 
@@ -99,11 +80,6 @@ const nextConfig: NextConfig = {
   webpack,
   devIndicators: {
     position: 'bottom-right'
-  },
-  experimental: {
-    // https://nextjs.org/docs/app/guides/memory-usage#preloading-entries
-    // preloadEntriesOnStart: false
-    // webpackMemoryOptimizations: true
   },
   typescript: {
     ignoreBuildErrors: true

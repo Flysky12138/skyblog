@@ -7,7 +7,7 @@ export const edgeConfig = new Elysia({ prefix: '/edge-config' }).get(
   '/get',
   async ({ query }) => ({
     key: query.key,
-    value: await get(query.key)
+    value: (await get(query.key)) ?? ''
   }),
   {
     query: EdgeConfigQuerySchema,

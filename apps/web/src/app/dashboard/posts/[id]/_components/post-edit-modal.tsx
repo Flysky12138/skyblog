@@ -37,7 +37,7 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
   return (
     <Dialog>
       <DialogTrigger render={children} />
-      <DialogContent className="max-w-5xl">
+      <DialogContent className="max-w-5xl" fullScreen="sm">
         <DialogHeader>
           <DialogTitle>文章</DialogTitle>
           <DialogDescription>文章的描述信息</DialogDescription>
@@ -125,7 +125,7 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
             </Field>
             <Field>
               <FieldTitle>区块显示</FieldTitle>
-              <div className="grid grid-cols-10 gap-3">
+              <div className="grid grid-cols-10 gap-3" role="radiogroup">
                 <RadioArea
                   className="col-span-full h-10"
                   pressed={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.HEADER) == POST_CARD_VISIBILITY_MASK.HEADER}

@@ -20,8 +20,14 @@ import { SongList } from './_components/song-list'
 const getSearch = () => (isBrowser() ? (new URLSearchParams(window.location.search).get('search') ?? '') : '')
 
 export default function Page() {
-  const [search, setSearch] = React.useState(getSearch)
-  const [keywords, setKeywords] = React.useState(getSearch)
+  const [search, setSearch] = React.useState('')
+  const [keywords, setKeywords] = React.useState('')
+
+  React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSearch(getSearch())
+    setKeywords(getSearch())
+  }, [])
 
   const {
     data = [],

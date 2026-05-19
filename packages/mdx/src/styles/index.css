@@ -9,7 +9,14 @@
 
 /* 放 components 层，方便标签上的 utility 层样式覆盖 */
 @layer components {
-  [data-slot='mdx-root'] {
+  [data-slot='mdx-wrapper'] {
     @apply prose prose-sm prose-sky dark:prose-invert md:prose-base;
+
+    blockquote p:is(:first-of-type, :last-of-type) {
+      &::before,
+      &::after {
+        content: none;
+      }
+    }
   }
 }

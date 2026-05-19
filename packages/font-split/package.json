@@ -14,9 +14,9 @@
     "dist"
   ],
   "devDependencies": {
-    "@japont/unicode-range": "^1.0.0",
+    "@japont/unicode-range": "catalog:",
     "es-toolkit": "catalog:",
-    "cn-font-split": "6.0.3",
+    "cn-font-split": "catalog:",
     "tsx": "catalog:"
   }
 }

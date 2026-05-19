@@ -1,19 +1,20 @@
 import { Prisma } from '@/generated/prisma/client'
 
-export const DEFAULT_SORT_VALUE = 'desc' satisfies Prisma.SortOrder
-export const DEFAULT_SORT_KEY = 'updatedAt' satisfies keyof Prisma.PostOrderByWithRelationInput
+export const POST_SORT_FIELDS = ['createdAt', 'updatedAt', 'viewCount'] satisfies (keyof Prisma.PostOrderByWithRelationInput)[]
+export const SORT_DIRECTIONS = ['asc', 'desc'] satisfies Prisma.SortOrder[]
+
+export const DEFAULT_POST_SORT_FIELD = 'updatedAt' satisfies keyof Prisma.PostOrderByWithRelationInput
+export const DEFAULT_SORT_DIRECTION = 'desc' satisfies Prisma.SortOrder
 
 /**
- * 默认文章排序
+ * 文章排序
  */
-export const POST_ORDER_BY_DESC_INPUT = [
-  {
-    pinOrder: 'desc'
-  },
-  {
-    [DEFAULT_SORT_KEY]: DEFAULT_SORT_VALUE
-  }
-] satisfies Prisma.PostOrderByWithRelationInput[]
+export const createPostOrderByInput = (
+  field: (typeof POST_SORT_FIELDS)[number] = DEFAULT_POST_SORT_FIELD,
+  direction: (typeof SORT_DIRECTIONS)[number] = DEFAULT_SORT_DIRECTION
+) => {
+  return [{ pinOrder: 'desc' }, { [field]: direction }, { id: 'desc' }] satisfies Prisma.PostOrderByWithRelationInput[]
+}
 
 /**
  * 文章查询过滤器

@@ -123,6 +123,7 @@ export function DownloadModal({ songs: staticSongs }: DownloadModalProps) {
         }
       }
       const limit = limitAsync(download, 5)
+
       await Promise.allSettled(Array.from(selected, limit))
     } catch (error) {
       console.error(error)

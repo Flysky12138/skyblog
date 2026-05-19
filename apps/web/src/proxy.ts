@@ -13,13 +13,12 @@ export const proxy: NextProxy = async request => {
     return NextResponse.next()
   }
 
-  const auth = await authServer()
-  const session = await auth.getSession()
+  const { data: session } = await authServer.getSession()
 
   const agent = userAgent(request)
 
   if (
-    session.data?.user.banned ||
+    session?.user.banned ||
     // 封禁华为
     ['huawei', 'honor', 'harmonyos'].some(device => agent.ua.toLowerCase().includes(device)) ||
     agent.device.vendor?.toLowerCase() == 'huawei'
@@ -29,7 +28,7 @@ export const proxy: NextProxy = async request => {
 
   // 权限管理
   if (['/dashboard', '/api/dashboard'].some(url => request.nextUrl.pathname.startsWith(url))) {
-    if (session.data?.user.role != 'admin') {
+    if (session?.user.role != 'admin') {
       return NextResponse.redirect(new URL('/', request.url))
     }
   }

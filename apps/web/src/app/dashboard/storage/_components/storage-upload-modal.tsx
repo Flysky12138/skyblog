@@ -5,24 +5,20 @@ import { useAsyncFn, useBeforeUnload, useImmer } from '@repo/react-hooks'
 import { FileSelect } from '@repo/ui/components-self/file-select'
 import { Button } from '@repo/ui/components/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui/components/dialog'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@repo/ui/components/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/tabs'
-import { cn } from '@repo/ui/lib/utils'
-import { limitAsync, remove, unionWith } from 'es-toolkit'
+import { difference, limitAsync, remove, unionWith } from 'es-toolkit'
 import { FileIcon, FolderIcon, TrashIcon, UploadIcon } from 'lucide-react'
 import React from 'react'
 
-import { DataTableWrapper } from '@/components/data-table'
-import { DataTableRowActionButton } from '@/components/data-table/data-table-action'
 import { FileHelper } from '@/lib/helper/file'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise, toastPromiseDelay } from '@/lib/toast'
 
-import { StorageFileIcon } from './storage-file-icon'
 import { StorageTable2 } from './storage-table2'
+import { StorageTable3 } from './storage-table3'
 import { chunkUpload } from './utils'
 
-interface FileEntry {
+export interface FileEntry {
   /**
    * 文件 sha256
    */
@@ -44,7 +40,7 @@ interface StorageUploadModalProps {
 }
 
 export function StorageUploadModal({ children, id, onUploaded }: StorageUploadModalProps) {
-  const [activeTab, setActiveTab] = React.useState('select')
+  const [activeTab, setActiveTab] = React.useState<'select' | 'uploaded' | 'waiting'>('select')
   const [filelist, setFilelist] = useImmer<{ uploaded: FileEntry[]; waiting: FileEntry[] }>({
     uploaded: [],
     waiting: []
@@ -52,20 +48,27 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
 
   const isUploadFinished = filelist.waiting.length == 0
 
+  if (isUploadFinished && activeTab == 'waiting') {
+    setActiveTab('select')
+  }
+
   // 选择文件
   const onChange = React.useEffectEvent(async (files: File[]) => {
     try {
-      setActiveTab('waiting')
+      const getFileInfo = async (file: File) => ({
+        id: await FileHelper.getFileHash(file),
+        name: file.name,
+        path: file.webkitRelativePath || file.name,
+        rawFile: file,
+        size: file.size,
+        type: file.type
+      })
+      const limit = limitAsync(getFileInfo, 10)
+
       const fileEntries: FileEntry[] = await toastPromiseDelay(
-        Array.fromAsync(files, async file => ({
-          id: await FileHelper.getFileHash(file),
-          name: file.name,
-          path: file.webkitRelativePath || file.name,
-          rawFile: file,
-          size: file.size,
-          type: file.type
-        })),
+        Promise.all(files.map(limit)),
         {
+          error: '文件 SHA256 计算失败',
           loading: '正在计算文件 SHA256'
         },
         200
@@ -74,6 +77,8 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
       setFilelist(draft => {
         draft.waiting = unionWith(draft.waiting, fileEntries, (a, b) => a.id == b.id && a.path == b.path)
       })
+
+      setActiveTab('waiting')
     } catch (error) {
       console.error(error)
     }
@@ -82,12 +87,15 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
   // 上传文件
   const uploadFile = React.useEffectEvent(async (file: FileEntry) => {
     const promise = async () => {
+      // 检查文件是否已上传
       const objectDetail = await rpc.dashboard.storage.objects({ id: file.id }).get().then(unwrap)
-      const bucket = objectDetail?.bucket || (await chunkUpload({ file: file.rawFile, key: file.id, type: file.type }))
-      // 获取文件信息
-      const metadata = {
-        ...(FileHelper.getFileType(file.type) == 'image' ? await FileHelper.getImageSize(file.rawFile) : {})
+      let bucket = objectDetail?.bucket
+
+      // 上传文件
+      if (!bucket) {
+        bucket = await chunkUpload({ file: file.rawFile, key: file.id, type: file.type })
       }
+
       // 保存记录到数据库
       return rpc.dashboard.storage.files
         .post({
@@ -97,10 +105,12 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
           },
           file: {
             ext: FileHelper.getExtension(file.name),
-            metadata,
             mimeType: file.type,
             name: FileHelper.getBaseName(file.name),
-            size: file.size
+            size: file.size,
+            metadata: {
+              ...(FileHelper.getFileType(file.type) == 'image' ? await FileHelper.getImageSize(file.rawFile) : {})
+            }
           },
           s3Object: {
             bucket,
@@ -127,7 +137,7 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
   // 上传
   const [{ loading: isUploading }, handleUpload] = useAsyncFn(async () => {
     const limit = limitAsync(uploadFile, 3)
-    return Promise.allSettled(Array.from(filelist.waiting, limit))
+    return Promise.allSettled(filelist.waiting.map(limit))
   }, [filelist, onUploaded])
 
   useBeforeUnload(isUploading, '正在上传中，不要关闭窗口')
@@ -150,7 +160,9 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-3 sm:w-80">
             <TabsTrigger value="select">选择文件</TabsTrigger>
-            <TabsTrigger value="waiting">待上传 {filelist.waiting.length || undefined}</TabsTrigger>
+            <TabsTrigger disabled={isUploadFinished} value="waiting">
+              待上传 {filelist.waiting.length || undefined}
+            </TabsTrigger>
             <TabsTrigger value="uploaded">已上传</TabsTrigger>
           </TabsList>
 
@@ -179,72 +191,39 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
           <TabsContent value="waiting">
             <div className="flex flex-col gap-2">
               {!isUploadFinished && (
-                <Button
-                  className="ml-auto"
-                  loading={isUploading}
-                  size="sm"
-                  onClick={() => {
-                    void handleUpload()
-                  }}
-                >
-                  <UploadIcon /> 开始上传
-                </Button>
+                <div className="ml-auto flex gap-2">
+                  <Button
+                    loading={isUploading}
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => {
+                      setFilelist(draft => {
+                        draft.waiting = []
+                      })
+                    }}
+                  >
+                    <TrashIcon /> 清空
+                  </Button>
+                  <Button
+                    loading={isUploading}
+                    size="sm"
+                    onClick={() => {
+                      void handleUpload()
+                    }}
+                  >
+                    <UploadIcon /> 开始上传
+                  </Button>
+                </div>
               )}
-              <DataTableWrapper>
-                <Table>
-                  <colgroup>
-                    <col width="42" />
-                    <col style={{ minWidth: 250, width: 'fit-content' }} />
-                    <col width="120" />
-                    <col width="80" />
-                  </colgroup>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead />
-                      <TableHead>路径</TableHead>
-                      <TableHead>大小</TableHead>
-                      <TableHead className="text-right">操作</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filelist.waiting.length ? (
-                      filelist.waiting.map((file, index) => (
-                        <TableRow
-                          key={`${file.id}_${file.path}`}
-                          className={cn({
-                            hidden: filelist.uploaded.includes(file)
-                          })}
-                        >
-                          <TableCell>
-                            <StorageFileIcon mimeType={file.type} size={18} />
-                          </TableCell>
-                          <TableCell>{file.path}</TableCell>
-                          <TableCell>{FileHelper.formatFileSize(file.size)}</TableCell>
-                          <TableCell className="text-right">
-                            <DataTableRowActionButton
-                              disabled={isUploading}
-                              variant="destructive"
-                              onClick={() => {
-                                setFilelist(draft => {
-                                  draft.waiting.splice(index, 1)
-                                })
-                              }}
-                            >
-                              <TrashIcon />
-                            </DataTableRowActionButton>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell className="cursor-default text-center font-heading" colSpan={4}>
-                          未添加文件
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </DataTableWrapper>
+              <StorageTable3
+                data={difference(filelist.waiting, filelist.uploaded)}
+                isUploading={isUploading}
+                onDelete={(file, index) => {
+                  setFilelist(draft => {
+                    draft.waiting.splice(index, 1)
+                  })
+                }}
+              />
             </div>
           </TabsContent>
 

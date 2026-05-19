@@ -28,7 +28,9 @@ export function ScrollToTop({ className, showOnScrollYOverflow = 200, ...props }
     const timer = setTimeout(() => {
       setShowProgress(false)
     }, 500)
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+    }
   }, [yProgress])
 
   const handleClick = React.useEffectEvent(() => {
@@ -64,7 +66,7 @@ export function ScrollToTop({ className, showOnScrollYOverflow = 200, ...props }
   return (
     <Button
       aria-label="scroll back to top"
-      className={cn('relative p-4 select-none', className, {
+      className={cn('relative select-none', className, {
         'cursor-default': showProgress
       })}
       size="icon"
@@ -73,11 +75,23 @@ export function ScrollToTop({ className, showOnScrollYOverflow = 200, ...props }
     >
       <AnimatePresence initial={false} mode="popLayout">
         {showProgress ? (
-          <motion.div key={1} animate={{ opacity: 1 }} exit={{ opacity: 0 }} initial={{ opacity: 0 }}>
+          <motion.div
+            key={1}
+            animate={{ opacity: 1 }}
+            className="absolute inset-0 flex items-center justify-center"
+            exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
+          >
             {yProgress}
           </motion.div>
         ) : (
-          <motion.div key={2} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} initial={{ opacity: 0, y: 15 }}>
+          <motion.div
+            key={2}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute inset-0 flex items-center justify-center"
+            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, y: 15 }}
+          >
             <ChevronUpIcon strokeWidth={3} />
           </motion.div>
         )}

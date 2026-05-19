@@ -5,16 +5,20 @@ import { Prisma } from '@/generated/prisma/client'
 import { CACHE_TAG } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
 
-import { DEFAULT_SORT_KEY, DEFAULT_SORT_VALUE, POST_WHERE_INPUT } from '../utils'
-
-const SORT_VALUES = ['asc', 'desc'] satisfies Prisma.SortOrder[]
-const SORT_KEYS = ['createdAt', 'updatedAt', 'viewCount'] satisfies (keyof Prisma.PostOrderByWithRelationInput)[]
+import {
+  createPostOrderByInput,
+  DEFAULT_POST_SORT_FIELD,
+  DEFAULT_SORT_DIRECTION,
+  POST_SORT_FIELDS,
+  POST_WHERE_INPUT,
+  SORT_DIRECTIONS
+} from '../utils'
 
 export const PostSearchParamsSchema = z.strictObject({
   categories: z.string().optional(),
-  order: z.enum(SORT_VALUES).default(DEFAULT_SORT_VALUE),
+  direction: z.enum(SORT_DIRECTIONS).default(DEFAULT_SORT_DIRECTION),
+  field: z.enum(POST_SORT_FIELDS).default(DEFAULT_POST_SORT_FIELD),
   page: z.coerce.number().int().positive().default(1),
-  sortord: z.enum(SORT_KEYS).default(DEFAULT_SORT_KEY),
   tags: z.string().optional()
 })
 export type PostSearchParamsType = z.infer<typeof PostSearchParamsSchema>
@@ -22,7 +26,7 @@ export type PostSearchParamsType = z.infer<typeof PostSearchParamsSchema>
 /**
  * 获取文章列表
  */
-export const getPostList = async ({ categories, order, page, sortord, tags }: PostSearchParamsType) => {
+export const getPostList = async ({ categories, direction, field, page, tags }: PostSearchParamsType) => {
   'use cache: remote'
   cacheLife('max')
   cacheTag(CACHE_TAG.POSTS)
@@ -32,7 +36,7 @@ export const getPostList = async ({ categories, order, page, sortord, tags }: Po
     tags: tags ? { some: { tag: { name: decodeURIComponent(tags) } } } : undefined
   } satisfies Prisma.PostWhereInput
 
-  const orderBy = [{ pinOrder: 'desc' }, { [sortord]: order }] satisfies Prisma.PostOrderByWithRelationInput[]
+  const orderBy = createPostOrderByInput(field, direction)
 
   const [posts, pagination] = await prisma.post
     .paginate({

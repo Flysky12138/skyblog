@@ -128,7 +128,7 @@ export default function Page() {
               <Button type="submit">{isSignIn ? '登录' : '验证邮箱'}</Button>
             </div>
             <ButtonLink href="/auth/sign-in" variant="secondary">
-              <LockIcon data-icon="inline-start" />
+              <LockIcon />
               使用密码登录
             </ButtonLink>
           </Field>

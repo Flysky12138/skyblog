@@ -13,7 +13,7 @@ import { getPostList, PostSearchParamsSchema } from './utils'
 type PostWhereInputKey = Extract<keyof Prisma.PostWhereInput, 'categories' | 'tags'>
 
 export default async function Page({ searchParams }: PageProps<'/'>) {
-  const params = await PostSearchParamsSchema.parseAsync(pick(await searchParams, ['categories', 'order', 'page', 'sortord', 'tags']))
+  const params = await PostSearchParamsSchema.parseAsync(pick(await searchParams, PostSearchParamsSchema.keyof().options))
 
   const { pagination, posts } = await getPostList(params)
 
@@ -24,7 +24,7 @@ export default async function Page({ searchParams }: PageProps<'/'>) {
   return (
     <>
       <div className="-order-1 flex">
-        <PostSort className="ml-auto" order={params.order} sortord={params.sortord} />
+        <PostSort className="ml-auto" direction={params.direction} field={params.field} />
       </div>
 
       {posts.map(post => (

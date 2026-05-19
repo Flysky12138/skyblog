@@ -1,66 +1,53 @@
+import { cacheLife, cacheTag } from 'next/cache'
 import React from 'react'
 import { z } from 'zod'
 
-import { internal } from '@/lib/prisma'
-
-import { getPosts } from '../utils'
+import { CACHE_TAG } from '@/lib/constants'
+import { internal, prisma } from '@/lib/prisma'
 
 /**
- * 获取所有文章的作者
+ * 获取作者
  */
-const getAuthors = React.cache(async () => {
-  const posts = await getPosts()
+const getAuthor = async (id: string) => {
+  'use cache'
+  cacheLife('max')
+  cacheTag(CACHE_TAG.AUTHOR(id))
 
-  const authors = posts.map(post => post.authorId)
-
-  const users = await internal.user.findMany({
-    where: {
-      id: {
-        in: authors
-      }
-    }
+  return internal.user.findUnique({
+    where: { id }
   })
-
-  return users
-})
+}
 
 /**
  * 获取文章
  */
 export const getPost = React.cache(async (idOrSlug: string) => {
-  const { success: isUuidv7 } = await z.uuidv7().safeParseAsync(idOrSlug)
+  const { data: id, success } = await z.uuidv7().safeParseAsync(idOrSlug)
 
-  const posts = await getPosts()
-  const post = posts.find(post => (isUuidv7 ? idOrSlug == post.id : idOrSlug == post.slug))
+  const post = await prisma.post.findUnique({
+    where: success ? { id } : { slug: idOrSlug },
+    include: {
+      categories: {
+        include: {
+          category: true
+        }
+      },
+      tags: {
+        include: {
+          tag: true
+        }
+      }
+    }
+  })
 
-  if (!post) return { post: null, user: null }
+  if (!post) {
+    return { post: null, user: null }
+  }
 
-  const authors = await getAuthors()
-  const user = authors.find(author => author.id == post.authorId)
+  const user = await getAuthor(post.authorId)
 
   return {
     post,
     user
-  }
-})
-
-/**
- * 获取推荐文章
- */
-export const getPostsRecommendByPostId = React.cache(async (id: string) => {
-  const posts = await getPosts()
-
-  const index = posts.findIndex(post => post.id == id)
-
-  if (index == -1) {
-    return { next: null, prev: null }
-  }
-
-  const next = index == posts.length - 1 ? null : posts[index + 1]
-  const prev = index == 0 ? null : posts[index - 1]
-
-  return {
-    next,
-    prev
   }
 })

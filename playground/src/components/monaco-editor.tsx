@@ -1,4 +1,4 @@
-import '@repo/monaco-editor/styles.css'
+import '@repo/monaco-editor/style.css'
 import { MonacoEditor } from '@repo/monaco-editor'
 
 import tsx from '../index.tsx?raw'

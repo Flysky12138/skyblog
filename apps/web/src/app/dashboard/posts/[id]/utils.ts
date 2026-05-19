@@ -1,11 +1,10 @@
 import { Treaty } from '@elysiajs/eden'
-import { createPrettierOptions, MonacoEditorProps } from '@repo/monaco-editor'
+import { createPrettierOptions, grammars, MonacoEditorProps } from '@repo/monaco-editor'
 import { isUndefined } from 'es-toolkit'
 import babelPlugins from 'prettier/plugins/babel'
 import estreePlugins from 'prettier/plugins/estree'
 import markdownPlugins from 'prettier/plugins/markdown'
 import { format } from 'prettier/standalone'
-import { grammars } from 'tm-grammars'
 
 import { POST_CARD_VISIBILITY_MASK } from '@/lib/constants'
 import { rpc } from '@/lib/http/rpc'

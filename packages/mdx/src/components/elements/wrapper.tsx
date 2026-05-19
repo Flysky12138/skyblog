@@ -2,7 +2,17 @@ import { useRender } from '@repo/ui/base'
 import { cn } from '@repo/ui/lib/utils'
 import React from 'react'
 
-export function MDXRoot({ className, ...props }: React.ComponentProps<'article'> & useRender.ComponentProps<'article'>) {
+export function Wrapper({
+  className,
+  components,
+  ...props
+}: {
+  /**
+   * MDX 注入的参数
+   */
+  components?: any
+} & React.ComponentProps<'article'> &
+  useRender.ComponentProps<'article'>) {
   return useRender({
     defaultTagName: 'article',
     props: {
@@ -10,7 +20,7 @@ export function MDXRoot({ className, ...props }: React.ComponentProps<'article'>
       ...props
     },
     state: {
-      slot: 'mdx-root'
+      slot: 'mdx-wrapper'
     }
   })
 }

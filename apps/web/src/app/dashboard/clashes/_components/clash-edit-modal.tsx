@@ -71,7 +71,7 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
       }}
     >
       <DialogTrigger render={children} />
-      <DialogContent className="max-w-7xl lg:h-[calc(100vh-120px)]">
+      <DialogContent className="max-w-7xl lg:h-[calc(100vh-120px)]" fullScreen="lg">
         <DialogHeader>
           <DialogTitle>共享配置</DialogTitle>
           <DialogDescription>自定义 Clash 客户端订阅内容</DialogDescription>
@@ -94,11 +94,12 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
                   <FieldTitle className="sr-only">内容</FieldTitle>
                   <MonacoEditor
                     aria-invalid={fieldState.invalid}
-                    className="not-lg:h-80"
+                    className="not-lg:min-h-120"
                     id={field.name}
                     isDiffMode={isUseTemplate}
                     language="yaml"
                     options={{
+                      lineNumbers: 'off',
                       readOnly: isUseTemplate
                     }}
                     originalValue={isUseTemplate ? selectedClashTemplate?.content : value?.content}

@@ -1,4 +1,4 @@
-import React from 'react'
+import { MDXComponents } from 'next-mdx-remote-client'
 
 import { A } from './a'
 import { Code } from './code'
@@ -20,4 +20,4 @@ export const original = {
   pre: Pre,
   style: Style,
   ul: Ul
-} as Record<React.HTMLElementType, React.FunctionComponent>
+} satisfies MDXComponents

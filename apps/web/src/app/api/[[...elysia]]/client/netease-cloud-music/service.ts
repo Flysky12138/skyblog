@@ -4,8 +4,10 @@ import { toMerged } from 'es-toolkit'
 import NeteaseCloudMusicApi from 'NeteaseCloudMusicApi'
 import { cacheLife, cacheTag } from 'next/cache'
 import { createRequire } from 'node:module'
+import { get } from '@vercel/edge-config'
+import { status } from 'elysia'
 
-import { CACHE_TAG } from '@/lib/constants'
+import { CACHE_TAG, VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
 
 import {
   AlbumResponseType,
@@ -16,7 +18,7 @@ import {
   SongUrlQueryType,
   SongUrlResponseType
 } from './model'
-import { getNeteaseCloudMusicCookie, parseLyric } from './utils'
+import { parseLyric } from './utils'
 
 const require = createRequire(import.meta.url)
 const { album, cloudsearch, lyric, playlist_detail, song_url_v1 } = require('NeteaseCloudMusicApi') as typeof NeteaseCloudMusicApi
@@ -30,8 +32,10 @@ export abstract class Service {
     cacheLife('days')
     cacheTag(CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
 
+    const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
+
     try {
-      const res = await album({ cookie: await getNeteaseCloudMusicCookie(), id })
+      const res = await album({ cookie, id })
       return {
         hasMore: false,
         songCount: res.body.album.size,
@@ -56,8 +60,10 @@ export abstract class Service {
     cacheLife('max')
     cacheTag(CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
 
+    const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
+
     try {
-      const res = await lyric({ cookie: await getNeteaseCloudMusicCookie(), id })
+      const res = await lyric({ cookie, id })
       return {
         lrc: parseLyric(res.body.lrc.lyric),
         lrcText: res.body.lrc.lyric
@@ -75,8 +81,10 @@ export abstract class Service {
     cacheLife('days')
     cacheTag(CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
 
+    const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
+
     try {
-      const res = await playlist_detail({ cookie: await getNeteaseCloudMusicCookie(), id })
+      const res = await playlist_detail({ cookie, id })
       return {
         hasMore: false,
         songCount: res.body.playlist.trackCount,
@@ -95,8 +103,10 @@ export abstract class Service {
     cacheLife('days')
     cacheTag(CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
 
+    const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
+
     try {
-      const res = await cloudsearch({ cookie: await getNeteaseCloudMusicCookie(), keywords, limit, offset: page * limit, type })
+      const res = await cloudsearch({ cookie, keywords, limit, offset: page * limit, type })
       return {
         hasMore: res.body.result.songCount > (page + 1) * limit,
         songCount: res.body.result.songCount,
@@ -115,8 +125,10 @@ export abstract class Service {
     cacheLife('max')
     cacheTag(CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
 
+    const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
+
     try {
-      const res = await song_url_v1({ cookie: await getNeteaseCloudMusicCookie(), id, level })
+      const res = await song_url_v1({ cookie, id, level })
       return res.body.data
     } catch (error) {
       return status(500, { message: error.body.message })

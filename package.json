@@ -16,25 +16,25 @@
     ]
   },
   "lint-staged": {
-    "*.{md,json,ts,tsx}": "prettier --write"
+    "*.{md,json,yaml,ts,tsx}": "prettier --write"
   },
   "devDependencies": {
-    "@commitlint/cli": "^21.0.1",
-    "@commitlint/config-conventional": "^21.0.1",
-    "@monaco-editor/loader": "^1.7.0",
+    "@commitlint/cli": "catalog:",
+    "@commitlint/config-conventional": "catalog:",
+    "@monaco-editor/loader": "catalog:",
     "@repo/eslint-config": "workspace:*",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "eslint": "catalog:",
-    "husky": "^9.1.7",
-    "lint-staged": "^17.0.5",
-    "monaco-editor": "0.55.1",
-    "npm-check-updates": "^22.2.0",
-    "prettier": "^3.8.3",
-    "prettier-plugin-tailwindcss": "^0.8.0",
-    "typescript": "^6.0.3"
+    "husky": "catalog:",
+    "lint-staged": "catalog:",
+    "monaco-editor": "catalog:",
+    "npm-check-updates": "catalog:",
+    "prettier": "catalog:",
+    "prettier-plugin-tailwindcss": "catalog:",
+    "typescript": "catalog:"
   },
-  "packageManager": "pnpm@11.1.2",
+  "packageManager": "pnpm@11.3.0",
   "engines": {
     "node": ">=24"
   }

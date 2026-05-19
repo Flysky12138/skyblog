@@ -1,4 +1,4 @@
-import { limitAsync } from 'es-toolkit'
+import { limitAsync, range } from 'es-toolkit'
 
 import { rpc, unwrap } from '@/lib/http/rpc'
 
@@ -14,16 +14,32 @@ export const PART_SIZE = 10 * 1024 * 1024
 
 /**
  * 获取 S3 直链
+ *
+ * @param id 文件 ID
  */
-export const getPublicUrl = (key: string) => `${process.env.NEXT_PUBLIC_R2_URL.replace(/\/$/, '')}/${key}`
+export const getPublicUrl = (id: string) => `${process.env.NEXT_PUBLIC_WEBSITE_URL}/api/files/${id}/url`
 
 /**
  * 分片上传
  */
-export const chunkUpload = async ({ file, key, type }: { file: File; key: string; type: string }) => {
+export const chunkUpload = async ({
+  file,
+  key,
+  type
+}: {
+  file: File
+  /**
+   * 文件 sha256
+   */
+  key: string
+  /**
+   * 文件类型
+   */
+  type: string
+}) => {
   // 初始化
   const { uploadId } = await rpc.dashboard.storage.objects['multipart-upload'].create.post({ contentType: type, key }).then(unwrap)
-  // 开始上传
+
   const partUpload = async (index: number) => {
     const partNumber = index + 1
     const { url } = await rpc.dashboard.storage.objects['multipart-upload']['sign-part'].post({ key, partNumber, uploadId }).then(unwrap)
@@ -40,8 +56,12 @@ export const chunkUpload = async ({ file, key, type }: { file: File; key: string
     }
   }
   const limit = limitAsync(partUpload, 5)
-  const parts = await Promise.all(Array.from({ length: Math.ceil(file.size / PART_SIZE) }, (_, index) => limit(index)))
+
+  // 开始上传
+  const parts = await Promise.all(range(Math.ceil(file.size / PART_SIZE)).map(limit))
+
   // 完成上传
   const { Bucket } = await rpc.dashboard.storage.objects['multipart-upload'].complete.post({ key, parts, uploadId }).then(unwrap)
-  return Bucket!
+
+  return Bucket ?? process.env.R2_BUCKET_NAME
 }
