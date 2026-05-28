@@ -6,7 +6,7 @@ model Friend {
   name             String
   description      String?
   siteUrl          String  @map("site_url")
-  order            Int     @default(0)
+  order            Int     @default(0) @map("sort_order")
   isEnabled        Boolean @default(true) @map("is_enabled")
   screenshotFileId String? @unique @map("screenshot_file_id") @db.Uuid
 

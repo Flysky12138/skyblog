@@ -11,7 +11,7 @@ model Comment {
   parentId      String? @map("parent_id") @db.Uuid
   activityLogId BigInt? @map("activity_log_id")
 
-  activityLog ActivityLog? @relation(fields: [activityLogId], references: [id])
+  activityLog ActivityLog? @relation(fields: [activityLogId], references: [id], onDelete: SetNull)
   parent      Comment?     @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
   replies     Comment[]    @relation("CommentToComment")
   post        Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
