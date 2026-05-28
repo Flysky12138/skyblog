@@ -1,5 +1,13 @@
 import { z } from 'zod'
 
+export const fileMetadataSchema = z
+  .strictObject({
+    height: z.number().optional(),
+    width: z.number().optional()
+  })
+  .optional()
+export type FileMetadataType = z.infer<typeof fileMetadataSchema>
+
 export const StorageFileCreateBodySchema = z.strictObject({
   directory: z.strictObject({
     id: z.uuidv7(),
@@ -7,7 +15,7 @@ export const StorageFileCreateBodySchema = z.strictObject({
   }),
   file: z.strictObject({
     ext: z.string().nonempty(),
-    metadata: z.record(z.string().nonempty(), z.any()).optional(),
+    metadata: fileMetadataSchema,
     mimeType: z.string(),
     name: z.string().nonempty(),
     size: z.int().positive()

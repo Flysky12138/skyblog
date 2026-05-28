@@ -28,7 +28,13 @@ export const nextJsConfig = defineConfig([
       'no-restricted-imports': [
         'error',
         {
-          paths: ['next/router']
+          paths: ['next/router'],
+          patterns: [
+            {
+              allowImportNamePattern: '^(.*Icon|LucideProps)$',
+              group: ['lucide-react']
+            }
+          ]
         }
       ]
     }

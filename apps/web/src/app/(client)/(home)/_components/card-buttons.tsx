@@ -15,7 +15,7 @@ export async function CardButtons() {
   cacheTag(CACHE_TAG.FRIENDS)
 
   const friendCount = await prisma.friend.count({
-    where: { isActive: true }
+    where: { isEnabled: true }
   })
 
   const pkgCount = Object.keys(packageJson.dependencies).length + Object.keys(packageJson.devDependencies).length

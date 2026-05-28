@@ -79,13 +79,14 @@ export function PostTable() {
       accessorKey: 'title',
       header: '标题',
       size: 250,
-      cell: ({ row }) => <div className="line-clamp-1 whitespace-normal">{row.original.title}</div>
+      cell: ({ row }) => <div className="truncate">{row.original.title}</div>
     },
     {
       accessorKey: 'summary',
       header: '描述',
+      minSize: 300,
       meta: {
-        widthFit: true
+        autoWidth: true
       },
       cell: ({ row }) => <div className="line-clamp-2 whitespace-normal">{row.original.summary}</div>
     },

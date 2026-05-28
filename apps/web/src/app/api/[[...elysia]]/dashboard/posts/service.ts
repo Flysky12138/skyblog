@@ -8,6 +8,7 @@ import { PaginationQueryType } from '../../model'
 import { PostCreateBodyType, PostUpdateBodyType } from './model'
 
 const include = {
+  coverFile: true,
   categories: {
     select: {
       category: {

@@ -4,6 +4,7 @@ export const PostCreateBodySchema = z.strictObject({
   authorId: z.uuidv4(),
   categories: z.string().array().nullish(),
   content: z.string().nullish(),
+  coverFileId: z.uuidv7().nullish(),
   isPublished: z.boolean().optional(),
   pinOrder: z.int().optional(),
   summary: z.string().nullish(),
@@ -21,6 +22,7 @@ export type PostCreateBodyType = z.infer<typeof PostCreateBodySchema>
 export const PostUpdateBodySchema = z.strictObject({
   categories: z.string().array().nullish(),
   content: z.string().nullish(),
+  coverFileId: z.uuidv7().nullish(),
   isPublished: z.boolean().optional(),
   pinOrder: z.int().optional(),
   summary: z.string().nullish(),

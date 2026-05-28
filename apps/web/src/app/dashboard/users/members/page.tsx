@@ -28,7 +28,7 @@ export default function Page() {
       header: '用户名',
       size: 100,
       meta: {
-        widthFit: true
+        autoWidth: true
       }
     },
     {

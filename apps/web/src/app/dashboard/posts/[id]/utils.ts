@@ -28,6 +28,8 @@ export const createInitialPost: () => PostType = () => ({
   commentCount: 0,
   content: null,
   cover: null,
+  coverFile: null,
+  coverFileId: null,
   createdAt: new Date(),
   id: '-1',
   isPublished: false,

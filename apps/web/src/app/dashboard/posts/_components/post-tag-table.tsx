@@ -66,7 +66,7 @@ export function PostTagTable() {
       header: '标题',
       size: 120,
       meta: {
-        widthFit: true
+        autoWidth: true
       }
     },
     getColumnConfig('updatedAt'),

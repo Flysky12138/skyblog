@@ -4,12 +4,12 @@ export abstract class Service {
   /**
    * 获取对象详情
    */
-  static async detail(id: string) {
+  static async detail(key: string) {
     return prisma.s3Object.findUnique({
       where: {
         bucket_objectKey: {
           bucket: process.env.R2_BUCKET_NAME,
-          objectKey: id
+          objectKey: key
         }
       }
     })

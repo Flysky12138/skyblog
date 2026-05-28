@@ -82,7 +82,7 @@ export function ClashTemplateTable() {
       header: '名称',
       size: 180,
       meta: {
-        widthFit: true
+        autoWidth: true
       }
     },
     {

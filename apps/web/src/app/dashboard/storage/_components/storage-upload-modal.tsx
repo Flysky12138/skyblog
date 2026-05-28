@@ -11,12 +11,12 @@ import { FileIcon, FolderIcon, TrashIcon, UploadIcon } from 'lucide-react'
 import React from 'react'
 
 import { FileHelper } from '@/lib/helper/file'
-import { rpc, unwrap } from '@/lib/http/rpc'
+import { rpc } from '@/lib/http/rpc'
+import { Storage } from '@/lib/http/storage'
 import { toastPromise, toastPromiseDelay } from '@/lib/toast'
 
 import { StorageTable2 } from './storage-table2'
 import { StorageTable3 } from './storage-table3'
-import { chunkUpload } from './utils'
 
 export interface FileEntry {
   /**
@@ -32,6 +32,9 @@ export interface FileEntry {
 
 interface StorageUploadModalProps {
   children: React.ReactElement
+  /**
+   * 父文件夹 ID
+   */
   id: string
   /**
    * 每个上传成功的文件都会调用
@@ -85,58 +88,33 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
   })
 
   // 上传文件
-  const uploadFile = React.useEffectEvent(async (file: FileEntry) => {
-    const promise = async () => {
-      // 检查文件是否已上传
-      const objectDetail = await rpc.dashboard.storage.objects({ id: file.id }).get().then(unwrap)
-      let bucket = objectDetail?.bucket
-
-      // 上传文件
-      if (!bucket) {
-        bucket = await chunkUpload({ file: file.rawFile, key: file.id, type: file.type })
-      }
-
-      // 保存记录到数据库
-      return rpc.dashboard.storage.files
-        .post({
+  const [{ loading: isUploading }, handleUpload] = useAsyncFn(async () => {
+    const promise = async (file: FileEntry) => {
+      const data = await toastPromise(
+        Storage.uploadFile({
+          file: file.rawFile,
+          s3ObjectKey: file.id,
           directory: {
             id,
             names: file.path.split('/').filter(Boolean).slice(0, -1)
-          },
-          file: {
-            ext: FileHelper.getExtension(file.name),
-            mimeType: file.type,
-            name: FileHelper.getBaseName(file.name),
-            size: file.size,
-            metadata: {
-              ...(FileHelper.getFileType(file.type) == 'image' ? await FileHelper.getImageSize(file.rawFile) : {})
-            }
-          },
-          s3Object: {
-            bucket,
-            objectKey: file.id
           }
-        })
-        .then(unwrap)
+        }),
+        {
+          description: file.path,
+          loading: '正在上传',
+          success: '上传成功'
+        }
+      )
+
+      setFilelist(draft => {
+        draft.uploaded.push(file)
+        remove(draft.waiting, item => item.id == file.id && item.path == file.path)
+      })
+
+      await onUploaded?.(data)
     }
+    const limit = limitAsync(promise, 3)
 
-    const data = await toastPromise(promise(), {
-      description: file.path,
-      loading: '正在上传',
-      success: '上传成功'
-    })
-
-    setFilelist(draft => {
-      draft.uploaded.push(file)
-      remove(draft.waiting, item => item.id == file.id && item.path == file.path)
-    })
-
-    await onUploaded?.(data)
-  })
-
-  // 上传
-  const [{ loading: isUploading }, handleUpload] = useAsyncFn(async () => {
-    const limit = limitAsync(uploadFile, 3)
     return Promise.allSettled(filelist.waiting.map(limit))
   }, [filelist, onUploaded])
 
@@ -193,7 +171,7 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
               {!isUploadFinished && (
                 <div className="ml-auto flex gap-2">
                   <Button
-                    loading={isUploading}
+                    disabled={isUploading}
                     size="sm"
                     variant="destructive"
                     onClick={() => {

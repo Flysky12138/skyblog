@@ -6,7 +6,6 @@ model Post {
   title          String
   summary        String?
   content        String?
-  cover          String?
   slug           String? @unique
   isPublished    Boolean @default(false) @map("is_published")
   viewCount      Int     @default(0) @map("view_count")
@@ -14,10 +13,12 @@ model Post {
   visibilityMask Int     @default(dbgenerated("B'111'::int")) @map("visibility_mask")
   commentCount   Int     @default(0) @map("comment_count")
   authorId       String  @map("author_id") @db.Uuid
+  coverFileId    String? @map("cover_file_id") @db.Uuid
 
   comments   Comment[]
   categories PostCategory[]
   tags       PostTag[]
+  coverFile  File?          @relation(fields: [coverFileId], references: [id], onDelete: SetNull)
 
   @@map("posts")
 }

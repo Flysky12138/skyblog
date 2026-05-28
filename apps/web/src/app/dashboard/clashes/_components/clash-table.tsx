@@ -108,7 +108,7 @@ export function ClashTable() {
       header: '描述',
       size: 200,
       meta: {
-        widthFit: true
+        autoWidth: true
       }
     },
     {

@@ -10,8 +10,7 @@ import React from 'react'
 
 import { FileHelper } from '@/lib/helper/file'
 import { rpc } from '@/lib/http/rpc'
-
-import { getPublicUrl } from './utils'
+import { Storage } from '@/lib/http/storage'
 
 interface StorageFileLinkCopyProps {
   children: React.ReactElement
@@ -25,15 +24,17 @@ export function StorageFileLinkCopy({ children, file }: StorageFileLinkCopyProps
     }
   })
 
-  const links = [{ label: '直链', value: getPublicUrl(file.id) }]
+  const url = Storage.getPublicUrl(file.id)
+
+  const links = [{ label: '直链', value: url }]
 
   switch (FileHelper.getFileType(file.mimeType)) {
     case 'image':
       links.push(
-        { label: 'Markdown', value: `![${file.name}](${getPublicUrl(file.id)})` },
+        { label: 'Markdown', value: `![${file.name}](${url})` },
         {
           label: 'HTML',
-          value: `::img{alt="${file.name}" src="${getPublicUrl(file.id)}" width="${file.metadata.width}" height="${file.metadata.height}"}`
+          value: `::img{alt="${file.name}" src="${url}" width="${file.metadata?.width}" height="${file.metadata?.height}"}`
         }
       )
       break

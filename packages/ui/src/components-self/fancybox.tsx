@@ -6,9 +6,9 @@ import React from 'react'
 
 import { useTheme } from '../hooks/use-theme'
 
-export const itemSelector = '[data-fancybox]'
-
 export { Fancybox } from '@fancyapps/ui'
+
+const itemSelector = '[data-fancybox]'
 
 /**
  * 图片预览

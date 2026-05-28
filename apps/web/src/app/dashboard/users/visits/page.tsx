@@ -47,7 +47,7 @@ export default function Page() {
       header: 'Ip',
       size: 140,
       meta: {
-        widthFit: true
+        autoWidth: true
       }
     },
     {

@@ -16,6 +16,7 @@ import { DisplayByAuth } from '@/components/display/display-by-auth'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Style } from '@/components/style'
 import { ATTRIBUTE, CACHE_TAG, POST_CARD_VISIBILITY_MASK } from '@/lib/constants'
+import { Storage } from '@/lib/http/storage'
 
 import { getPosts, getPrevNextPost } from '../utils'
 import { PostInfo } from './_components/post-info'
@@ -75,7 +76,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
           datePublished: post.createdAt.toString(),
           description: post.summary ?? undefined,
           headline: post.title,
-          image: post.cover ?? undefined,
+          image: post.coverFileId ? Storage.getPublicUrl(post.coverFileId) : undefined,
           author: user
             ? {
                 '@type': 'Person',

@@ -21,6 +21,7 @@ interface FileSelectProps extends Omit<FileSelectBaseProps, 'onChange'> {
    * @default '*'
    */
   accept?: string
+  disabled?: boolean
   /**
    * 是否多选
    *
@@ -36,13 +37,15 @@ interface FileSelectProps extends Omit<FileSelectBaseProps, 'onChange'> {
   onChange: (files: File[]) => void
 }
 
-export function FileSelect({ accept, className, multiple, type, onChange, ...props }: FileSelectProps) {
+export function FileSelect({ accept, className, disabled, multiple, type, onChange, ...props }: FileSelectProps) {
   const accessibleProps = useAccessibleClick(event => {
     event.currentTarget.click()
   })
 
   const [bond, state] = useDropArea({
-    onFiles: onChange
+    onFiles: files => {
+      onChange(multiple ? files : files.slice(0, 1))
+    }
   })
 
   return (
@@ -50,18 +53,22 @@ export function FileSelect({ accept, className, multiple, type, onChange, ...pro
       className={cn(
         'block',
         {
-          'border-green-500/75': state.over
+          'border-green-500/75': !disabled && state.over,
+          'pointer-events-none cursor-not-allowed opacity-50': disabled
         },
         className
       )}
       render={<label />}
       {...props}
-      {...accessibleProps}
-      {...bond}
+      {...(!disabled && {
+        ...accessibleProps,
+        ...bond
+      })}
     >
       <Input
         hidden
         accept={accept}
+        disabled={disabled}
         multiple={multiple}
         type="file"
         webkitdirectory={type == 'folder' ? 'true' : undefined}
@@ -81,7 +88,7 @@ export function FileSelectBase({ children, className, description, logo: Logo, r
     props: {
       children: (
         <>
-          <Empty className="pointer-events-none">
+          <Empty>
             <EmptyHeader>
               <EmptyMedia variant="icon">
                 <Logo />
@@ -94,7 +101,7 @@ export function FileSelectBase({ children, className, description, logo: Logo, r
         </>
       ),
       className: cn(
-        'mx-auto w-full max-w-2xl cursor-pointer rounded-lg border border-dashed bg-transparent transition-all dark:bg-input/30',
+        'mx-auto w-full max-w-2xl rounded-md border border-dashed bg-transparent transition-all dark:bg-input/30',
         'hover:border-blue-500/75',
         'focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50',
         className

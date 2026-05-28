@@ -13,7 +13,7 @@ export function DataTable<TData extends RowData>({ table }: DataTableProps<TData
   return (
     <DataTableWrapper>
       <Table
-        className="min-w-full"
+        className="min-w-full table-fixed"
         style={{
           width: table.getTotalSize()
         }}
@@ -27,7 +27,7 @@ export function DataTable<TData extends RowData>({ table }: DataTableProps<TData
                   className={cn('', getAlignClassName(header.column.columnDef.meta?.align))}
                   colSpan={header.colSpan}
                   style={{
-                    width: header.column.columnDef.meta?.widthFit ? 'fit-content' : header.column.getSize()
+                    width: header.column.columnDef.meta?.autoWidth ? undefined : header.column.getSize()
                   }}
                 >
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}

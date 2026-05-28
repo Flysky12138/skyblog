@@ -13,9 +13,6 @@ export const paginationModel = new Elysia({ name: 'pagination' }).model({
 
 // ID 验证
 export const idModel = new Elysia({ name: 'id' }).model({
-  sha256: z.strictObject({
-    id: z.hash('sha256')
-  }),
   uuidv4: z.strictObject({
     id: z.uuidv4()
   }),

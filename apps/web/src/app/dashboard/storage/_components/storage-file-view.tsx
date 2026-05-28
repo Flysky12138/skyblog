@@ -6,8 +6,7 @@ import { Fancybox } from '@repo/ui/components-self/fancybox'
 
 import { FileHelper } from '@/lib/helper/file'
 import { rpc } from '@/lib/http/rpc'
-
-import { getPublicUrl } from './utils'
+import { Storage } from '@/lib/http/storage'
 
 interface StorageFileViewProps extends useRender.ComponentProps<'div'> {
   file: Treaty.Data<ReturnType<typeof rpc.dashboard.storage.directories>['get']>['files'][number]
@@ -17,15 +16,17 @@ export function StorageFileView({ file, render, onClick, ...props }: StorageFile
   const types: ReturnType<typeof FileHelper.getFileType>[] = ['image', 'pdf']
   const type = FileHelper.getFileType(file.mimeType)
 
+  const url = Storage.getPublicUrl(file.id)
+
   const defaultProps: useRender.ElementProps<'div'> = {
     onClick: event => {
       onClick?.(event)
       switch (type) {
         case 'image':
-          Fancybox.show([{ src: getPublicUrl(file.id) }])
+          Fancybox.show([{ src: url }])
           break
         case 'pdf':
-          window.open(getPublicUrl(file.id), '_blank')
+          window.open(url, '_blank')
           break
       }
     }

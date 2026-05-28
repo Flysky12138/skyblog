@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const friends = await prisma.friend.findMany({
-    where: { isActive: true },
+    where: { isEnabled: true },
     select: {
       siteUrl: true,
       updatedAt: true

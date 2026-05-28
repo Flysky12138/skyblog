@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia'
 
 import { idModel } from '../../model'
-import { FriendCreateBodySchema, FriendUpdateBodySchema } from './model'
+import { FriendCoverBodySchema, FriendCreateBodySchema, FriendUpdateBodySchema } from './model'
 import { Service } from './service'
 
 export const friends = new Elysia({ prefix: '/friends' })
@@ -17,6 +17,6 @@ export const friends = new Elysia({ prefix: '/friends' })
   .delete('/:id', ({ params }) => Service.delete(params.id), {
     params: 'uuidv7'
   })
-  .post('/:id/cover', ({ params }) => Service.generateCover(params.id), {
-    params: 'uuidv7'
+  .post('/cover', ({ body }) => Service.generateCover(body), {
+    body: FriendCoverBodySchema
   })

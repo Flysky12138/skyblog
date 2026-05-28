@@ -1,28 +1,31 @@
 'use client'
 
 import { Updater } from '@repo/react-hooks'
+import { Card } from '@repo/ui/components-self/card'
 import { FileSelect } from '@repo/ui/components-self/file-select'
 import { MultiSelect } from '@repo/ui/components-self/multi-select'
+import { Button } from '@repo/ui/components/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui/components/dialog'
 import { Field, FieldGroup, FieldLabel, FieldTitle } from '@repo/ui/components/field'
 import { Input } from '@repo/ui/components/input'
 import { Textarea } from '@repo/ui/components/textarea'
 import { Toggle } from '@repo/ui/components/toggle'
 import { cn } from '@repo/ui/lib/utils'
-import { noop } from '@tanstack/react-table'
-import { ImageIcon } from 'lucide-react'
+import { noop } from 'es-toolkit'
+import { ImageIcon, XIcon } from 'lucide-react'
 import useSWR from 'swr'
 import { uuidv7 } from 'uuidv7'
 
 import { POST_CARD_VISIBILITY_MASK } from '@/lib/constants'
 import { rpc, unwrap } from '@/lib/http/rpc'
+import { Storage } from '@/lib/http/storage'
 
 import { POST_CATEGORY_SWR_KEY, POST_TAG_SWR_KEY } from '../../utils'
 import { PostType } from '../utils'
 
 interface PostEditModalProps {
   children: React.ReactElement
-  value: PostType
+  readonly value: PostType
   onChange: Updater<PostType>
 }
 
@@ -121,7 +124,31 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
           <FieldGroup>
             <Field>
               <FieldTitle>封面</FieldTitle>
-              <FileSelect logo={ImageIcon} title="选择图片" onChange={noop} />
+              <Card className="overflow-hidden rounded-md bg-transparent ring-0">
+                {post.coverFileId ? (
+                  <>
+                    <img
+                      height={post.coverFile?.metadata?.height}
+                      src={Storage.getPublicUrl(post.coverFileId)}
+                      width={post.coverFile?.metadata?.width}
+                    />
+                    <Button
+                      className="absolute top-2 right-2"
+                      size="icon-sm"
+                      onClick={() => {
+                        setPost(state => {
+                          state.coverFileId = null
+                          state.coverFile = null
+                        })
+                      }}
+                    >
+                      <XIcon />
+                    </Button>
+                  </>
+                ) : (
+                  <FileSelect logo={ImageIcon} title="选择图片" onChange={noop} />
+                )}
+              </Card>
             </Field>
             <Field>
               <FieldTitle>区块显示</FieldTitle>
@@ -174,7 +201,7 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
 function RadioArea({ className, ...props }: React.ComponentProps<typeof Toggle>) {
   return (
     <Toggle
-      className={cn('text-md border-dashed font-heading hover:bg-input/30 aria-pressed:border-solid', className)}
+      className={cn('text-md border-dashed font-heading hover:bg-input/10 aria-pressed:border-solid', className)}
       role="radio"
       variant="outline"
       {...props}
