@@ -1,27 +1,23 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 // @ts-nocheck
 
+import { get } from '@vercel/edge-config'
+import { status } from 'elysia'
 import { toMerged } from 'es-toolkit'
 import NeteaseCloudMusicApi from 'NeteaseCloudMusicApi'
 import { cacheLife, cacheTag } from 'next/cache'
 import { createRequire } from 'node:module'
-import { get } from '@vercel/edge-config'
-import { status } from 'elysia'
 
 import { CACHE_TAG, VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
 
-import {
-  AlbumResponseType,
-  LyricResponseType,
-  PlaylistResponseType,
-  SearchQueryType,
-  SearchResponseType,
-  SongUrlQueryType,
-  SongUrlResponseType
-} from './model'
-import { parseLyric } from './utils'
+import { AlbumResponseType, PlaylistResponseType, SearchQueryType, SearchResponseType } from './model'
 
 const require = createRequire(import.meta.url)
-const { album, cloudsearch, lyric, playlist_detail, song_url_v1 } = require('NeteaseCloudMusicApi') as typeof NeteaseCloudMusicApi
+const { album, cloudsearch, playlist_detail } = require('NeteaseCloudMusicApi') as typeof NeteaseCloudMusicApi
 
 export abstract class Service {
   /**
@@ -46,27 +42,6 @@ export abstract class Service {
             }
           })
         })
-      }
-    } catch (error) {
-      return status(500, { message: error.body.message })
-    }
-  }
-
-  /**
-   * 获取歌词
-   */
-  static async lyric(id: number): Promise<LyricResponseType> {
-    'use cache'
-    cacheLife('max')
-    cacheTag(CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
-
-    const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
-
-    try {
-      const res = await lyric({ cookie, id })
-      return {
-        lrc: parseLyric(res.body.lrc.lyric),
-        lrcText: res.body.lrc.lyric
       }
     } catch (error) {
       return status(500, { message: error.body.message })
@@ -112,24 +87,6 @@ export abstract class Service {
         songCount: res.body.result.songCount,
         songs: res.body.result.songs
       }
-    } catch (error) {
-      return status(500, { message: error.body.message })
-    }
-  }
-
-  /**
-   * 获取歌曲 url
-   */
-  static async songUrl(id: number, { level = 'lossless' }: SongUrlQueryType): Promise<SongUrlResponseType> {
-    'use cache'
-    cacheLife('max')
-    cacheTag(CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
-
-    const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
-
-    try {
-      const res = await song_url_v1({ cookie, id, level })
-      return res.body.data
     } catch (error) {
       return status(500, { message: error.body.message })
     }

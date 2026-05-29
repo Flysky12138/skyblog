@@ -13,11 +13,11 @@ import useSWRInfinite from 'swr/infinite'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { rpc, unwrap } from '@/lib/http/rpc'
 
-import { AudioPlayerModal, AudioPlayerModalRef } from './_components/audio-player-modal'
+import { AudioPlayerModal } from './_components/audio-player-modal'
 import { DownloadModal } from './_components/download-modal'
 import { SongList } from './_components/song-list'
 
-const getSearch = () => (isBrowser() ? (new URLSearchParams(window.location.search).get('search') ?? '') : '')
+const getSearch = () => (isBrowser() ? decodeURIComponent(new URLSearchParams(window.location.search).get('search') ?? '') : '')
 
 export default function Page() {
   const [search, setSearch] = React.useState('')
@@ -67,7 +67,7 @@ export default function Page() {
   const hasMore = data.at(-1)?.hasMore
 
   // 播放器
-  const audioPlayerModalRef = React.useRef<AudioPlayerModalRef>(null)
+  const [isOpen, setIsOpen] = React.useState(false)
   const [player, setPlayer] = useImmer<(typeof songs)[number] | null>(null)
 
   return (
@@ -75,6 +75,7 @@ export default function Page() {
       <InputGroup>
         <InputGroupInput
           autoComplete="off"
+          disabled={isLoading}
           placeholder="搜索 / 粘贴歌单或专辑分享链接"
           value={search}
           onChange={event => {
@@ -131,13 +132,13 @@ export default function Page() {
             if (player?.id != song.id) {
               setPlayer(song)
             }
-            audioPlayerModalRef.current?.setOpen(true)
+            setIsOpen(true)
           }}
         />
       </DisplayByConditional>
 
       <DownloadModal songs={songs} />
-      <AudioPlayerModal ref={audioPlayerModalRef} song={player} />
+      <AudioPlayerModal open={isOpen} song={player} onOpenChange={setIsOpen} />
     </>
   )
 }

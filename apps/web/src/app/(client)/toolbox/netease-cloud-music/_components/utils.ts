@@ -1,6 +1,6 @@
-import { SongUrlQueryType } from '@/app/api/[[...elysia]]/client/netease-cloud-music/model'
+import { UrlQueryType } from '@/app/api/[[...elysia]]/client/netease-cloud-music/songs/model'
 
-export type LevelType = NonNullable<SongUrlQueryType['level']>
+export type LevelType = NonNullable<UrlQueryType['level']>
 
 /**
  * 音质等级

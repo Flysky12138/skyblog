@@ -3,7 +3,7 @@ import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
   {
-    ignores: ['src/generated/', './next.config.ts', '**/netease-cloud-music/service.ts']
+    ignores: ['src/generated/', './next.config.ts']
   },
   nextJsConfig,
   {

@@ -71,7 +71,7 @@ export function DownloadModal({ songs: staticSongs }: DownloadModalProps) {
 
       const downloadSong = async (song: DownloadModalProps['songs'][number]) => {
         if (!ffmpegRef.current) return
-        const [{ type, url }] = await rpc['netease-cloud-music'].song({ id: song.id }).url.get({ query: { level } }).then(unwrap)
+        const [{ type, url }] = await rpc['netease-cloud-music'].songs({ id: song.id }).url.get({ query: { level } }).then(unwrap)
         if (!url) {
           throw new Error([song.ar[0].name, song.al.name].filter(Boolean).join(' - '))
         }
@@ -102,7 +102,7 @@ export function DownloadModal({ songs: staticSongs }: DownloadModalProps) {
       }
 
       const downloadLyric = async (song: DownloadModalProps['songs'][number]) => {
-        const { lrcText } = await rpc['netease-cloud-music'].lyric({ id: song.id }).get().then(unwrap)
+        const { lrcText } = await rpc['netease-cloud-music'].songs({ id: song.id }).lyric.get().then(unwrap)
         if (lrcText) {
           await helper.writeFile(`${song?.name ?? song.id}.lrc`, lrcText)
         } else {

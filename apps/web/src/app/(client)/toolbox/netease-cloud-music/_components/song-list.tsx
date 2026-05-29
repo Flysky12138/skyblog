@@ -3,6 +3,7 @@
 import { Card } from '@repo/ui/components-self/card'
 import { Spinner } from '@repo/ui/components/spinner'
 import { cn } from '@repo/ui/lib/utils'
+import Link from 'next/link'
 import React from 'react'
 import { List, RowComponentProps } from 'react-window'
 import { useInfiniteLoader } from 'react-window-infinite-loader'
@@ -46,7 +47,7 @@ export function SongList({ hasMore, loadMoreRows, songs, onRowClick }: SongListP
           rowComponent={Row}
           rowCount={rowCount}
           rowHeight={48}
-          rowProps={{ hasMore, songs, onRowClick } satisfies RowProps}
+          rowProps={{ hasMore, songs, onRowClick }}
           onRowsRendered={onRowsRendered}
         />
       }
@@ -66,10 +67,17 @@ function Row({ ariaAttributes, hasMore, index, songs, style, onRowClick }: RowCo
   const song = songs[index]
 
   return (
-    <div
+    <Link
       className={cn('relative flex cursor-pointer items-center gap-2 px-1.5', {
         'border-t': index > 0
       })}
+      href={{
+        pathname: '/toolbox/netease-cloud-music/player',
+        query: {
+          id: song.id
+        }
+      }}
+      scroll={false}
       style={style}
       {...ariaAttributes}
       onClick={() => {
@@ -85,10 +93,12 @@ function Row({ ariaAttributes, hasMore, index, songs, style, onRowClick }: RowCo
         src={song.al.picUrl.replace('http:', 'https:') + '?param=72y72'}
         width={36}
       />
-      <div className="truncate">
+      <div className="overflow-hidden">
         <p className="truncate text-sm">{song.name}</p>
-        <p className="text-xs text-muted-foreground">{[song.ar.map(item => item.name).join('/'), song.al.name].filter(Boolean).join(' - ')}</p>
+        <p className="truncate text-xs text-muted-foreground">
+          {[song.ar.map(item => item.name).join('/'), song.al.name].filter(Boolean).join(' - ')}
+        </p>
       </div>
-    </div>
+    </Link>
   )
 }

@@ -29,7 +29,13 @@ export function DialogDrawer(props: Pick<React.ComponentProps<typeof Drawer>, 'c
   const isMobile = breakpoints[breakpoint] <= breakpoints.zero
 
   return (
-    <DialogDrawerContext value={{ isMobile }}>{isMobile ? <Drawer shouldScaleBackground {...props} /> : <Dialog {...props} />}</DialogDrawerContext>
+    <DialogDrawerContext
+      value={{
+        isMobile
+      }}
+    >
+      {isMobile ? <Drawer {...props} /> : <Dialog {...props} />}
+    </DialogDrawerContext>
   )
 }
 

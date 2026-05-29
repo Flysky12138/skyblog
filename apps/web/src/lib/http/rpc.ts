@@ -5,9 +5,10 @@ import { isBrowser } from 'es-toolkit'
 import { app } from '@/app/api/[[...elysia]]/route'
 
 import { HEADER_KEY } from '../constants'
+import { isDev } from '../utils'
 import { AesGcm } from './crypto'
 
-const url = isBrowser() ? process.env.NEXT_PUBLIC_WEBSITE_URL : `http://localhost:${process.env.PORT ?? 3000}`
+const url = isBrowser() || !isDev() ? process.env.NEXT_PUBLIC_WEBSITE_URL : `http://localhost:${process.env.PORT ?? 3000}`
 
 /**
  * 添加 Eden 来实现类似于 tRPC 的端到端类型安全
