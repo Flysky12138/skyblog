@@ -47,7 +47,7 @@ export class DirectoryHelper {
       for await (const [name, handle] of dir.entries()) {
         const relPath = basePath ? `${basePath}/${name}` : name
         results.push({ kind: handle.kind, name, path: relPath })
-        if (handle.kind == 'directory') {
+        if (handle.kind === 'directory') {
           await walk(handle, relPath)
         }
       }
@@ -69,7 +69,7 @@ export class DirectoryHelper {
     try {
       this.#dirHandle = await window.showDirectoryPicker(options)
     } catch (error) {
-      if (error instanceof DOMException && error.name == 'AbortError') {
+      if (error instanceof DOMException && error.name === 'AbortError') {
         throw new Error('已取消文件夹选择操作', { cause: error })
       }
       toast.warning('当前浏览器不支持选择目录功能', {

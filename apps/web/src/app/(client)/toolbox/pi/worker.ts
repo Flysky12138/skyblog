@@ -27,7 +27,7 @@ const chudnovsky = (digits: number) => {
     a_sum += a_k
     b_sum += k * a_k
     k += 1n
-    if (a_k == 0n) {
+    if (a_k === 0n) {
       break
     }
   }
@@ -38,9 +38,9 @@ const chudnovsky = (digits: number) => {
 }
 
 const bs = (a: bigint, b: bigint): [bigint, bigint, bigint] => {
-  if (b - a == 1n) {
+  if (b - a === 1n) {
     let [Pab, Qab] = [1n, 1n]
-    if (a != 0n) {
+    if (a !== 0n) {
       Pab = (6n * a - 5n) * (2n * a - 1n) * (6n * a - 1n)
       Qab = a ** 3n * C3_OVER_24
     }

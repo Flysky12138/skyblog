@@ -19,13 +19,13 @@ export function PostPagination({ currentPage, pageCount }: PostPaginationProps) 
     let prev: null | Route = null
     let next: null | Route = null
 
-    if (currentPage != 1) {
+    if (currentPage !== 1) {
       const params = new URLSearchParams(searchParams)
       params.set('page', String(currentPage - 1))
       params.sort()
       prev = pathname + '?' + params.toString()
     }
-    if (currentPage != pageCount) {
+    if (currentPage !== pageCount) {
       const params = new URLSearchParams(searchParams)
       params.set('page', String(currentPage + 1))
       params.sort()

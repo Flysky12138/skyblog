@@ -27,7 +27,7 @@ export const getPosts = React.cache(async () => {
 export const getPrevNextPost = async ({ id, pinOrder, updatedAt }: Pick<Post, 'id' | 'pinOrder' | 'updatedAt'>) => {
   const [prev, next] = await Promise.all([
     prisma.post.findFirst({
-      orderBy: createPostOrderByInput().map(item => mapValues(item, value => (value == 'desc' ? 'asc' : 'desc'))),
+      orderBy: createPostOrderByInput().map(item => mapValues(item, value => (value === 'desc' ? 'asc' : 'desc'))),
       where: {
         ...POST_WHERE_INPUT,
         OR: [

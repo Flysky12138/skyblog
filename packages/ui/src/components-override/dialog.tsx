@@ -1,7 +1,7 @@
 'use client'
 
 import { Dialog as DialogPrimitive } from '@base-ui/react'
-import { breakpoints, useBreakpoint } from '@repo/react-hooks'
+import { breakpoints, useBreakpoint, useRoutingControl } from '@repo/react-hooks'
 import { XIcon } from 'lucide-react'
 import React from 'react'
 
@@ -10,10 +10,6 @@ import { Dialog as _Dialog, DialogDescription as _DialogDescription, DialogClose
 import { cn } from '../lib/utils'
 
 export * from '../components/dialog'
-
-interface HistoryState {
-  isDialogOpen?: boolean
-}
 
 export function Dialog({
   routing = true,
@@ -28,46 +24,13 @@ export function Dialog({
   routing?: boolean
 } & React.ComponentProps<typeof _Dialog>) {
   const actionsRef = React.useRef<DialogPrimitive.Root.Actions>(null)
-  const isClosingFromPopstate = React.useRef(false)
 
-  React.useEffect(() => {
-    if (!routing) return
-
-    const handlePopState = (event: PopStateEvent) => {
-      event.preventDefault()
-      isClosingFromPopstate.current = true
+  const { onOpenChange: updateHistoryForDialog } = useRoutingControl({
+    enabled: routing,
+    onClose: () => {
       actionsRef.current?.close()
     }
-
-    window.addEventListener('popstate', handlePopState)
-
-    return () => {
-      window.removeEventListener('popstate', handlePopState)
-      const state = window.history.state as HistoryState | null
-      if (state?.isDialogOpen) {
-        window.history.replaceState({ ...state, isDialogOpen: false }, '')
-      }
-    }
-  }, [routing])
-
-  const updateHistoryForDialog = (open: boolean) => {
-    if (!routing) return
-
-    const state = window.history.state as HistoryState | null
-    if (open) {
-      if (state?.isDialogOpen === false) {
-        window.history.replaceState({ ...state, isDialogOpen: true }, '')
-      } else {
-        window.history.pushState({ ...state, isDialogOpen: true }, '')
-      }
-    } else {
-      if (isClosingFromPopstate.current) {
-        isClosingFromPopstate.current = false
-      } else {
-        window.history.back()
-      }
-    }
-  }
+  })
 
   return (
     <_Dialog
@@ -99,7 +62,7 @@ export function DialogContent({
 } & DialogPrimitive.Popup.Props) {
   const breakpoint = useBreakpoint()
 
-  const isMatched = fullScreen == true || (fullScreen ? breakpoints[fullScreen] > breakpoints[breakpoint] : false)
+  const isMatched = fullScreen === true || (fullScreen ? breakpoints[fullScreen] > breakpoints[breakpoint] : false)
 
   return (
     <DialogPortal>

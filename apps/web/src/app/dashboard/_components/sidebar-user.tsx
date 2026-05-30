@@ -15,7 +15,6 @@ import { Skeleton } from '@repo/ui/components/skeleton'
 import { ChevronsUpDownIcon, LogOutIcon, UserRoundCogIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
-import React from 'react'
 
 import { authClient } from '@/lib/auth/client'
 
@@ -24,14 +23,14 @@ export function SidebarUser() {
   const { isMobile, open } = useSidebar()
   const { data: session, isPending } = authClient.useSession()
 
-  const handleSignOut = React.useEffectEvent(async () => {
+  const handleSignOut = async () => {
     try {
       await authClient.signOut()
       router.replace('/auth/sign-in')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : String(error))
     }
-  })
+  }
 
   if (isPending || !session) {
     return <Skeleton className={open ? 'h-12' : 'h-8'} />

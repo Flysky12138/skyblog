@@ -179,15 +179,15 @@ export function MonacoEditor({
   React.useEffect(() => {
     if (isDiffMode) {
       if (!diffEditorRef.current) return
-      if (originalValue != diffEditorRef.current.getModel()?.original.getValue()) {
+      if (originalValue !== diffEditorRef.current.getModel()?.original.getValue()) {
         diffEditorRef.current.getModel()?.original.setValue(originalValue)
       }
-      if (value != diffEditorRef.current.getModel()?.modified.getValue()) {
+      if (value !== diffEditorRef.current.getModel()?.modified.getValue()) {
         diffEditorRef.current.getModel()?.modified.setValue(value)
       }
     } else {
       if (!editorRef.current) return
-      if (value != editorRef.current.getValue()) {
+      if (value !== editorRef.current.getValue()) {
         editorRef.current.setValue(value)
       }
     }
@@ -219,7 +219,7 @@ export function MonacoEditor({
         ref={containerRef}
         className="size-full"
         onKeyDown={event => {
-          if (event.key == 's' && (event.ctrlKey || event.metaKey)) {
+          if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
             event.preventDefault()
           }
         }}

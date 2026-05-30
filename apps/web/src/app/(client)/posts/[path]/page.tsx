@@ -92,7 +92,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
       />
       <Style>{`html { scroll-padding-top: 60px }`}</Style>
 
-      <DisplayByConditional condition={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.HEADER) == POST_CARD_VISIBILITY_MASK.HEADER}>
+      <DisplayByConditional condition={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.HEADER) === POST_CARD_VISIBILITY_MASK.HEADER}>
         <Card aria-label="post abstract" className="relative space-y-2 p-3 md:p-5" data-slot="post-abstract">
           <DisplayByAuth role="admin">
             <ButtonLink
@@ -165,7 +165,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
             </DisplayByConditional>
           </div>
 
-          <DisplayByConditional condition={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.TOC) == POST_CARD_VISIBILITY_MASK.TOC}>
+          <DisplayByConditional condition={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.TOC) === POST_CARD_VISIBILITY_MASK.TOC}>
             <Card
               aria-label="post toc"
               render={

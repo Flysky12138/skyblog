@@ -24,7 +24,7 @@ export function StorageBreadcrumb({ id, onChange }: StorageBreadcrumbProps) {
     }
   )
 
-  if (isLoading && paths.length == 0) {
+  if (isLoading && paths.length === 0) {
     return <Skeleton className="h-9 w-60" />
   }
 
@@ -41,7 +41,7 @@ export function StorageBreadcrumb({ id, onChange }: StorageBreadcrumbProps) {
                 </DisplayByConditional>
                 <BreadcrumbItem>
                   <DisplayByConditional
-                    condition={index == paths.length - 1}
+                    condition={index === paths.length - 1}
                     fallback={
                       <BreadcrumbLink
                         className="cursor-pointer"

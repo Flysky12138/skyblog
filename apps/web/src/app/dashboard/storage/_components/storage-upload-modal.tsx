@@ -49,14 +49,14 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
     waiting: []
   })
 
-  const isUploadFinished = filelist.waiting.length == 0
+  const isUploadFinished = filelist.waiting.length === 0
 
-  if (isUploadFinished && activeTab == 'waiting') {
+  if (isUploadFinished && activeTab === 'waiting') {
     setActiveTab('select')
   }
 
   // 选择文件
-  const onChange = React.useEffectEvent(async (files: File[]) => {
+  const onChange = async (files: File[]) => {
     try {
       const getFileInfo = async (file: File) => ({
         id: await FileHelper.getFileHash(file),
@@ -78,14 +78,14 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
       )
 
       setFilelist(draft => {
-        draft.waiting = unionWith(draft.waiting, fileEntries, (a, b) => a.id == b.id && a.path == b.path)
+        draft.waiting = unionWith(draft.waiting, fileEntries, (a, b) => a.id === b.id && a.path === b.path)
       })
 
       setActiveTab('waiting')
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   // 上传文件
   const [{ loading: isUploading }, handleUpload] = useAsyncFn(async () => {
@@ -108,7 +108,7 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
 
       setFilelist(draft => {
         draft.uploaded.push(file)
-        remove(draft.waiting, item => item.id == file.id && item.path == file.path)
+        remove(draft.waiting, item => item.id === file.id && item.path === file.path)
       })
 
       await onUploaded?.(data)

@@ -30,7 +30,7 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
     return rpc.dashboard.storage.directories({ id }).get().then(unwrap)
   })
 
-  const isEmpty = data?.directories.length == 0 && data?.files.length == 0
+  const isEmpty = data?.directories.length === 0 && data?.files.length === 0
 
   return (
     <DataTableWrapper className={className}>
@@ -61,7 +61,7 @@ export function StorageTable({ className, id, onFolderRowClick }: StorageTablePr
                     await mutate()
                     return
                   }
-                  if (data.parentDirectory.id != payload.directoryId) return
+                  if (data.parentDirectory.id !== payload.directoryId) return
                   await mutate(current => {
                     return produce(current, draft => {
                       draft?.files.push(payload)

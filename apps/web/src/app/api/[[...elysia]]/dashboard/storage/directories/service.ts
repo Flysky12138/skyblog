@@ -66,7 +66,7 @@ export abstract class Service {
       }),
       prisma.directory.findUniqueOrThrow({ where: { id } }).then(directory => ({
         ...directory,
-        isRoot: directory.parentId == id
+        isRoot: directory.parentId === id
       }))
     ])
 

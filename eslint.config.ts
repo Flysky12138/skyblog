@@ -6,7 +6,7 @@ export default defineConfig([
   {
     languageOptions: {
       parserOptions: {
-        project: ['./tsconfig.json', './apps/*/tsconfig.json', './packages/*/tsconfig.json', './playgrounds/tsconfig.json'],
+        project: ['./tsconfig.json', './apps/*/tsconfig.json', './packages/*/tsconfig.json', './playground/tsconfig.json'],
         tsconfigRootDir: import.meta.dirname
       }
     }

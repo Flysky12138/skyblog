@@ -19,13 +19,13 @@ export default function Page() {
   const { width } = useWindowSize()
   const isMounted = useMounted()
 
-  const getOptions = React.useEffectEvent(() => {
+  const getOptions = () => {
     try {
       return transform(code, { transforms: ['typescript'] }).code
     } catch {
       return '{}'
     }
-  })
+  }
 
   useDebounce(
     () => {

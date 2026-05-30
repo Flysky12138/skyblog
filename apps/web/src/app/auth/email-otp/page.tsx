@@ -30,7 +30,7 @@ export default function Page() {
   const email = searchParams.get('email') ?? ''
   const type = (searchParams.get('type') ?? 'sign-in') as z.infer<typeof formSchema>['type']
 
-  const isSignIn = type == 'sign-in'
+  const isSignIn = type === 'sign-in'
 
   const form = useForm({
     defaultValues: { email, otp: '', type },

@@ -44,7 +44,7 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
   const items = [{ label: '自定义', value: 'custom' }].concat(clashTemplates.map(item => ({ label: item.name, value: item.id })))
 
   // 选中的模板
-  const selectedClashTemplate = React.useMemo(() => clashTemplates?.find(it => it.id == templateId), [clashTemplates, templateId])
+  const selectedClashTemplate = React.useMemo(() => clashTemplates?.find(it => it.id === templateId), [clashTemplates, templateId])
   // 选中的模板中的变量名
   const selectedClashTemplateVariableKeys = React.useMemo(() => getVariablesNames(selectedClashTemplate?.content), [selectedClashTemplate?.content])
   // 赋值后的模板内容
@@ -154,11 +154,11 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor={field.name}>模板</FieldLabel>
                   <Select
-                    disabled={clashTemplates?.length == 0 || isLoading}
+                    disabled={clashTemplates?.length === 0 || isLoading}
                     items={items}
                     value={field.value ?? 'custom'}
                     onValueChange={id => {
-                      field.onChange(id == 'custom' ? null : id)
+                      field.onChange(id === 'custom' ? null : id)
                     }}
                   >
                     <SelectTrigger aria-invalid={fieldState.invalid} className="w-full" id={field.name}>

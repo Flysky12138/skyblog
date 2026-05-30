@@ -38,7 +38,7 @@ const headers: NextConfig['headers'] = () => [
 
 const images: NextConfig['images'] = {
   formats: ['image/avif', 'image/webp'],
-  remotePatterns: [].filter(Boolean).map(item => new URL(item))
+  remotePatterns: []
 }
 
 const rewrites: NextConfig['rewrites'] = async () => [

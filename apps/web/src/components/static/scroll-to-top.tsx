@@ -33,7 +33,7 @@ export function ScrollToTop({ className, showOnScrollYOverflow = 200, ...props }
     }
   }, [yProgress])
 
-  const handleClick = React.useEffectEvent(() => {
+  const handleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
     if (showProgress) return
 
     const realStart = window.scrollY
@@ -58,7 +58,7 @@ export function ScrollToTop({ className, showOnScrollYOverflow = 200, ...props }
     }
 
     requestAnimationFrame(tick)
-  })
+  }
 
   if (!isMounted) return null
   if (y <= showOnScrollYOverflow) return null

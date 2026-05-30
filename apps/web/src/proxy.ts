@@ -21,14 +21,14 @@ export const proxy: NextProxy = async request => {
     session?.user.banned ||
     // 封禁华为
     ['huawei', 'honor', 'harmonyos'].some(device => agent.ua.toLowerCase().includes(device)) ||
-    agent.device.vendor?.toLowerCase() == 'huawei'
+    agent.device.vendor?.toLowerCase() === 'huawei'
   ) {
     return NextResponse.redirect(new URL('/ban', request.url))
   }
 
   // 权限管理
   if (['/dashboard', '/api/dashboard'].some(url => request.nextUrl.pathname.startsWith(url))) {
-    if (session?.user.role != 'admin') {
+    if (session?.user.role !== 'admin') {
       return NextResponse.redirect(new URL('/', request.url))
     }
   }

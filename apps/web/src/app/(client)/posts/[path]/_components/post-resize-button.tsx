@@ -18,7 +18,7 @@ export function PostResizeButton({ className, ...props }: PostResizeButtonProps)
   const placeholderRef = React.useRef<HTMLElement>(null)
   const scrollTop = React.useRef(0)
 
-  const handleClick = React.useEffectEvent(() => {
+  const handleClick = () => {
     const article = document.getElementById(ATTRIBUTE.ID.POST_CONTAINER)
     if (!article) return
 
@@ -36,10 +36,10 @@ export function PostResizeButton({ className, ...props }: PostResizeButtonProps)
       document.body.prepend(article)
     }
     isFullPageToggle()
-  })
+  }
 
   useEvent('keydown', (event: KeyboardEvent) => {
-    if (isFullPage && event.key == 'Escape') {
+    if (isFullPage && event.key === 'Escape') {
       handleClick()
     }
   })

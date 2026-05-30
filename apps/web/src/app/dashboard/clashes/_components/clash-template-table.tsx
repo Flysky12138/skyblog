@@ -3,7 +3,6 @@
 import { produce } from '@repo/react-hooks'
 import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { PencilIcon, PlusIcon } from 'lucide-react'
-import React from 'react'
 import useSWR from 'swr'
 
 import { ClashTemplateCreateBodyType, ClashTemplateUpdateBodyType } from '@/app/api/[[...elysia]]/dashboard/clashes/templates/model'
@@ -28,7 +27,7 @@ export function ClashTemplateTable() {
   type RowData = Row<(typeof clashTemplates)[number]>
 
   // 创建
-  const handleCreate = React.useEffectEvent(async (body: ClashTemplateCreateBodyType) => {
+  const handleCreate = async (body: ClashTemplateCreateBodyType) => {
     try {
       const data = await toastPromise(rpc.dashboard.clashes.templates.post(body).then(unwrap), {
         success: '创建成功'
@@ -41,10 +40,10 @@ export function ClashTemplateTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   // 删除
-  const handleDelete = React.useEffectEvent(async (row: RowData) => {
+  const handleDelete = async (row: RowData) => {
     try {
       await toastPromise(rpc.dashboard.clashes.templates({ id: row.original.id }).delete().then(unwrap), {
         success: '删除成功'
@@ -57,10 +56,10 @@ export function ClashTemplateTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   // 更新
-  const handleUpdate = React.useEffectEvent(async (row: RowData, body: ClashTemplateUpdateBodyType) => {
+  const handleUpdate = async (row: RowData, body: ClashTemplateUpdateBodyType) => {
     try {
       const data = await toastPromise(rpc.dashboard.clashes.templates({ id: row.original.id }).put(body).then(unwrap), {
         success: '更新成功'
@@ -73,7 +72,7 @@ export function ClashTemplateTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   const columns: ColumnDef<(typeof clashTemplates)[number]>[] = [
     getColumnConfig('index'),

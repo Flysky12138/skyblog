@@ -10,7 +10,7 @@ export const DATA_IS_BLOCK = 'data-is-block'
 export const rehypeCode = () => {
   return (tree: Root) => {
     visit(tree, 'element', (node, _, parent) => {
-      if (node.tagName == 'code' && parent?.type == 'element' && parent.tagName == 'pre') {
+      if (node.tagName === 'code' && parent?.type === 'element' && parent.tagName === 'pre') {
         node.properties = toMerged(node.properties || {}, {
           [DATA_IS_BLOCK]: true // 标记为代码块
         })

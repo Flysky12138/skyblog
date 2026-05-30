@@ -12,13 +12,13 @@ import { toastPromise } from '@/lib/toast'
 type Provider = Parameters<typeof authClient.signIn.social>[0]['provider']
 
 export function AuthSocialButton() {
-  const setLoading = React.useEffectEvent((event: React.MouseEvent<HTMLButtonElement>, disabled: boolean) => {
+  const setLoading = (event: React.MouseEvent<HTMLButtonElement>, disabled: boolean) => {
     const fieldset = event.currentTarget.closest('fieldset')
     if (!fieldset) return
     fieldset.inert = disabled
-  })
+  }
 
-  const handleLogin = React.useEffectEvent(async (event: React.MouseEvent<HTMLButtonElement>, provider: Provider) => {
+  const handleLogin = async (event: React.MouseEvent<HTMLButtonElement>, provider: Provider) => {
     try {
       setLoading(event, true)
       const { error } = await authClient.signIn.social({ callbackURL: process.env.NEXT_PUBLIC_WEBSITE_URL, provider })
@@ -29,9 +29,9 @@ export function AuthSocialButton() {
       setLoading(event, false)
       toast.error(error instanceof Error ? error.message : String(error))
     }
-  })
+  }
 
-  const handleClick = React.useEffectEvent<typeof handleLogin>(async (...params) => {
+  const handleClick = async (...params: Parameters<typeof handleLogin>) => {
     try {
       await toastPromise(handleLogin(...params), {
         loading: '登录中...',
@@ -42,7 +42,7 @@ export function AuthSocialButton() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   return (
     <>

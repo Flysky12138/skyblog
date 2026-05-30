@@ -2,7 +2,7 @@ import * as echarts from 'echarts'
 
 console.log('[Sandbox] echarts runtime loaded')
 
-if (window.self == window.top) {
+if (window.self === window.top) {
   throw new Error('Sandbox is not allowed to access the parent window.')
 }
 

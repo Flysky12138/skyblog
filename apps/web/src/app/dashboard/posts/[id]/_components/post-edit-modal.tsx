@@ -155,7 +155,7 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
               <div className="grid grid-cols-10 gap-3" role="radiogroup">
                 <RadioArea
                   className="col-span-full h-10"
-                  pressed={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.HEADER) == POST_CARD_VISIBILITY_MASK.HEADER}
+                  pressed={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.HEADER) === POST_CARD_VISIBILITY_MASK.HEADER}
                   onPressedChange={() => {
                     setPost(state => {
                       state.visibilityMask ^= POST_CARD_VISIBILITY_MASK.HEADER
@@ -169,7 +169,7 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
                 </RadioArea>
                 <RadioArea
                   className="col-span-3 h-40"
-                  pressed={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.TOC) == POST_CARD_VISIBILITY_MASK.TOC}
+                  pressed={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.TOC) === POST_CARD_VISIBILITY_MASK.TOC}
                   onPressedChange={() => {
                     setPost(state => {
                       state.visibilityMask ^= POST_CARD_VISIBILITY_MASK.TOC
@@ -180,7 +180,7 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
                 </RadioArea>
                 <RadioArea
                   className="col-span-full h-14"
-                  pressed={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.COMMENT) == POST_CARD_VISIBILITY_MASK.COMMENT}
+                  pressed={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.COMMENT) === POST_CARD_VISIBILITY_MASK.COMMENT}
                   onPressedChange={() => {
                     setPost(state => {
                       state.visibilityMask ^= POST_CARD_VISIBILITY_MASK.COMMENT

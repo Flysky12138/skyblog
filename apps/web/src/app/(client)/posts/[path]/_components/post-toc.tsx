@@ -15,8 +15,8 @@ export function PostToc({ className, ref, ...props }: PostTocProps) {
 
   const activeIndexRef = React.useRef(-1)
 
-  const setActiveItemStyle = React.useEffectEvent((activeIndex: number) => {
-    if (activeIndexRef.current == activeIndex) return
+  const setActiveItemStyle = (activeIndex: number) => {
+    if (activeIndexRef.current === activeIndex) return
     activeIndexRef.current = activeIndex
 
     const ul = ulRef.current
@@ -25,7 +25,7 @@ export function PostToc({ className, ref, ...props }: PostTocProps) {
     const links = Array.from(ul.querySelectorAll<HTMLAnchorElement>('a[data-level]'))
 
     links.forEach((link, i) => {
-      if (i == activeIndex) {
+      if (i === activeIndex) {
         link.setAttribute('data-active', '')
       } else {
         link.removeAttribute('data-active')
@@ -51,7 +51,7 @@ export function PostToc({ className, ref, ...props }: PostTocProps) {
         top: offsetTop - parentHeight * 0.5
       })
     }
-  })
+  }
 
   React.useEffect(() => {
     const article = document.getElementById(ATTRIBUTE.ID.POST_CONTAINER)

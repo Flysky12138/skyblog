@@ -117,12 +117,12 @@ export default function Page() {
                 <DialogTitle>{form.mode}</DialogTitle>
                 <DialogDescription />
               </DialogHeader>
-              {form.mode == 'chudnovsky' && <ChudnovskyCode />}
-              {form.mode == 'chudnovsky-bs' && <ChudnovskyBsCode />}
+              {form.mode === 'chudnovsky' && <ChudnovskyCode />}
+              {form.mode === 'chudnovsky-bs' && <ChudnovskyBsCode />}
             </DialogContent>
           </Dialog>
         </ButtonGroup>
-        <DisplayByConditional condition={form.mode != 'arctan'}>
+        <DisplayByConditional condition={form.mode !== 'arctan'}>
           <ButtonGroup className="grow">
             <Select
               disabled={loading}
@@ -163,7 +163,7 @@ export default function Page() {
         </DisplayByConditional>
       </div>
 
-      <DisplayByConditional condition={form.mode == 'arctan'}>
+      <DisplayByConditional condition={form.mode === 'arctan'}>
         <Alert variant="destructive">
           <AlertCircleIcon />
           <AlertTitle>收敛速度太慢，不提供计算</AlertTitle>
@@ -192,9 +192,9 @@ export default function Page() {
       )}
 
       <div className="mt-10">
-        {form.mode == 'arctan' && <Arctan />}
-        {form.mode == 'chudnovsky' && <Chudnovsky />}
-        {form.mode == 'chudnovsky-bs' && <ChudnovskyBs />}
+        {form.mode === 'arctan' && <Arctan />}
+        {form.mode === 'chudnovsky' && <Chudnovsky />}
+        {form.mode === 'chudnovsky-bs' && <ChudnovskyBs />}
       </div>
     </Card>
   )

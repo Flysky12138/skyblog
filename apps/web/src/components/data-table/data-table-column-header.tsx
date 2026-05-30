@@ -27,7 +27,7 @@ export function DataTableColumnSortHeader<TData, TValue>({ column, title }: { co
       }}
     >
       <span>{title}</span>
-      {sortState == 'desc' ? <ArrowDownIcon /> : sortState == 'asc' ? <ArrowUpIcon /> : <ChevronsUpDownIcon />}
+      {sortState === 'desc' ? <ArrowDownIcon /> : sortState === 'asc' ? <ArrowUpIcon /> : <ChevronsUpDownIcon />}
     </button>
   )
 }

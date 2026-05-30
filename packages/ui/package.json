@@ -35,7 +35,6 @@
     "react-dom": "catalog:",
     "react-resizable-panels": "catalog:",
     "schema-dts": "catalog:",
-    "shadcn": "catalog:",
     "sonner": "catalog:",
     "tailwind-merge": "catalog:",
     "tw-animate-css": "catalog:",
@@ -47,6 +46,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "shadcn": "catalog:",
     "tailwindcss": "catalog:"
   }
 }

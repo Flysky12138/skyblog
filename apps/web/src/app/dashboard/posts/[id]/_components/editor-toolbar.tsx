@@ -71,21 +71,21 @@ export function EditorToolbar({
 }: EditorToolbarProps) {
   const dragControls = useDragControls()
 
-  const handleFormat = React.useEffectEvent<EditorToolbarProps['onFormat']>(async () => {
+  const handleFormat: EditorToolbarProps['onFormat'] = async () => {
     try {
       await onFormat()
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
-  const handleUpdate = React.useEffectEvent<EditorToolbarProps['onUpdate']>(async type => {
+  const handleUpdate: EditorToolbarProps['onUpdate'] = async type => {
     try {
       await onUpdate(type)
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   return (
     <Card

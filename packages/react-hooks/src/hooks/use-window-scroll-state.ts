@@ -12,8 +12,10 @@ const getState = (): State => {
   if (!isBrowser()) {
     return { x: 0, xProgress: 0, y: 0, yProgress: 0 }
   }
+
   const { pageXOffset: x, pageYOffset: y } = window
   const { clientHeight, clientWidth, scrollHeight, scrollWidth } = document.documentElement
+
   return {
     x,
     xProgress: Math.round((x / (scrollWidth - clientWidth)) * 100) || 0,
@@ -25,21 +27,22 @@ const getState = (): State => {
 export const useWindowScrollState = () => {
   const [state, setState] = React.useState(getState)
 
-  const handler = React.useEffectEvent(() => {
-    const { x, xProgress, y, yProgress } = getState()
-    if (state.x == x && state.y == y) return
-    setState({ x, xProgress, y, yProgress })
-  })
-
   React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    handler()
+    const handler = () => {
+      const newState = getState()
+      setState(oldState => {
+        if (oldState.x === newState.x && oldState.y === newState.y) return oldState
+        return newState
+      })
+    }
+
     window.addEventListener('scroll', handler, {
       capture: false,
       passive: true
     })
+
     return () => {
-      window.removeEventListener('scroll', handler)
+      window.removeEventListener('scroll', handler, { capture: false })
     }
   }, [])
 

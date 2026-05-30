@@ -18,7 +18,7 @@ export default function Page() {
   const { postMessage } = useBroadcastChannel<MessageEventDataPostUpdate, MessageEventDataPostPreviewMounted>(
     POST_PREVIEW_BROADCAST_CHANNEL_ID,
     ({ type, value }) => {
-      if (type != 'post-update') return
+      if (type !== 'post-update') return
       setPost(value)
     }
   )

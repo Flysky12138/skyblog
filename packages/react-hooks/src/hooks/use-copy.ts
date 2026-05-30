@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 import React from 'react'
 import { useCopyToClipboard } from 'react-use'
 
@@ -13,28 +14,39 @@ interface UseCopyProps {
 }
 
 export const useCopy = ({ timeout = 1000, onCopy, onEnd }: UseCopyProps = {}) => {
-  const [_, copy] = useCopyToClipboard()
+  const [, copy] = useCopyToClipboard()
 
   const [isCopied, setIsCopied] = React.useState(false)
 
-  const timer = React.useRef<NodeJS.Timeout>(undefined)
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  const onCopyRef = React.useRef(onCopy)
+  onCopyRef.current = onCopy
+
+  const onEndRef = React.useRef(onEnd)
+  onEndRef.current = onEnd
+
+  React.useEffect(() => {
+    return () => {
+      clearTimeout(timer.current)
+    }
+  }, [])
 
   const handleCopy = React.useCallback(
     (text: string) => {
       if (isCopied) return
 
       copy(text)
-      onCopy?.(text)
+      onCopyRef.current?.(text)
 
       setIsCopied(true)
 
       clearTimeout(timer.current)
       timer.current = setTimeout(() => {
         setIsCopied(false)
-        void onEnd?.()
+        void onEndRef.current?.()
       }, timeout)
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [copy, isCopied, timeout]
   )
 

@@ -3,7 +3,6 @@
 import { produce } from '@repo/react-hooks'
 import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { PencilIcon } from 'lucide-react'
-import React from 'react'
 import useSWR from 'swr'
 
 import { TagUpdateBodyType } from '@/app/api/[[...elysia]]/dashboard/posts/tags/model'
@@ -28,7 +27,7 @@ export function PostTagTable() {
   type RowData = Row<(typeof tags)[number]>
 
   // 更新
-  const handleUpdate = React.useEffectEvent(async (row: RowData, body: TagUpdateBodyType) => {
+  const handleUpdate = async (row: RowData, body: TagUpdateBodyType) => {
     try {
       const data = await toastPromise(rpc.dashboard.posts.tags({ id: row.original.id }).put(body).then(unwrap), {
         success: '更新成功'
@@ -41,10 +40,10 @@ export function PostTagTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   // 删除
-  const handleDelete = React.useEffectEvent(async (row: RowData) => {
+  const handleDelete = async (row: RowData) => {
     try {
       await toastPromise(rpc.dashboard.posts.tags({ id: row.original.id }).delete().then(unwrap), {
         success: '删除成功'
@@ -57,7 +56,7 @@ export function PostTagTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   const columns: ColumnDef<(typeof tags)[number]>[] = [
     getColumnConfig('index'),

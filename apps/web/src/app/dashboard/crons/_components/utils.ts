@@ -39,7 +39,7 @@ export const onInit: MonacoEditorProps['onInit'] = (monaco, language) => {
       const model = monaco.editor.getModel(uri)
       if (!model) continue
       const markers = monaco.editor.getModelMarkers({ resource: uri }).filter(marker => {
-        const code = typeof marker.code == 'string' ? marker.code : String(marker.code?.value)
+        const code = typeof marker.code === 'string' ? marker.code : String(marker.code?.value)
         return !ignoreCodes.has(code)
       })
       monaco.editor.setModelMarkers(model, 'typescript', markers)

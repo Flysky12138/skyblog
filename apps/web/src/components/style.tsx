@@ -12,8 +12,7 @@ interface StyleProps {
 export function Style({ children }: StyleProps) {
   const styleRef = React.useRef<HTMLStyleElement>(null)
 
-  // React.useInsertionEffect 只会执行一次，应该是 React 的 BUG
-  React.useLayoutEffect(() => {
+  React.useInsertionEffect(() => {
     if (!styleRef.current) {
       const style = document.createElement('style')
       styleRef.current = style

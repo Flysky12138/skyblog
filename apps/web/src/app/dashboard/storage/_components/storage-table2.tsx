@@ -27,7 +27,7 @@ export function StorageTable2({ className, id }: StorageTable2Props) {
     return rpc.dashboard.storage.directories({ id: directoryId }).get().then(unwrap)
   })
 
-  const isEmpty = data?.directories.length == 0 && data?.files.length == 0
+  const isEmpty = data?.directories.length === 0 && data?.files.length === 0
 
   return (
     <DataTableWrapper className={className}>
