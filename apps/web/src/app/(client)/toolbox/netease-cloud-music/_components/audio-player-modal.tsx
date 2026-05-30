@@ -57,6 +57,7 @@ export function AudioPlayerModal({ open: controlledOpen, song, onOpenChange }: A
 
   return (
     <DialogDrawer
+      dialogRouting={false}
       open={open}
       onOpenChange={isOpen => {
         setOpen(isOpen)

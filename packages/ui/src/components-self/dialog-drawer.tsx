@@ -23,7 +23,17 @@ interface DialogDrawerContextProps {
 const DialogDrawerContext = React.createContext<DialogDrawerContextProps>(null!)
 const useDialogDrawerContext = () => React.useContext(DialogDrawerContext)
 
-export function DialogDrawer(props: Pick<React.ComponentProps<typeof Drawer>, 'children' | 'onOpenChange' | 'open'>) {
+export function DialogDrawer({
+  dialogRouting = true,
+  ...props
+}: {
+  /**
+   * 是否使用路由控制 `Dialog`。手机端返回可关闭弹窗，而不是路由切换
+   *
+   * @default true
+   */
+  dialogRouting?: boolean
+} & Pick<React.ComponentProps<typeof Drawer>, 'children' | 'onOpenChange' | 'open'>) {
   const breakpoint = useBreakpoint()
 
   const isMobile = breakpoints[breakpoint] <= breakpoints.zero
@@ -34,7 +44,7 @@ export function DialogDrawer(props: Pick<React.ComponentProps<typeof Drawer>, 'c
         isMobile
       }}
     >
-      {isMobile ? <Drawer {...props} /> : <Dialog {...props} />}
+      {isMobile ? <Drawer {...props} /> : <Dialog routing={dialogRouting} {...props} />}
     </DialogDrawerContext>
   )
 }
