@@ -49,8 +49,8 @@ export function DataTable<TData extends RowData>({ table }: DataTableProps<TData
             ))
           ) : (
             <TableRow>
-              <TableCell className="text-center" colSpan={table.getVisibleLeafColumns().length}>
-                {table.options.meta?.isLoading ? 'Loading...' : 'No results.'}
+              <TableCell colSpan={table.getVisibleLeafColumns().length}>
+                <span className="sticky left-1/2 inline-block -translate-x-1/2">{table.options.meta?.isLoading ? 'Loading...' : 'No results.'}</span>
               </TableCell>
             </TableRow>
           )}
