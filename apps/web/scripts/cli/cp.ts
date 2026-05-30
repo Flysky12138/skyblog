@@ -25,7 +25,7 @@ const realTarget = (() => {
     return target
   }
 })()
-if (realSource == realTarget) {
+if (realSource === realTarget) {
   console.error(colors.bgRed('\nSAME PATH'), colors.red(realSource), '\n')
   process.exit(0)
 }

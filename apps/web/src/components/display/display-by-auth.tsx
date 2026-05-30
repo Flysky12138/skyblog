@@ -13,5 +13,5 @@ export function DisplayByAuth({ role, ...props }: DisplayByAuthProps) {
 
   if (isPending) return null
 
-  return <DisplayByConditional condition={data?.user.role == role} {...props} />
+  return <DisplayByConditional condition={data?.user.role === role} {...props} />
 }

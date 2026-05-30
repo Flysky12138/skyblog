@@ -12,7 +12,7 @@ export function CardWolf() {
 
   const [isMounted, setIsMounted] = React.useState(false)
 
-  const draw = React.useEffectEvent(() => {
+  const draw = () => {
     const div = divRef.current
     const canvas = canvasRef.current
 
@@ -36,7 +36,7 @@ export function CardWolf() {
     })
 
     setIsMounted(true)
-  })
+  }
 
   React.useEffect(() => {
     draw()

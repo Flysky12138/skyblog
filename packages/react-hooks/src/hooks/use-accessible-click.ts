@@ -8,11 +8,11 @@ type AnyEvent = React.KeyboardEvent<HTMLElement> | React.MouseEvent<HTMLElement>
 export const useAccessibleClick = (handler: (event: AnyEvent) => void) => {
   const onKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLElement>) => {
-      if (event.key == 'Enter') {
+      if (event.key === 'Enter') {
         event.preventDefault()
         handler(event)
       }
-      if (event.key == ' ') {
+      if (event.key === ' ') {
         event.preventDefault()
       }
     },
@@ -21,7 +21,7 @@ export const useAccessibleClick = (handler: (event: AnyEvent) => void) => {
 
   const onKeyUp = React.useCallback(
     (event: React.KeyboardEvent<HTMLElement>) => {
-      if (event.key == ' ') {
+      if (event.key === ' ') {
         event.preventDefault()
         handler(event)
       }

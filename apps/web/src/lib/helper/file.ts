@@ -33,7 +33,7 @@ export abstract class FileHelper {
    * formatFileSize(114514) // 111.83 KB
    */
   static formatFileSize(bytes: number): string {
-    if (bytes == 0) return '0 B'
+    if (bytes === 0) return '0 B'
 
     const k = 1024
     const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
@@ -42,7 +42,7 @@ export abstract class FileHelper {
     const i = Math.floor(Math.log(bytes) / Math.log(k))
     const value = bytes / Math.pow(k, i)
 
-    return i == 0 ? `${value} B` : `${value.toFixed(2)} ${sizes[i]}`
+    return i === 0 ? `${value} B` : `${value.toFixed(2)} ${sizes[i]}`
   }
 
   /**
@@ -50,7 +50,7 @@ export abstract class FileHelper {
    */
   static getBaseName(fileName: string): string {
     const lastDotIndex = fileName.lastIndexOf('.')
-    return lastDotIndex == -1 ? fileName : fileName.slice(0, lastDotIndex)
+    return lastDotIndex === -1 ? fileName : fileName.slice(0, lastDotIndex)
   }
 
   /**
@@ -58,7 +58,7 @@ export abstract class FileHelper {
    */
   static getExtension(fileName: string): string {
     const lastDotIndex = fileName.lastIndexOf('.')
-    return lastDotIndex == -1 ? '' : fileName.slice(lastDotIndex + 1).toLowerCase()
+    return lastDotIndex === -1 ? '' : fileName.slice(lastDotIndex + 1).toLowerCase()
   }
 
   /**
@@ -120,9 +120,9 @@ export abstract class FileHelper {
     if (mimeType.startsWith('font')) return 'font'
     if (mimeType.startsWith('text')) return 'text'
 
-    if (mimeType == 'application/pdf') return 'pdf'
-    if (mimeType == 'application/json') return 'json'
-    if (mimeType == 'application/zip') return 'zip'
+    if (mimeType === 'application/pdf') return 'pdf'
+    if (mimeType === 'application/json') return 'json'
+    if (mimeType === 'application/zip') return 'zip'
 
     return 'unknown'
   }
@@ -160,7 +160,7 @@ export abstract class FileHelper {
         const prefix = type.slice(0, -2)
         return file.type.startsWith(prefix)
       }
-      return file.type == type
+      return file.type === type
     })
   }
 

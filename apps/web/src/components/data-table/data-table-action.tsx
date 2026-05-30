@@ -36,7 +36,7 @@ export function DataTableRowActionButton({
         'size-7',
         'border-current/10! hover:border-current/30!',
         {
-          'border-current/30! hover:border-current/50!': variant == 'destructive'
+          'border-current/30! hover:border-current/50!': variant === 'destructive'
         },
         className
       )}
@@ -48,7 +48,7 @@ export function DataTableRowActionButton({
 
   if (!tooltip) return button
 
-  if (typeof tooltip == 'string') {
+  if (typeof tooltip === 'string') {
     tooltip = {
       children: tooltip
     }
@@ -123,7 +123,7 @@ export function DataTableRowsDeleteButton<TData extends RowData>({
     await onConfirm({ rows: selectedRows })
   }, [onConfirm, selectedRows])
 
-  if (selectedRows.length == 0) return <i />
+  if (selectedRows.length === 0) return <i />
 
   return (
     <AlertDialog>

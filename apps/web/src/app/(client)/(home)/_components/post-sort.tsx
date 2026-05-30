@@ -5,7 +5,6 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { cn } from '@repo/ui/lib/utils'
 import { ArrowDownNarrowWideIcon, ArrowDownWideNarrowIcon } from 'lucide-react'
 import { useRouter } from 'nextjs-toploader/app'
-import React from 'react'
 
 import { PostSearchParamsType } from '../utils'
 
@@ -24,12 +23,12 @@ interface PostSortProps {
 export function PostSort({ className, direction, field }: PostSortProps) {
   const router = useRouter()
 
-  const handleClick = React.useEffectEvent(({ direction, field }: RequiredPick<PostSortProps, 'direction' | 'field'>) => {
+  const handleClick = ({ direction, field }: RequiredPick<PostSortProps, 'direction' | 'field'>) => {
     const url = new URL(window.location.href)
     url.searchParams.set('field', field)
     url.searchParams.set('direction', direction)
     router.push(url.href)
-  })
+  }
 
   return (
     <div className={cn('flex items-center gap-2', className)}>
@@ -37,10 +36,10 @@ export function PostSort({ className, direction, field }: PostSortProps) {
         size="icon"
         variant="outline"
         onClick={() => {
-          handleClick({ direction: direction == 'desc' ? 'asc' : 'desc', field })
+          handleClick({ direction: direction === 'desc' ? 'asc' : 'desc', field })
         }}
       >
-        {direction == 'desc' ? <ArrowDownWideNarrowIcon /> : <ArrowDownNarrowWideIcon />}
+        {direction === 'desc' ? <ArrowDownWideNarrowIcon /> : <ArrowDownNarrowWideIcon />}
       </Button>
 
       <Select

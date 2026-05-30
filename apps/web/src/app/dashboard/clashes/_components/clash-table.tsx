@@ -5,7 +5,6 @@ import { toast } from '@repo/ui/base'
 import { Switch } from '@repo/ui/components/switch'
 import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { CopyIcon, PencilIcon, PlusIcon } from 'lucide-react'
-import React from 'react'
 import useSWR from 'swr'
 
 import { ClashCreateBodyType, ClashUpdateBodyType } from '@/app/api/[[...elysia]]/dashboard/clashes/model'
@@ -37,7 +36,7 @@ export function ClashTable() {
   type RowData = Row<(typeof clashes)[number]>
 
   // 创建
-  const handleCreate = React.useEffectEvent(async (body: ClashCreateBodyType) => {
+  const handleCreate = async (body: ClashCreateBodyType) => {
     try {
       const data = await toastPromise(rpc.dashboard.clashes.post(body).then(unwrap), {
         success: '创建成功'
@@ -50,10 +49,10 @@ export function ClashTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   // 删除
-  const handleDelete = React.useEffectEvent(async (row: RowData) => {
+  const handleDelete = async (row: RowData) => {
     try {
       await toastPromise(rpc.dashboard.clashes({ id: row.original.id }).delete().then(unwrap), {
         success: '删除成功'
@@ -66,10 +65,10 @@ export function ClashTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   // 更新
-  const handleUpdate = React.useEffectEvent(async (row: RowData, body: ClashUpdateBodyType) => {
+  const handleUpdate = async (row: RowData, body: ClashUpdateBodyType) => {
     try {
       const data = await toastPromise(rpc.dashboard.clashes({ id: row.original.id }).put(body).then(unwrap), {
         success: '更新成功'
@@ -82,10 +81,10 @@ export function ClashTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   // 修改状态
-  const handleChangeStatus = React.useEffectEvent(async (row: RowData) => {
+  const handleChangeStatus = async (row: RowData) => {
     try {
       const clash = await toastPromise(rpc.dashboard.clashes({ id: row.original.id }).put({ isEnabled: !row.original.isEnabled }).then(unwrap), {
         success: '修改成功'
@@ -98,7 +97,7 @@ export function ClashTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   const columns: ColumnDef<(typeof clashes)[number]>[] = [
     getColumnConfig('index'),

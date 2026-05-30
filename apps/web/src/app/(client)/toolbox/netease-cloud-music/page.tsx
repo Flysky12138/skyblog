@@ -95,7 +95,7 @@ export default function Page() {
             setSearch(text)
           }}
           onKeyDown={event => {
-            if (event.key != 'Enter') return
+            if (event.key !== 'Enter') return
             setKeywords(search.trim())
           }}
         />
@@ -129,7 +129,7 @@ export default function Page() {
           }}
           songs={songs}
           onRowClick={song => {
-            if (player?.id != song.id) {
+            if (player?.id !== song.id) {
               setPlayer(song)
             }
             setIsOpen(true)

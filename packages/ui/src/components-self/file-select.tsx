@@ -71,7 +71,7 @@ export function FileSelect({ accept, className, disabled, multiple, type, onChan
         disabled={disabled}
         multiple={multiple}
         type="file"
-        webkitdirectory={type == 'folder' ? 'true' : undefined}
+        webkitdirectory={type === 'folder' ? 'true' : undefined}
         onChange={event => {
           onChange(Array.from(event.target.files ?? []))
           event.target.value = ''

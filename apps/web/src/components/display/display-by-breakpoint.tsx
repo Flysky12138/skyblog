@@ -23,8 +23,8 @@ export function DisplayByBreakPoint({ max: up = Infinity, min: down = -Infinity,
   const breakpoint = useBreakpoint()
   const breakpointMatchedValue = breakpoints[breakpoint]
 
-  const upValue = typeof up == 'string' ? breakpoints[up] : up
-  const downValue = typeof down == 'string' ? breakpoints[down] : down
+  const upValue = typeof up === 'string' ? breakpoints[up] : up
+  const downValue = typeof down === 'string' ? breakpoints[down] : down
 
   const isLtUpValue = breakpointMatchedValue < upValue
   const isGteDownValue = breakpointMatchedValue >= downValue

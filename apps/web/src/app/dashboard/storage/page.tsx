@@ -13,10 +13,10 @@ const getId = () => (isBrowser() ? (new URLSearchParams(window.location.search).
 export default function Page() {
   const [id, setId] = React.useState<string>(getId)
 
-  const handleChange = React.useEffectEvent((id: string) => {
+  const handleChange = (id: string) => {
     setId(id)
     window.history.pushState({}, '', `/dashboard/storage?id=${id}`)
-  })
+  }
 
   return (
     <>

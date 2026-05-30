@@ -42,7 +42,7 @@ export function PostTable() {
   type RowData = Row<NonNullable<typeof data>['posts'][number]>
 
   // 更新
-  const handleUpdate = React.useEffectEvent(async (row: RowData) => {
+  const handleUpdate = async (row: RowData) => {
     try {
       const post = await toastPromise(rpc.dashboard.posts({ id: row.original.id }).put({ isPublished: !row.original.isPublished }).then(unwrap), {
         success: '更新成功'
@@ -55,10 +55,10 @@ export function PostTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   // 删除
-  const handleDelete = React.useEffectEvent(async (row: RowData) => {
+  const handleDelete = async (row: RowData) => {
     try {
       await toastPromise(rpc.dashboard.posts({ id: row.original.id }).delete().then(unwrap), {
         success: '删除成功'
@@ -67,11 +67,11 @@ export function PostTable() {
         return produce(current, draft => {
           draft?.posts.splice(row.index, 1)
         })
-      }, data?.posts.length == 1)
+      }, data?.posts.length === 1)
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   const columns: ColumnDef<NonNullable<typeof data>['posts'][number]>[] = [
     getColumnConfig('index'),

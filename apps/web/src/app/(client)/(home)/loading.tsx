@@ -14,7 +14,7 @@ export default function Loading() {
         <Card
           key={index}
           className={cn('space-y-3 p-card lg:space-y-4', {
-            'md:hidden': index == 0
+            'md:hidden': index === 0
           })}
         >
           <Skeleton className="h-7 w-60" />

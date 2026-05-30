@@ -60,13 +60,13 @@ export function AudioPlayer({ autoPlay = false, className, loading = false, lyri
     return lyric.lrc[clamp(index, 0, lyric.lrc.length - 1)]?.lyric
   }, [lyric.lrc, time])
 
-  const handlePlayOrPause = React.useEffectEvent(async () => {
+  const handlePlayOrPause = async () => {
     try {
       paused ? await controls.play() : controls.pause()
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   React.useImperativeHandle(ref, () => ({ controls }), [controls])
 

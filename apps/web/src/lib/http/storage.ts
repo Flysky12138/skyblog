@@ -65,7 +65,7 @@ export abstract class Storage {
           name: FileHelper.getBaseName(file.name),
           size: file.size,
           metadata: {
-            ...(FileHelper.getFileType(file.type) == 'image' ? await FileHelper.getImageSize(file) : {})
+            ...(FileHelper.getFileType(file.type) === 'image' ? await FileHelper.getImageSize(file) : {})
           }
         },
         s3Object: {

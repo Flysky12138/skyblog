@@ -33,6 +33,14 @@ export const baseConfig = defineConfig([
 
   perfectionist.configs['recommended-natural'],
 
+  // https://eslint.org/docs/latest/rules/
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      eqeqeq: ['error', 'always', { null: 'ignore' }]
+    }
+  },
+
   // https://typescript-eslint.io/rules
   {
     files: ['**/*.{ts,tsx}'],
@@ -70,7 +78,7 @@ export const baseConfig = defineConfig([
 
   // https://github.com/sweepline/eslint-plugin-unused-imports?tab=readme-ov-file#usage
   {
-    files: ['**/*.{ts,tsx,js,jsx}'],
+    files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
       'unused-imports': unusedImports
     },

@@ -11,11 +11,12 @@ export const useEcharts = <T extends HTMLElement>(options?: EChartsInitOpts) => 
     const el = domRef.current
     if (!el) return
     try {
+      // 先 init，成功后再 dispose 旧实例，避免 init 失败后旧实例也被销毁
+      const chart = echarts.init(el, null, newOptions)
       chartRef.current?.dispose()
-      chartRef.current = echarts.init(el, null, newOptions)
+      chartRef.current = chart
     } catch (error) {
       console.error('echarts init failed:', error)
-      chartRef.current?.clear()
     }
   }, [])
 

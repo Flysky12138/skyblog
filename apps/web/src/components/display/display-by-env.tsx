@@ -5,5 +5,5 @@ interface DisplayByEnvProps extends Omit<DisplayByConditionalProps, 'condition'>
 }
 
 export function DisplayByEnv({ env, ...props }: DisplayByEnvProps) {
-  return <DisplayByConditional condition={process.env.NODE_ENV == env} {...props} />
+  return <DisplayByConditional condition={process.env.NODE_ENV === env} {...props} />
 }

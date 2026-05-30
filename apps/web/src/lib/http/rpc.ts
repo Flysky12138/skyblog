@@ -29,7 +29,7 @@ export const unwrap = <T extends Treaty.TreatyResponse<{}>>({ data, error }: T) 
   if (error) {
     console.error(error.status, error.value)
 
-    const message = typeof error.value == 'string' ? error.value : JSON.stringify(error.value, null, 2)
+    const message = typeof error.value === 'string' ? error.value : JSON.stringify(error.value, null, 2)
 
     if (isBrowser() && location.pathname.startsWith('/dashboard')) {
       toast.error(message, {

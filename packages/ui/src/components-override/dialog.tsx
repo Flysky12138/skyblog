@@ -28,7 +28,7 @@ export function DialogContent({
 } & DialogPrimitive.Popup.Props) {
   const breakpoint = useBreakpoint()
 
-  const isMatched = fullScreen == true || (fullScreen ? breakpoints[fullScreen] > breakpoints[breakpoint] : false)
+  const isMatched = fullScreen === true || (fullScreen ? breakpoints[fullScreen] > breakpoints[breakpoint] : false)
 
   return (
     <DialogPortal>

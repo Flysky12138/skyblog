@@ -10,7 +10,7 @@ export function Report() {
 
   useAsync(async () => {
     if (isPending) return
-    if (session?.user.role == 'admin') return
+    if (session?.user.role === 'admin') return
     await rpc.visits.post()
   }, [isPending, session])
 

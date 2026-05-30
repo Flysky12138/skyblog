@@ -72,23 +72,27 @@ export function MultiSelect<T extends Record<string, unknown>>({
   const getValue = (target: T) => target[fieldNames.value] as string
 
   // 是否选中
-  const isSelected = (target: T) => selectedValues.some(item => getLabel(item) == getLabel(target))
+  const isSelected = (target: T) => selectedValues.some(item => getLabel(item) === getLabel(target))
 
   // 选中/取消选中
-  const toggleOption = React.useEffectEvent((target: T) => {
-    const cloneValues = cloneDeep(selectedValues)
-    const index = cloneValues.findIndex(item => getLabel(item) == getLabel(target))
-    if (multiple) {
-      if (index == -1) {
-        cloneValues.push(target)
+  const toggleOption = React.useCallback(
+    (target: T) => {
+      const cloneValues = cloneDeep(selectedValues)
+      const index = cloneValues.findIndex(item => getLabel(item) === getLabel(target))
+      if (multiple) {
+        if (index === -1) {
+          cloneValues.push(target)
+        } else {
+          cloneValues.splice(index, 1)
+        }
+        onValueChange?.(cloneValues)
       } else {
-        cloneValues.splice(index, 1)
+        onValueChange?.(index === -1 ? [target] : [])
       }
-      onValueChange?.(cloneValues)
-    } else {
-      onValueChange?.(index == -1 ? [target] : [])
-    }
-  })
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [multiple, onValueChange, selectedValues]
+  )
 
   const mergeOptions = newOptions.concat(options)
 
@@ -116,7 +120,7 @@ export function MultiSelect<T extends Record<string, unknown>>({
                       toggleOption(option)
                     }}
                     onKeyDown={event => {
-                      if (event.key == 'Enter' || event.key == ' ') {
+                      if (event.key === 'Enter' || event.key === ' ') {
                         event.preventDefault()
                         event.stopPropagation()
                         toggleOption(option)
@@ -139,7 +143,7 @@ export function MultiSelect<T extends Record<string, unknown>>({
                   onValueChange([])
                 }}
                 onKeyDown={event => {
-                  if (event.key == 'Enter' || event.key == ' ') {
+                  if (event.key === 'Enter' || event.key === ' ') {
                     event.preventDefault()
                     event.stopPropagation()
                     onValueChange([])
@@ -171,10 +175,10 @@ export function MultiSelect<T extends Record<string, unknown>>({
             onKeyDown={event => {
               if (!onAddOption) return
               if (!search.trim()) return
-              if (event.key == 'Enter' || event.key == ' ') {
+              if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault()
                 const option = onAddOption(search)
-                if (!mergeOptions.some(item => getLabel(item) == getLabel(option))) {
+                if (!mergeOptions.some(item => getLabel(item) === getLabel(option))) {
                   setNewOptions(draft => {
                     draft.unshift(option as Draft<T>)
                   })

@@ -9,12 +9,12 @@ export const remarkPickHeading = () => {
     const children: Heading[] = []
 
     visit(tree, ['heading', 'link'], (node, index, parent) => {
-      if (node.type == 'heading') {
+      if (node.type === 'heading') {
         children.push(node)
         return
       }
 
-      if (node.type == 'link' && parent && index != null) {
+      if (node.type === 'link' && parent && index != null) {
         parent.children.splice(index, 1, ...node.children)
       }
     })

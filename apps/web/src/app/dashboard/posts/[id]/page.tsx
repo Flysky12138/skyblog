@@ -33,7 +33,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   const isMounted = useMounted()
 
   const { id } = React.use(params)
-  const isCreate = id == 'create'
+  const isCreate = id === 'create'
 
   // 文章数据
   const [post, setPost] = useImmer(createInitialPost())
@@ -53,14 +53,14 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   const editorRef = React.useRef<MonacoEditorRef>(null)
 
   // 初始化数据
-  const initData = React.useEffectEvent((data: null | PostType) => {
+  const initData = (data: null | PostType) => {
     if (!data) return
     setPost(data)
     setOldValue(draft => {
       draft.code = data.content ?? ''
       draft.post = data
     })
-  })
+  }
 
   // 请求数据
   useAsync(async () => {
@@ -73,7 +73,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
     POST_PREVIEW_BROADCAST_CHANNEL_ID,
     ({ type }, channel) => {
       // 窗口加载完成后获取一次预览数据
-      if (type != 'post-preview-mounted') return
+      if (type !== 'post-preview-mounted') return
       setPreviewContent(post.content)
       channel.postMessage({ type: 'post-update', value: post } satisfies MessageEventDataPostUpdate)
     }
@@ -98,7 +98,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   )
 
   // 创建
-  const handleCreate = React.useEffectEvent(async () => {
+  const handleCreate = async () => {
     if (!post.title) {
       toast.error('表单验证失败', { richColors: true })
       return
@@ -127,10 +127,10 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
       }
     )
     router.replace(`/dashboard/posts/${data.id}`)
-  })
+  }
 
   // 更新
-  const handleUpdate: EditorToolbarProps['onUpdate'] = React.useEffectEvent(async type => {
+  const handleUpdate: EditorToolbarProps['onUpdate'] = async type => {
     try {
       if (!post.title) {
         toast.error('表单验证失败', { richColors: true })
@@ -148,7 +148,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
             summary: post.summary,
             tags: post.tags.map(({ tag }) => tag.name),
             title: post.title,
-            updatedAt: type == 'normal' ? new Date().toISOString() : undefined,
+            updatedAt: type === 'normal' ? new Date().toISOString() : undefined,
             visibilityMask: post.visibilityMask
           })
           .then(unwrap),
@@ -160,7 +160,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   if (!isMounted) return null
 

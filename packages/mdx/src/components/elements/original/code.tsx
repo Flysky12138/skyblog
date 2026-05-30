@@ -35,7 +35,7 @@ function CodeBlock({ children, className, forceExpand = true, style, ...props }:
     lineCount++
   })
 
-  const handleToggle = React.useEffectEvent(() => {
+  const handleToggle = React.useCallback(() => {
     const beforeTop = btnRef.current!.getBoundingClientRect().top
 
     setIsExpanded(v => !v)
@@ -49,7 +49,7 @@ function CodeBlock({ children, className, forceExpand = true, style, ...props }:
         })
       })
     }
-  })
+  }, [isExpanded])
 
   return (
     <>

@@ -68,7 +68,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
               <Report />
             </DisplayByEnv>
           </SWRConfig>
-          <NextTopLoader showSpinner={false} />
+          <NextTopLoader showForHashAnchor={false} showSpinner={false} />
           <Toaster />
           <FancyboxRegister />
         </ThemeProvider>

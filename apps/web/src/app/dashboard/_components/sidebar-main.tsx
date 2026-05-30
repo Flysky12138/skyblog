@@ -85,9 +85,9 @@ export const SidebarMain = () => {
   const pathname = usePathname()
   const { open, setOpenMobile } = useSidebar()
 
-  const handleCloseSidebarMobile = React.useEffectEvent(() => {
+  const handleCloseSidebarMobile = () => {
     setOpenMobile(false)
-  })
+  }
 
   return menus.map((menu, index) => (
     <SidebarGroup key={index}>
@@ -98,11 +98,11 @@ export const SidebarMain = () => {
             <SidebarMenuItem
               key={item.href}
               className={cn({
-                hidden: !isUndefined(item.onlyShow) && { collapsed: true, expanded: false }[item.onlyShow] == open
+                hidden: !isUndefined(item.onlyShow) && { collapsed: true, expanded: false }[item.onlyShow] === open
               })}
             >
               <SidebarMenuButton
-                isActive={item.href == pathname}
+                isActive={item.href === pathname}
                 render={<Link href={item.href} onNavigate={handleCloseSidebarMobile} />}
                 tooltip={item.name}
               >

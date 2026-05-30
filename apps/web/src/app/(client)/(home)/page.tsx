@@ -17,7 +17,7 @@ export default async function Page({ searchParams }: PageProps<'/'>) {
 
   const { pagination, posts } = await getPostList(params)
 
-  if (pagination.totalCount == 0) {
+  if (pagination.totalCount === 0) {
     return <span className="text-center">空空如也</span>
   }
 
@@ -57,7 +57,7 @@ export default async function Page({ searchParams }: PageProps<'/'>) {
 }
 
 function PostCategroyTag({ Icon, queryKey, values }: { Icon: LucideIcon; queryKey: PostWhereInputKey; values: { id: string; name: string }[] }) {
-  if (values.length == 0) return null
+  if (values.length === 0) return null
 
   return (
     <>

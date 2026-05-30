@@ -1,10 +1,11 @@
-import { noop } from 'es-toolkit'
 import React from 'react'
+
+import { useLatestRef } from './use-latest-ref'
 
 export const useBroadcastChannel = <T = any, D = any>(name: string, onMessage?: (data: T, channel: BroadcastChannel) => void) => {
   const channelRef = React.useRef<BroadcastChannel>(null)
 
-  const handlerRef = React.useEffectEvent(onMessage ?? noop)
+  const onMessageRef = useLatestRef(onMessage)
 
   React.useEffect(() => {
     if (!('BroadcastChannel' in window)) return
@@ -13,7 +14,7 @@ export const useBroadcastChannel = <T = any, D = any>(name: string, onMessage?: 
     channelRef.current = channel
 
     channel.onmessage = event => {
-      handlerRef(event.data as T, channel)
+      onMessageRef.current?.(event.data as T, channel)
     }
 
     return () => {

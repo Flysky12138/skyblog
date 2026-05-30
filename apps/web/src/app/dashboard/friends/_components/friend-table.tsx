@@ -5,7 +5,6 @@ import { Switch } from '@repo/ui/components/switch'
 import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { EyeIcon, PencilIcon, PlusIcon } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
 import useSWR from 'swr'
 
 import { FriendCreateBodyType, FriendUpdateBodyType } from '@/app/api/[[...elysia]]/dashboard/friends/model'
@@ -25,7 +24,7 @@ export function FriendTable() {
   type RowData = Row<(typeof data)[number]>
 
   // 创建
-  const handleCreate = React.useEffectEvent(async (body: FriendCreateBodyType) => {
+  const handleCreate = async (body: FriendCreateBodyType) => {
     try {
       const data = await toastPromise(rpc.dashboard.friends.post(body).then(unwrap), {
         success: '创建成功'
@@ -38,10 +37,10 @@ export function FriendTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   // 删除
-  const handleDelete = React.useEffectEvent(async (row: RowData) => {
+  const handleDelete = async (row: RowData) => {
     try {
       await toastPromise(rpc.dashboard.friends({ id: row.original.id }).delete().then(unwrap), {
         success: '删除成功'
@@ -54,10 +53,10 @@ export function FriendTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   // 更新
-  const handleUpdate = React.useEffectEvent(async (row: RowData, body: FriendUpdateBodyType) => {
+  const handleUpdate = async (row: RowData, body: FriendUpdateBodyType) => {
     try {
       const data = await toastPromise(rpc.dashboard.friends({ id: row.original.id }).put(body).then(unwrap), {
         success: '更新成功'
@@ -70,10 +69,10 @@ export function FriendTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   // 修改状态
-  const handleChangeStatus = React.useEffectEvent(async (row: RowData) => {
+  const handleChangeStatus = async (row: RowData) => {
     try {
       const data = await toastPromise(rpc.dashboard.friends({ id: row.original.id }).put({ isEnabled: !row.original.isEnabled }).then(unwrap), {
         success: '修改成功'
@@ -86,7 +85,7 @@ export function FriendTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   const columns: ColumnDef<NonNullable<typeof data>[number]>[] = [
     getColumnConfig('index'),

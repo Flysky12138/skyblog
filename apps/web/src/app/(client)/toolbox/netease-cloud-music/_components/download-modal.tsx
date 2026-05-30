@@ -153,10 +153,10 @@ export function DownloadModal({ songs: staticSongs }: DownloadModalProps) {
 
         <div className="flex items-center justify-between border-b border-divide px-2.5 pt-3 pb-3 shadow-xs md:mt-0">
           <Checkbox
-            checked={selected.size == songs.length}
+            checked={selected.size === songs.length}
             disabled={isDownloading}
             onClick={() => {
-              if (selected.size == songs.length) {
+              if (selected.size === songs.length) {
                 clearSelected()
               } else {
                 songs.forEach(addSelected)
@@ -166,7 +166,7 @@ export function DownloadModal({ songs: staticSongs }: DownloadModalProps) {
           <DialogDrawer>
             <DialogDrawerTrigger
               render={
-                <Button disabled={isDownloading || selected.size == 0} loading={isDownloading} size="sm">
+                <Button disabled={isDownloading || selected.size === 0} loading={isDownloading} size="sm">
                   下载（{selected.size}）
                 </Button>
               }
@@ -247,7 +247,7 @@ export function DownloadModal({ songs: staticSongs }: DownloadModalProps) {
                   className="min-w-40"
                   render={
                     <Button
-                      disabled={downloadType.size == 0}
+                      disabled={downloadType.size === 0}
                       onClick={() => {
                         void handleDownload()
                       }}

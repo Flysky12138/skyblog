@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default async function Layout({ children }: React.PropsWithChildren) {
   const cookieStore = await cookies()
-  const defaultOpen = cookieStore.has('sidebar_state') ? cookieStore.get('sidebar_state')?.value == 'true' : true
+  const defaultOpen = cookieStore.has('sidebar_state') ? cookieStore.get('sidebar_state')?.value === 'true' : true
 
   return (
     <SidebarProvider

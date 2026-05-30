@@ -1,6 +1,5 @@
 import { LaptopMinimalIcon, MoonStarIcon, SunIcon } from 'lucide-react'
 import { useTheme as useThemeContext } from 'next-themes'
-import React from 'react'
 import { ToasterProps } from 'sonner'
 
 type Theme = NonNullable<ToasterProps['theme']>
@@ -8,7 +7,7 @@ type Theme = NonNullable<ToasterProps['theme']>
 export const useTheme = () => {
   const { resolvedTheme, setTheme, theme } = useThemeContext()
 
-  const isDark = resolvedTheme == 'dark'
+  const isDark = resolvedTheme === 'dark'
 
   // 切换主题，按照 themeQueue 的顺序切换
   const toggleTheme = (theme: Theme) => {
@@ -16,7 +15,7 @@ export const useTheme = () => {
   }
 
   // 根据当前主题返回对应的图标
-  const ThemeIcon = React.useMemo(() => {
+  const ThemeIcon = (() => {
     switch (theme as Theme) {
       case 'dark':
         return MoonStarIcon
@@ -25,7 +24,7 @@ export const useTheme = () => {
       default:
         return LaptopMinimalIcon
     }
-  }, [theme])
+  })()
 
   return {
     /**

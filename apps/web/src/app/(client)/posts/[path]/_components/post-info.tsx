@@ -34,7 +34,7 @@ export function PostInfo({ defaultValue, id }: PostInfoProps) {
     if (viewed) return
     if (!post?.isPublished) return
     if (isPending) return
-    if (session?.user.role == 'admin') return
+    if (session?.user.role === 'admin') return
 
     let ignore = false
 

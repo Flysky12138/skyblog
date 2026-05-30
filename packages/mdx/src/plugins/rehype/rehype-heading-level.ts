@@ -35,7 +35,7 @@ class Stack {
     }
 
     const order = top.order.slice()
-    if (top.h == h) {
+    if (top.h === h) {
       order.push(order.pop()! + 1)
     }
     if (top.h < h) {

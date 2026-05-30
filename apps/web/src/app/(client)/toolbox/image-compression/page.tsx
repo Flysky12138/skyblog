@@ -38,9 +38,9 @@ export default function Page() {
   const currentQuality = quality ?? DEFAULT_QUALITY
 
   // 清除缓存
-  const handleResetCompressedFileCache = React.useEffectEvent(() => {
+  const handleResetCompressedFileCache = () => {
     compressedFileCache.current = new WeakMap()
-  })
+  }
   React.useEffect(() => {
     handleResetCompressedFileCache()
   }, [ext, quality])
@@ -54,7 +54,7 @@ export default function Page() {
   // 压缩图片格式
   const selectedItem = React.useMemo(() => {
     if (!ext) return
-    return imageCompressionGroup.find(item => item.ext == ext)
+    return imageCompressionGroup.find(item => item.ext === ext)
   }, [ext])
 
   // 原图链接
@@ -78,7 +78,7 @@ export default function Page() {
   }, [compressedFileUrl])
 
   // 压缩图片的方法
-  const handleCompressImage = React.useEffectEvent(async (file: File | null) => {
+  const handleCompressImage = async (file: File | null) => {
     if (!file) return
     if (!selectedItem) return
 
@@ -87,7 +87,7 @@ export default function Page() {
       mimeType: selectedItem.mimeType,
       quality: currentQuality / 100
     })
-  })
+  }
 
   // 压缩当前图片
   useDebounce(
@@ -110,7 +110,7 @@ export default function Page() {
   )
 
   // 压缩图片并保存
-  const handleSave = React.useEffectEvent(async () => {
+  const handleSave = async () => {
     if (!selectedItem) return
 
     const id = '019c8598-4d0b-76be-8b70-b6ad9aecc69b'
@@ -131,10 +131,10 @@ export default function Page() {
     } catch (error) {
       toast.error(error instanceof Error ? error.message : String(error), { id })
     }
-  })
+  }
 
   // 图片预览
-  const handlePreview = React.useEffectEvent(() => {
+  const handlePreview = () => {
     switch (activeTab) {
       case 'compressed':
         Fancybox.show(
@@ -162,7 +162,7 @@ export default function Page() {
         )
         break
     }
-  })
+  }
 
   if (!activeFile) {
     return (
@@ -188,10 +188,10 @@ export default function Page() {
         </TabsList>
         <div className="flex grow gap-5 not-md:flex-col">
           <Button className="relative h-auto grow rounded-md" variant="outline" onClick={handlePreview}>
-            <React.Activity mode={activeTab == 'original' ? 'visible' : 'hidden'}>
+            <React.Activity mode={activeTab === 'original' ? 'visible' : 'hidden'}>
               <Image fill alt="original-image" className="size-full object-contain" src={filesUrl[activeFileIndex]} />
             </React.Activity>
-            <React.Activity mode={activeTab == 'compressed' ? 'visible' : 'hidden'}>
+            <React.Activity mode={activeTab === 'compressed' ? 'visible' : 'hidden'}>
               {compressedFile && compressedFileUrl && (
                 <Image fill alt="compressed-image" className="size-full object-contain" src={compressedFileUrl} />
               )}

@@ -5,7 +5,6 @@ import { produce, useAsyncFn } from '@repo/react-hooks'
 import { Switch } from '@repo/ui/components/switch'
 import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { PencilIcon, PlayIcon, PlusIcon } from 'lucide-react'
-import React from 'react'
 import useSWR from 'swr'
 
 import { CronCreateBodyType, CronUpdateBodyType } from '@/app/api/[[...elysia]]/dashboard/crons/model'
@@ -29,7 +28,7 @@ export function CronTable() {
   type RowData = Row<(typeof crons)[number]>
 
   // 创建
-  const handleCreate = React.useEffectEvent(async (body: CronCreateBodyType) => {
+  const handleCreate = async (body: CronCreateBodyType) => {
     try {
       const data = await toastPromise(rpc.dashboard.crons.post(body).then(unwrap), {
         success: '创建成功'
@@ -42,10 +41,10 @@ export function CronTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   // 删除
-  const handleDelete = React.useEffectEvent(async (row: RowData) => {
+  const handleDelete = async (row: RowData) => {
     try {
       await toastPromise(rpc.dashboard.crons({ id: row.original.id }).delete().then(unwrap), {
         success: '删除成功'
@@ -58,10 +57,10 @@ export function CronTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   // 更新
-  const handleUpdate = React.useEffectEvent(async (row: RowData, body: CronUpdateBodyType) => {
+  const handleUpdate = async (row: RowData, body: CronUpdateBodyType) => {
     try {
       const data = await toastPromise(rpc.dashboard.crons({ id: row.original.id }).put(body).then(unwrap), {
         success: '更新成功'
@@ -74,10 +73,10 @@ export function CronTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   // 修改状态
-  const handleChangeStatus = React.useEffectEvent(async (row: RowData) => {
+  const handleChangeStatus = async (row: RowData) => {
     try {
       const data = await toastPromise(rpc.dashboard.crons({ id: row.original.id }).put({ isEnabled: !row.original.isEnabled }).then(unwrap), {
         success: '修改成功'
@@ -90,7 +89,7 @@ export function CronTable() {
     } catch (error) {
       console.error(error)
     }
-  })
+  }
 
   const columns: ColumnDef<(typeof crons)[number]>[] = [
     getColumnConfig('index'),
@@ -177,7 +176,7 @@ function DataTableRowRunButton({ row }: { row: Treaty.Data<ReturnType<typeof rpc
       await toastPromise(rpc.dashboard.crons({ id: row.id }).run.post().then(unwrap), {
         descriptionClassName: 'whitespace-pre-wrap mt-2',
         success: '执行成功',
-        description: ({ data }) => (typeof data == 'object' ? JSON.stringify(data, null, 4) : String(data))
+        description: ({ data }) => (typeof data === 'object' ? JSON.stringify(data, null, 4) : String(data))
       })
     } catch (error) {
       console.error(error)

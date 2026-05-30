@@ -23,7 +23,7 @@ export function AuthButton() {
     )
   }
 
-  if (session.user.role == 'admin') {
+  if (session.user.role === 'admin') {
     return (
       <ButtonLink aria-label="dashboard" href="/dashboard" size="icon" variant="outline">
         <LayoutDashboardIcon />
