@@ -12,10 +12,15 @@ interface StyleProps {
 export function Style({ children }: StyleProps) {
   const styleRef = React.useRef<HTMLStyleElement>(null)
 
-  React.useInsertionEffect(() => {
+  const id = React.useId()
+
+  React.useEffect(() => {
     if (!styleRef.current) {
       const style = document.createElement('style')
       styleRef.current = style
+
+      style.id = id
+
       document.head.append(style)
     }
 
@@ -25,7 +30,7 @@ export function Style({ children }: StyleProps) {
       styleRef.current?.remove()
       styleRef.current = null
     }
-  }, [children])
+  }, [children, id])
 
   return null
 }

@@ -99,7 +99,6 @@ export function PostToc({ className, ref, ...props }: PostTocProps) {
   return (
     <ul
       ref={ulRef}
-      aria-label="post toc"
       className={cn(
         'hidden empty:hidden lg:block',
         'w-52 space-y-1.5 p-3 pe-1.5',
@@ -107,7 +106,6 @@ export function PostToc({ className, ref, ...props }: PostTocProps) {
         'sticky top-[calc(var(--height-header)+(--spacing(9)))] max-h-[calc(100dvh-var(--height-header)-(--spacing(18)))]',
         className
       )}
-      data-slot="post-toc"
       {...props}
     />
   )

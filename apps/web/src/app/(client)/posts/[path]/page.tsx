@@ -114,12 +114,17 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
       {post.content && (
         <div className="flex gap-bp-2">
           <div className="grid w-full gap-bp-4">
-            <Card aria-label="post content" className="group/article relative px-3 py-5 md:px-5 md:py-8" id={ATTRIBUTE.ID.POST_CONTAINER}>
+            <Card
+              aria-label="post content"
+              className="group/article relative px-3 py-5 md:px-5 md:py-8"
+              data-slot="post-content"
+              id={ATTRIBUTE.ID.POST_CONTAINER}
+            >
               <PostResizeButton
                 className={cn(
                   'opacity-0 group-hover/article:opacity-100',
                   'absolute inset-e-1 top-1 z-10 inline-flex',
-                  'aria-pressed:fixed aria-pressed:inset-e-[calc(var(--scrollbar-width)+(--spacing(1)))]'
+                  'aria-pressed:fixed aria-pressed:inset-e-[calc(var(--scrollbar-width,0)+(--spacing(1)))]'
                 )}
                 tabIndex={-1}
               />
@@ -168,6 +173,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
           <DisplayByConditional condition={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.TOC) === POST_CARD_VISIBILITY_MASK.TOC}>
             <Card
               aria-label="post toc"
+              data-slot="post-toc"
               render={
                 <PostToc>
                   <MDXHeading component={PostTocHeading} source={post.content} />

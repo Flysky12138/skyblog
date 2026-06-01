@@ -112,10 +112,10 @@ export default function Page() {
             <DialogTrigger className="min-w-28 grow" render={<Button />}>
               源码
             </DialogTrigger>
-            <DialogContent className="max-w-2xl bg-transparent p-0 text-sm **:[figure]:rounded-lg!" showCloseButton={false}>
-              <DialogHeader className="sr-only">
-                <DialogTitle>{form.mode}</DialogTitle>
-                <DialogDescription />
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>JavaScript 源码</DialogTitle>
+                <DialogDescription>{form.mode}</DialogDescription>
               </DialogHeader>
               {form.mode === 'chudnovsky' && <ChudnovskyCode />}
               {form.mode === 'chudnovsky-bs' && <ChudnovskyBsCode />}

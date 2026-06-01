@@ -48,7 +48,7 @@ export function PostResizeButton({ className, ...props }: PostResizeButtonProps)
     <>
       {isFullPage && (
         <Style>{`
-          html {
+          :root {
             --scrollbar-width: ${scrollBarWidth ?? 0}px;
           }
           #${ATTRIBUTE.ID.POST_CONTAINER} {

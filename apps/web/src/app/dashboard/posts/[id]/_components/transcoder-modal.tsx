@@ -18,7 +18,7 @@ export function TranscoderModal({ children }: TranscoderModalProps) {
       <DialogContent className="max-w-5xl">
         <DialogHeader>
           <DialogTitle>转码器</DialogTitle>
-          <DialogDescription className="hidden" />
+          <DialogDescription>文本编码转换</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 sm:grid-cols-2">
           <Textarea

@@ -47,7 +47,7 @@ export function CardWolf() {
   }, [])
 
   return (
-    <Card className="p-2 select-none">
+    <Card className="overflow-hidden p-2 select-none">
       <motion.div
         ref={divRef}
         animate={isMounted ? 'visible' : 'hidden'}
