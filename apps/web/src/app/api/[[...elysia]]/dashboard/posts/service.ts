@@ -126,43 +126,49 @@ export abstract class Service {
    * 更新文章
    */
   static async update(id: string, { categories, tags, ...body }: PostUpdateBodyType) {
-    const data = await prisma.$transaction(async ctx => {
-      await ctx.postCategory.deleteMany({
-        where: { postId: id }
-      })
+    const data = await prisma.$transaction(
+      async ctx => {
+        await ctx.postCategory.deleteMany({
+          where: { postId: id }
+        })
 
-      await ctx.postTag.deleteMany({
-        where: { postId: id }
-      })
+        await ctx.postTag.deleteMany({
+          where: { postId: id }
+        })
 
-      return ctx.post.update({
-        include,
-        where: { id },
-        data: {
-          ...body,
-          categories: {
-            create: categories?.map(name => ({
-              category: {
-                connectOrCreate: {
-                  create: { name },
-                  where: { name }
+        return ctx.post.update({
+          include,
+          where: { id },
+          data: {
+            ...body,
+            categories: {
+              create: categories?.map(name => ({
+                category: {
+                  connectOrCreate: {
+                    create: { name },
+                    where: { name }
+                  }
                 }
-              }
-            }))
-          },
-          tags: {
-            create: tags?.map(name => ({
-              tag: {
-                connectOrCreate: {
-                  create: { name },
-                  where: { name }
+              }))
+            },
+            tags: {
+              create: tags?.map(name => ({
+                tag: {
+                  connectOrCreate: {
+                    create: { name },
+                    where: { name }
+                  }
                 }
-              }
-            }))
+              }))
+            }
           }
-        }
-      })
-    })
+        })
+      },
+      {
+        maxWait: 5000,
+        timeout: 10000
+      }
+    )
 
     revalidateTag(CACHE_TAG.POST(id), 'max')
     revalidateTag(CACHE_TAG.POSTS, 'max')

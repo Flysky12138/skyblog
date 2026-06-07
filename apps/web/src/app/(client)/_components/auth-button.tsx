@@ -1,7 +1,6 @@
 'use client'
 
-import { ButtonLink } from '@repo/ui/components/button'
-import { Skeleton } from '@repo/ui/components/skeleton'
+import { ButtonLink, buttonVariants } from '@repo/ui/components/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui/components/tooltip'
 import { LayoutDashboardIcon, LogInIcon, UserRoundCogIcon } from 'lucide-react'
 
@@ -10,7 +9,7 @@ import { authClient } from '@/lib/auth/client'
 export function AuthButton() {
   const { data: session, isPending } = authClient.useSession()
 
-  if (isPending) return <Skeleton className="size-9" />
+  if (isPending) return <div className={buttonVariants({ className: 'pointer-events-none', size: 'icon', variant: 'outline' })} />
 
   if (!session) {
     return (

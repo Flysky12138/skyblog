@@ -1,6 +1,5 @@
 'use client'
 
-import { useImmer } from '@repo/react-hooks'
 import { toast } from '@repo/ui/base'
 import { Card } from '@repo/ui/components-self/card'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@repo/ui/components/input-group'
@@ -9,6 +8,7 @@ import { isBrowser } from 'es-toolkit'
 import { SearchIcon } from 'lucide-react'
 import React from 'react'
 import useSWRInfinite from 'swr/infinite'
+import { useImmer } from 'use-immer'
 
 import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { rpc, unwrap } from '@/lib/http/rpc'

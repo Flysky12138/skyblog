@@ -1,13 +1,11 @@
 @import 'tailwindcss';
 
-@source '../../../../apps/**/*.{ts,tsx}';
-@source '../../../../packages/**/*.{ts,tsx}';
+@source '../**/*.{ts,tsx}';
 
 @custom-variant dark (&:is(.dark, .dark *));
 @custom-variant light (&:is(.light, .light *));
 
 @import './shadcn.css';
-
 @import './base.css' layer(base);
 @import './utilities.css';
 
@@ -36,14 +34,11 @@
   --font-*: initial;
   /* shadcn variables */
   --font-heading: var(--font-heading);
+  --font-sans: var(--font-sans, 'Geist', 'Geist Fallback');
   /* static variables */
-  --font-root: 'FZSJ-ZHUZAYTE';
   --font-emoji: 'Noto Color Emoji';
   --font-article: 'Microsoft Yahei', '微软雅黑';
-  --font-code: var(--font-emoji), var(--font-code);
-  --height-header: 3.125rem;
-  --height-main: calc(100dvh - var(--height-header));
-  --height-footer: 9.375rem;
+  --font-code: var(--font-emoji), var(--font-code, 'Cascadia Code', 'SF Mono', 'Roboto Mono', Consolas, 'Courier New', monospace);
   /* dark & light variables */
   --color-root: var(--root);
   --color-divide: var(--divide);

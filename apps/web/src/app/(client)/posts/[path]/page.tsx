@@ -1,6 +1,5 @@
 'use cache'
 
-import { MDXHeading, MDXServer } from '@repo/mdx'
 import { Card } from '@repo/ui/components-self/card'
 import { JsonLD } from '@repo/ui/components-self/json-ld'
 import { ButtonLink } from '@repo/ui/components/button'
@@ -21,7 +20,6 @@ import { Storage } from '@/lib/http/storage'
 import { getPosts, getPrevNextPost } from '../utils'
 import { PostInfo } from './_components/post-info'
 import { PostResizeButton } from './_components/post-resize-button'
-import { PostToc, PostTocHeading } from './_components/post-toc'
 import { getPost } from './utils'
 
 export const generateStaticParams = async (): Promise<Awaited<PageProps<'/posts/[path]'>['params']>[]> => {
@@ -116,7 +114,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
           <div className="grid w-full gap-bp-4">
             <Card
               aria-label="post content"
-              className="group/article relative px-3 py-5 md:px-5 md:py-8"
+              className="group/article relative overflow-hidden px-3 py-5 md:px-5 md:py-8"
               data-slot="post-content"
               id={ATTRIBUTE.ID.POST_CONTAINER}
             >
@@ -128,13 +126,11 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
                 )}
                 tabIndex={-1}
               />
-              <MDXServer
-                componentsProps={{
-                  code: {
-                    forceExpand: false
-                  }
+              <article
+                dangerouslySetInnerHTML={{
+                  __html: post.content
                 }}
-                source={post.content}
+                className="tiptap font-article"
               />
             </Card>
 
@@ -170,7 +166,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
             </DisplayByConditional>
           </div>
 
-          <DisplayByConditional condition={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.TOC) === POST_CARD_VISIBILITY_MASK.TOC}>
+          {/* <DisplayByConditional condition={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.TOC) === POST_CARD_VISIBILITY_MASK.TOC}>
             <Card
               aria-label="post toc"
               data-slot="post-toc"
@@ -180,7 +176,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
                 </PostToc>
               }
             />
-          </DisplayByConditional>
+          </DisplayByConditional> */}
         </div>
       )}
     </>

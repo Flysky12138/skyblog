@@ -1,3 +1,4 @@
+import { renderHTMLStringToHTMLString } from '@repo/rich-text-editor/render'
 import { cacheLife, cacheTag } from 'next/cache'
 import React from 'react'
 import { z } from 'zod'
@@ -43,6 +44,8 @@ export const getPost = React.cache(async (idOrSlug: string) => {
   if (!post) {
     return { post: null, user: null }
   }
+
+  post.content = await renderHTMLStringToHTMLString(post.content ?? '')
 
   const user = await getAuthor(post.authorId)
 

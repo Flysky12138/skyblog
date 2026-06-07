@@ -1,7 +1,6 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useAsyncFn } from '@repo/react-hooks'
 import { toast } from '@repo/ui/base'
 import { Button } from '@repo/ui/components/button'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet } from '@repo/ui/components/field'
@@ -10,6 +9,7 @@ import { ArrowLeftIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
 import { Controller, useForm } from 'react-hook-form'
+import { useAsyncFn } from 'react-use'
 import { z } from 'zod'
 
 import { authClient } from '@/lib/auth/client'

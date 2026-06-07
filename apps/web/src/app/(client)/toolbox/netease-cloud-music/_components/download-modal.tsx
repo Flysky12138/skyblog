@@ -1,6 +1,5 @@
 'use client'
 
-import { useAsyncFn, useBeforeUnload, useMap, useSet } from '@repo/react-hooks'
 import { toast } from '@repo/ui/base'
 import {
   DialogDrawer,
@@ -21,6 +20,7 @@ import dayjs from 'dayjs'
 import { limitAsync } from 'es-toolkit'
 import { DownloadIcon, MusicIcon, ScrollTextIcon } from 'lucide-react'
 import React from 'react'
+import { useAsyncFn, useBeforeUnload, useMap, useSet } from 'react-use'
 import { List, RowComponentProps } from 'react-window'
 
 import { AlbumResponseType } from '@/app/api/[[...elysia]]/client/netease-cloud-music/model'

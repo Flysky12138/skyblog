@@ -1,11 +1,11 @@
 'use client'
 
-import { useAsyncFn } from '@repo/react-hooks'
 import { Button } from '@repo/ui/components/button'
 import { ButtonGroup } from '@repo/ui/components/button-group'
 import { Field, FieldGroup, FieldLabel } from '@repo/ui/components/field'
 import { Input } from '@repo/ui/components/input'
 import React from 'react'
+import { useAsyncFn } from 'react-use'
 import useSWR from 'swr'
 
 import { CACHE_TAG, VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'

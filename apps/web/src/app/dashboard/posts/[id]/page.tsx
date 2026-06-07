@@ -1,104 +1,84 @@
 'use client'
 
-import { MDXClient } from '@repo/mdx'
-import { MonacoEditor, MonacoEditorRef } from '@repo/monaco-editor'
-import { useBroadcastChannel, useImmer, useMounted } from '@repo/react-hooks'
-import { useAsync, useDebounce, useWindowSize } from '@repo/react-hooks'
+import { Tiptap, useEditor } from '@repo/rich-text-editor'
+import { ExtensionKit } from '@repo/rich-text-editor/extensions'
+import { ToolBar } from '@repo/rich-text-editor/toolbar'
 import { toast } from '@repo/ui/base'
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@repo/ui/components/resizable'
-import { ScrollArea } from '@repo/ui/components/scroll-area'
-import { isEqual } from 'es-toolkit'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@repo/ui/components/alert-dialog'
+import { Button } from '@repo/ui/components/button'
+import { Separator } from '@repo/ui/components/separator'
+import { Spinner } from '@repo/ui/components/spinner'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui/components/tooltip'
+import { CloudUploadIcon, EyeClosedIcon, EyeIcon, ReceiptTextIcon, SaveIcon } from 'lucide-react'
 import { useRouter } from 'nextjs-toploader/app'
 import React from 'react'
+import { useAsync } from 'react-use'
+import { useImmer } from 'use-immer'
 
-import { ErrorBoundary } from '@/components/static/error'
+import { StorageUploadModal } from '@/app/dashboard/storage/_components/storage-upload-modal'
+import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { authClient } from '@/lib/auth/client'
+import { STORAGE } from '@/lib/constants'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
 
-import { EditorToolbar, EditorToolbarProps } from './_components/editor-toolbar'
-import {
-  createInitialPost,
-  MessageEventDataPostPreviewMounted,
-  MessageEventDataPostUpdate,
-  onInit,
-  POST_PREVIEW_BROADCAST_CHANNEL_ID,
-  PostType
-} from './utils'
+import { PostEditModal } from './_components/post-edit-modal'
+import { createInitialPost, PostType } from './utils'
 
 export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   const router = useRouter()
-  const { width } = useWindowSize()
   const { data: session } = authClient.useSession()
-  const isMounted = useMounted()
 
   const { id } = React.use(params)
   const isCreate = id === 'create'
 
-  // 文章数据
-  const [post, setPost] = useImmer(createInitialPost())
-  const [oldValue, setOldValue] = useImmer({
-    code: '',
-    post: createInitialPost()
+  const editor = useEditor({
+    editable: true,
+    emitContentError: true,
+    enableContentCheck: false,
+    extensions: [ExtensionKit],
+    immediatelyRender: false,
+    editorProps: {
+      attributes: {
+        role: 'textbox',
+        spellcheck: 'false'
+      }
+    }
   })
 
-  // Diff 对比模式
-  const [isCompare, setIsCompare] = React.useState(false)
-  // 右侧窗口预览数据
-  const [previewContent, setPreviewContent] = React.useState(post.content)
-
-  // 工具栏拖动限制区域引用
-  const dragConstraintsRef = React.useRef<HTMLDivElement>(null)
-  // 编辑器引用
-  const editorRef = React.useRef<MonacoEditorRef>(null)
+  // 文章数据
+  const [post, setPost] = useImmer(createInitialPost())
 
   // 初始化数据
   const initData = (data: null | PostType) => {
     if (!data) return
     setPost(data)
-    setOldValue(draft => {
-      draft.code = data.content ?? ''
-      draft.post = data
+    editor?.commands.setContent(data.content, {
+      contentType: data.content?.startsWith('<') ? 'html' : 'markdown'
     })
   }
 
   // 请求数据
-  useAsync(async () => {
+  const { loading } = useAsync(async () => {
     if (isCreate) return
+    if (!editor) return
     const data = await rpc.dashboard.posts({ id }).get().then(unwrap)
     initData(data)
-  }, [id])
-
-  const { postMessage } = useBroadcastChannel<MessageEventDataPostPreviewMounted, MessageEventDataPostUpdate>(
-    POST_PREVIEW_BROADCAST_CHANNEL_ID,
-    ({ type }, channel) => {
-      // 窗口加载完成后获取一次预览数据
-      if (type !== 'post-preview-mounted') return
-      setPreviewContent(post.content)
-      channel.postMessage({ type: 'post-update', value: post } satisfies MessageEventDataPostUpdate)
-    }
-  )
-  // 预览数据更新
-  useDebounce(
-    () => {
-      setPreviewContent(post.content)
-      postMessage({ type: 'post-update', value: post })
-    },
-    1000,
-    [post]
-  )
-
-  // 禁用按钮
-  const disabled = React.useMemo(
-    () => ({
-      format: isCompare,
-      save: isCreate ? !post.content : isEqual(post, oldValue.post)
-    }),
-    [isCompare, isCreate, oldValue.post, post]
-  )
+  }, [id, editor])
 
   // 创建
   const handleCreate = async () => {
+    if (!editor) return
     if (!post.title) {
       toast.error('表单验证失败', { richColors: true })
       return
@@ -112,7 +92,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
         .post({
           authorId: session.user.id,
           categories: post.categories.map(({ category }) => category.name),
-          content: post.content,
+          content: editor.getHTML(),
           isPublished: post.isPublished,
           pinOrder: post.pinOrder,
           slug: post.slug,
@@ -130,8 +110,9 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   }
 
   // 更新
-  const handleUpdate: EditorToolbarProps['onUpdate'] = async type => {
+  const handleUpdate = async (type: 'normal' | 'secret') => {
     try {
+      if (!editor) return
       if (!post.title) {
         toast.error('表单验证失败', { richColors: true })
         return
@@ -141,7 +122,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
           .posts({ id })
           .put({
             categories: post.categories.map(({ category }) => category.name),
-            content: post.content,
+            content: editor.getHTML(),
             isPublished: post.isPublished,
             pinOrder: post.pinOrder,
             slug: post.slug,
@@ -162,68 +143,108 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
     }
   }
 
-  if (!isMounted) return null
+  if (!editor) return null
 
   return (
-    <div ref={dragConstraintsRef} className="relative flex h-full max-h-screen overflow-hidden">
-      <EditorToolbar
-        className="absolute bottom-2 left-1/2 z-50 -translate-x-1/2"
-        disabled={disabled}
-        dragConstraints={dragConstraintsRef}
-        isCreate={isCreate}
-        post={post}
-        setPost={setPost}
-        onCompare={() => {
-          setIsCompare(prev => !prev)
-        }}
-        onCreate={() => {
-          void handleCreate()
-        }}
-        onFormat={async () => {
-          await editorRef.current?.format()
-        }}
-        onPreview={() => {
-          window.open(`/posts/preview`, '_blank')
-        }}
-        onUpdate={handleUpdate}
-      />
-
-      <ResizablePanelGroup orientation={width < 1200 ? 'vertical' : 'horizontal'}>
-        <ResizablePanel defaultSize="60%" maxSize="70%" minSize="30%">
-          <MonacoEditor
-            ref={editorRef}
-            unstyled
-            isDiffMode={isCompare}
-            language="markdown"
-            originalValue={oldValue.code}
-            value={post.content ?? ''}
-            onChange={value => {
-              setPost(draft => {
-                draft.content = value || null
-              })
-            }}
-            onInit={onInit}
-          />
-        </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel defaultSize="40%">
-          <ScrollArea className="h-full bg-card">
-            <ErrorBoundary className="mx-auto mt-16 w-[calc(100%-4rem)]">
-              <MDXClient
-                componentsProps={{
-                  code: {
-                    forceExpand: false
-                  },
-                  wrapper: {
-                    className: 'min-h-screen p-5 pb-[60vh]'
-                  }
-                }}
-                source={previewContent}
-              />
-            </ErrorBoundary>
-          </ScrollArea>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+    <div className="flex h-screen flex-col bg-card">
+      <Tiptap editor={editor}>
+        <div className="bg-sidebar shadow-xs">
+          <ToolBar className="flex flex-wrap justify-center p-3">
+            <hr className="h-4 w-0.5 rounded-full bg-divide" />
+            <Tooltip>
+              <StorageUploadModal id={STORAGE.ROOT_DIRECTORY_ID}>
+                <TooltipTrigger render={<Button aria-label="文件" disabled={isCreate} size="icon" variant="outline" />}>
+                  <CloudUploadIcon />
+                </TooltipTrigger>
+              </StorageUploadModal>
+              <TooltipContent>文件</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <PostEditModal value={post} onChange={setPost}>
+                <TooltipTrigger render={<Button aria-label="信息" size="icon" variant="outline" />}>
+                  <ReceiptTextIcon />
+                </TooltipTrigger>
+              </PostEditModal>
+              <TooltipContent>信息</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Button
+                    aria-label={post.isPublished ? '公开' : '隐藏'}
+                    size="icon"
+                    variant="outline"
+                    onClick={() => {
+                      setPost(state => {
+                        state.isPublished = !state.isPublished
+                      })
+                    }}
+                  />
+                }
+              >
+                {post.isPublished ? <EyeIcon /> : <EyeClosedIcon />}
+              </TooltipTrigger>
+              <TooltipContent>{post.isPublished ? '公开' : '隐藏'}</TooltipContent>
+            </Tooltip>
+            <AlertDialog>
+              <Tooltip>
+                <TooltipTrigger render={<AlertDialogTrigger render={<Button aria-label={isCreate ? '创建' : '更新'} size="icon" />} />}>
+                  <SaveIcon />
+                </TooltipTrigger>
+                <TooltipContent>{isCreate ? '创建' : '更新'}</TooltipContent>
+              </Tooltip>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>更新方式</AlertDialogTitle>
+                  <AlertDialogDescription>不修改更新时间，可以悄悄更新文章</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>取消</AlertDialogCancel>
+                  <DisplayByConditional
+                    condition={isCreate}
+                    fallback={
+                      <>
+                        <AlertDialogAction
+                          onClick={() => {
+                            void handleUpdate('secret')
+                          }}
+                        >
+                          悄悄更新
+                        </AlertDialogAction>
+                        <AlertDialogAction
+                          onClick={() => {
+                            void handleUpdate('normal')
+                          }}
+                        >
+                          更新
+                        </AlertDialogAction>
+                      </>
+                    }
+                  >
+                    <AlertDialogAction
+                      onClick={() => {
+                        void handleCreate()
+                      }}
+                    >
+                      创建
+                    </AlertDialogAction>
+                  </DisplayByConditional>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </ToolBar>
+          <Separator />
+        </div>
+        <div className="h-full overflow-y-auto px-3 py-5 md:px-5 md:py-8">
+          {loading ? (
+            <div className="flex h-full items-center justify-center">
+              <Spinner className="size-8" />
+            </div>
+          ) : (
+            <Tiptap.Content className="font-article" />
+          )}
+        </div>
+      </Tiptap>
     </div>
   )
 }

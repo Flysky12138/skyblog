@@ -68,6 +68,7 @@ export function useRoutingControl({ enabled = true, onClose }: UseRoutingControl
         window.history.replaceState({ ...state, isOverlayOpen: false }, '')
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled])
 
   const handleOpenChange = React.useCallback(

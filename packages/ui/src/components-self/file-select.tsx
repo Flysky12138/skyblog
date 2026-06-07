@@ -1,8 +1,9 @@
 'use client'
 
 import { useRender } from '@base-ui/react'
-import { useAccessibleClick, useDropArea } from '@repo/react-hooks'
-import { LucideIcon } from 'lucide-react'
+import { useAccessibleClick } from '@repo/react-hooks'
+import { LucideIcon, UploadIcon } from 'lucide-react'
+import { useDropArea } from 'react-use'
 
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '../components/empty'
 import { Input } from '../components/input'
@@ -10,8 +11,8 @@ import { cn } from '../lib/utils'
 
 interface FileSelectBaseProps extends useRender.ComponentProps<'div'> {
   description?: string
-  logo: LucideIcon
-  title: string
+  logo?: LucideIcon
+  title?: string
 }
 
 interface FileSelectProps extends Omit<FileSelectBaseProps, 'onChange'> {
@@ -81,7 +82,7 @@ export function FileSelect({ accept, className, disabled, multiple, type, onChan
   )
 }
 
-export function FileSelectBase({ children, className, description, logo: Logo, render, title, ...props }: FileSelectBaseProps) {
+export function FileSelectBase({ children, className, description, logo: Logo = UploadIcon, render, title, ...props }: FileSelectBaseProps) {
   return useRender({
     defaultTagName: 'div',
     render,
@@ -93,7 +94,7 @@ export function FileSelectBase({ children, className, description, logo: Logo, r
               <EmptyMedia variant="icon">
                 <Logo />
               </EmptyMedia>
-              <EmptyTitle>{title}</EmptyTitle>
+              <EmptyTitle>{title ?? '拖放或点击上传'}</EmptyTitle>
               {description && <EmptyDescription>{description}</EmptyDescription>}
             </EmptyHeader>
           </Empty>
@@ -101,7 +102,7 @@ export function FileSelectBase({ children, className, description, logo: Logo, r
         </>
       ),
       className: cn(
-        'mx-auto w-full max-w-2xl rounded-md border border-dashed bg-transparent transition-all dark:bg-input/30',
+        'mx-auto w-full max-w-2xl rounded-md border border-dashed transition-all dark:bg-input/30',
         'hover:border-blue-500/75',
         'focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50',
         className

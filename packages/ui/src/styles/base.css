@@ -4,11 +4,7 @@
 }
 
 html {
-  @apply font-root antialiased;
-}
-
-body {
-  @apply overscroll-none bg-root text-foreground;
+  @apply antialiased;
 }
 
 img {

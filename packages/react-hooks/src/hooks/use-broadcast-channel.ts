@@ -21,6 +21,7 @@ export const useBroadcastChannel = <T = any, D = any>(name: string, onMessage?: 
       channel.close()
       channelRef.current = null
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name])
 
   const postMessage = React.useCallback((data: D) => {

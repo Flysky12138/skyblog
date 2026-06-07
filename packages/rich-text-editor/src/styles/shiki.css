@@ -1,0 +1,21 @@
+.tiptap {
+  pre,
+  code span {
+    @apply text-(--shiki-light) dark:text-(--shiki-dark);
+    @apply bg-(--shiki-light-bg) dark:bg-(--shiki-dark-bg);
+
+    font-style: var(--shiki-light-font-style, normal);
+
+    @variant dark {
+      font-style: var(--shiki-dark-font-style, normal);
+    }
+  }
+
+  /* BFC */
+  .node-codeBlock {
+    @apply prose-margin-pre;
+    pre {
+      @apply my-0;
+    }
+  }
+}

@@ -1,0 +1,14 @@
+.tiptap {
+  blockquote {
+    @apply not-italic;
+
+    p {
+      &:first-of-type::before {
+        content: none;
+      }
+      &:last-of-type::after {
+        content: none;
+      }
+    }
+  }
+}

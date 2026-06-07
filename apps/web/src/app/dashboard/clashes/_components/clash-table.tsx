@@ -1,9 +1,10 @@
 'use client'
 
-import { produce, useCopy } from '@repo/react-hooks'
+import { useCopy } from '@repo/react-hooks'
 import { toast } from '@repo/ui/base'
 import { Switch } from '@repo/ui/components/switch'
 import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
+import { produce } from 'immer'
 import { CopyIcon, PencilIcon, PlusIcon } from 'lucide-react'
 import useSWR from 'swr'
 

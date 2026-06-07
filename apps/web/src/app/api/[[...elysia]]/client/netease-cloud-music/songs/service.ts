@@ -1,22 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
-// @ts-nocheck
-
 import { get } from '@vercel/edge-config'
-import { status } from 'elysia'
-import NeteaseCloudMusicApi from 'NeteaseCloudMusicApi'
 import { cacheLife, cacheTag } from 'next/cache'
-import { createRequire } from 'node:module'
 
 import { CACHE_TAG, VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
 
+import { neteaseRequest } from '../core'
 import { LyricResponseType, SongDetailResponseType, UrlQueryType, UrlResponseType } from './model'
 import { parseLyric } from './utils'
-
-const require = createRequire(import.meta.url)
-const { lyric, song_detail, song_url_v1 } = require('NeteaseCloudMusicApi') as typeof NeteaseCloudMusicApi
 
 export abstract class Service {
   /**
@@ -29,12 +18,11 @@ export abstract class Service {
 
     const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
 
-    try {
-      const res = await song_detail({ cookie, ids: String(id) })
-      return res.body.songs[0]
-    } catch (error) {
-      return status(500, { message: error.body.message })
-    }
+    const res = await neteaseRequest<{
+      songs: SongDetailResponseType[]
+    }>('/api/v3/song/detail', { c: `[{"id":${id}}]` }, { cookie, crypto: 'weapi' })
+
+    return res.body.songs[0]
   }
 
   /**
@@ -47,14 +35,13 @@ export abstract class Service {
 
     const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
 
-    try {
-      const res = await lyric({ cookie, id })
-      return {
-        lrc: parseLyric(res.body.lrc.lyric),
-        lrcText: res.body.lrc.lyric
-      }
-    } catch (error) {
-      return status(500, { message: error.body.message })
+    const res = await neteaseRequest<{
+      lrc: { lyric: string }
+    }>('/api/song/lyric', { _nmclfl: 1, id, kv: -1, lv: -1, rv: -1, tv: -1 }, { cookie, crypto: 'eapi' })
+
+    return {
+      lrc: parseLyric(res.body.lrc.lyric),
+      lrcText: res.body.lrc.lyric
     }
   }
 
@@ -68,11 +55,19 @@ export abstract class Service {
 
     const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
 
-    try {
-      const res = await song_url_v1({ cookie, id, level })
-      return res.body.data
-    } catch (error) {
-      return status(500, { message: error.body.message })
+    const data: Record<string, unknown> = {
+      encodeType: 'flac',
+      ids: `[${id}]`,
+      level
     }
+    if (level === 'sky') {
+      data.immerseType = 'c51'
+    }
+
+    const res = await neteaseRequest<{
+      data: UrlResponseType
+    }>(`/api/song/enhance/player/url/v1`, data, { cookie, crypto: 'eapi' })
+
+    return res.body.data
   }
 }

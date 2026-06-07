@@ -3,9 +3,10 @@ minimumReleaseAge: 1440
 packages:
   - apps/*
   - packages/*
-  - playground
+  - playgrounds
 
 allowBuilds:
+  '@parcel/watcher': true
   '@prisma/engines': false
   cn-font-split: true
   core-js: false
@@ -22,8 +23,8 @@ patchedDependencies:
 catalogMode: prefer
 cleanupUnusedCatalogs: true
 catalog:
-  '@aws-sdk/client-s3': ^3.1057.0
-  '@aws-sdk/s3-request-presigner': ^3.1057.0
+  '@aws-sdk/client-s3': ^3.1067.0
+  '@aws-sdk/s3-request-presigner': ^3.1067.0
   '@base-ui/react': 1.4.1
   '@commitlint/cli': ^21.0.2
   '@commitlint/config-conventional': ^21.0.2
@@ -39,37 +40,36 @@ catalog:
   '@mdx-js/react': ^3.1.1
   '@monaco-editor/loader': ^1.7.0
   '@neondatabase/auth': 0.4.1-beta
-  '@next/env': ^16.2.6
-  '@next/eslint-plugin-next': ^16.2.6
-  '@next/mdx': ^16.2.6
+  '@next/env': ^16.2.9
+  '@next/eslint-plugin-next': ^16.2.9
+  '@next/mdx': ^16.2.9
   '@octokit/rest': ^22.0.1
   '@prisma/adapter-neon': ^7.8.0
   '@prisma/client': ^7.8.0
-  '@shikijs/colorized-brackets': ^4.1.0
-  '@shikijs/monaco': ^4.1.0
-  '@shikijs/transformers': ^4.1.0
+  '@shikijs/colorized-brackets': ^4.2.0
+  '@shikijs/monaco': ^4.2.0
+  '@shikijs/transformers': ^4.2.0
   '@sinclair/typebox': ^0.34.49
   '@svgr/webpack': ^8.1.0
   '@tailwindcss/postcss': ^4.3.0
-  '@tailwindcss/typography': ^0.5.19
+  '@tailwindcss/typography': ^0.5.20
   '@tailwindcss/vite': ^4.3.0
   '@tanstack/react-table': ^8.21.3
   '@types/hast': ^3.0.4
   '@types/mdast': ^4.0.4
-  '@types/mdx': ^2.0.13
-  '@types/node': ^25.9.1
-  '@types/react': ^19.2.15
+  '@types/mdx': ^2.0.14
+  '@types/node': ^25.9.3
+  '@types/react': ^19.2.17
   '@types/react-dom': ^19.2.3
   '@types/wicg-file-system-access': ^2023.10.7
   '@vercel/edge-config': ^1.4.3
-  '@vercel/functions': ^3.6.1
+  '@vercel/functions': ^3.7.1
   '@vitejs/plugin-react': ^6.0.2
   badge-maker: ^5.0.2
   class-variance-authority: ^0.7.1
   clsx: ^2.1.1
   cmdk: ^1.1.1
   cn-font-split: 6.0.3
-  cross-env: ^10.1.0
   dayjs: ^1.11.21
   echarts: ^6.1.0
   elysia: ^1.4.28
@@ -83,28 +83,25 @@ catalog:
   eslint-plugin-unused-imports: ^4.4.1
   globals: ^17.6.0
   husky: ^9.1.7
-  immer: ^11.1.8
   input-otp: ^1.4.2
-  lint-staged: ^17.0.5
+  lint-staged: ^17.0.7
   lucide-react: ^1.17.0
   monaco-editor: 0.55.1
   motion: ^12.40.0
-  NeteaseCloudMusicApi: ^4.32.0
-  next: ^16.2.6
+  next: ^16.2.9
   next-mdx-remote-client: ^2.1.11
   next-themes: ^0.4.6
   nextjs-toploader: ^3.9.17
-  npm-check-updates: ^22.2.1
-  prettier: ^3.8.3
+  npm-check-updates: ^22.2.3
+  prettier: ^3.8.4
   prettier-plugin-tailwindcss: ^0.8.0
   prisma: ^7.8.0
   prisma-extension-pagination: ^0.7.6
   prisma-json-types-generator: ^5.1.0
-  react: ^19.2.6
-  react-dom: ^19.2.6
-  react-hook-form: ^7.76.1
+  react: ^19.2.7
+  react-dom: ^19.2.7
+  react-hook-form: ^7.78.0
   react-resizable-panels: ^4.11.2
-  react-use: ^17.6.0
   react-window: ^2.2.7
   react-window-infinite-loader: ^2.0.1
   rehype-katex: ^7.0.1
@@ -116,8 +113,8 @@ catalog:
   remark-gfm: ^4.0.1
   remark-math: ^6.0.0
   schema-dts: ^2.0.0
-  shadcn: ^4.8.3
-  shiki: ^4.1.0
+  shadcn: ^4.11.0
+  shiki: ^4.2.0
   sonner: ^2.0.7
   sucrase: ^3.35.1
   superjson: ^2.2.6
@@ -125,17 +122,45 @@ catalog:
   tailwind-merge: ^3.6.0
   tailwindcss: ^4.3.0
   tm-grammars: ^1.31.15
-  tsx: ^4.22.3
+  tsx: ^4.22.4
   tw-animate-css: ^1.4.0
   typescript: ^6.0.3
-  typescript-eslint: ^8.60.0
+  typescript-eslint: ^8.61.0
   unified: ^11.0.5
   unist-util-visit: ^5.1.0
-  use-immer: ^0.11.0
   uuidv7: ^1.2.1
   vaul: ^1.1.2
-  vercel: ^54.6.1
-  vite: ^8.0.14
+  vercel: ^54.12.2
+  vite: ^8.0.16
   zod: ^4.4.3
-  tsdown: ^0.22.1
+  tsdown: ^0.22.2
   hash-wasm: ^4.12.0
+  '@tiptap/react': ^3.26.1
+  '@tiptap/pm': ^3.26.1
+  '@tiptap/starter-kit': ^3.26.1
+  '@tiptap/extension-table': ^3.26.1
+  '@tiptap/extension-list': ^3.26.1
+  '@tiptap/extension-subscript': ^3.26.1
+  '@tiptap/extension-superscript': ^3.26.1
+  '@tiptap/extension-text-style': ^3.26.1
+  '@tiptap/extension-text-align': ^3.26.1
+  '@tiptap/extension-typography': ^3.26.1
+  '@tiptap/extension-highlight': ^3.26.1
+  culori: ^4.0.2
+  '@types/culori': ^4.0.1
+  '@tiptap/extension-image': ^3.26.1
+  '@tiptap/core': ^3.26.1
+  '@tiptap/extension-emoji': ^3.26.1
+  '@tiptap/extensions': ^3.26.1
+  tm-themes: ^1.12.2
+  '@tiptap/static-renderer': ^3.26.1
+  '@tailwindcss/cli': ^4.3.0
+  '@tiptap/markdown': ^3.26.1
+  '@tiptap/extension-mathematics': ^3.26.1
+  katex: ^0.17.0
+  raw-loader: ^4.0.2
+  '@tiptap/html': ^3.26.1
+  '@intevation/tiptap-extension-office-paste': ^0.1.2
+  immer: ^11.1.8
+  react-use: ^17.6.1
+  use-immer: ^0.11.0

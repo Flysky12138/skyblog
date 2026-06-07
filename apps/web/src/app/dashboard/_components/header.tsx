@@ -7,7 +7,7 @@ interface HeaderProps {
 
 export function Header({ className }: HeaderProps) {
   return (
-    <header className={cn('flex h-header items-center border-b border-divide px-4', className)}>
+    <header className={cn('h-header flex items-center border-b border-divide px-4', className)}>
       <SidebarTrigger className="size-9" variant="outline" />
     </header>
   )

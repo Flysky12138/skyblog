@@ -1,0 +1,23 @@
+@utility prose-margin-img {
+  margin-block: calc(24em / 14);
+  @variant md {
+    margin-block: calc(32em / 16);
+  }
+  @variant 2xl {
+    margin-block: calc(32em / 18);
+  }
+}
+
+@utility prose-margin-pre {
+  margin-block: calc(20em / 12);
+  @variant md {
+    margin-block: calc(24em / 14);
+  }
+  @variant 2xl {
+    margin-block: calc(32em / 16);
+  }
+}
+
+@utility prose-margin-table {
+  margin-block: calc(32em / 16);
+}

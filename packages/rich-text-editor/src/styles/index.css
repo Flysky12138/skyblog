@@ -1,0 +1,58 @@
+@import 'tailwindcss';
+
+@import '@repo/ui/globals.css';
+
+@import './blockquote.css' layer(components);
+@import './img.css' layer(components);
+@import './list.css' layer(components);
+@import './math.css' layer(components);
+@import './shiki.css' layer(components);
+@import './table.css' layer(components);
+@import './utilities.css';
+
+@source '../**/*.{ts,tsx}';
+
+@plugin '@tailwindcss/typography';
+
+@layer components {
+  .tiptap {
+    @apply prose prose-sky prose-sm md:prose-base 2xl:prose-lg dark:prose-invert max-w-none;
+    @apply prose-pre:tab-2 prose-pre:font-bold not-2xl:prose-pre:[&_code]:text-[length:inherit];
+    @apply prose-code:before:content-none prose-code:after:content-none;
+    @apply prose-a:no-underline;
+
+    @apply selection:bg-blue-500/40;
+    @apply *:first:mt-0 *:last:mb-0;
+
+    /* emoji */
+    [data-type='emoji'] {
+      @apply font-emoji;
+    }
+
+    /* 占位符 */
+    p.is-editor-empty:first-child::before,
+    p.is-empty::before {
+      @apply pointer-events-none float-left h-0 text-muted-foreground/50 content-[attr(data-placeholder)];
+    }
+
+    /* 光标 */
+    .ProseMirror-gapcursor:after {
+      @apply rounded-full border-t-2! border-t-blue-500!;
+    }
+
+    /* 行内代码 */
+    code:is(:not(pre *)) {
+      @apply rounded bg-muted px-[0.3rem] py-[0.2rem] wrap-break-word;
+    }
+
+    /* 加粗文字颜色 */
+    span[style*='color'] strong {
+      @apply text-inherit;
+    }
+
+    /* 避免段落空行高度坍缩 */
+    p:empty::before {
+      content: '\00a0';
+    }
+  }
+}

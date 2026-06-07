@@ -1,6 +1,5 @@
 'use client'
 
-import { useDebounce, useLocalStorage } from '@repo/react-hooks'
 import { toast } from '@repo/ui/base'
 import { Fancybox } from '@repo/ui/components-self/fancybox'
 import { FileSelect } from '@repo/ui/components-self/file-select'
@@ -12,9 +11,10 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Slider } from '@repo/ui/components/slider'
 import { Tabs, TabsList, TabsTrigger } from '@repo/ui/components/tabs'
 import { remove } from 'es-toolkit'
-import { ChevronLeftIcon, ChevronRightIcon, ImageIcon } from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon, ImageUpIcon } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
+import { useDebounce, useLocalStorage } from 'react-use'
 
 import { DirectoryHelper } from '@/lib/helper/directory'
 import { FileHelper } from '@/lib/helper/file'
@@ -169,9 +169,8 @@ export default function Page() {
       <FileSelect
         multiple
         accept="image/*"
-        description="选择或拖入需要处理的图片"
-        logo={ImageIcon}
-        title="选择图片"
+        className="bg-card"
+        logo={ImageUpIcon}
         onChange={files => {
           setFiles(remove(files, file => FileHelper.isFileType(file, 'image/*')))
         }}

@@ -13,10 +13,8 @@
   "dependencies": {
     "echarts": "catalog:",
     "es-toolkit": "catalog:",
-    "immer": "catalog:",
     "react": "catalog:",
-    "react-use": "catalog:",
-    "use-immer": "catalog:"
+    "react-use": "catalog:"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

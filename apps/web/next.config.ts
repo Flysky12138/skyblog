@@ -1,6 +1,6 @@
+import path from 'node:path'
 import './env.zod'
 
-import { withMDX } from '@repo/mdx/next'
 import { NextConfig } from 'next'
 
 // 内容安全策略 (CSP)
@@ -48,36 +48,29 @@ const rewrites: NextConfig['rewrites'] = async () => [
   }
 ]
 
-const webpack: NextConfig['webpack'] = config => {
-  const svgLoaderRule = config.module.rules.find((rule: any) => rule.test?.test?.('.svg'))
-  config.module.rules.push(
-    {
-      test: /\.svg$/i,
-      oneOf: [
-        { ...svgLoaderRule, resourceQuery: /url/ }, // *.svg?url
-        { issuer: svgLoaderRule.issuer, resourceQuery: { not: [...svgLoaderRule.resourceQuery.not, /url/] }, use: ['@svgr/webpack'] } // *.svg
-      ]
-    },
-    {
-      resourceQuery: /raw/,
-      type: 'asset/source'
-    }
-  )
-  svgLoaderRule.exclude = /\.svg$/i
-  return config
-}
-
 const nextConfig: NextConfig = {
   cacheComponents: true,
   headers,
   images,
-  pageExtensions: ['mdx', 'ts', 'tsx'],
+  pageExtensions: ['ts', 'tsx'],
   reactStrictMode: true,
   rewrites,
-  serverExternalPackages: ['NeteaseCloudMusicApi'],
-  transpilePackages: ['@repo/chart-preview', '@repo/mdx', '@repo/monaco-editor', '@repo/react-hooks', '@repo/ui'],
+  transpilePackages: ['@repo/chart-preview', '@repo/mdx', '@repo/monaco-editor', '@repo/react-hooks', '@repo/ui', '@repo/rich-text-editor'],
   typedRoutes: true,
-  webpack,
+  turbopack: {
+    root: path.join(process.cwd(), '../..'),
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js'
+      },
+      '*': {
+        condition: { query: '?raw' },
+        loaders: ['raw-loader'],
+        as: '*.js'
+      }
+    }
+  },
   devIndicators: {
     position: 'bottom-right'
   },
@@ -87,4 +80,4 @@ const nextConfig: NextConfig = {
   staticPageGenerationTimeout: 600
 }
 
-export default withMDX(nextConfig)
+export default nextConfig

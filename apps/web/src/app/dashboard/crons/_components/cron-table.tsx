@@ -1,10 +1,11 @@
 'use client'
 
 import { Treaty } from '@elysiajs/eden'
-import { produce, useAsyncFn } from '@repo/react-hooks'
 import { Switch } from '@repo/ui/components/switch'
 import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
+import { produce } from 'immer'
 import { PencilIcon, PlayIcon, PlusIcon } from 'lucide-react'
+import { useAsyncFn } from 'react-use'
 import useSWR from 'swr'
 
 import { CronCreateBodyType, CronUpdateBodyType } from '@/app/api/[[...elysia]]/dashboard/crons/model'

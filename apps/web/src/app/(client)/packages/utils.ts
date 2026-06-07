@@ -1,10 +1,9 @@
-import fs from 'node:fs'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 
-/**
- * 获取依赖信息
- */
 export const getPackageInfo = ([name, version]: [string, string]) => {
-  const pkg = fs.readFileSync(new URL(`../../../../node_modules/${name}/package.json`, import.meta.url), 'utf8')
+  const pkgPath = resolve(process.cwd(), 'node_modules', name, 'package.json')
+  const pkg = readFileSync(pkgPath, 'utf8')
 
   const pkgJson = JSON.parse(pkg) as {
     homepage?: string
