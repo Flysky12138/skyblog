@@ -1,0 +1,65 @@
+.tiptap {
+  pre {
+    @apply relative font-semibold tab-2;
+    @apply bg-(--shiki-light-bg) dark:bg-(--shiki-dark-bg);
+
+    code {
+      /* counter-reset: line; */
+      @apply grid min-w-fit auto-rows-fr whitespace-pre;
+      @apply not-2xl:text-[length:inherit];
+    }
+
+    /* &[data-line-digits='2'] {
+      --digist-width: 2em;
+    }
+    &[data-line-digits='3'] {
+      --digist-width: 3em;
+    }
+    &[data-line-digits='4'] {
+      --digist-width: 4em;
+    } */
+
+    .line {
+      span {
+        @apply text-(--shiki-light) dark:text-(--shiki-dark);
+        font-style: var(--shiki-light-font-style, normal);
+      }
+
+      /* 行号 */
+      /* &:is([data-line-digits] *):not(.node-codeBlock *)::before {
+        content: counter(line);
+        counter-increment: line;
+        width: calc(0px + var(--digist-width, 1.5em));
+        @apply inline-block pr-3 text-end tabular-nums;
+        @apply text-slate-500;
+      } */
+
+      /* 行高亮 */
+      &.highlighted {
+        @apply bg-slate-300/30 dark:bg-slate-600/30;
+        @apply -mx-2 rounded-sm px-2 has-[+.highlighted]:rounded-b-none [&+.highlighted]:rounded-t-none;
+      }
+
+      /* 标记增删的行 */
+      &.diff {
+        @apply after:absolute after:left-1;
+
+        &.add {
+          @apply after:text-green-500 after:content-["+"];
+        }
+
+        &.remove {
+          @apply after:text-red-500 after:content-["-"];
+        }
+      }
+    }
+  }
+
+  /* BFC */
+  .node-codeBlock {
+    @apply prose-margin-pre;
+    pre {
+      @apply my-0;
+    }
+  }
+}

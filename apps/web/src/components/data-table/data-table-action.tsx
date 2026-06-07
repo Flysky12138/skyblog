@@ -1,6 +1,5 @@
 'use client'
 
-import { useAsyncFn } from '@repo/react-hooks'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,6 +17,7 @@ import { cn } from '@repo/ui/lib/utils'
 import { RowData, Table } from '@tanstack/react-table'
 import { TrashIcon } from 'lucide-react'
 import React from 'react'
+import { useAsyncFn } from 'react-use'
 
 /**
  * 列表行操作按钮

@@ -39,6 +39,7 @@ export function useCopy({ timeout = 1000, onCopy, onEnd }: UseCopyProps = {}) {
         void onEndRef.current?.()
       }, timeout)
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [copy, isCopied, timeout]
   )
 

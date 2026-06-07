@@ -1,31 +1,59 @@
+import path from 'node:path'
 import './env.zod'
 
-import { withMDX } from '@repo/mdx/next'
 import { NextConfig } from 'next'
 
 // 内容安全策略 (CSP)
 // CSP 是一种安全机制，用于限制网页的哪些内容可以加载、执行、显示、或使用
 // https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
-const cspSrc = [process.env.NEXT_PUBLIC_R2_URL, '*.music.126.net', '*.r2.cloudflarestorage.com'].filter(Boolean).join(' ')
-const cspHeader = [
-  "default-src 'self'",
-  `img-src 'self' blob: data: https://avatars.githubusercontent.com/u/ https://lh3.googleusercontent.com/a/ ${cspSrc}`,
-  `media-src 'self' ${cspSrc}`,
-  `connect-src 'self' blob: data: ${process.env.NEXT_PUBLIC_CDN_FFMPEG} ${cspSrc}`,
-  `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${process.env.NEXT_PUBLIC_CDN_FFMPEG}`,
-  "style-src 'self' 'unsafe-inline'",
-  "worker-src 'self' blob:",
-  "frame-src 'self' blob:",
-  "font-src 'self' data:",
-  "object-src 'none'",
-  "frame-ancestors 'none'"
-].join('; ')
+const cspMap = {
+  'default-src': ["'self'"],
+  'img-src': [
+    "'self'",
+    'blob:',
+    'data:',
+    'https://avatars.githubusercontent.com/u/',
+    'https://lh3.googleusercontent.com/a/',
+    process.env.NEXT_PUBLIC_R2_URL,
+    '*.music.126.net',
+    '*.r2.cloudflarestorage.com'
+  ],
+  'media-src': ["'self'", process.env.NEXT_PUBLIC_R2_URL, '*.music.126.net', '*.r2.cloudflarestorage.com'],
+  'connect-src': [
+    "'self'",
+    'blob:',
+    'data:',
+    process.env.NEXT_PUBLIC_CDN_FFMPEG,
+    process.env.NEXT_PUBLIC_R2_URL,
+    '*.music.126.net',
+    '*.r2.cloudflarestorage.com',
+    'https://esm.sh/@excalidraw/'
+  ],
+  'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'", process.env.NEXT_PUBLIC_CDN_FFMPEG],
+  'style-src': ["'self'", "'unsafe-inline'"],
+  'worker-src': ["'self'", 'blob:'],
+  'frame-src': ["'self'", 'blob:'],
+  'font-src': ["'self'", 'data:', 'https://esm.sh/@excalidraw/'],
+  'object-src': ["'none'"],
+  'frame-ancestors': ["'none'"]
+}
 
 const headers: NextConfig['headers'] = () => [
   {
     source: '/(.*)',
     headers: [
-      { key: 'Content-Security-Policy', value: cspHeader },
+      {
+        key: 'Content-Security-Policy',
+        value: Object.entries(cspMap)
+          .map(
+            ([key, value]) =>
+              `${key} ${value
+                .sort((a, b) => a.localeCompare(b))
+                .filter(Boolean)
+                .join(' ')}`
+          )
+          .join('; ')
+      },
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       { key: 'Permissions-Policy', value: 'geolocation=(self),camera=(),microphone=()' },
       { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' },
@@ -48,36 +76,29 @@ const rewrites: NextConfig['rewrites'] = async () => [
   }
 ]
 
-const webpack: NextConfig['webpack'] = config => {
-  const svgLoaderRule = config.module.rules.find((rule: any) => rule.test?.test?.('.svg'))
-  config.module.rules.push(
-    {
-      test: /\.svg$/i,
-      oneOf: [
-        { ...svgLoaderRule, resourceQuery: /url/ }, // *.svg?url
-        { issuer: svgLoaderRule.issuer, resourceQuery: { not: [...svgLoaderRule.resourceQuery.not, /url/] }, use: ['@svgr/webpack'] } // *.svg
-      ]
-    },
-    {
-      resourceQuery: /raw/,
-      type: 'asset/source'
-    }
-  )
-  svgLoaderRule.exclude = /\.svg$/i
-  return config
-}
-
 const nextConfig: NextConfig = {
   cacheComponents: true,
   headers,
   images,
-  pageExtensions: ['mdx', 'ts', 'tsx'],
+  pageExtensions: ['ts', 'tsx'],
   reactStrictMode: true,
   rewrites,
-  serverExternalPackages: ['NeteaseCloudMusicApi'],
-  transpilePackages: ['@repo/chart-preview', '@repo/mdx', '@repo/monaco-editor', '@repo/react-hooks', '@repo/ui'],
+  transpilePackages: ['@repo/chart-preview', '@repo/mdx', '@repo/monaco-editor', '@repo/react-hooks', '@repo/ui', '@repo/rich-text-editor'],
   typedRoutes: true,
-  webpack,
+  turbopack: {
+    root: path.join(process.cwd(), '../..'),
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js'
+      },
+      '*': {
+        condition: { query: '?raw' },
+        loaders: ['raw-loader'],
+        as: '*.js'
+      }
+    }
+  },
   devIndicators: {
     position: 'bottom-right'
   },
@@ -87,4 +108,4 @@ const nextConfig: NextConfig = {
   staticPageGenerationTimeout: 600
 }
 
-export default withMDX(nextConfig)
+export default nextConfig

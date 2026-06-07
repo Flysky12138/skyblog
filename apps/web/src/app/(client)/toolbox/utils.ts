@@ -22,6 +22,12 @@ export const tools = [
         href: '/toolbox/image-compression',
         id: 'image-compression',
         title: '图片压缩'
+      },
+      {
+        description: 'Tiptap 富文本编辑器',
+        href: '/toolbox/tiptap',
+        id: 'tiptap',
+        title: 'Tiptap'
       }
     ]
   },

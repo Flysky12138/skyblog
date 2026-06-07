@@ -1,10 +1,10 @@
 'use client'
 
-import { useEvent, useScrollbarWidth, useToggle } from '@repo/react-hooks'
 import { Button } from '@repo/ui/components/button'
 import { cn } from '@repo/ui/lib/utils'
 import { ExpandIcon, ShrinkIcon } from 'lucide-react'
 import React from 'react'
+import { useEvent, useScrollbarWidth, useToggle } from 'react-use'
 
 import { Style } from '@/components/style'
 import { ATTRIBUTE } from '@/lib/constants'

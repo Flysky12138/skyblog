@@ -1,14 +1,37 @@
+@import 'tailwindcss';
+
 @import '@repo/ui/globals.css';
-
-@import '@repo/font-split/fzsj-zhuzayte.css';
-@import '@repo/font-split/noto-color-emoji-regular.css';
-
 @import '@repo/mdx/style.css';
 @import '@repo/monaco-editor/style.css';
+@import '@repo/font-split/fzsj-zhuzayte.css';
+@import '@repo/font-split/noto-color-emoji-regular.css';
+@import '@repo/rich-text-editor/style.css';
+
+@source './**/*.{ts,tsx}';
+
+@theme inline {
+  --height-header: 3.125rem;
+  --height-main: calc(100dvh - var(--height-header));
+  --height-footer: 9.375rem;
+}
+
+@layer base {
+  html {
+    font-family: FZSJ-ZHUZAYTE;
+  }
+
+  body {
+    @apply overscroll-none bg-root text-foreground;
+  }
+}
 
 /** 对 Fancybox 图片取消滤镜样式 */
 .fancybox__dialog {
   img {
     filter: none;
   }
+}
+/* 避免弹窗导致的页面抖动 */
+.with-fancybox header {
+  margin-inline-end: var(--f-scrollbar-compensate, 0);
 }

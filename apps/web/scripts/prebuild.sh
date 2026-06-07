@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/usr/bin/env sh
+set -eu
 
 pnpm exec tsx scripts/cli/cp.ts node_modules/@repo/chart-preview/dist/ public/chart-preview/
 

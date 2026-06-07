@@ -41,7 +41,7 @@ export function Pre({ children, className, tabIndex, ...props }: React.Component
   })
 
   return (
-    <pre ref={preRef} className={cn('group/pre relative overflow-clip rounded-[inherit] bg-sheet p-0', className)} {...props}>
+    <pre ref={preRef} className={cn('group/pre relative overflow-clip rounded-inherit bg-sheet p-0', className)} {...props}>
       {children}
       {copyText && (
         <Button

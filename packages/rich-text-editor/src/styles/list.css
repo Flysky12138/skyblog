@@ -1,0 +1,19 @@
+.tiptap {
+  [data-type='taskList'] {
+    @apply list-none ps-0;
+
+    li {
+      @apply grid grid-cols-[auto_minmax(1px,1fr)] gap-2;
+    }
+  }
+
+  li p {
+    @apply my-0;
+  }
+
+  [data-type='taskItem'] {
+    label {
+      @apply pointer-events-none;
+    }
+  }
+}

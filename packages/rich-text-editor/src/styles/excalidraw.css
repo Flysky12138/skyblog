@@ -1,0 +1,26 @@
+.tiptap {
+  [data-type='excalidraw'] {
+    @apply prose-margin-pre;
+
+    svg {
+      @apply max-w-full;
+      @apply dark:hue-rotate-180 dark:invert-93;
+    }
+  }
+
+  /* 对齐 */
+  [data-excalidraw-align] {
+    @apply flex;
+  }
+  [data-excalidraw-align='start'],
+  [data-excalidraw-align='left'] {
+    @apply justify-start;
+  }
+  [data-excalidraw-align='center'] {
+    @apply justify-center;
+  }
+  [data-excalidraw-align='end'],
+  [data-excalidraw-align='right'] {
+    @apply justify-end;
+  }
+}

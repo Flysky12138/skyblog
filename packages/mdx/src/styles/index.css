@@ -1,11 +1,13 @@
 @import '@repo/ui/globals.css';
 
-@plugin '@tailwindcss/typography';
-
 /* import 'katex/dist/katex.min.css' */
 /* import './katex.css' */
 @import './mathjax.css';
 @import './shiki.css';
+
+@source '../**/*.{ts,tsx}';
+
+@plugin '@tailwindcss/typography';
 
 /* 放 components 层，方便标签上的 utility 层样式覆盖 */
 @layer components {

@@ -2,7 +2,6 @@
 
 import { Treaty } from '@elysiajs/eden'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useAsyncFn } from '@repo/react-hooks'
 import { Card } from '@repo/ui/components-self/card'
 import { Button } from '@repo/ui/components/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui/components/dialog'
@@ -16,6 +15,7 @@ import { pick } from 'es-toolkit'
 import { ImageDownIcon, XIcon } from 'lucide-react'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useAsyncFn } from 'react-use'
 
 import { FriendCreateBodySchema, FriendCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/friends/model'
 import { rpc, unwrap } from '@/lib/http/rpc'

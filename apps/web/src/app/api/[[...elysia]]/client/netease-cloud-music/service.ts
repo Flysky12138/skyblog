@@ -1,23 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
-// @ts-nocheck
-
 import { get } from '@vercel/edge-config'
-import { status } from 'elysia'
 import { toMerged } from 'es-toolkit'
-import NeteaseCloudMusicApi from 'NeteaseCloudMusicApi'
 import { cacheLife, cacheTag } from 'next/cache'
-import { createRequire } from 'node:module'
 
 import { CACHE_TAG, VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
 
+import { neteaseRequest } from './core'
 import { AlbumResponseType, PlaylistResponseType, SearchQueryType, SearchResponseType } from './model'
-
-const require = createRequire(import.meta.url)
-const { album, cloudsearch, playlist_detail } = require('NeteaseCloudMusicApi') as typeof NeteaseCloudMusicApi
+import { SongDetailResponseType } from './songs/model'
 
 export abstract class Service {
   /**
@@ -30,21 +19,21 @@ export abstract class Service {
 
     const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
 
-    try {
-      const res = await album({ cookie, id })
-      return {
-        hasMore: false,
-        songCount: res.body.album.size,
-        songs: res.body.songs.map(song => {
-          return toMerged(song, {
-            al: {
-              picUrl: res.body.album.picUrl
-            }
-          })
+    const res = await neteaseRequest<{
+      album: { picUrl: string; size: number }
+      songs: SongDetailResponseType[]
+    }>(`/api/v1/album/${id}`, {}, { cookie, crypto: 'weapi' })
+
+    return {
+      hasMore: false,
+      songCount: res.body.album.size,
+      songs: res.body.songs.map(song => {
+        return toMerged(song, {
+          al: {
+            picUrl: res.body.album.picUrl
+          }
         })
-      }
-    } catch (error) {
-      return status(500, { message: error.body.message })
+      })
     }
   }
 
@@ -58,15 +47,17 @@ export abstract class Service {
 
     const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
 
-    try {
-      const res = await playlist_detail({ cookie, id })
-      return {
-        hasMore: false,
-        songCount: res.body.playlist.trackCount,
-        songs: res.body.playlist.tracks
+    const res = await neteaseRequest<{
+      playlist: {
+        trackCount: number
+        tracks: SongDetailResponseType[]
       }
-    } catch (error) {
-      return status(500, { message: error.body.message })
+    }>('/api/v6/playlist/detail', { id, n: 100000, s: 8 }, { cookie, crypto: 'eapi' })
+
+    return {
+      hasMore: false,
+      songCount: res.body.playlist.trackCount,
+      songs: res.body.playlist.tracks
     }
   }
 
@@ -80,15 +71,17 @@ export abstract class Service {
 
     const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
 
-    try {
-      const res = await cloudsearch({ cookie, keywords, limit, offset: page * limit, type })
-      return {
-        hasMore: res.body.result.songCount > (page + 1) * limit,
-        songCount: res.body.result.songCount,
-        songs: res.body.result.songs
+    const res = await neteaseRequest<{
+      result: {
+        songCount: number
+        songs: SongDetailResponseType[]
       }
-    } catch (error) {
-      return status(500, { message: error.body.message })
+    }>('/api/cloudsearch/pc', { limit, offset: page * limit, s: keywords, total: true, type }, { cookie, crypto: 'eapi' })
+
+    return {
+      hasMore: res.body.result.songCount > (page + 1) * limit,
+      songCount: res.body.result.songCount,
+      songs: res.body.result.songs
     }
   }
 }

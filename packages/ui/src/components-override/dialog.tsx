@@ -1,8 +1,9 @@
 'use client'
 
 import { Dialog as DialogPrimitive } from '@base-ui/react'
-import { breakpoints, useBreakpoint } from '@repo/react-hooks'
+import { breakpoints } from '@repo/react-hooks'
 import { XIcon } from 'lucide-react'
+import React from 'react'
 
 import { Button } from '../components/button'
 import { DialogDescription as _DialogDescription, DialogClose, DialogOverlay, DialogPortal } from '../components/dialog'
@@ -23,12 +24,14 @@ export function DialogContent({
   /**
    * 向下匹配
    */
-  fullScreen?: boolean | Exclude<ReturnType<typeof useBreakpoint>, 'zero'>
+  fullScreen?: boolean | Exclude<keyof typeof breakpoints, 'zero'>
   showCloseButton?: boolean
 } & DialogPrimitive.Popup.Props) {
-  const breakpoint = useBreakpoint()
-
-  const isMatched = fullScreen === true || (fullScreen ? breakpoints[fullScreen] > breakpoints[breakpoint] : false)
+  const isMatched = (() => {
+    if (fullScreen === true) return true
+    if (!fullScreen || typeof window === 'undefined') return false
+    return breakpoints[fullScreen] > window.innerWidth
+  })()
 
   return (
     <DialogPortal>
@@ -43,11 +46,12 @@ export function DialogContent({
         <DialogPrimitive.Popup
           className={cn(
             'relative flex flex-col gap-bp-3',
-            'w-full max-w-[calc(100%-2rem)] overflow-hidden rounded-lg p-5 duration-200',
+            'w-full overflow-hidden rounded-lg p-5 duration-200',
             'bg-popover text-popover-foreground ring-1 ring-foreground/10',
             'data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95',
             'data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95',
             'fill-mode-forwards data-nested-dialog-open:animate-out data-nested-dialog-open:fade-out-0 data-nested-dialog-open:zoom-out-95',
+            'will-change-transform',
             {
               'h-fit min-h-full': isMatched,
               'my-auto': !isMatched

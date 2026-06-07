@@ -24,6 +24,7 @@ export function useControllableState<T>({ defaultValue, value: controlledValue, 
     const newValue = next instanceof Function ? next(currentValue) : next
     if (!isControlledRef.current) setInternalValue(newValue)
     onChangeRef.current?.(newValue)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return [value, setValue] as const

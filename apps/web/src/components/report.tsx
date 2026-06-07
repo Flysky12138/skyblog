@@ -1,6 +1,6 @@
 'use client'
 
-import { useAsync } from '@repo/react-hooks'
+import { useAsync } from 'react-use'
 
 import { authClient } from '@/lib/auth/client'
 import { rpc } from '@/lib/http/rpc'

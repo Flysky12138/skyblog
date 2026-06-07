@@ -1,8 +1,8 @@
 'use client'
 
-import { produce } from '@repo/react-hooks'
 import { Switch } from '@repo/ui/components/switch'
 import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
+import { produce } from 'immer'
 import { EyeIcon, PencilIcon, PlusIcon } from 'lucide-react'
 import Link from 'next/link'
 import useSWR from 'swr'

@@ -1,0 +1,33 @@
+.tiptap {
+  /* 对齐 */
+  [data-image-align='left'] {
+    @apply mr-auto;
+  }
+  [data-image-align='center'] {
+    @apply mx-auto;
+  }
+  [data-image-align='right'] {
+    @apply ml-auto;
+  }
+  [data-image-align='end'] {
+    @apply ms-auto;
+  }
+
+  img {
+    &[data-width-full='true'] {
+      @apply w-full;
+    }
+  }
+
+  /* BFC */
+  .node-image {
+    @apply prose-margin-img;
+    img {
+      @apply my-0;
+    }
+  }
+
+  .node-imageUploadPlaceholder {
+    @apply prose-margin-img;
+  }
+}

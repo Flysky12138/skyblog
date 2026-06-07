@@ -1,0 +1,59 @@
+{
+  "name": "@repo/rich-text-editor",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "eslint --fix --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "build:css": "tailwindcss build -i ./src/styles/index.css -o ./dist/style.css --minify"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./toolbar": "./src/components/toolbar/index.tsx",
+    "./extensions": "./src/extensions/index.ts",
+    "./style.css": "./src/styles/index.css"
+  },
+  "dependencies": {
+    "@excalidraw/excalidraw": "catalog:",
+    "@excalidraw/utils": "catalog:",
+    "@intevation/tiptap-extension-office-paste": "catalog:",
+    "@repo/react-hooks": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "@shikijs/colorized-brackets": "catalog:",
+    "@shikijs/transformers": "catalog:",
+    "@tiptap/core": "catalog:",
+    "@tiptap/extension-emoji": "catalog:",
+    "@tiptap/extension-highlight": "catalog:",
+    "@tiptap/extension-list": "catalog:",
+    "@tiptap/extension-mathematics": "catalog:",
+    "@tiptap/extension-subscript": "catalog:",
+    "@tiptap/extension-superscript": "catalog:",
+    "@tiptap/extension-table": "catalog:",
+    "@tiptap/extension-text-align": "catalog:",
+    "@tiptap/extension-text-style": "catalog:",
+    "@tiptap/extension-typography": "catalog:",
+    "@tiptap/extensions": "catalog:",
+    "@tiptap/html": "catalog:",
+    "@tiptap/markdown": "catalog:",
+    "@tiptap/pm": "catalog:",
+    "@tiptap/react": "catalog:",
+    "@tiptap/starter-kit": "catalog:",
+    "@tiptap/static-renderer": "catalog:",
+    "es-toolkit": "catalog:",
+    "katex": "catalog:",
+    "lucide-react": "catalog:",
+    "react": "catalog:",
+    "shiki": "catalog:",
+    "tm-grammars": "catalog:",
+    "tm-themes": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@tailwindcss/cli": "catalog:",
+    "@tailwindcss/typography": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "tailwindcss": "catalog:"
+  }
+}

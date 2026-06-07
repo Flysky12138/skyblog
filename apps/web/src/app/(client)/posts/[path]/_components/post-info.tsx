@@ -1,10 +1,11 @@
 'use client'
 
 import { Treaty } from '@elysiajs/eden'
-import { produce, useSessionStorage } from '@repo/react-hooks'
 import { Skeleton } from '@repo/ui/components/skeleton'
+import { produce } from 'immer'
 import Link from 'next/link'
 import React from 'react'
+import { useSessionStorage } from 'react-use'
 import useSWR from 'swr'
 
 import { authClient } from '@/lib/auth/client'

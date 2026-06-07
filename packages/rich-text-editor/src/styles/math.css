@@ -1,0 +1,28 @@
+@import 'katex/dist/katex.min.css';
+
+.tiptap {
+  .tiptap-mathematics-render {
+    @apply rounded;
+  }
+
+  .tiptap-mathematics-render--editable {
+    @apply cursor-pointer;
+
+    &:hover {
+      @apply bg-secondary ring ring-border;
+    }
+  }
+
+  [data-type='inline-math'] {
+    @apply inline-block px-1.5;
+  }
+
+  [data-type='block-math'] {
+    @apply my-4 p-4 text-center;
+  }
+
+  .inline-math-error,
+  .block-math-error {
+    @apply rounded border bg-red-50 p-2 text-red-600 dark:bg-red-950 dark:text-red-400;
+  }
+}

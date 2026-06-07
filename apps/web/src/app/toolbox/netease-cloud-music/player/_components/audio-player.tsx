@@ -1,6 +1,5 @@
 'use client'
 
-import { useAudio } from '@repo/react-hooks'
 import { Button } from '@repo/ui/components/button'
 import { Slider } from '@repo/ui/components/slider'
 import { Toggle } from '@repo/ui/components/toggle'
@@ -9,6 +8,7 @@ import { clamp } from 'es-toolkit'
 import { Loader2Icon, PauseIcon, PlayIcon, Repeat1Icon } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import React from 'react'
+import { useAudio } from 'react-use'
 
 import { LyricResponseType, SongDetailResponseType } from '@/app/api/[[...elysia]]/client/netease-cloud-music/songs/model'
 import { DisplayByConditional } from '@/components/display/display-by-conditional'

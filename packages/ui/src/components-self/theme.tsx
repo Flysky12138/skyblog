@@ -5,7 +5,7 @@ import { LaptopMinimalIcon, MoonStarIcon, SunIcon } from 'lucide-react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import React from 'react'
 
-import { Button } from '../components/button'
+import { Button, buttonVariants } from '../components/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +15,6 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger
 } from '../components/dropdown-menu'
-import { Skeleton } from '../components/skeleton'
 import { useTheme } from '../hooks/use-theme'
 
 export function DropdownMenuThemeRadio({
@@ -28,7 +27,7 @@ export function DropdownMenuThemeRadio({
   const { theme, ThemeIcon, toggleTheme } = useTheme()
 
   const isMounted = useMounted()
-  if (!isMounted) return skeleton ?? <Skeleton className="size-9" />
+  if (!isMounted) return skeleton ?? <div className={buttonVariants({ className: 'pointer-events-none', size: 'icon', variant: 'outline' })} />
 
   render ??= (
     <Button aria-label="theme toggle" size="icon" variant="outline">

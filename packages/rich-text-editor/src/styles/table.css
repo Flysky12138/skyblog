@@ -1,0 +1,79 @@
+.tiptap {
+  table {
+    @apply w-auto;
+
+    th,
+    td {
+      @apply relative border p-2 align-middle;
+
+      > * {
+        @apply m-0!;
+      }
+    }
+
+    th {
+      @apply bg-muted;
+    }
+
+    /* 选中的单元格 */
+    .selectedCell {
+      @apply border-transparent bg-blue-500/10 ring-1 ring-blue-500/30 transition-colors ring-inset;
+    }
+
+    /* 拖动列时显示的线 */
+    .column-resize-handle {
+      @apply pointer-events-none absolute -top-0.5 right-0 z-1 h-[calc(100%+2px)] w-0.5 translate-x-px bg-blue-500;
+    }
+
+    /* 整表对齐 */
+    &[data-table-align='left'] {
+      @apply mr-auto;
+    }
+    &[data-table-align='center'] {
+      @apply mx-auto;
+    }
+    &[data-table-align='right'] {
+      @apply ml-auto;
+    }
+    &[data-table-align='end'] {
+      @apply ms-auto;
+    }
+
+    /* 不需要边框 */
+    &[data-table-border='false'] :where(tr, td, th):not(&:not([data-table-border='false']) *) {
+      @apply border-none;
+    }
+
+    /* 单元格间距 */
+    &[data-cell-padding] :where(th, td) {
+      @apply p-0;
+    }
+    &[data-cell-padding='none'] {
+      @apply border-collapse;
+    }
+    &[data-cell-padding='small'] {
+      @apply border-separate border-spacing-2;
+    }
+    &[data-cell-padding='medium'] {
+      @apply border-separate border-spacing-4;
+    }
+    &[data-cell-padding='large'] {
+      @apply border-separate border-spacing-8;
+    }
+  }
+
+  /* 列宽调整时鼠标样式 */
+  &.resize-cursor {
+    @apply cursor-col-resize;
+  }
+
+  .tableWrapper {
+    @apply overflow-x-auto;
+
+    /* BFC */
+    @apply prose-margin-table;
+    table {
+      @apply my-0;
+    }
+  }
+}

@@ -42,3 +42,5 @@ scripts/prisma/backups/
 /public/chart-preview
 
 .env*.local
+
+.env*

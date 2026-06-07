@@ -1,7 +1,7 @@
 'use client'
 
-import { produce } from '@repo/react-hooks'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@repo/ui/components/table'
+import { produce } from 'immer'
 import { CloudUploadIcon, EyeIcon, FolderIcon, LinkIcon, Undo2Icon } from 'lucide-react'
 import useSWR from 'swr'
 

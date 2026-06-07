@@ -1,7 +1,7 @@
 'use client'
 
-import { produce } from '@repo/react-hooks'
 import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
+import { produce } from 'immer'
 import { PencilIcon, PlusIcon } from 'lucide-react'
 import useSWR from 'swr'
 

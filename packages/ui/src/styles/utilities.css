@@ -6,6 +6,10 @@
   -ms-overflow-style: none;
 }
 
+@utility rounded-* {
+  border-radius: --value('inherit', 'initial', 'unset');
+}
+
 @utility p-card {
   @apply p-4 lg:p-5;
 }

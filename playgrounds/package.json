@@ -1,0 +1,28 @@
+{
+  "name": "playgrounds",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite --open",
+    "lint": "eslint --fix --max-warnings 0",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@repo/chart-preview": "workspace:*",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/mdx": "workspace:*",
+    "@repo/monaco-editor": "workspace:*",
+    "@repo/rich-text-editor": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "@tailwindcss/vite": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "lucide-react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tailwindcss": "catalog:",
+    "vite": "catalog:"
+  }
+}

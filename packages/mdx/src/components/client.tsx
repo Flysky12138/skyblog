@@ -1,9 +1,10 @@
 'use client'
 
-import { useAsync, useImmer } from '@repo/react-hooks'
 import { Spinner } from '@repo/ui/components/spinner'
 import { evaluate, EvaluateResult } from 'next-mdx-remote-client/rsc'
 import React from 'react'
+import { useAsync } from 'react-use'
+import { useImmer } from 'use-immer'
 
 import { mdxOptions } from '../lib/options'
 import { withComponentProps } from '../lib/utils'

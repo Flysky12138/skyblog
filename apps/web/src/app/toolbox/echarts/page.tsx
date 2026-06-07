@@ -2,9 +2,10 @@
 
 import { ChartPreview } from '@repo/chart-preview'
 import { MonacoEditor } from '@repo/monaco-editor'
-import { useDebounce, useMounted, useWindowSize } from '@repo/react-hooks'
+import { useMounted } from '@repo/react-hooks'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@repo/ui/components/resizable'
 import React from 'react'
+import { useDebounce, useWindowSize } from 'react-use'
 import { transform } from 'sucrase'
 
 import { ECHARTS_TEMPLATE, onInit } from './utils'

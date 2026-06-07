@@ -22,7 +22,7 @@ export default async function Page() {
 
   return friends.map(friend => (
     <Link key={friend.id} className="group rounded-lg focus-visible:ring-3" href={friend.siteUrl} rel="noreferrer nofollow" target="_blank">
-      <Card className="overflow-hidden rounded-[inherit]">
+      <Card className="overflow-hidden rounded-inherit">
         {friend.screenshotFile && (
           <img
             alt={friend.name}

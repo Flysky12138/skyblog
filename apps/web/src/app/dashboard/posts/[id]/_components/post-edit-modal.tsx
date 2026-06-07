@@ -1,19 +1,31 @@
 'use client'
 
-import { Updater } from '@repo/react-hooks'
 import { Card } from '@repo/ui/components-self/card'
 import { FileSelect } from '@repo/ui/components-self/file-select'
-import { MultiSelect } from '@repo/ui/components-self/multi-select'
 import { Button } from '@repo/ui/components/button'
+import {
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxValue,
+  useComboboxAnchor
+} from '@repo/ui/components/combobox'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui/components/dialog'
 import { Field, FieldGroup, FieldLabel, FieldTitle } from '@repo/ui/components/field'
 import { Input } from '@repo/ui/components/input'
 import { Textarea } from '@repo/ui/components/textarea'
 import { Toggle } from '@repo/ui/components/toggle'
 import { cn } from '@repo/ui/lib/utils'
-import { noop } from 'es-toolkit'
-import { ImageIcon, XIcon } from 'lucide-react'
+import { noop, unionBy } from 'es-toolkit'
+import { ImageUpIcon, XIcon } from 'lucide-react'
+import React from 'react'
 import useSWR from 'swr'
+import { Updater } from 'use-immer'
 import { uuidv7 } from 'uuidv7'
 
 import { POST_CARD_VISIBILITY_MASK } from '@/lib/constants'
@@ -23,6 +35,8 @@ import { Storage } from '@/lib/http/storage'
 import { POST_CATEGORY_SWR_KEY, POST_TAG_SWR_KEY } from '../../utils'
 import { PostType } from '../utils'
 
+type ComboboxValue = PostEditModalProps['value']['tags'][number]['tag']
+
 interface PostEditModalProps {
   children: React.ReactElement
   readonly value: PostType
@@ -30,12 +44,15 @@ interface PostEditModalProps {
 }
 
 export function PostEditModal({ children, value: post, onChange: setPost }: PostEditModalProps) {
-  const { data: categories } = useSWR(POST_CATEGORY_SWR_KEY, () => rpc.dashboard.posts.categories.get().then(unwrap), {
+  const { data: categories, mutate: mutateCategories } = useSWR(POST_CATEGORY_SWR_KEY, () => rpc.dashboard.posts.categories.get().then(unwrap), {
     fallbackData: []
   })
-  const { data: tags } = useSWR(POST_TAG_SWR_KEY, () => rpc.dashboard.posts.tags.get().then(unwrap), {
+  const { data: tags, mutate: mutateTags } = useSWR(POST_TAG_SWR_KEY, () => rpc.dashboard.posts.tags.get().then(unwrap), {
     fallbackData: []
   })
+
+  const anchorCategorieRef = useComboboxAnchor()
+  const anchorTagRef = useComboboxAnchor()
 
   return (
     <Dialog>
@@ -91,33 +108,95 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
             </Field>
             <Field>
               <FieldTitle>分类</FieldTitle>
-              <MultiSelect
+              <Combobox
+                autoHighlight
                 multiple
-                fieldNames={{ label: 'name', value: 'id' }}
-                options={categories}
+                items={categories}
                 value={post.categories.map(({ category }) => category)}
-                onAddOption={name => ({ id: uuidv7(), name })}
                 onValueChange={payload => {
+                  if (!payload) return
                   setPost(state => {
                     state.categories = payload.map(category => ({ category }))
                   })
                 }}
-              />
+              >
+                <ComboboxChips ref={anchorCategorieRef}>
+                  <ComboboxValue>
+                    {(values: ComboboxValue[]) => values.map(value => <ComboboxChip key={value.id}>{value.name}</ComboboxChip>)}
+                  </ComboboxValue>
+                  <ComboboxChipsInput
+                    onKeyDown={event => {
+                      if (event.key !== 'Enter') return
+                      const category: (typeof categories)[number] = {
+                        createdAt: new Date(),
+                        id: uuidv7(),
+                        name: event.currentTarget.value,
+                        updatedAt: new Date()
+                      }
+                      void mutateCategories(draft => unionBy(draft ?? [], [category], item => item.name), false)
+                      setPost(state => {
+                        state.categories.push({ category })
+                      })
+                    }}
+                  />
+                </ComboboxChips>
+                <ComboboxContent anchor={anchorCategorieRef} side="top">
+                  <ComboboxEmpty>无选项</ComboboxEmpty>
+                  <ComboboxList>
+                    {(item: ComboboxValue) => (
+                      <ComboboxItem key={item.id} value={item}>
+                        {item.name}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
             </Field>
             <Field>
               <FieldTitle>标签</FieldTitle>
-              <MultiSelect
+              <Combobox
+                autoHighlight
                 multiple
-                fieldNames={{ label: 'name', value: 'id' }}
-                options={tags}
+                items={tags}
                 value={post.tags.map(({ tag }) => tag)}
-                onAddOption={name => ({ id: uuidv7(), name })}
                 onValueChange={payload => {
+                  if (!payload) return
                   setPost(state => {
                     state.tags = payload.map(tag => ({ tag }))
                   })
                 }}
-              />
+              >
+                <ComboboxChips ref={anchorTagRef}>
+                  <ComboboxValue>
+                    {(values: ComboboxValue[]) => values.map(value => <ComboboxChip key={value.id}>{value.name}</ComboboxChip>)}
+                  </ComboboxValue>
+                  <ComboboxChipsInput
+                    onKeyDown={event => {
+                      if (event.key !== 'Enter') return
+                      const tag: (typeof tags)[number] = {
+                        createdAt: new Date(),
+                        id: uuidv7(),
+                        name: event.currentTarget.value,
+                        updatedAt: new Date()
+                      }
+                      void mutateTags(draft => unionBy(draft!, [tag], item => item.name), false)
+                      setPost(state => {
+                        state.tags.push({ tag })
+                      })
+                    }}
+                  />
+                </ComboboxChips>
+                <ComboboxContent anchor={anchorTagRef} side="top">
+                  <ComboboxEmpty>无选项</ComboboxEmpty>
+                  <ComboboxList>
+                    {(item: ComboboxValue) => (
+                      <ComboboxItem key={item.id} value={item}>
+                        {item.name}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
             </Field>
           </FieldGroup>
 
@@ -146,7 +225,7 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
                     </Button>
                   </>
                 ) : (
-                  <FileSelect logo={ImageIcon} title="选择图片" onChange={noop} />
+                  <FileSelect logo={ImageUpIcon} onChange={noop} />
                 )}
               </Card>
             </Field>

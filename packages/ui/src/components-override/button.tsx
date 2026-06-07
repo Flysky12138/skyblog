@@ -5,6 +5,8 @@ import * as ButtonPrimitive from '../components/button'
 import { Spinner } from '../components/spinner'
 import { cn } from '../lib/utils'
 
+export { buttonVariants }
+
 interface ButtonProps extends React.ComponentProps<typeof ButtonPrimitive.Button> {
   loading?: boolean
 }
@@ -16,7 +18,7 @@ export function Button({ children, disabled, loading, ...props }: ButtonProps) {
   const _disabled = disabled ?? loading
 
   return (
-    <ButtonPrimitive.Button disabled={_disabled} focusableWhenDisabled={_disabled} {...props}>
+    <ButtonPrimitive.Button disabled={_disabled} {...props}>
       {loading ? <Spinner /> : children}
     </ButtonPrimitive.Button>
   )
