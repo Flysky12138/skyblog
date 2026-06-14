@@ -5,7 +5,7 @@ type AnyEvent = React.KeyboardEvent<HTMLElement> | React.MouseEvent<HTMLElement>
 /**
  * 无障碍交互的点击事件。`Enter` 和 `Space` 键都会触发点击事件
  */
-export const useAccessibleClick = (handler: (event: AnyEvent) => void) => {
+export function useAccessibleClick(handler: (event: AnyEvent) => void) {
   const onKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLElement>) => {
       if (event.key === 'Enter') {

@@ -9,10 +9,10 @@ export const DEFAULT_SORT_DIRECTION = 'desc' satisfies Prisma.SortOrder
 /**
  * 文章排序
  */
-export const createPostOrderByInput = (
+export function createPostOrderByInput(
   field: (typeof POST_SORT_FIELDS)[number] = DEFAULT_POST_SORT_FIELD,
   direction: (typeof SORT_DIRECTIONS)[number] = DEFAULT_SORT_DIRECTION
-) => {
+) {
   return [{ pinOrder: 'desc' }, { [field]: direction }, { id: 'desc' }] satisfies Prisma.PostOrderByWithRelationInput[]
 }
 

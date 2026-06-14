@@ -1,7 +1,7 @@
 import { STORAGE } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
 
-const main = async () => {
+async function main() {
   // 创建根目录
   await prisma.directory.upsert({
     update: {},

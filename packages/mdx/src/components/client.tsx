@@ -16,7 +16,7 @@ export interface MDXClientProps {
   onAfterRender?: (isFirstRender: boolean) => void
 }
 
-export const MDXClient = React.memo(function MDXClientInner({ componentsProps, loading, source = '', onAfterRender }: MDXClientProps) {
+function MDXClientInner({ componentsProps, loading, source = '', onAfterRender }: MDXClientProps) {
   const isFirstRenderRef = React.useRef(true)
 
   const [{ content, error }, setEvaluateResult] = useImmer<Partial<EvaluateResult>>({})
@@ -41,6 +41,7 @@ export const MDXClient = React.memo(function MDXClientInner({ componentsProps, l
     })
   }, [source])
 
+  // eslint-disable-next-line react-hooks/refs
   if (isLoading && isFirstRenderRef.current) {
     return (
       loading ?? (
@@ -54,4 +55,6 @@ export const MDXClient = React.memo(function MDXClientInner({ componentsProps, l
   if (error) return <div className="flex min-h-20 items-center justify-center text-xl">{error.message}</div>
 
   return content
-})
+}
+
+export const MDXClient = React.memo(MDXClientInner)

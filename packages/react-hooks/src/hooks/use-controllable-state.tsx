@@ -8,7 +8,7 @@ interface UseControllableStateProps<T> {
   onChange?: (value: T) => void
 }
 
-export const useControllableState = <T,>({ defaultValue, value: controlledValue, onChange }: UseControllableStateProps<T>) => {
+export function useControllableState<T>({ defaultValue, value: controlledValue, onChange }: UseControllableStateProps<T>) {
   const [internalValue, setInternalValue] = React.useState(defaultValue as T)
 
   const isControlled = controlledValue !== undefined

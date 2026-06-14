@@ -54,7 +54,7 @@ const HEADING_ATTRIBUTE = 'data-level'
 /**
  * 给标题标签添加包含层级关系的属性
  */
-export const rehypeHeadingOrder = () => {
+export function rehypeHeadingOrder() {
   return (tree: Root) => {
     const stack = new Stack()
     visit(tree, 'element', node => {

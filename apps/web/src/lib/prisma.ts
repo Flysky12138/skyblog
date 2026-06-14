@@ -7,13 +7,13 @@ import { PrismaClient } from '@/generated/prisma/client'
 
 import { isDev } from './utils'
 
-const internalClientSingleton = () => {
+function internalClientSingleton() {
   return new InternalClient({
     adapter: new PrismaNeon({ connectionString: process.env.DATABASE_URL })
   })
 }
 
-const prismaClientSingleton = () => {
+function prismaClientSingleton() {
   return new PrismaClient({
     adapter: new PrismaNeon({ connectionString: process.env.DATABASE_URL })
   })

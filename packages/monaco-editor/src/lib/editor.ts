@@ -5,7 +5,7 @@ import { editor } from 'monaco-editor'
 /**
  * `monaco-editor` 初始配置
  */
-export const createMonacoEditorInitialOptions = (options: editor.IStandaloneEditorConstructionOptions = {}) => {
+export function createMonacoEditorInitialOptions(options: editor.IStandaloneEditorConstructionOptions = {}) {
   return toMerged(
     {
       automaticLayout: true,
@@ -42,7 +42,7 @@ export const createMonacoEditorInitialOptions = (options: editor.IStandaloneEdit
 /**
  * 初始化语言
  */
-export const initialLanguage2ZhCN = (vs: string) => {
+export function initialLanguage2ZhCN(vs: string) {
   if (vs && !vs.endsWith('min/vs')) {
     throw new Error('vs must end with min/vs')
   }

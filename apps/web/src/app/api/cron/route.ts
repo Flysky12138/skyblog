@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 
 import { Service } from '../[[...elysia]]/dashboard/crons/service'
 
-export const GET = async () => {
+export async function GET() {
   try {
     const crons = await prisma.cron.findMany({
       select: {

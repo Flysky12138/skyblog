@@ -6,7 +6,7 @@ import { Prisma } from '@/generated/prisma/client'
 /**
  * 获取用户真实 IP
  */
-export const getRealIp = (request: Request) => {
+export function getRealIp(request: Request) {
   const cfIp = request.headers.get('cf-connecting-ip')
   if (cfIp) return cfIp
 
@@ -19,7 +19,7 @@ export const getRealIp = (request: Request) => {
 /**
  * 获取用户访问信息
  */
-export const getUserVisitInfo = (request: Request): Prisma.ActivityLogCreateInput => {
+export function getUserVisitInfo(request: Request): Prisma.ActivityLogCreateInput {
   const agent = userAgent(request)
   const geo = geolocation(request)
 

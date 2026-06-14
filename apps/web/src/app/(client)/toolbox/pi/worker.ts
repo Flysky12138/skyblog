@@ -1,6 +1,6 @@
 import { Form } from './page'
 
-const pell_sqrt_10005 = (digits: number): [bigint, bigint] => {
+function pell_sqrt_10005(digits: number): [bigint, bigint] {
   const D = 10005n
   const Y_MIN = 10n ** BigInt(digits / 2 + 5)
   let [x1, y1] = [1n, 0n]
@@ -18,26 +18,7 @@ const pell_sqrt_10005 = (digits: number): [bigint, bigint] => {
 const C = 640320n
 const C3_OVER_24 = C ** 3n / 24n
 
-const chudnovsky = (digits: number) => {
-  const PI_PRECISION = 10n ** BigInt(digits + 20)
-  let [k, a_k, a_sum, b_sum] = [1n, PI_PRECISION, PI_PRECISION, 0n]
-  while (true) {
-    a_k *= -(6n * k - 5n) * (2n * k - 1n) * (6n * k - 1n)
-    a_k /= k ** 3n * C3_OVER_24
-    a_sum += a_k
-    b_sum += k * a_k
-    k += 1n
-    if (a_k === 0n) {
-      break
-    }
-  }
-  const total = 13591409n * a_sum + 545140134n * b_sum
-  const [x, y] = pell_sqrt_10005(digits)
-  const pi = (426880n * x * PI_PRECISION ** 2n) / (total * y)
-  return pi
-}
-
-const bs = (a: bigint, b: bigint): [bigint, bigint, bigint] => {
+function bs(a: bigint, b: bigint): [bigint, bigint, bigint] {
   if (b - a === 1n) {
     let [Pab, Qab] = [1n, 1n]
     if (a !== 0n) {
@@ -60,7 +41,26 @@ const bs = (a: bigint, b: bigint): [bigint, bigint, bigint] => {
   }
 }
 
-const chudnovsky_bs = (digits: number) => {
+function chudnovsky(digits: number) {
+  const PI_PRECISION = 10n ** BigInt(digits + 20)
+  let [k, a_k, a_sum, b_sum] = [1n, PI_PRECISION, PI_PRECISION, 0n]
+  while (true) {
+    a_k *= -(6n * k - 5n) * (2n * k - 1n) * (6n * k - 1n)
+    a_k /= k ** 3n * C3_OVER_24
+    a_sum += a_k
+    b_sum += k * a_k
+    k += 1n
+    if (a_k === 0n) {
+      break
+    }
+  }
+  const total = 13591409n * a_sum + 545140134n * b_sum
+  const [x, y] = pell_sqrt_10005(digits)
+  const pi = (426880n * x * PI_PRECISION ** 2n) / (total * y)
+  return pi
+}
+
+function chudnovsky_bs(digits: number) {
   const DIGITS_PER_TERM = Math.log10(640320 ** 3 / (6 * 2 * 6 * 24))
   const N = Math.floor(digits / DIGITS_PER_TERM + 1)
   const [P, Q, T] = bs(0n, BigInt(N))

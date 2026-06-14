@@ -3,9 +3,7 @@ export const SWR_KEY_CLASH_TEMPLATES = '0198eb97-f705-777e-a134-9073d575c7b5'
 /**
  * 解析文本所有 `#{key}` 字符串中的 `key`，会过滤掉重复值
  */
-export const getVariablesNames = (content = '') => {
-  return Array.from(new Set(Array.from(content.matchAll(/#\{(.+?)\}/g), ([, key]) => key.trim())))
-}
+export const getVariablesNames = (content = '') => Array.from(new Set(Array.from(content.matchAll(/#\{(.+?)\}/g), ([, key]) => key.trim())))
 
 /**
  * 根据对象键值对，给文本中的变量 `#{key}` 替换为 `value`
@@ -15,7 +13,7 @@ export const getVariablesNames = (content = '') => {
  * @default
  * setForNull = true
  */
-export const replaceVariables = (target = '', variables: Record<string, null | string | undefined>, setForNull = true) => {
+export function replaceVariables(target = '', variables: Record<string, null | string | undefined>, setForNull = true) {
   for (const [key, value] of Object.entries(variables)) {
     if (value || setForNull) {
       target = target.replaceAll(`#{${key}}`, value ?? '')

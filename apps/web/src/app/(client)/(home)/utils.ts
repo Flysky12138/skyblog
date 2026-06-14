@@ -26,7 +26,7 @@ export type PostSearchParamsType = z.infer<typeof PostSearchParamsSchema>
 /**
  * 获取文章列表
  */
-export const getPostList = async ({ categories, direction, field, page, tags }: PostSearchParamsType) => {
+export async function getPostList({ categories, direction, field, page, tags }: PostSearchParamsType) {
   'use cache: remote'
   cacheLife('max')
   cacheTag(CACHE_TAG.POSTS)

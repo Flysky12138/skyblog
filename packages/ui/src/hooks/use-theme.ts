@@ -4,7 +4,7 @@ import { ToasterProps } from 'sonner'
 
 type Theme = NonNullable<ToasterProps['theme']>
 
-export const useTheme = () => {
+export function useTheme() {
   const { resolvedTheme, setTheme, theme } = useThemeContext()
 
   const isDark = resolvedTheme === 'dark'

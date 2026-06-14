@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useLatestRef } from './use-latest-ref'
 
-export const useBroadcastChannel = <T = any, D = any>(name: string, onMessage?: (data: T, channel: BroadcastChannel) => void) => {
+export function useBroadcastChannel<T = any, D = any>(name: string, onMessage?: (data: T, channel: BroadcastChannel) => void) {
   const channelRef = React.useRef<BroadcastChannel>(null)
 
   const onMessageRef = useLatestRef(onMessage)

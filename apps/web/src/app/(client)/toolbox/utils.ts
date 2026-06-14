@@ -61,7 +61,7 @@ export const tools = [
 type StaticToolGroup = (typeof tools)[number]
 type ToolChildIds<T extends StaticToolGroup['id']> = Extract<StaticToolGroup, { id: T }>['children'][number]['id']
 
-export const getToolPageMetadata = <T extends StaticToolGroup['id'], C extends ToolChildIds<T>>(id: T, cId: C): Metadata => {
+export function getToolPageMetadata<T extends StaticToolGroup['id'], C extends ToolChildIds<T>>(id: T, cId: C): Metadata {
   const group = tools.find(group => group.id === id)!
   const child = group.children.find(child => child.id === cId)!
 

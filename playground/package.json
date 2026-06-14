@@ -4,9 +4,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev:chart-preview": "cross-env VITE_APP_PACKAGE=chart-preview vite --open",
-    "dev:mdx": "cross-env VITE_APP_PACKAGE=mdx vite --open",
-    "dev:monaco-editor": "cross-env VITE_APP_PACKAGE=monaco-editor vite --open"
+    "dev": "vite --open",
+    "lint": "eslint --fix --max-warnings 0",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@repo/chart-preview": "workspace:*",

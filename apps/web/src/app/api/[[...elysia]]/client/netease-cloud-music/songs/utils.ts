@@ -3,7 +3,7 @@ import { TimeHelper } from '@/lib/helper/time'
 /**
  * 处理网易云音乐的歌词
  */
-export const parseLyric = (lyric?: string) => {
+export function parseLyric(lyric?: string) {
   if (!lyric) return null
 
   const matcher = lyric.matchAll(/\[([\d:.]+)\]\r*(.*)$/gm)

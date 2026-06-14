@@ -6,7 +6,7 @@ const BACKUP_DIR = new URL('./backups/', import.meta.url)
 
 await fs.mkdir(BACKUP_DIR, { recursive: true })
 
-const writeFileContent = async (filePath: string, content: object) => {
+async function writeFileContent(filePath: string, content: object) {
   await fs.writeFile(new URL(filePath, BACKUP_DIR), JSON.stringify(content, null, 2))
 }
 

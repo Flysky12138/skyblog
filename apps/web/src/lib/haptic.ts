@@ -15,7 +15,7 @@ const isTouchDevice = isBrowser() ? window.matchMedia('(pointer: coarse)').match
  *
  * <Button onClick={() => haptic()}>Haptic</Button>
  */
-export const haptic = (pattern: number | number[] = 50) => {
+export function haptic(pattern: number | number[] = 50) {
   try {
     if (!isTouchDevice) return
 

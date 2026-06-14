@@ -14,7 +14,7 @@ interface UseCopyProps {
   onEnd?: () => Promise<void>
 }
 
-export const useCopy = ({ timeout = 1000, onCopy, onEnd }: UseCopyProps = {}) => {
+export function useCopy({ timeout = 1000, onCopy, onEnd }: UseCopyProps = {}) {
   const [, copy] = useCopyToClipboard()
 
   const [isCopied, setIsCopied] = React.useState(false)
