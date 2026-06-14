@@ -64,7 +64,7 @@ export function DataTableWrapper({ className, ...props }: React.ComponentProps<t
   return <Card className={cn('rounded-md dark:ring-0', '*:pointer-coarse:no-scrollbar **:[th]:border-b-2', className)} {...props} />
 }
 
-const getAlignClassName = <TData extends RowData, TValue>(align: ColumnMeta<TData, TValue>['align']) => {
+function getAlignClassName<TData extends RowData, TValue>(align: ColumnMeta<TData, TValue>['align']) {
   switch (align) {
     case 'center':
       return cn('text-center')

@@ -10,27 +10,9 @@ let highlighter: Highlighter | null = null
 let promise: null | Promise<Highlighter> = null
 
 /**
- * 创建高亮渲染器
- */
-const getHighlighter = async () => {
-  if (highlighter) return highlighter
-  if (promise) return promise
-
-  promise = createHighlighter({
-    langs: [defaultLanguage],
-    themes: [defaultLightTheme, defaultDarkTheme]
-  })
-
-  highlighter = await promise
-  promise = null
-
-  return highlighter
-}
-
-/**
  * 高亮代码
  */
-export const highlightCode = async (
+export async function highlightCode(
   code: string,
   options: {
     lang?: BundledLanguage | SpecialLanguage
@@ -43,7 +25,7 @@ export const highlightCode = async (
       light?: BundledTheme
     }
   }
-) => {
+) {
   const { lang = defaultLanguage, structure = 'classic', themes = {} } = options
 
   const h = await getHighlighter()
@@ -93,4 +75,22 @@ export const highlightCode = async (
       transformerMetaHighlight()
     ]
   })
+}
+
+/**
+ * 创建高亮渲染器
+ */
+async function getHighlighter() {
+  if (highlighter) return highlighter
+  if (promise) return promise
+
+  promise = createHighlighter({
+    langs: [defaultLanguage],
+    themes: [defaultLightTheme, defaultDarkTheme]
+  })
+
+  highlighter = await promise
+  promise = null
+
+  return highlighter
 }

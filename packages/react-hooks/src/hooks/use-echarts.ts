@@ -3,7 +3,7 @@ import { ECharts, EChartsInitOpts } from 'echarts'
 import React from 'react'
 import { useEvent } from 'react-use'
 
-export const useEcharts = <T extends HTMLElement>(options?: EChartsInitOpts) => {
+export function useEcharts<T extends HTMLElement>(options?: EChartsInitOpts) {
   const domRef = React.useRef<T>(null)
   const chartRef = React.useRef<ECharts>(null)
 

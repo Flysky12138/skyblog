@@ -24,7 +24,7 @@ export const getPosts = React.cache(async () => {
 /**
  * 获取相邻文章
  */
-export const getPrevNextPost = async ({ id, pinOrder, updatedAt }: Pick<Post, 'id' | 'pinOrder' | 'updatedAt'>) => {
+export async function getPrevNextPost({ id, pinOrder, updatedAt }: Pick<Post, 'id' | 'pinOrder' | 'updatedAt'>) {
   const [prev, next] = await Promise.all([
     prisma.post.findFirst({
       orderBy: createPostOrderByInput().map(item => mapValues(item, value => (value === 'desc' ? 'asc' : 'desc'))),

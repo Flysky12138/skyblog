@@ -81,7 +81,7 @@ const menus: Menu[] = [
   }
 ]
 
-export const SidebarMain = () => {
+export function SidebarMain() {
   const pathname = usePathname()
   const { open, setOpenMobile } = useSidebar()
 

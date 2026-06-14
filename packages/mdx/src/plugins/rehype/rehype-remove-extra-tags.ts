@@ -4,7 +4,7 @@ import { visit } from 'unist-util-visit'
 /**
  * 移除多余的标签
  */
-export const rehypeRemoveExtraTags = () => {
+export function rehypeRemoveExtraTags() {
   return (tree: Root) => {
     visit(tree, 'element', (node, index, parent) => {
       // 匹配 <p><img></p> 替换为 <img>

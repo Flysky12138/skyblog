@@ -11,7 +11,7 @@ type ColumnAccessorKey = 'createdAt' | 'index' | 'selection' | 'updatedAt'
 /**
  * 获取列配置
  */
-export const getColumnConfig = <T extends RowData>(accessorKey: ColumnAccessorKey, options?: ColumnDef<T>): ColumnDef<T> => {
+export function getColumnConfig<T extends RowData>(accessorKey: ColumnAccessorKey, options?: ColumnDef<T>): ColumnDef<T> {
   switch (accessorKey) {
     case 'createdAt':
       return merge(

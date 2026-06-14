@@ -9,10 +9,10 @@ type MathClickHandler = (payload: MathClickPayload) => void
 
 let handler: MathClickHandler | null = null
 
-export const getMathClickHandler = () => {
+export function getMathClickHandler() {
   return handler
 }
 
-export const setMathClickHandler = (fn: MathClickHandler | null) => {
+export function setMathClickHandler(fn: MathClickHandler | null) {
   handler = fn
 }

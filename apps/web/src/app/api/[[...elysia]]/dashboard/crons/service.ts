@@ -89,6 +89,4 @@ export abstract class Service {
 /**
  * 获取当前时间
  */
-const now = () => {
-  return dayjs().tz('Asia/Shanghai').format('YYYY年MM月DD日，星期dd，HH:mm:ss')
-}
+const now = () => dayjs().tz('Asia/Shanghai').format('YYYY年MM月DD日，星期dd，HH:mm:ss')

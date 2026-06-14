@@ -11,7 +11,7 @@ import { prisma } from '@/lib/prisma'
 
 const BACKUP_DIR = new URL('./backups/', import.meta.url)
 
-const readFileContent = async <T>(filePath: string) => {
+async function readFileContent<T>(filePath: string) {
   const fileContent = await fs.readFile(new URL(filePath, BACKUP_DIR), { encoding: 'utf-8' })
   return JSON.parse(fileContent) as T
 }

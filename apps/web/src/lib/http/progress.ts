@@ -16,7 +16,7 @@ export interface ProgressProps {
 /**
  * 获取下载进度
  */
-export const readResponseProgress = async (response: Response, onProgress: (props: ProgressProps) => void) => {
+export async function readResponseProgress(response: Response, onProgress: (props: ProgressProps) => void) {
   if (!response.body) {
     return new Blob()
   }

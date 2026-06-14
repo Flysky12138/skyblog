@@ -7,7 +7,7 @@ export const DATA_IS_BLOCK = 'data-is-block'
 /**
  * 给 `code` 标签添加额外属性
  */
-export const rehypeCode = () => {
+export function rehypeCode() {
   return (tree: Root) => {
     visit(tree, 'element', (node, _, parent) => {
       if (node.tagName === 'code' && parent?.type === 'element' && parent.tagName === 'pre') {

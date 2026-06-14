@@ -70,7 +70,7 @@ export function Heading() {
   )
 }
 
-const getCurrentHeadingLevel = (editor: Editor) => {
+function getCurrentHeadingLevel(editor: Editor) {
   for (let level = 1; level <= 6; level++) {
     if (editor.isActive('heading', { level })) {
       return level

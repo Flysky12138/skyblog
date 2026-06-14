@@ -16,7 +16,7 @@ interface PrintProps {
   onClose: () => void
 }
 
-export const Print = React.memo(function Print({ pi, size, time, onClose }: PrintProps) {
+export function Print({ pi, size, time, onClose }: PrintProps) {
   const [divRef, { width }] = useMeasure<HTMLDivElement>()
   const [fontRef, { width: fontWidth }] = useMeasure<HTMLSpanElement>()
 
@@ -24,6 +24,7 @@ export const Print = React.memo(function Print({ pi, size, time, onClose }: Prin
 
   React.useEffect(() => {
     if ([width, fontWidth].some(it => it <= 0)) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPiChunk(chunk(Array.from(pi), Math.floor((width - 24) / fontWidth)))
   }, [fontWidth, pi, width])
 
@@ -66,4 +67,4 @@ export const Print = React.memo(function Print({ pi, size, time, onClose }: Prin
       </div>
     </div>
   )
-})
+}

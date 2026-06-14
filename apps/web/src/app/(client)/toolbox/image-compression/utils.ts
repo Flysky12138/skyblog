@@ -30,7 +30,7 @@ export const imageCompressionGroup: ImageCompressionGroup[] = [
 /**
  * 使用 canvas 压缩图片
  */
-export const compressImageByCanvas = async ({ file, mimeType, quality }: CompressImageByCanvas): Promise<Blob> => {
+export async function compressImageByCanvas({ file, mimeType, quality }: CompressImageByCanvas): Promise<Blob> {
   const img = new Image()
   img.src = URL.createObjectURL(file)
 

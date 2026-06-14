@@ -37,7 +37,20 @@ export const baseConfig = defineConfig([
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     rules: {
-      eqeqeq: ['error', 'always', { null: 'ignore' }]
+      eqeqeq: ['error', 'always', { null: 'ignore' }],
+      'prefer-arrow-callback': ['error', { allowNamedFunctions: false, allowUnboundThis: true }],
+      'no-restricted-syntax': [
+        'error',
+        {
+          message: '顶层含块体的函数请使用 function 声明，不要用箭头函数赋值',
+          selector:
+            'ExportNamedDeclaration > VariableDeclaration > VariableDeclarator:not([id.typeAnnotation]) > ArrowFunctionExpression > BlockStatement'
+        },
+        {
+          message: '顶层含块体的函数请使用 function 声明，不要用箭头函数赋值',
+          selector: 'Program > VariableDeclaration > VariableDeclarator:not([id.typeAnnotation]) > ArrowFunctionExpression > BlockStatement'
+        }
+      ]
     }
   },
 

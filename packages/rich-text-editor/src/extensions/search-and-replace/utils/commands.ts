@@ -6,7 +6,7 @@ import { rebaseNextResult, scrollToAndFocus } from './helper'
 /**
  * 替换选中的结果
  */
-export const replace = (replaceTerm: string, results: Range[], selectedResult: number, { dispatch, state, view }: CommandProps) => {
+export function replace(replaceTerm: string, results: Range[], selectedResult: number, { dispatch, state, view }: CommandProps) {
   const currentResult = results[selectedResult]
 
   if (!currentResult) {
@@ -27,7 +27,7 @@ export const replace = (replaceTerm: string, results: Range[], selectedResult: n
 /**
  * 替换所有匹配项
  */
-export const replaceAll = (replaceTerm: string, results: Range[], { dispatch, tr }: CommandProps) => {
+export function replaceAll(replaceTerm: string, results: Range[], { dispatch, tr }: CommandProps) {
   if (!results.length) {
     return
   }
@@ -54,7 +54,7 @@ export const replaceAll = (replaceTerm: string, results: Range[], { dispatch, tr
 /**
  * 选中下一个匹配项
  */
-export const selectNext = (editor: CoreEditor) => {
+export function selectNext(editor: CoreEditor) {
   const { results, selectedResult } = editor.storage.searchAndReplace
 
   if (!results.length) {
@@ -83,7 +83,7 @@ export const selectNext = (editor: CoreEditor) => {
 /**
  * 选中上一个匹配项
  */
-export const selectPrevious = (editor: CoreEditor) => {
+export function selectPrevious(editor: CoreEditor) {
   const { results, selectedResult } = editor.storage.searchAndReplace
 
   if (!results.length) {

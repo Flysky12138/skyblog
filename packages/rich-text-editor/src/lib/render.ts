@@ -9,56 +9,23 @@ import { ExtensionKit } from '../extensions/index'
 import { defaultDarkTheme, defaultLanguage, defaultLightTheme, highlightCode } from './highlighter'
 
 /**
- * 预高亮文档中所有 `codeBlock` 节点
+ * 将 HTML 字符串渲染为 HTML 字符串
  */
-const highlightCodeBlocks = async (pmNode: ProseMirrorNode) => {
-  const highlighted = new WeakMap<ProseMirrorNode, null | string>()
-  const tasks: Promise<void>[] = []
-
-  for (const { node } of findChildren(pmNode, child => child.type.name === 'codeBlock')) {
-    const {
-      darkTheme = defaultDarkTheme,
-      language = defaultLanguage,
-      lightTheme = defaultLightTheme
-    } = node.attrs as Partial<CodeBlockShikiAttributes>
-
-    const task = highlightCode(node.textContent, {
-      lang: language,
-      themes: { dark: darkTheme, light: lightTheme }
-    })
-      .then(html =>
-        html.replace(
-          '<pre',
-          `<pre ${serializeAttrsToHTMLString({
-            'data-dark-theme': darkTheme,
-            'data-language': language,
-            'data-light-theme': lightTheme
-          })}`
-        )
-      )
-      .catch(() => null)
-
-    tasks.push(
-      task.then(html => {
-        highlighted.set(node, html)
-      })
-    )
-  }
-
-  await Promise.all(tasks)
-
-  return highlighted
+export async function renderHTMLStringToHTMLString(html: string, extensions: Extensions = [ExtensionKit]) {
+  const resolvedExtensions = resolveExtensions(extensions)
+  const json = generateJSON(html, resolvedExtensions)
+  return renderJSONContentToHTMLString(json, { extensions: resolvedExtensions })
 }
 
 /**
  * 将 JSON 内容渲染为 HTML 字符串
  */
-export const renderJSONContentToHTMLString = async (
+export async function renderJSONContentToHTMLString(
   content: JSONContent | ProseMirrorNode,
   options?: {
     extensions?: Extensions
   }
-) => {
+) {
   const { extensions = [ExtensionKit] } = options ?? {}
 
   // 统一转换为 ProseMirror Node
@@ -102,19 +69,52 @@ export const renderJSONContentToHTMLString = async (
 }
 
 /**
- * 将 HTML 字符串渲染为 HTML 字符串
+ * 将 Markdown 内容渲染为 HTML 字符串
  */
-export const renderHTMLStringToHTMLString = async (html: string, extensions: Extensions = [ExtensionKit]) => {
+export async function renderMarkdownToHTMLString(markdown: string, extensions: Extensions = [ExtensionKit]) {
   const resolvedExtensions = resolveExtensions(extensions)
-  const json = generateJSON(html, resolvedExtensions)
+  const json = generateJSON(markdown, resolvedExtensions)
   return renderJSONContentToHTMLString(json, { extensions: resolvedExtensions })
 }
 
 /**
- * 将 Markdown 内容渲染为 HTML 字符串
+ * 预高亮文档中所有 `codeBlock` 节点
  */
-export const renderMarkdownToHTMLString = async (markdown: string, extensions: Extensions = [ExtensionKit]) => {
-  const resolvedExtensions = resolveExtensions(extensions)
-  const json = generateJSON(markdown, resolvedExtensions)
-  return renderJSONContentToHTMLString(json, { extensions: resolvedExtensions })
+async function highlightCodeBlocks(pmNode: ProseMirrorNode) {
+  const highlighted = new WeakMap<ProseMirrorNode, null | string>()
+  const tasks: Promise<void>[] = []
+
+  for (const { node } of findChildren(pmNode, child => child.type.name === 'codeBlock')) {
+    const {
+      darkTheme = defaultDarkTheme,
+      language = defaultLanguage,
+      lightTheme = defaultLightTheme
+    } = node.attrs as Partial<CodeBlockShikiAttributes>
+
+    const task = highlightCode(node.textContent, {
+      lang: language,
+      themes: { dark: darkTheme, light: lightTheme }
+    })
+      .then(html =>
+        html.replace(
+          '<pre',
+          `<pre ${serializeAttrsToHTMLString({
+            'data-dark-theme': darkTheme,
+            'data-language': language,
+            'data-light-theme': lightTheme
+          })}`
+        )
+      )
+      .catch(() => null)
+
+    tasks.push(
+      task.then(html => {
+        highlighted.set(node, html)
+      })
+    )
+  }
+
+  await Promise.all(tasks)
+
+  return highlighted
 }

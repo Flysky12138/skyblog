@@ -6,7 +6,7 @@ export const isDev = () => !process.env.NODE_ENV || process.env.NODE_ENV === 'de
 /**
  * 生成随机字符串
  */
-export const randomString = (length: number) => {
+export function randomString(length: number) {
   const chars = '0123456789abcdefghijklmnopqrstuvwxyz'
   const base = chars.length
   const max = Math.floor(256 / base) * base

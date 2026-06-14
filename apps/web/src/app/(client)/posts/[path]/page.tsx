@@ -22,12 +22,7 @@ import { PostInfo } from './_components/post-info'
 import { PostResizeButton } from './_components/post-resize-button'
 import { getPost } from './utils'
 
-export const generateStaticParams = async (): Promise<Awaited<PageProps<'/posts/[path]'>['params']>[]> => {
-  const posts = await getPosts()
-  return posts.map(post => ({ path: post.slug ?? post.id }))
-}
-
-export const generateMetadata = async ({ params }: PageProps<'/posts/[path]'>): Promise<Metadata> => {
+export async function generateMetadata({ params }: PageProps<'/posts/[path]'>): Promise<Metadata> {
   cacheLife('max')
 
   const { path: idOrSlug } = await params
@@ -51,6 +46,11 @@ export const generateMetadata = async ({ params }: PageProps<'/posts/[path]'>): 
       url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/posts/${idOrSlug}`
     }
   }
+}
+
+export async function generateStaticParams(): Promise<Awaited<PageProps<'/posts/[path]'>['params']>[]> {
+  const posts = await getPosts()
+  return posts.map(post => ({ path: post.slug ?? post.id }))
 }
 
 export default async function Page({ params }: PageProps<'/posts/[path]'>) {

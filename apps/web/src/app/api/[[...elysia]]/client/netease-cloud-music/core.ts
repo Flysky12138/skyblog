@@ -20,106 +20,17 @@ V8k4cBFK9snQXE9/DDaFt6Rr7iVZMldczhC0JNgTz+SHXT6CBHuX3e9SdB1Ua44o
 ncaTWz7OBGLbCiK45wIDAQAB
 -----END PUBLIC KEY-----`
 
-const cookieObjToString = (cookie: Record<string, string>): string =>
-  Object.entries(cookie)
-    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
-    .join('; ')
-
-const cookieStringToObj = (cookie: string): Record<string, string> => {
-  if (!cookie) return {}
-  const obj: Record<string, string> = {}
-  for (const item of cookie.split(';')) {
-    const [key, ...rest] = item.trim().split('=')
-    if (key && rest.length > 0) {
-      obj[key.trim()] = rest.join('=').trim()
-    }
-  }
-  return obj
-}
-
-/**
- * AES-128-CBC 加密，返回 base64
- */
-const aesCbcEncrypt = (text: string, key: string, iv: string): string => {
-  const cipher = crypto.createCipheriv('aes-128-cbc', Buffer.from(key), Buffer.from(iv))
-  let encrypted = cipher.update(text, 'utf8', 'base64')
-  encrypted += cipher.final('base64')
-  return encrypted
-}
-
-/**
- * AES-128-ECB 加密，返回大写 hex
- */
-const aesEcbEncrypt = (text: string, key: string): string => {
-  const cipher = crypto.createCipheriv('aes-128-ecb', Buffer.from(key), null as unknown as Buffer)
-  let encrypted = cipher.update(text, 'utf8', 'hex')
-  encrypted += cipher.final('hex')
-  return encrypted.toUpperCase()
-}
-
-/**
- * RSA 无填充加密
- *
- * node-forge 的 'NONE' 模式直接对输入做 m^e mod n 运算，
- * 而 Node.js crypto RSA_NO_PADDING 要求输入严格等于 key 长度（128 字节）。
- * 此处将原文右对齐填充至 128 字节以保证兼容。
- */
-const rsaEncrypt = (str: string): string => {
-  const buffer = Buffer.from(str, 'utf8')
-  const padded = Buffer.alloc(128)
-  buffer.copy(padded, 128 - buffer.length)
-
-  const encrypted = crypto.publicEncrypt({ key: RSA_PUBLIC_KEY, padding: crypto.constants.RSA_NO_PADDING }, padded)
-  return encrypted.toString('hex')
-}
-
-/**
- * eapi 加密
- */
-const eapiEncrypt = (uri: string, data: Record<string, unknown>): { params: string } => {
-  const text = JSON.stringify(data)
-  const message = `nobody${uri}use${text}md5forencrypt`
-  const digest = crypto.createHash('md5').update(message).digest('hex')
-  const encryptedData = `${uri}-36cd479b6b5-${text}-36cd479b6b5-${digest}`
-
-  return { params: aesEcbEncrypt(encryptedData, EAPI_KEY) }
-}
-
-/**
- * weapi 加密
- */
-const weapiEncrypt = (data: Record<string, unknown>): { encSecKey: string; params: string } => {
-  const text = JSON.stringify(data)
-
-  // 第一次 AES-CBC 加密
-  const firstEncrypted = aesCbcEncrypt(text, PRESET_KEY, AES_IV)
-
-  // 生成随机 16 位密钥
-  let secretKey = ''
-  for (let i = 0; i < 16; i++) {
-    secretKey += BASE62[Math.floor(Math.random() * 62)]
-  }
-
-  // 第二次 AES-CBC 加密
-  const params = aesCbcEncrypt(firstEncrypted, secretKey, AES_IV)
-
-  // RSA 加密（逆转后的密钥）
-  const encSecKey = rsaEncrypt(secretKey.split('').reverse().join(''))
-
-  return { encSecKey, params }
-}
-
 /**
  * 发送请求到网易云音乐 API
  */
-export const neteaseRequest = async <T>(
+export async function neteaseRequest<T>(
   uri: string,
   data: Record<string, unknown>,
   options: {
     cookie?: Record<string, string> | string
     crypto: 'eapi' | 'weapi'
   }
-) => {
+) {
   const cookieObj = (() => {
     if (typeof options.cookie === 'string') {
       return cookieStringToObj(options.cookie)
@@ -192,4 +103,94 @@ export const neteaseRequest = async <T>(
     cookie: resCookie,
     status: body.code ?? response.status
   }
+}
+
+/**
+ * AES-128-CBC 加密，返回 base64
+ */
+function aesCbcEncrypt(text: string, key: string, iv: string): string {
+  const cipher = crypto.createCipheriv('aes-128-cbc', Buffer.from(key), Buffer.from(iv))
+  let encrypted = cipher.update(text, 'utf8', 'base64')
+  encrypted += cipher.final('base64')
+  return encrypted
+}
+
+/**
+ * AES-128-ECB 加密，返回大写 hex
+ */
+function aesEcbEncrypt(text: string, key: string): string {
+  const cipher = crypto.createCipheriv('aes-128-ecb', Buffer.from(key), null as unknown as Buffer)
+  let encrypted = cipher.update(text, 'utf8', 'hex')
+  encrypted += cipher.final('hex')
+  return encrypted.toUpperCase()
+}
+
+function cookieObjToString(cookie: Record<string, string>): string {
+  return Object.entries(cookie)
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    .join('; ')
+}
+
+function cookieStringToObj(cookie: string): Record<string, string> {
+  if (!cookie) return {}
+  const obj: Record<string, string> = {}
+  for (const item of cookie.split(';')) {
+    const [key, ...rest] = item.trim().split('=')
+    if (key && rest.length > 0) {
+      obj[key.trim()] = rest.join('=').trim()
+    }
+  }
+  return obj
+}
+
+/**
+ * eapi 加密
+ */
+function eapiEncrypt(uri: string, data: Record<string, unknown>): { params: string } {
+  const text = JSON.stringify(data)
+  const message = `nobody${uri}use${text}md5forencrypt`
+  const digest = crypto.createHash('md5').update(message).digest('hex')
+  const encryptedData = `${uri}-36cd479b6b5-${text}-36cd479b6b5-${digest}`
+
+  return { params: aesEcbEncrypt(encryptedData, EAPI_KEY) }
+}
+
+/**
+ * RSA 无填充加密
+ *
+ * node-forge 的 'NONE' 模式直接对输入做 m^e mod n 运算，
+ * 而 Node.js crypto RSA_NO_PADDING 要求输入严格等于 key 长度（128 字节）。
+ * 此处将原文右对齐填充至 128 字节以保证兼容。
+ */
+function rsaEncrypt(str: string): string {
+  const buffer = Buffer.from(str, 'utf8')
+  const padded = Buffer.alloc(128)
+  buffer.copy(padded, 128 - buffer.length)
+
+  const encrypted = crypto.publicEncrypt({ key: RSA_PUBLIC_KEY, padding: crypto.constants.RSA_NO_PADDING }, padded)
+  return encrypted.toString('hex')
+}
+
+/**
+ * weapi 加密
+ */
+function weapiEncrypt(data: Record<string, unknown>): { encSecKey: string; params: string } {
+  const text = JSON.stringify(data)
+
+  // 第一次 AES-CBC 加密
+  const firstEncrypted = aesCbcEncrypt(text, PRESET_KEY, AES_IV)
+
+  // 生成随机 16 位密钥
+  let secretKey = ''
+  for (let i = 0; i < 16; i++) {
+    secretKey += BASE62[Math.floor(Math.random() * 62)]
+  }
+
+  // 第二次 AES-CBC 加密
+  const params = aesCbcEncrypt(firstEncrypted, secretKey, AES_IV)
+
+  // RSA 加密（逆转后的密钥）
+  const encSecKey = rsaEncrypt(secretKey.split('').reverse().join(''))
+
+  return { encSecKey, params }
 }

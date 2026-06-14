@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
-export const getPackageInfo = ([name, version]: [string, string]) => {
+export function getPackageInfo([name, version]: [string, string]) {
   const pkgPath = resolve(process.cwd(), 'node_modules', name, 'package.json')
   const pkg = readFileSync(pkgPath, 'utf8')
 

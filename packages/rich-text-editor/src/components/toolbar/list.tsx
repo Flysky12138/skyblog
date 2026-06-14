@@ -70,7 +70,7 @@ export function List() {
   )
 }
 
-const getCurrentListType = (editor: Editor): null | Type => {
+function getCurrentListType(editor: Editor): null | Type {
   if (editor.isActive('taskList')) return 'taskList'
   if (editor.isActive('orderedList')) return 'orderedList'
   if (editor.isActive('bulletList')) return 'bulletList'

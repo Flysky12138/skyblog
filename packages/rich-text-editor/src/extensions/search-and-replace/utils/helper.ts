@@ -15,7 +15,7 @@ interface TextNodeWithPosition {
 /**
  * 获取用于搜索的正则表达式
  */
-export const getRegex = (searchString: string, disableRegex: boolean, caseSensitive: boolean): RegExp => {
+export function getRegex(searchString: string, disableRegex: boolean, caseSensitive: boolean): RegExp {
   const escapedString = disableRegex ? searchString.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') : searchString
   return new RegExp(escapedString, caseSensitive ? 'gu' : 'gui')
 }
@@ -23,13 +23,13 @@ export const getRegex = (searchString: string, disableRegex: boolean, caseSensit
 /**
  * 处理搜索操作
  */
-export const processSearches = (
+export function processSearches(
   doc: PMNode,
   searchTerm: RegExp,
   selectedResultIndex: number,
   searchResultClass: string,
   selectedResultClass: string
-): ProcessedSearches => {
+): ProcessedSearches {
   const decorations: Decoration[] = []
   const results: Range[] = []
   const textNodesWithPosition: TextNodeWithPosition[] = []
@@ -75,7 +75,7 @@ export const processSearches = (
 /**
  * 重新计算结果位置
  */
-export const rebaseNextResult = (replaceTerm: string, index: number, lastOffset: number, results: Range[]): [number, Range[]] | null => {
+export function rebaseNextResult(replaceTerm: string, index: number, lastOffset: number, results: Range[]): [number, Range[]] | null {
   const nextIndex = index + 1
 
   if (!results[nextIndex]) {
@@ -99,7 +99,7 @@ export const rebaseNextResult = (replaceTerm: string, index: number, lastOffset:
 /**
  * 滚动到指定位置并聚焦编辑器
  */
-export const scrollToAndFocus = (view: CoreEditor['view'], from: number) => {
+export function scrollToAndFocus(view: CoreEditor['view'], from: number) {
   const node = view.domAtPos(from).node as HTMLElement | undefined
   node?.scrollIntoView({ behavior: 'instant', block: 'center' })
   view.focus()

@@ -25,7 +25,7 @@ export const rpc = treaty<typeof app>(url, {
   }
 }).api
 
-export const unwrap = <T extends Treaty.TreatyResponse<{}>>({ data, error }: T) => {
+export function unwrap<T extends Treaty.TreatyResponse<{}>>({ data, error }: T) {
   if (error) {
     console.error(error.status, error.value)
 

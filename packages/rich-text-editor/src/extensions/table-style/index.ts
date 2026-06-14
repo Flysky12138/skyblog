@@ -187,7 +187,7 @@ export const TableStyle = Extension.create<TableStyleOptions>({
   }
 })
 
-const syncTableStyleAttributes = (editor: Editor) => {
+function syncTableStyleAttributes(editor: Editor) {
   const { view } = editor
 
   view.state.doc.descendants((node, pos) => {

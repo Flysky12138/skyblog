@@ -38,7 +38,7 @@ export const MarkdownPaste = Extension.create({
 })
 
 // Simple heuristic: check for Markdown syntax
-const looksLikeMarkdown = (text: string) => {
+function looksLikeMarkdown(text: string) {
   return (
     /^#{1,6}\s/.test(text) || // Headings
     /\*\*[^*]+\*\*/.test(text) || // Bold

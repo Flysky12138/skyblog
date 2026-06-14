@@ -6,7 +6,7 @@ const LIST_CONTAINER_TYPES = new Set(['bulletList', 'orderedList', 'taskList'])
 const LIST_ITEM_TYPES = new Set(['listItem', 'taskItem'])
 
 // 查找最近的上层列表项容器
-const findListItemInfo = ($from: ResolvedPos) => {
+function findListItemInfo($from: ResolvedPos) {
   for (let d = $from.depth; d >= 0; d--) {
     const node = $from.node(d)
     if (LIST_ITEM_TYPES.has(node.type.name)) {

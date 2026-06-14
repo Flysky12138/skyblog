@@ -68,7 +68,7 @@ export function TextAlign() {
   )
 }
 
-const getCurrentAlignment = (editor: Editor): React.CSSProperties['textAlign'] => {
+function getCurrentAlignment(editor: Editor): React.CSSProperties['textAlign'] {
   if (editor.isActive({ textAlign: 'justify' })) return 'justify'
   if (editor.isActive({ textAlign: 'center' })) return 'center'
   if (editor.isActive({ textAlign: 'end' })) return 'end'

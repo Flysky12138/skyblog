@@ -9,7 +9,7 @@ import { internal, prisma } from '@/lib/prisma'
 /**
  * 获取作者
  */
-const getAuthor = async (id: string) => {
+async function getAuthor(id: string) {
   'use cache'
   cacheLife('max')
   cacheTag(CACHE_TAG.AUTHOR(id))

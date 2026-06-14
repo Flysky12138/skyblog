@@ -4,9 +4,9 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "build:css": "tailwindcss build -i ./src/styles/index.css -o ./dist/style.css --minify",
     "lint": "eslint --fix --max-warnings 0",
-    "typecheck": "tsc --noEmit",
-    "build:css": "tailwindcss build -i ./src/styles/index.css -o ./dist/style.css --minify"
+    "typecheck": "tsc --noEmit"
   },
   "exports": {
     ".": "./src/index.ts",

@@ -4,7 +4,7 @@ import { visit } from 'unist-util-visit'
 /**
  * 只保留标题，并移除标题中的链接
  */
-export const remarkPickHeading = () => {
+export function remarkPickHeading() {
   return (tree: Root) => {
     const children: Heading[] = []
 

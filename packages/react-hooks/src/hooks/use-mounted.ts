@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const useMounted = () => {
+export function useMounted() {
   const [mounted, dispatch] = React.useReducer(() => true, false)
 
   React.useEffect(() => {
