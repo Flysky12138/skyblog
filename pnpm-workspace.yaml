@@ -23,9 +23,9 @@ patchedDependencies:
 catalogMode: prefer
 cleanupUnusedCatalogs: true
 catalog:
-  '@aws-sdk/client-s3': ^3.1067.0
-  '@aws-sdk/s3-request-presigner': ^3.1067.0
-  '@base-ui/react': 1.4.1
+  '@aws-sdk/client-s3': ^3.1073.0
+  '@aws-sdk/s3-request-presigner': ^3.1073.0
+  '@base-ui/react': 1.6.0
   '@commitlint/cli': ^21.0.2
   '@commitlint/config-conventional': ^21.0.2
   '@elysiajs/eden': ^1.4.9
@@ -39,7 +39,7 @@ catalog:
   '@mdx-js/loader': ^3.1.1
   '@mdx-js/react': ^3.1.1
   '@monaco-editor/loader': ^1.7.0
-  '@neondatabase/auth': 0.4.1-beta
+  '@neondatabase/auth': 0.4.2-beta
   '@next/env': ^16.2.9
   '@next/eslint-plugin-next': ^16.2.9
   '@next/mdx': ^16.2.9
@@ -51,19 +51,19 @@ catalog:
   '@shikijs/transformers': ^4.2.0
   '@sinclair/typebox': ^0.34.49
   '@svgr/webpack': ^8.1.0
-  '@tailwindcss/postcss': ^4.3.0
+  '@tailwindcss/postcss': ^4.3.1
   '@tailwindcss/typography': ^0.5.20
-  '@tailwindcss/vite': ^4.3.0
+  '@tailwindcss/vite': ^4.3.1
   '@tanstack/react-table': ^8.21.3
   '@types/hast': ^3.0.4
   '@types/mdast': ^4.0.4
   '@types/mdx': ^2.0.14
-  '@types/node': ^25.9.3
+  '@types/node': ^26.0.0
   '@types/react': ^19.2.17
   '@types/react-dom': ^19.2.3
   '@types/wicg-file-system-access': ^2023.10.7
   '@vercel/edge-config': ^1.4.3
-  '@vercel/functions': ^3.7.1
+  '@vercel/functions': ^3.7.2
   '@vitejs/plugin-react': ^6.0.2
   badge-maker: ^5.0.2
   class-variance-authority: ^0.7.1
@@ -72,11 +72,11 @@ catalog:
   cn-font-split: 6.0.3
   dayjs: ^1.11.21
   echarts: ^6.1.0
-  elysia: ^1.4.28
-  es-toolkit: ^1.47.0
+  elysia: ^1.4.29
+  es-toolkit: ^1.48.1
   eslint: ^9.39.4
   eslint-config-prettier: ^10.1.8
-  eslint-plugin-perfectionist: ^5.9.0
+  eslint-plugin-perfectionist: ^5.9.1
   eslint-plugin-prettier: ^5.5.6
   eslint-plugin-react: ^7.37.5
   eslint-plugin-react-hooks: ^7.1.1
@@ -84,15 +84,15 @@ catalog:
   globals: ^17.6.0
   husky: ^9.1.7
   input-otp: ^1.4.2
-  lint-staged: ^17.0.7
-  lucide-react: ^1.17.0
+  lint-staged: ^17.0.8
+  lucide-react: ^1.21.0
   monaco-editor: 0.55.1
   motion: ^12.40.0
   next: ^16.2.9
   next-mdx-remote-client: ^2.1.11
   next-themes: ^0.4.6
   nextjs-toploader: ^3.9.17
-  npm-check-updates: ^22.2.3
+  npm-check-updates: ^22.2.7
   prettier: ^3.8.4
   prettier-plugin-tailwindcss: ^0.8.0
   prisma: ^7.8.0
@@ -100,7 +100,7 @@ catalog:
   prisma-json-types-generator: ^5.1.0
   react: ^19.2.7
   react-dom: ^19.2.7
-  react-hook-form: ^7.78.0
+  react-hook-form: ^7.80.0
   react-resizable-panels: ^4.11.2
   react-window: ^2.2.7
   react-window-infinite-loader: ^2.0.1
@@ -120,45 +120,45 @@ catalog:
   superjson: ^2.2.6
   swr: ^2.4.1
   tailwind-merge: ^3.6.0
-  tailwindcss: ^4.3.0
+  tailwindcss: ^4.3.1
   tm-grammars: ^1.31.15
   tsx: ^4.22.4
   tw-animate-css: ^1.4.0
   typescript: ^6.0.3
-  typescript-eslint: ^8.61.0
+  typescript-eslint: ^8.61.1
   unified: ^11.0.5
   unist-util-visit: ^5.1.0
   uuidv7: ^1.2.1
   vaul: ^1.1.2
-  vercel: ^54.12.2
+  vercel: ^54.14.5
   vite: ^8.0.16
   zod: ^4.4.3
-  tsdown: ^0.22.2
+  tsdown: ^0.22.3
   hash-wasm: ^4.12.0
-  '@tiptap/react': ^3.26.1
-  '@tiptap/pm': ^3.26.1
-  '@tiptap/starter-kit': ^3.26.1
-  '@tiptap/extension-table': ^3.26.1
-  '@tiptap/extension-list': ^3.26.1
-  '@tiptap/extension-subscript': ^3.26.1
-  '@tiptap/extension-superscript': ^3.26.1
-  '@tiptap/extension-text-style': ^3.26.1
-  '@tiptap/extension-text-align': ^3.26.1
-  '@tiptap/extension-typography': ^3.26.1
-  '@tiptap/extension-highlight': ^3.26.1
+  '@tiptap/react': ^3.27.1
+  '@tiptap/pm': ^3.27.1
+  '@tiptap/starter-kit': ^3.27.1
+  '@tiptap/extension-table': ^3.27.1
+  '@tiptap/extension-list': ^3.27.1
+  '@tiptap/extension-subscript': ^3.27.1
+  '@tiptap/extension-superscript': ^3.27.1
+  '@tiptap/extension-text-style': ^3.27.1
+  '@tiptap/extension-text-align': ^3.27.1
+  '@tiptap/extension-typography': ^3.27.1
+  '@tiptap/extension-highlight': ^3.27.1
   culori: ^4.0.2
   '@types/culori': ^4.0.1
-  '@tiptap/core': ^3.26.1
-  '@tiptap/extension-emoji': ^3.26.1
-  '@tiptap/extensions': ^3.26.1
+  '@tiptap/core': ^3.27.1
+  '@tiptap/extension-emoji': ^3.27.1
+  '@tiptap/extensions': ^3.27.1
   tm-themes: ^1.12.2
-  '@tiptap/static-renderer': ^3.26.1
-  '@tailwindcss/cli': ^4.3.0
-  '@tiptap/markdown': ^3.26.1
-  '@tiptap/extension-mathematics': ^3.26.1
+  '@tiptap/static-renderer': ^3.27.1
+  '@tailwindcss/cli': ^4.3.1
+  '@tiptap/markdown': ^3.27.1
+  '@tiptap/extension-mathematics': ^3.27.1
   katex: ^0.17.0
   raw-loader: ^4.0.2
-  '@tiptap/html': ^3.26.1
+  '@tiptap/html': ^3.27.1
   '@intevation/tiptap-extension-office-paste': ^0.1.2
   immer: ^11.1.8
   react-use: ^17.6.1
