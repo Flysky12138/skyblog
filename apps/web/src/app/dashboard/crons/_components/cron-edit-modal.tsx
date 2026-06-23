@@ -34,9 +34,9 @@ export function CronEditModal({ children, value, onSubmit }: CronEditModalProps)
 
   return (
     <Dialog
-      onOpenChange={isOpen => {
+      onOpenChange={newOpen => {
         form.reset()
-        if (!isOpen) return
+        if (!newOpen) return
         if (value) {
           form.setValues(pick(value, CronCreateBodySchema.keyof().options))
         }

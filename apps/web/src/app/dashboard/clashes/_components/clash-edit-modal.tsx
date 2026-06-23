@@ -62,9 +62,9 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
 
   return (
     <Dialog
-      onOpenChange={isOpen => {
+      onOpenChange={newOpen => {
         form.reset()
-        if (!isOpen) return
+        if (!newOpen) return
         if (value) {
           form.setValues(pick(value, ClashCreateBodySchema.keyof().options))
         }

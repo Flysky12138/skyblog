@@ -36,9 +36,9 @@ export function PostTagEditModal({ children, value, onSubmit }: PostTagEditModal
 
   return (
     <Dialog
-      onOpenChange={isOpen => {
+      onOpenChange={newOpen => {
         form.reset()
-        if (!isOpen) return
+        if (!newOpen) return
         if (value) {
           form.setValues(pick(value, TagCreateBodySchema.keyof().options))
         }

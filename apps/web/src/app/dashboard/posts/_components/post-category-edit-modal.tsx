@@ -36,9 +36,9 @@ export function PostCategoryEditModal({ children, value, onSubmit }: PostCategor
 
   return (
     <Dialog
-      onOpenChange={isOpen => {
+      onOpenChange={newOpen => {
         form.reset()
-        if (!isOpen) return
+        if (!newOpen) return
         if (value) {
           form.setValues(pick(value, CategoryCreateBodySchema.keyof().options))
         }

@@ -35,9 +35,9 @@ export function ClashTemplateEditModal({ children, value, onSubmit }: ClashTempl
 
   return (
     <Dialog
-      onOpenChange={isOpen => {
+      onOpenChange={newOpen => {
         form.reset()
-        if (!isOpen) return
+        if (!newOpen) return
         if (value) {
           form.setValues(pick(value, ClashTemplateCreateBodySchema.keyof().options))
         }

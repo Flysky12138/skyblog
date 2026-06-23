@@ -123,8 +123,8 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
 
   return (
     <Dialog
-      onOpenChange={open => {
-        if (!open) return
+      onOpenChange={newOpen => {
+        if (!newOpen) return
         if (isUploadFinished) {
           setFilelist({ uploaded: [], waiting: [] })
         }

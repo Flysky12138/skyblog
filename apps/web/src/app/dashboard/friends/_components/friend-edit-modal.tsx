@@ -73,9 +73,9 @@ export function FriendEditModal({ children, value, onSubmit }: FriendEditModalPr
 
   return (
     <Dialog
-      onOpenChange={isOpen => {
+      onOpenChange={newOpen => {
         form.reset()
-        if (!isOpen) return
+        if (!newOpen) return
         if (value) {
           form.setValues(pick(value, FriendCreateBodySchema.keyof().options))
           if (value.screenshotFile) {
