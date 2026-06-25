@@ -1,6 +1,7 @@
 import '@/globals.css'
 
 import { FancyboxRegister } from '@repo/ui/components-self/fancybox'
+import { NoiseTexture } from '@repo/ui/components-self/noise-texture'
 import { ThemeProvider } from '@repo/ui/components-self/theme'
 import { Toaster } from '@repo/ui/components/sonner'
 import { TooltipProvider } from '@repo/ui/components/tooltip'
@@ -72,6 +73,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
           <Toaster />
           <FancyboxRegister />
         </ThemeProvider>
+        <NoiseTexture />
       </body>
     </html>
   )
