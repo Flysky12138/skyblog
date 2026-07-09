@@ -1,10 +1,12 @@
 'use client'
 
 import { Treaty } from '@elysiajs/eden'
+import { useCopy } from '@repo/react-hooks'
+import { toast } from '@repo/ui/base'
 import { Switch } from '@repo/ui/components/switch'
 import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { produce } from 'immer'
-import { PencilIcon, PlayIcon, PlusIcon } from 'lucide-react'
+import { CopyIcon, PencilIcon, PlayIcon, PlusIcon } from 'lucide-react'
 import { useAsyncFn } from 'react-use'
 import useSWR from 'swr'
 
@@ -18,6 +20,12 @@ import { toastPromise } from '@/lib/toast'
 import { CronEditModal } from './cron-edit-modal'
 
 export function CronTable() {
+  const { copy } = useCopy({
+    onCopy: () => {
+      toast.success('复制成功')
+    }
+  })
+
   const {
     data: crons,
     isLoading,
@@ -121,13 +129,20 @@ export function CronTable() {
     },
     {
       id: 'actions',
-      size: 140,
+      size: 160,
       meta: {
         align: 'end'
       },
       cell: ({ row }) => (
         <div className="flex justify-end gap-2">
           <DataTableRowRunButton row={row.original} />
+          <DataTableRowActionButton
+            onClick={() => {
+              copy(new URL(`/api/crons/${row.original.id}`, window.origin).href)
+            }}
+          >
+            <CopyIcon />
+          </DataTableRowActionButton>
           <CronEditModal
             value={row.original}
             onSubmit={async body => {

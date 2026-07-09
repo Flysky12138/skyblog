@@ -151,7 +151,6 @@ export function ClashTable() {
       cell: ({ row }) => (
         <div className="flex justify-end gap-2">
           <DataTableRowActionButton
-            tooltip="复制"
             onClick={() => {
               copy(new URL(`/api/clashes/${row.original.id}`, window.origin).href)
             }}
