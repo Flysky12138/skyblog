@@ -2,15 +2,7 @@
  * “不可展开”的类型
  */
 type Builtin =
-  | Date
-  | Error
-  | Function
-  | Map<unknown, unknown>
-  | React.ReactNode
-  | RegExp
-  | Set<unknown>
-  | WeakMap<unknown, unknown>
-  | WeakSet<unknown>
+  Date | Error | Function | Map<unknown, unknown> | React.ReactNode | RegExp | Set<unknown> | WeakMap<unknown, unknown> | WeakSet<unknown>
 
 /**
  * 元素的属性，但不包含事件
