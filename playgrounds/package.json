@@ -11,7 +11,6 @@
   "devDependencies": {
     "@repo/chart-preview": "workspace:*",
     "@repo/eslint-config": "workspace:*",
-    "@repo/mdx": "workspace:*",
     "@repo/monaco-editor": "workspace:*",
     "@repo/rich-text-editor": "workspace:*",
     "@repo/ui": "workspace:*",
