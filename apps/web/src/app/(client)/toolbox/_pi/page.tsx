@@ -10,7 +10,7 @@ import { AlertCircleIcon } from 'lucide-react'
 import React from 'react'
 import { useImmer } from 'use-immer'
 
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Show } from '@/components/show'
 import { haptic } from '@/lib/haptic'
 
 import Arctan_ from './_components/arctan.mdx'
@@ -122,7 +122,7 @@ export default function Page() {
             </DialogContent>
           </Dialog>
         </ButtonGroup>
-        <DisplayByConditional condition={form.mode !== 'arctan'}>
+        <Show when={form.mode !== 'arctan'}>
           <ButtonGroup className="grow">
             <Select
               disabled={loading}
@@ -160,25 +160,25 @@ export default function Page() {
               计算
             </Button>
           </ButtonGroup>
-        </DisplayByConditional>
+        </Show>
       </div>
 
-      <DisplayByConditional condition={form.mode === 'arctan'}>
+      <Show when={form.mode === 'arctan'}>
         <Alert variant="destructive">
           <AlertCircleIcon />
           <AlertTitle>收敛速度太慢，不提供计算</AlertTitle>
         </Alert>
-      </DisplayByConditional>
+      </Show>
 
       {result && (
-        <DisplayByConditional
-          condition={!result.error}
+        <Show
           fallback={
             <Alert variant="destructive">
               <AlertCircleIcon />
               <AlertTitle>{result.error?.message}</AlertTitle>
             </Alert>
           }
+          when={!result.error}
         >
           <Print
             pi={result.pi}
@@ -188,7 +188,7 @@ export default function Page() {
               setResult(null)
             }}
           />
-        </DisplayByConditional>
+        </Show>
       )}
 
       <div className="mt-10">

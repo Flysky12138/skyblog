@@ -3,25 +3,54 @@ set -eu
 
 cd "$(dirname "$0")" || exit
 
-# 获取 src/components 下所有组件名（不含路径和扩展名）
-components=$(find ./src/components -type f -name "*.tsx" -maxdepth 1 -exec basename {} .tsx \; | sort)
+pnpm exec shadcn add -y -o \
+  alert \
+  alert-dialog \
+  avatar \
+  badge \
+  breadcrumb \
+  button \
+  button-group \
+  card \
+  checkbox \
+  combobox \
+  command \
+  context-menu \
+  dialog \
+  drawer \
+  dropdown-menu \
+  empty \
+  field \
+  input \
+  input-group \
+  input-otp \
+  item \
+  kbd \
+  label \
+  pagination \
+  popover \
+  radio-group \
+  resizable \
+  scroll-area \
+  select \
+  separator \
+  sheet \
+  sidebar \
+  skeleton \
+  slider \
+  sonner \
+  spinner \
+  switch \
+  table \
+  tabs \
+  textarea \
+  toggle \
+  toggle-group \
+  tooltip
 
-if [ -z "$components" ]; then
-  echo "未找到组件文件"
-  exit 1
+# 替换组件中的 /components-override/ 为 /components/
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  find ./src/components -type f -name "*.tsx" -exec sed -i '' 's|components-override|components|g' {} +
+else
+  find ./src/components -type f -name "*.tsx" -exec sed -i 's|components-override|components|g' {} +
 fi
-
-echo "组件列表:"
-echo "$components"
-echo ""
-
-# 批量执行 shadcn add
-# 将换行符替换为空格，一次性传入所有组件名
-all_components=$(echo "$components" | tr '\n' ' ')
-echo "▶ 批量添加组件: $all_components"
-pnpm exec shadcn add -y -o $all_components
-
-echo "▶ 替换组件中的 /components-override/ 为 /components/"
-find ./src/components -type f -name "*.tsx" -exec sed -i '' 's|components-override|components|g' {} +
-
-echo "✅ 所有组件已添加完成"

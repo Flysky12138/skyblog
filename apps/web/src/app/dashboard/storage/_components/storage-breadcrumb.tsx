@@ -6,7 +6,7 @@ import { Skeleton } from '@repo/ui/components/skeleton'
 import React from 'react'
 import useSWR from 'swr'
 
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Show } from '@/components/show'
 import { rpc, unwrap } from '@/lib/http/rpc'
 
 interface StorageBreadcrumbProps {
@@ -36,12 +36,11 @@ export function StorageBreadcrumb({ id, onChange }: StorageBreadcrumbProps) {
           <BreadcrumbList>
             {paths.map((path, index) => (
               <React.Fragment key={path.id}>
-                <DisplayByConditional condition={index > 0}>
+                <Show when={index > 0}>
                   <BreadcrumbSeparator />
-                </DisplayByConditional>
+                </Show>
                 <BreadcrumbItem>
-                  <DisplayByConditional
-                    condition={index === paths.length - 1}
+                  <Show
                     fallback={
                       <BreadcrumbLink
                         className="cursor-pointer"
@@ -53,9 +52,10 @@ export function StorageBreadcrumb({ id, onChange }: StorageBreadcrumbProps) {
                         {path.name}
                       </BreadcrumbLink>
                     }
+                    when={index === paths.length - 1}
                   >
                     <BreadcrumbPage className="break-all">{path.name}</BreadcrumbPage>
-                  </DisplayByConditional>
+                  </Show>
                 </BreadcrumbItem>
               </React.Fragment>
             ))}

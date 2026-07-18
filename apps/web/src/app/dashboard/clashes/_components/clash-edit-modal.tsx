@@ -15,7 +15,7 @@ import { Controller, useForm } from 'react-hook-form'
 import useSWR from 'swr'
 
 import { ClashCreateBodySchema, ClashCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/clashes/model'
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Show } from '@/components/show'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { randomString } from '@/lib/utils'
 
@@ -178,7 +178,7 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
                 </Field>
               )}
             />
-            <DisplayByConditional condition={selectedClashTemplateVariableKeys.length > 0}>
+            <Show when={selectedClashTemplateVariableKeys.length > 0}>
               <Controller
                 control={form.control}
                 name="variables"
@@ -206,7 +206,7 @@ export function ClashEditModal({ children, value, onSubmit }: ClashEditModalProp
                   </Field>
                 )}
               />
-            </DisplayByConditional>
+            </Show>
             <Field>
               <Button loading={form.formState.isSubmitting} type="submit">
                 {value ? '更新' : '保存'}

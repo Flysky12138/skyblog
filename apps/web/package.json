@@ -35,7 +35,6 @@
     "@prisma/client": "catalog:",
     "@repo/chart-preview": "workspace:*",
     "@repo/font-split": "workspace:*",
-    "@repo/mdx": "workspace:*",
     "@repo/monaco-editor": "workspace:*",
     "@repo/react-hooks": "workspace:*",
     "@repo/rich-text-editor": "workspace:*",

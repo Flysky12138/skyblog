@@ -24,6 +24,7 @@ export const tools = [
         title: '图片压缩'
       },
       {
+        _blank: true,
         description: 'Tiptap 富文本编辑器',
         href: '/toolbox/tiptap',
         id: 'tiptap',

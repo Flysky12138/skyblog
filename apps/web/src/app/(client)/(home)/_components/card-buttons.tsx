@@ -5,7 +5,7 @@ import { ButtonLink } from '@repo/ui/components/button'
 import { HandshakeIcon, PackageIcon } from 'lucide-react'
 import { cacheLife, cacheTag } from 'next/cache'
 
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Show } from '@/components/show'
 import { CACHE_TAG } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
 import packageJson from '~/package.json'
@@ -22,11 +22,11 @@ export async function CardButtons() {
 
   return (
     <Card className="grid grid-cols-2 gap-3 p-card sm:grid-cols-1">
-      <DisplayByConditional condition={friendCount > 0}>
+      <Show when={friendCount > 0}>
         <ButtonLink href="/friends" variant="outline">
           <HandshakeIcon /> 友链（{friendCount}）
         </ButtonLink>
-      </DisplayByConditional>
+      </Show>
       <ButtonLink href="/packages" variant="outline">
         <PackageIcon /> 项目依赖（{pkgCount}）
       </ButtonLink>

@@ -13,7 +13,7 @@ import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { ClashTemplateCreateBodySchema, ClashTemplateCreateBodyType } from '@/app/api/[[...elysia]]/dashboard/clashes/templates/model'
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Show } from '@/components/show'
 import { rpc } from '@/lib/http/rpc'
 
 import { getVariablesNames } from './utils'
@@ -94,7 +94,7 @@ export function ClashTemplateEditModal({ children, value, onSubmit }: ClashTempl
                 </Field>
               )}
             />
-            <DisplayByConditional condition={variables.length > 0}>
+            <Show when={variables.length > 0}>
               <Field>
                 <FieldLabel>变量</FieldLabel>
                 <div className="flex flex-wrap gap-2">
@@ -105,7 +105,7 @@ export function ClashTemplateEditModal({ children, value, onSubmit }: ClashTempl
                   ))}
                 </div>
               </Field>
-            </DisplayByConditional>
+            </Show>
             <Field>
               <Button loading={form.formState.isSubmitting} type="submit">
                 {value ? '更新' : '保存'}

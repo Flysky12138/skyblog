@@ -11,8 +11,8 @@ import { cacheLife, cacheTag } from 'next/cache'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { DisplayByAuth } from '@/components/display/display-by-auth'
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Show } from '@/components/show'
+import { ShowByAuth } from '@/components/show/show-by-auth'
 import { Style } from '@/components/style'
 import { ATTRIBUTE, CACHE_TAG, POST_CARD_VISIBILITY_MASK } from '@/lib/constants'
 import { Storage } from '@/lib/http/storage'
@@ -90,9 +90,9 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
       />
       <Style>{`html { scroll-padding-top: 60px }`}</Style>
 
-      <DisplayByConditional condition={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.HEADER) === POST_CARD_VISIBILITY_MASK.HEADER}>
+      <Show when={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.HEADER) === POST_CARD_VISIBILITY_MASK.HEADER}>
         <Card aria-label="post abstract" className="relative space-y-2 p-3 md:p-5" data-slot="post-abstract">
-          <DisplayByAuth role="admin">
+          <ShowByAuth role="admin">
             <ButtonLink
               className="absolute top-3 right-3 md:top-5 md:right-5"
               href={`/dashboard/posts/${post.id}`}
@@ -102,12 +102,12 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
             >
               <PencilLineIcon />
             </ButtonLink>
-          </DisplayByAuth>
+          </ShowByAuth>
           <h1 className="font-heading text-2xl font-normal md:text-3xl">{post.title}</h1>
           {post.summary && <p className="text-secondary-foreground">{post.summary}</p>}
           <PostInfo defaultValue={post} id={post.id} />
         </Card>
-      </DisplayByConditional>
+      </Show>
 
       {post.content && (
         <div className="flex gap-bp-2">
@@ -134,7 +134,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
               />
             </Card>
 
-            <DisplayByConditional condition={!!prev || !!next}>
+            <Show when={!!prev || !!next}>
               <div className="grid gap-bp-2 sm:grid-cols-2">
                 {prev && (
                   <Card
@@ -163,7 +163,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
                   />
                 )}
               </div>
-            </DisplayByConditional>
+            </Show>
           </div>
 
           {/* <DisplayByConditional condition={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.TOC) === POST_CARD_VISIBILITY_MASK.TOC}>

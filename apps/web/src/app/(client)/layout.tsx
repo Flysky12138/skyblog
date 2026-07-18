@@ -4,7 +4,7 @@ import { ButtonLink } from '@repo/ui/components/button'
 import { ToolCaseIcon } from 'lucide-react'
 import Link from 'next/link'
 
-import { DisplayByBreakPoint } from '@/components/display/display-by-breakpoint'
+import { ShowByBreakPoint } from '@/components/show/show-by-breakpoint'
 import { About } from '@/components/static/about'
 import { Header } from '@/components/static/header'
 import { Logo } from '@/components/static/logo'
@@ -22,9 +22,9 @@ export default function Layout({ children }: React.PropsWithChildren) {
             <Logo />
           </Link>
           <span aria-hidden="true" className="grow" />
-          <DisplayByBreakPoint max="sm">
+          <ShowByBreakPoint max="sm">
             <ScrollToTop showOnScrollYOverflow={500} variant="outline" />
-          </DisplayByBreakPoint>
+          </ShowByBreakPoint>
           <ButtonLink aria-label="toolbox" href="/toolbox" size="icon" variant="outline">
             <ToolCaseIcon />
           </ButtonLink>
@@ -39,9 +39,9 @@ export default function Layout({ children }: React.PropsWithChildren) {
       <aside className="fixed inset-x-0 bottom-[calc(var(--height-footer)+(--spacing(12)))] z-20">
         <Container className="flex h-0 flex-col items-end justify-end gap-3" variant="aside">
           <div id={ATTRIBUTE.ID.NAV_CONTAINER_DOWNLOAD} />
-          <DisplayByBreakPoint min="sm">
+          <ShowByBreakPoint min="sm">
             <ScrollToTop />
-          </DisplayByBreakPoint>
+          </ShowByBreakPoint>
         </Container>
       </aside>
       <footer className="h-footer fixed inset-x-0 bottom-0 flex items-center justify-center bg-white/70 dark:bg-root/80">

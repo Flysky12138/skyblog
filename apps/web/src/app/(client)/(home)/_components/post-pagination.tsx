@@ -7,7 +7,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { PageNumberPaginationMeta } from 'prisma-extension-pagination'
 import React from 'react'
 
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Show } from '@/components/show'
 
 export interface PostPaginationProps extends PageNumberPaginationMeta<true> {}
 
@@ -36,7 +36,7 @@ export function PostPagination({ currentPage, pageCount }: PostPaginationProps) 
   }, [currentPage, pageCount, pathname, searchParams])
 
   return (
-    <DisplayByConditional condition={!!prev || !!next}>
+    <Show when={!!prev || !!next}>
       <div className="grid grid-cols-2">
         {prev && (
           <ButtonLink className="justify-self-start" href={prev} variant="outline">
@@ -49,6 +49,6 @@ export function PostPagination({ currentPage, pageCount }: PostPaginationProps) 
           </ButtonLink>
         )}
       </div>
-    </DisplayByConditional>
+    </Show>
   )
 }

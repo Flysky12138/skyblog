@@ -23,34 +23,24 @@ interface DialogDrawerContextProps {
 const DialogDrawerContext = React.createContext<DialogDrawerContextProps>(null!)
 const useDialogDrawerContext = () => React.useContext(DialogDrawerContext)
 
-export function DialogDrawer(props: Pick<React.ComponentProps<typeof Drawer>, 'children' | 'onOpenChange' | 'open'>) {
+export function DialogDrawer(props: React.ComponentProps<typeof Drawer>) {
   const breakpoint = useBreakpoint()
 
   const isMobile = breakpoints[breakpoint] <= breakpoints.zero
 
+  const Comp = isMobile ? Drawer : Dialog
+
   return (
-    <DialogDrawerContext.Provider
-      value={{
-        isMobile
-      }}
-    >
-      {isMobile ? <Drawer {...props} /> : <Dialog {...props} />}
+    <DialogDrawerContext.Provider value={{ isMobile }}>
+      <Comp {...props} />
     </DialogDrawerContext.Provider>
   )
 }
 
-export function DialogDrawerClose({
-  render,
-  ...props
-}: React.ComponentProps<'button'> & {
-  render?: React.ReactElement
-}) {
+export function DialogDrawerClose(props: React.ComponentProps<'button'> & { render?: React.ReactElement }) {
   const { isMobile } = useDialogDrawerContext()
-  if (isMobile) {
-    props.children = render ?? props.children
-    return <DrawerClose asChild={!!render} {...props} />
-  }
-  return <DialogClose render={render} {...props} />
+  const Comp = isMobile ? DrawerClose : DialogClose
+  return <Comp {...props} />
 }
 
 export function DialogDrawerContent({
@@ -93,16 +83,8 @@ export function DialogDrawerTitle(props: React.ComponentProps<'div'>) {
   return <Comp {...props} />
 }
 
-export function DialogDrawerTrigger({
-  render,
-  ...props
-}: React.ComponentProps<'button'> & {
-  render?: React.ReactElement
-}) {
+export function DialogDrawerTrigger(props: React.ComponentProps<'button'> & { render?: React.ReactElement }) {
   const { isMobile } = useDialogDrawerContext()
-  if (isMobile) {
-    props.children = render ?? props.children
-    return <DrawerTrigger asChild={!!render} {...props} />
-  }
-  return <DialogTrigger render={render} {...props} />
+  const Comp = isMobile ? DrawerTrigger : DialogTrigger
+  return <Comp {...props} />
 }

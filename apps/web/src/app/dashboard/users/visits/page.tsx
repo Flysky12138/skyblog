@@ -1,8 +1,7 @@
 'use client'
 
-import { MDXCode } from '@repo/mdx'
+import { Card } from '@repo/ui/components-self/card'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui/components/dialog'
-import { Skeleton } from '@repo/ui/components/skeleton'
 import { ColumnDef, getCoreRowModel, getPaginationRowModel, getSortedRowModel, PaginationState, useReactTable } from '@tanstack/react-table'
 import { EyeIcon } from 'lucide-react'
 import React from 'react'
@@ -86,15 +85,13 @@ export default function Page() {
                 <DialogTitle>访客</DialogTitle>
                 <DialogDescription>访客的详细信息</DialogDescription>
               </DialogHeader>
-              <MDXCode
-                componentsProps={{
-                  wrapper: {
-                    className: '**:data-line:whitespace-pre-wrap'
-                  }
-                }}
-                language="json"
-                loading={<Skeleton className="h-48" />}
-                source={JSON.stringify(row.original, null, 2)}
+              <Card
+                className="rounded-md p-3 font-code text-sm whitespace-pre-wrap"
+                render={
+                  <pre>
+                    <code>{JSON.stringify(row.original, null, 2)}</code>
+                  </pre>
+                }
               />
             </DialogContent>
           </Dialog>

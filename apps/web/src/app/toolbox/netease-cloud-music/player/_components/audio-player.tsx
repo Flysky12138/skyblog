@@ -11,7 +11,7 @@ import React from 'react'
 import { useAudio } from 'react-use'
 
 import { LyricResponseType, SongDetailResponseType } from '@/app/api/[[...elysia]]/client/netease-cloud-music/songs/model'
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Show } from '@/components/show'
 import { TimeHelper } from '@/lib/helper/time'
 
 export interface AudioPlayerProps {
@@ -139,11 +139,11 @@ export function AudioPlayer({ autoPlay = false, className, loading = false, lyri
               void handlePlayOrPause()
             }}
           >
-            <DisplayByConditional condition={!loading} fallback={<Loader2Icon className="size-5 animate-spin" />}>
+            <Show fallback={<Loader2Icon className="size-5 animate-spin" />} when={!loading}>
               <motion.div className="flex size-full items-center justify-center px-4 py-2" tabIndex={-1} whileTap={{ scale: 0.8 }}>
                 {paused ? <PlayIcon className="size-6" /> : <PauseIcon className="size-6" />}
               </motion.div>
-            </DisplayByConditional>
+            </Show>
           </Button>
         </div>
       </div>

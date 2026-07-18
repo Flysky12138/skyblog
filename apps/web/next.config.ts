@@ -83,7 +83,7 @@ const nextConfig: NextConfig = {
   pageExtensions: ['ts', 'tsx'],
   reactStrictMode: true,
   rewrites,
-  transpilePackages: ['@repo/chart-preview', '@repo/mdx', '@repo/monaco-editor', '@repo/react-hooks', '@repo/ui', '@repo/rich-text-editor'],
+  transpilePackages: ['@repo/chart-preview', '@repo/monaco-editor', '@repo/react-hooks', '@repo/ui', '@repo/rich-text-editor'],
   typedRoutes: true,
   turbopack: {
     root: path.join(process.cwd(), '../..'),

@@ -7,7 +7,7 @@ import useSWR from 'swr'
 
 import { DataTableWrapper } from '@/components/data-table'
 import { DataTableRowActionButton } from '@/components/data-table/data-table-action'
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Show } from '@/components/show'
 import { FileHelper } from '@/lib/helper/file'
 import { rpc, unwrap } from '@/lib/http/rpc'
 
@@ -64,13 +64,13 @@ export function StorageTable2({ className, id }: StorageTable2Props) {
             </TableRow>
           )}
           {/* 加载状态 */}
-          <DisplayByConditional condition={isLoading || isEmpty}>
+          <Show when={isLoading || isEmpty}>
             <TableRow>
               <TableCell className="cursor-default text-center font-heading" colSpan={4}>
                 {isEmpty ? '内容为空' : 'Loading...'}
               </TableCell>
             </TableRow>
-          </DisplayByConditional>
+          </Show>
           {/* 文件夹 */}
           {data?.directories.map(directory => (
             <TableRow

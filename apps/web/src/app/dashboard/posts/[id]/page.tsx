@@ -27,7 +27,7 @@ import { useAsync } from 'react-use'
 import { useImmer } from 'use-immer'
 
 import { StorageUploadModal } from '@/app/dashboard/storage/_components/storage-upload-modal'
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Show } from '@/components/show'
 import { authClient } from '@/lib/auth/client'
 import { STORAGE } from '@/lib/constants'
 import { rpc, unwrap } from '@/lib/http/rpc'
@@ -215,8 +215,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>取消</AlertDialogCancel>
-                  <DisplayByConditional
-                    condition={isCreate}
+                  <Show
                     fallback={
                       <>
                         <AlertDialogAction
@@ -235,6 +234,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
                         </AlertDialogAction>
                       </>
                     }
+                    when={isCreate}
                   >
                     <AlertDialogAction
                       onClick={() => {
@@ -243,7 +243,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
                     >
                       创建
                     </AlertDialogAction>
-                  </DisplayByConditional>
+                  </Show>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>

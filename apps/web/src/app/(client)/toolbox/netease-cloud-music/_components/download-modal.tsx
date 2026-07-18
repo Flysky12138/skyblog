@@ -24,8 +24,8 @@ import { useAsyncFn, useBeforeUnload, useMap, useSet } from 'react-use'
 import { List, RowComponentProps } from 'react-window'
 
 import { AlbumResponseType } from '@/app/api/[[...elysia]]/client/netease-cloud-music/model'
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
 import { Portal } from '@/components/portal'
+import { Show } from '@/components/show'
 import { ATTRIBUTE } from '@/lib/constants'
 import { AudioFFmpeg } from '@/lib/ffmpeg/audio'
 import { DirectoryHelper } from '@/lib/helper/directory'
@@ -214,7 +214,7 @@ export function DownloadModal({ songs: staticSongs }: DownloadModalProps) {
                     </FieldLabel>
                   </div>
                 </Field>
-                <DisplayByConditional condition={hasDownloadType('song')}>
+                <Show when={hasDownloadType('song')}>
                   <Field>
                     <FieldTitle>音质</FieldTitle>
                     <Select
@@ -240,7 +240,7 @@ export function DownloadModal({ songs: staticSongs }: DownloadModalProps) {
                       </SelectContent>
                     </Select>
                   </Field>
-                </DisplayByConditional>
+                </Show>
               </FieldGroup>
               <DialogDrawerFooter className="mt-4 px-0">
                 <DialogDrawerClose

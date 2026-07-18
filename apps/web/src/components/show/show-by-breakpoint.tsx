@@ -2,9 +2,9 @@
 
 import { breakpoints, useBreakpoint } from '@repo/react-hooks'
 
-import { DisplayByConditional, DisplayByConditionalProps } from './display-by-conditional'
+import { Show, ShowProps } from '.'
 
-export interface DisplayByBreakPointProps extends Omit<DisplayByConditionalProps, 'condition'> {
+export interface ShowByBreakPointProps extends Omit<ShowProps, 'when'> {
   /**
    * 最大宽度
    *
@@ -19,7 +19,7 @@ export interface DisplayByBreakPointProps extends Omit<DisplayByConditionalProps
   min?: Exclude<keyof typeof breakpoints, 'xs'> | number
 }
 
-export function DisplayByBreakPoint({ max: up = Infinity, min: down = -Infinity, ...props }: DisplayByBreakPointProps) {
+export function ShowByBreakPoint({ max: up = Infinity, min: down = -Infinity, ...props }: ShowByBreakPointProps) {
   const breakpoint = useBreakpoint()
   const breakpointMatchedValue = breakpoints[breakpoint]
 
@@ -31,5 +31,5 @@ export function DisplayByBreakPoint({ max: up = Infinity, min: down = -Infinity,
 
   const isMatched = isLtUpValue && isGteDownValue
 
-  return <DisplayByConditional condition={isMatched} {...props} />
+  return <Show when={isMatched} {...props} />
 }

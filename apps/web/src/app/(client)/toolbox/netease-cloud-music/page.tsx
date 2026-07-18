@@ -10,7 +10,7 @@ import React from 'react'
 import useSWRInfinite from 'swr/infinite'
 import { useImmer } from 'use-immer'
 
-import { DisplayByConditional } from '@/components/display/display-by-conditional'
+import { Show } from '@/components/show'
 import { rpc, unwrap } from '@/lib/http/rpc'
 
 import { AudioPlayerModal } from './_components/audio-player-modal'
@@ -104,23 +104,23 @@ export default function Page() {
         </InputGroupAddon>
       </InputGroup>
 
-      <DisplayByConditional
-        condition={songs.length > 0}
+      <Show
         fallback={
-          <DisplayByConditional
-            condition={isLoading}
+          <Show
             fallback={
               <p className="py-10 text-center text-sm leading-6 text-muted-foreground">
                 站长贡献 <span className="italic">VIP</span> 账号，以实现会员歌曲使用 <br />
                 部分歌曲需要直接购买，若我云盘中存在时才可使用
               </p>
             }
+            when={isLoading}
           >
             <Card className="flex items-center justify-center rounded-md py-10">
               <Spinner className="size-8" />
             </Card>
-          </DisplayByConditional>
+          </Show>
         }
+        when={songs.length > 0}
       >
         <SongList
           hasMore={hasMore}
@@ -135,7 +135,7 @@ export default function Page() {
             setIsOpen(true)
           }}
         />
-      </DisplayByConditional>
+      </Show>
 
       <DownloadModal songs={songs} />
       <AudioPlayerModal open={isOpen} song={player} onOpenChange={setIsOpen} />

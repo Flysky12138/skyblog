@@ -129,7 +129,6 @@ catalog:
   unified: ^11.0.5
   unist-util-visit: ^5.1.0
   uuidv7: ^1.2.1
-  vaul: ^1.1.2
   vercel: ^56.2.1
   vite: ^8.1.4
   zod: ^4.4.3

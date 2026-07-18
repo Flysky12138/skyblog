@@ -12,8 +12,8 @@ import NextTopLoader from 'nextjs-toploader'
 import { prefetchDNS } from 'react-dom'
 import { SWRConfig } from 'swr'
 
-import { DisplayByEnv } from '@/components/display/display-by-env'
 import { Report } from '@/components/report'
+import { ShowByEnv } from '@/components/show/show-by-env'
 
 export const metadata: Metadata = {
   authors: [{ name: 'flysky12138', url: 'https://github.com/Flysky12138' }],
@@ -65,9 +65,9 @@ export default function Layout({ children }: React.PropsWithChildren) {
         <ThemeProvider>
           <SWRConfig>
             <TooltipProvider>{children}</TooltipProvider>
-            <DisplayByEnv env="production">
+            <ShowByEnv env="production">
               <Report />
-            </DisplayByEnv>
+            </ShowByEnv>
           </SWRConfig>
           <NextTopLoader showForHashAnchor={false} showSpinner={false} />
           <Toaster />
