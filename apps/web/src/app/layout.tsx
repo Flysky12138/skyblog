@@ -14,6 +14,7 @@ import { SWRConfig } from 'swr'
 
 import { Report } from '@/components/report'
 import { ShowByEnv } from '@/components/show/show-by-env'
+import { Offline } from '@/components/static/offline'
 
 export const metadata: Metadata = {
   authors: [{ name: 'flysky12138', url: 'https://github.com/Flysky12138' }],
@@ -63,17 +64,20 @@ export default function Layout({ children }: React.PropsWithChildren) {
     <html suppressHydrationWarning dir="ltr" lang="zh-CN">
       <body className={cn(heading.variable, code.variable)}>
         <ThemeProvider>
+          <Offline />
+          <NoiseTexture />
+
           <SWRConfig>
             <TooltipProvider>{children}</TooltipProvider>
             <ShowByEnv env="production">
               <Report />
             </ShowByEnv>
           </SWRConfig>
+
           <NextTopLoader showForHashAnchor={false} showSpinner={false} />
           <Toaster />
           <FancyboxRegister />
         </ThemeProvider>
-        <NoiseTexture />
       </body>
     </html>
   )

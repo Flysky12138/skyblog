@@ -115,7 +115,7 @@ export default function Page() {
             }
             when={isLoading}
           >
-            <Card className="flex items-center justify-center rounded-md py-10">
+            <Card className="flex items-center justify-center rounded-md py-10 ring-0">
               <Spinner className="size-8" />
             </Card>
           </Show>

@@ -33,6 +33,7 @@ export function PostSort({ className, direction, field }: PostSortProps) {
   return (
     <div className={cn('flex items-center gap-2', className)}>
       <Button
+        aria-label="排序方式"
         size="icon"
         variant="outline"
         onClick={() => {
@@ -50,8 +51,8 @@ export function PostSort({ className, direction, field }: PostSortProps) {
           handleClick({ direction, field: value })
         }}
       >
-        <SelectTrigger render={({ className, ...props }) => <Button className="w-32" variant="outline" {...props} />}>
-          <SelectValue placeholder="排序方式" />
+        <SelectTrigger render={({ className, ...props }) => <Button aria-label="排序字段" className="w-32" variant="outline" {...props} />}>
+          <SelectValue placeholder="排序字段" />
         </SelectTrigger>
         <SelectContent className="min-w-0">
           <SelectGroup>

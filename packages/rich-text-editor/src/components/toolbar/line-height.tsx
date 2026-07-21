@@ -10,7 +10,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui/components/tooltip'
 import { NodeSelection } from '@tiptap/pm/state'
 import { useTiptap, useTiptapState } from '@tiptap/react'
-import { TextCursorIcon } from 'lucide-react'
+import { MoveVerticalIcon } from 'lucide-react'
 
 import { TriggerButton } from './_components/button'
 
@@ -45,7 +45,7 @@ export function LineHeight() {
             <DropdownMenuTrigger
               render={
                 <TriggerButton aria-label="行高" disabled={isSelectionEmpty || isNodeSelected || !canDo}>
-                  <TextCursorIcon />
+                  <MoveVerticalIcon />
                 </TriggerButton>
               }
             />

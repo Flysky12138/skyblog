@@ -14,23 +14,26 @@ export function Style({ children }: StyleProps) {
 
   const id = React.useId()
 
-  React.useEffect(() => {
-    if (!styleRef.current) {
-      const style = document.createElement('style')
-      styleRef.current = style
+  React.useLayoutEffect(() => {
+    const style = document.createElement('style')
+    styleRef.current = style
 
-      style.id = id
+    style.id = id
 
-      document.head.append(style)
-    }
-
-    styleRef.current.textContent = children
+    document.head.append(style)
 
     return () => {
       styleRef.current?.remove()
       styleRef.current = null
     }
-  }, [children, id])
+  }, [id])
+
+  // 内容更新：就地写入 textContent，保持元素在 <head> 中的位置（层叠顺序）稳定
+  React.useLayoutEffect(() => {
+    if (styleRef.current) {
+      styleRef.current.textContent = children
+    }
+  }, [children])
 
   return null
 }

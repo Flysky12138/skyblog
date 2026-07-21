@@ -348,7 +348,7 @@ export function ResizableBox({
                   key={handle}
                   className={cn(
                     'absolute z-1 flex items-center justify-center',
-                    'opacity-0 transition-opacity group-hover:opacity-100',
+                    'opacity-0 transition-opacity group-hover:opacity-100 group-active:opacity-100',
                     HANDLE_POSITION[handle],
                     HANDLE_CURSOR[handle],
                     'before:absolute before:inset-0 before:z-10',

@@ -13,7 +13,7 @@ export function transformerLineNumbers(): ShikiTransformer {
     name: 'line-numbers',
 
     line(node, line) {
-      // node.properties['data-line'] = String(line)
+      node.properties['data-line'] = String(line)
     },
 
     pre(node) {

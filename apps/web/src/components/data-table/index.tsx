@@ -10,6 +10,8 @@ interface DataTableProps<TData extends RowData> {
 }
 
 export function DataTable<TData extends RowData>({ table }: DataTableProps<TData>) {
+  'use no memo'
+
   return (
     <DataTableWrapper>
       <Table
@@ -61,7 +63,7 @@ export function DataTable<TData extends RowData>({ table }: DataTableProps<TData
 }
 
 export function DataTableWrapper({ className, ...props }: React.ComponentProps<typeof Card>) {
-  return <Card className={cn('rounded-md dark:ring-0', '*:pointer-coarse:no-scrollbar **:[th]:border-b-2', className)} {...props} />
+  return <Card className={cn('overflow-hidden rounded-md dark:ring-0', '*:pointer-coarse:no-scrollbar **:[th]:border-b-2', className)} {...props} />
 }
 
 function getAlignClassName<TData extends RowData, TValue>(align: ColumnMeta<TData, TValue>['align']) {

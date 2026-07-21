@@ -3,8 +3,8 @@ import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { renderToHTMLString } from '@tiptap/static-renderer/pm/html-string'
 import { renderToString } from 'katex'
 
+import { ExcalidrawAttributes } from '../../extensions/excalidraw'
 import { renderCodeBlocks } from './code-block-render'
-import { renderExcalidrawNodes } from './excalidraw-render'
 
 /**
  * 将 JSON 内容渲染为 HTML 字符串
@@ -31,32 +31,22 @@ export async function renderJSONContentToHTMLString(
   }
 
   const highlighted = await renderCodeBlocks(pmNode)
-  const excalidrawSvgs = await renderExcalidrawNodes(pmNode)
 
   return renderToHTMLString({
     content: pmNode,
     extensions,
     options: {
       nodeMapping: {
-        blockMath: ({ node }) => {
-          return `<div data-type="block-math">${renderToString(node.attrs.latex as string)}</div>`
-        },
-        codeBlock: ({ node }) => {
-          return highlighted.get(node) ?? `<pre><code>${node.attrs.content}</code></pre>`
-        },
+        blockMath: ({ node }) => `<div data-type="block-math">${renderToString(node.attrs.latex as string)}</div>`,
+        codeBlock: ({ node }) => highlighted.get(node) ?? `<pre><code>${node.attrs.content}</code></pre>`,
+        inlineMath: ({ node }) => `<span data-type="inline-math">${renderToString(node.attrs.latex as string)}</span>`,
         excalidraw: ({ node }) => {
-          return excalidrawSvgs.get(node) ?? ''
-        },
-        inlineMath: ({ node }) => {
-          return `<span data-type="inline-math">${renderToString(node.attrs.latex as string)}</span>`
+          const { html, textAlign } = node.attrs as ExcalidrawAttributes
+          return html ? `<div data-type="excalidraw" data-excalidraw-align="${textAlign}">${html}</div>` : ''
         }
       },
-      unhandledMark: () => {
-        return ''
-      },
-      unhandledNode: () => {
-        return ''
-      }
+      unhandledMark: () => '',
+      unhandledNode: () => ''
     }
   })
 }

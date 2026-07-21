@@ -2,6 +2,7 @@
 
 import { Tiptap, useEditor } from '@repo/rich-text-editor'
 import { ExtensionKit } from '@repo/rich-text-editor/extensions'
+import { renderJSONContentToHTMLString } from '@repo/rich-text-editor/render'
 import { ToolBar } from '@repo/rich-text-editor/toolbar'
 import { toast } from '@repo/ui/base'
 import {
@@ -23,7 +24,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui/components/too
 import { CloudUploadIcon, EyeClosedIcon, EyeIcon, PresentationIcon, ReceiptTextIcon, SaveIcon } from 'lucide-react'
 import { useRouter } from 'nextjs-toploader/app'
 import React from 'react'
-import { useAsync } from 'react-use'
+import useSWR from 'swr'
 import { useImmer } from 'use-immer'
 
 import { StorageUploadModal } from '@/app/dashboard/storage/_components/storage-upload-modal'
@@ -34,7 +35,7 @@ import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
 
 import { PostEditModal } from './_components/post-edit-modal'
-import { createInitialPost, PostType } from './utils'
+import { createInitialPost } from './utils'
 
 export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   const router = useRouter()
@@ -45,6 +46,10 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
 
   const [open, setOpen] = React.useState(false)
   const [doc, setDoc] = React.useState('')
+  const [isEditorEmpty, setIsEditorEmpty] = React.useState(true)
+  const [post, setPost] = useImmer(createInitialPost())
+
+  const actionsRef = React.useRef<NonNullable<React.ComponentProps<typeof AlertDialog>['actionsRef']>['current']>(null)
 
   const editor = useEditor({
     editable: true,
@@ -57,32 +62,40 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
         role: 'textbox',
         spellcheck: 'false'
       }
+    },
+    onUpdate: () => {
+      setIsEditorEmpty(editor?.isEmpty ?? true)
     }
   })
 
-  // 文章数据
-  const [post, setPost] = useImmer(createInitialPost())
+  // 获取文章数据，仅仅为了缓存
+  const { data, isLoading } = useSWR(
+    isCreate ? null : ['019f84e6-d45f-7630-869b-bbab2af4a4f7', id],
+    () => rpc.dashboard.posts({ id }).get().then(unwrap),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      onSuccess: setPost
+    }
+  )
 
-  // 初始化数据
-  const initData = (data: null | PostType) => {
+  // 填充编辑器内容
+  React.useEffect(() => {
     if (!data) return
-    setPost(data)
-    editor
-      ?.chain()
-      .setMeta('addToHistory', false)
-      .setContent(data.content, {
-        contentType: data.content?.startsWith('<') ? 'html' : 'markdown'
-      })
-      .run()
-  }
-
-  // 请求数据
-  const { loading } = useAsync(async () => {
-    if (isCreate) return
     if (!editor) return
-    const data = await rpc.dashboard.posts({ id }).get().then(unwrap)
-    initData(data)
-  }, [id, editor])
+    const timer = setTimeout(() => {
+      const content = data.content?.startsWith('<') ? data.content : (JSON.parse(data.content ?? 'null') as object)
+      editor
+        .chain()
+        .setMeta('addToHistory', false)
+        .setContent(content, { contentType: typeof content === 'object' ? 'html' : 'json' })
+        .run()
+      setIsEditorEmpty(editor.isEmpty)
+    }, 0)
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [data, editor])
 
   if (!editor) return null
 
@@ -101,7 +114,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
         .post({
           authorId: session.user.id,
           categories: post.categories.map(({ category }) => category.name),
-          content: await editor.getHTMLAsync(),
+          content: JSON.stringify(editor.getJSON()),
           isPublished: post.isPublished,
           pinOrder: post.pinOrder,
           slug: post.slug,
@@ -115,6 +128,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
         success: '创建成功'
       }
     )
+    setPost(createInitialPost())
     router.replace(`/dashboard/posts/${data.id}`)
   }
 
@@ -125,12 +139,13 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
         toast.error('表单验证失败', { richColors: true })
         return
       }
-      const data = await toastPromise(
+      actionsRef.current?.close()
+      await toastPromise(
         rpc.dashboard
           .posts({ id })
           .put({
             categories: post.categories.map(({ category }) => category.name),
-            content: await editor.getHTMLAsync(),
+            content: JSON.stringify(editor.getJSON()),
             isPublished: post.isPublished,
             pinOrder: post.pinOrder,
             slug: post.slug,
@@ -145,7 +160,6 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
           success: '更新成功'
         }
       )
-      initData(data)
     } catch (error) {
       console.error(error)
     }
@@ -153,7 +167,8 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
 
   // 预览
   const handlePreview = async () => {
-    const html = await editor.getHTMLAsync()
+    const json = editor.getJSON()
+    const html = await renderJSONContentToHTMLString(json, { extensions: editor.extensionManager.baseExtensions })
     React.startTransition(() => {
       setDoc(html)
       setOpen(true)
@@ -201,7 +216,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
               </TooltipTrigger>
               <TooltipContent>{post.isPublished ? '公开' : '隐藏'}</TooltipContent>
             </Tooltip>
-            <AlertDialog>
+            <AlertDialog actionsRef={actionsRef}>
               <Tooltip>
                 <TooltipTrigger render={<AlertDialogTrigger render={<Button aria-label={isCreate ? '创建' : '更新'} size="icon" />} />}>
                   <SaveIcon />
@@ -254,6 +269,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
                   render={
                     <Button
                       aria-label="预览"
+                      disabled={isEditorEmpty}
                       size="icon-sm"
                       variant="outline"
                       onClick={() => {
@@ -266,15 +282,15 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
                 </TooltipTrigger>
                 <TooltipContent>预览</TooltipContent>
               </Tooltip>
-              <DialogContent className="max-w-5xl bg-card">
+              <DialogContent className="max-w-5xl bg-card" fullScreen="sm">
                 <article dangerouslySetInnerHTML={{ __html: doc }} className="tiptap" />
               </DialogContent>
             </Dialog>
           </ToolBar>
           <Separator />
         </div>
-        <div className="h-full overflow-y-auto px-3 py-5 md:px-5 md:py-8">
-          {loading ? (
+        <div className="h-full scroll-fade-b overflow-y-auto px-3 py-5 md:px-5 md:py-8">
+          {isLoading ? (
             <div className="flex h-full items-center justify-center">
               <Spinner className="size-8" />
             </div>

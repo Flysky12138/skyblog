@@ -73,7 +73,7 @@ export class DirectoryHelper {
         throw new Error('已取消文件夹选择操作', { cause: error })
       }
       toast.warning('当前浏览器不支持选择目录功能', {
-        duration: 6 * 1000,
+        duration: 6_000,
         id: '0199b418-183d-71bd-849a-09f6a9cd8985',
         richColors: true
       })

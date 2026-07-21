@@ -2,9 +2,10 @@
 
 import { Button } from '@repo/ui/components/button'
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from '@repo/ui/components/combobox'
-import { Field, FieldGroup, FieldLabel } from '@repo/ui/components/field'
+import { Field, FieldGroup, FieldLabel, FieldTitle } from '@repo/ui/components/field'
 import { Kbd } from '@repo/ui/components/kbd'
 import { Popover, PopoverContent, PopoverTrigger } from '@repo/ui/components/popover'
+import { Switch } from '@repo/ui/components/switch'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui/components/tooltip'
 import { useTiptap, useTiptapState } from '@tiptap/react'
 import { groupBy, mapValues } from 'es-toolkit'
@@ -14,9 +15,10 @@ import { grammars } from 'tm-grammars'
 import { themes } from 'tm-themes'
 
 import { CodeBlockShikiAttributes } from '../../extensions/code-block-shiki'
-import { defaultDarkTheme, defaultLanguage, defaultLightTheme } from '../../lib/shiki/highlighter'
+import { defaultDarkTheme, defaultLanguage, defaultLightTheme } from '../../lib/shiki'
 import { ToggleButton } from './_components/button'
 
+// 语言列表
 const grammarItems = grammars
   .map(grammar => ({ label: grammar.name, value: grammar.name }))
   .concat([
@@ -24,7 +26,7 @@ const grammarItems = grammars
     { label: 'ansi', value: 'ansi' }
   ])
   .sort((a, b) => a.label.localeCompare(b.label))
-
+// 主题列表
 const themeItems = mapValues(
   groupBy(themes, item => item.type),
   items => items.map(theme => ({ label: theme.name, value: theme.name })).sort((a, b) => a.label.localeCompare(b.label))
@@ -32,25 +34,28 @@ const themeItems = mapValues(
 
 export function CodeBlock() {
   const { editor } = useTiptap()
-  const { canDo, darkTheme, isActive, language, lightTheme } = useTiptapState(({ editor }) => {
-    const { darkTheme, language, lightTheme } = editor.isActive('codeBlock') ? (editor.getAttributes('codeBlock') as CodeBlockShikiAttributes) : {}
+  const { canDo, darkTheme, isActive, language, lightTheme, showLineNumbers } = useTiptapState(({ editor }) => {
+    const { darkTheme, language, lightTheme, showLineNumbers } = editor.isActive('codeBlock')
+      ? (editor.getAttributes('codeBlock') as CodeBlockShikiAttributes)
+      : {}
     return {
       canDo: editor.can().toggleCodeBlock(),
       darkTheme: darkTheme ?? defaultDarkTheme,
       isActive: editor.isActive('codeBlock'),
       language: language ?? defaultLanguage,
-      lightTheme: lightTheme ?? defaultLightTheme
+      lightTheme: lightTheme ?? defaultLightTheme,
+      showLineNumbers
     }
   })
 
   const [open, setOpen] = React.useState(false)
-  const [pending, setPending] = React.useState({ darkTheme, language, lightTheme })
+  const [pending, setPending] = React.useState({ darkTheme, language, lightTheme, showLineNumbers })
 
-  const initialRef = React.useRef({ darkTheme, language, lightTheme })
+  const initialRef = React.useRef({ darkTheme, language, lightTheme, showLineNumbers })
 
   const handleOpenChange = (open: boolean) => {
     if (open) {
-      const values = { darkTheme, language, lightTheme }
+      const values = { darkTheme, language, lightTheme, showLineNumbers }
       initialRef.current = values
       setPending(values)
     }
@@ -58,9 +63,9 @@ export function CodeBlock() {
   }
 
   const handleCancel = () => {
-    const { darkTheme, language, lightTheme } = initialRef.current
-    editor.chain().updateAttributes('codeBlock', { darkTheme, language, lightTheme }).run()
-    setPending({ darkTheme, language, lightTheme })
+    const { darkTheme, language, lightTheme, showLineNumbers } = initialRef.current
+    editor.chain().updateAttributes('codeBlock', { darkTheme, language, lightTheme, showLineNumbers }).run()
+    setPending({ darkTheme, language, lightTheme, showLineNumbers })
     setOpen(false)
   }
 
@@ -193,6 +198,22 @@ export function CodeBlock() {
                 </ComboboxList>
               </ComboboxContent>
             </Combobox>
+          </Field>
+          <Field>
+            <FieldLabel>状态</FieldLabel>
+            <FieldGroup>
+              <FieldLabel>
+                <Field className="p-2.5!" orientation="horizontal">
+                  <FieldTitle>行号</FieldTitle>
+                  <Switch
+                    checked={showLineNumbers}
+                    onCheckedChange={() => {
+                      editor.chain().toggleShowLineNumbers().run()
+                    }}
+                  />
+                </Field>
+              </FieldLabel>
+            </FieldGroup>
           </Field>
           <Field orientation="horizontal">
             {isActive ? (

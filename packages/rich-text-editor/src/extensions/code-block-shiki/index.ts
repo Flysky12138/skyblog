@@ -3,12 +3,13 @@ import { Attribute, Node, textblockTypeInputRule } from '@tiptap/core'
 import { BundledLanguage, BundledTheme, SpecialLanguage } from 'shiki'
 
 import { CodeBlockView } from '../../components/view/code-block-view'
-import { defaultDarkTheme, defaultLanguage, defaultLightTheme } from '../../lib/shiki/highlighter'
+import { defaultDarkTheme, defaultLanguage, defaultLightTheme } from '../../lib/shiki'
 
 export interface CodeBlockShikiAttributes {
   darkTheme: BundledTheme
   language: BundledLanguage | SpecialLanguage
   lightTheme: BundledTheme
+  showLineNumbers: boolean
 }
 
 export interface CodeBlockShikiOptions {
@@ -48,6 +49,10 @@ declare module '@tiptap/core' {
        * 切换代码块
        */
       toggleCodeBlock: (attributes?: { language?: string }) => ReturnType
+      /**
+       * 切换显示行号
+       */
+      toggleShowLineNumbers: () => ReturnType
     }
   }
 }
@@ -90,6 +95,13 @@ export const CodeBlockShiki = Node.create<CodeBlockShikiOptions>({
         renderHTML: attributes => ({
           'data-light-theme': attributes.lightTheme as string
         })
+      },
+      showLineNumbers: {
+        default: false,
+        parseHTML: element => element.hasAttribute('data-line-digits') || element.getAttribute('data-show-line-numbers') === 'true',
+        renderHTML: attributes => ({
+          'data-show-line-numbers': attributes.showLineNumbers as boolean
+        })
       }
     } satisfies Record<keyof CodeBlockShikiAttributes, Attribute>
   },
@@ -101,17 +113,17 @@ export const CodeBlockShiki = Node.create<CodeBlockShikiOptions>({
           return commands.setNode(this.name, attributes)
         }
       },
-      setCodeBlockDarkTheme: (darkTheme: string) => {
+      setCodeBlockDarkTheme: darkTheme => {
         return ({ commands }) => {
           return commands.updateAttributes(this.name, { darkTheme })
         }
       },
-      setCodeBlockLanguage: (language: string) => {
+      setCodeBlockLanguage: language => {
         return ({ commands }) => {
           return commands.updateAttributes(this.name, { language })
         }
       },
-      setCodeBlockLightTheme: (lightTheme: string) => {
+      setCodeBlockLightTheme: lightTheme => {
         return ({ commands }) => {
           return commands.updateAttributes(this.name, { lightTheme })
         }
@@ -119,6 +131,11 @@ export const CodeBlockShiki = Node.create<CodeBlockShikiOptions>({
       toggleCodeBlock: attributes => {
         return ({ commands }) => {
           return commands.toggleNode(this.name, 'paragraph', attributes)
+        }
+      },
+      toggleShowLineNumbers: () => {
+        return ({ commands, editor }) => {
+          return commands.updateAttributes(this.name, { showLineNumbers: !editor.isActive(this.name, { showLineNumbers: true }) })
         }
       }
     }

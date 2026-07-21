@@ -6,12 +6,12 @@ import { NodeViewContent, NodeViewProps, NodeViewWrapper, ReactNodeViewRenderer 
 import React from 'react'
 
 import { CodeBlockShikiAttributes } from '../../extensions/code-block-shiki'
-import { highlightCode } from '../../lib/shiki/highlighter'
+import { highlightCode } from '../../lib/shiki'
 
 export function CodeBlockViewInner({ editor, getPos, node }: NodeViewProps) {
   const [highlightedHtml, setHighlightedHtml] = React.useState('')
 
-  const { darkTheme, language, lightTheme } = node.attrs as CodeBlockShikiAttributes
+  const { darkTheme, language, lightTheme, showLineNumbers } = node.attrs as CodeBlockShikiAttributes
   const codeContent = node.textContent
 
   React.useEffect(() => {
@@ -22,6 +22,7 @@ export function CodeBlockViewInner({ editor, getPos, node }: NodeViewProps) {
         const html = await highlightCode(codeContent, {
           lang: language,
           preserveMarkers: true,
+          showLineNumbers,
           themes: {
             dark: darkTheme,
             light: lightTheme
@@ -42,7 +43,7 @@ export function CodeBlockViewInner({ editor, getPos, node }: NodeViewProps) {
     return () => {
       ignore = true
     }
-  }, [codeContent, darkTheme, language, lightTheme])
+  }, [codeContent, darkTheme, language, lightTheme, showLineNumbers])
 
   const nodeSizeRef = useLatestRef(node.nodeSize)
 

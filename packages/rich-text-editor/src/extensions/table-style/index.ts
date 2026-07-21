@@ -126,7 +126,7 @@ export const TableStyle = Extension.create<TableStyleOptions>({
             renderHTML: attributes => {
               const padding = attributes.cellPadding as null | PaddingValue
               if (!padding || padding === this.options.defaultPadding) {
-                return {}
+                return null
               }
               return { 'data-cell-padding': padding }
             }
@@ -143,7 +143,7 @@ export const TableStyle = Extension.create<TableStyleOptions>({
             renderHTML: attributes => {
               const tableAlign = attributes.tableAlign as Alignment | null
               if (!tableAlign || tableAlign === 'start') {
-                return {}
+                return null
               }
               return { 'data-table-align': tableAlign }
             }
@@ -159,7 +159,7 @@ export const TableStyle = Extension.create<TableStyleOptions>({
               if (border === false) {
                 return { 'data-table-border': 'false' }
               }
-              return {}
+              return null
             }
           }
         }

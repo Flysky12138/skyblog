@@ -31,7 +31,7 @@ export function ClashTable() {
     mutate
   } = useSWR('0198eb98-3acc-70ab-82f3-14d5ca929785', () => rpc.dashboard.clashes.get().then(unwrap), {
     fallbackData: [],
-    refreshInterval: 10 * 1000
+    refreshInterval: 10_000
   })
 
   type RowData = Row<(typeof clashes)[number]>

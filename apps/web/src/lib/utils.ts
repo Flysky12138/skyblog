@@ -1,3 +1,5 @@
+import { isBrowser } from 'es-toolkit'
+
 /**
  * 是否是开发环境
  */
@@ -26,3 +28,8 @@ export function randomString(length: number) {
 
   return result
 }
+
+/**
+ * 是否是触摸设备
+ */
+export const isTouchDevice = () => (isBrowser() ? window.matchMedia('(pointer: coarse)').matches : false)

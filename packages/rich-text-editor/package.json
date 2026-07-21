@@ -12,6 +12,8 @@
     ".": "./src/index.ts",
     "./toolbar": "./src/components/toolbar/index.tsx",
     "./extensions": "./src/extensions/index.ts",
+    "./render": "./src/lib/render/index.ts",
+    "./shiki": "./src/lib/shiki/index.ts",
     "./style.css": "./src/styles/index.css"
   },
   "dependencies": {

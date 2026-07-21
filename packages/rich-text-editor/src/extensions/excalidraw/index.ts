@@ -1,12 +1,15 @@
 import { ExcalidrawElement } from '@excalidraw/excalidraw/element/types'
 import { Attribute, mergeAttributes, Node } from '@tiptap/core'
-import { omit } from 'es-toolkit'
 
 import { ExcalidrawView } from '../../components/view/excalidraw-view'
 
 export interface ExcalidrawAttributes {
   elements: ExcalidrawElement[]
   height?: number
+  /**
+   * 渲染后的 HTML 字符串
+   */
+  html?: null | string
   /**
    * `@tiptap/extension-text-align` 注册的全局属性
    */
@@ -35,6 +38,7 @@ export const Excalidraw = Node.create({
     return {
       elements: {
         default: [],
+        renderHTML: () => null,
         parseHTML: el => {
           const script = el.querySelector('script[type="application/json"]')
           if (!script) return []
@@ -47,26 +51,32 @@ export const Excalidraw = Node.create({
       },
       height: {
         default: null,
+        renderHTML: () => null,
         parseHTML: el => {
           const svg = el.querySelector('svg')
           const h = svg?.getAttribute('height')
           return h ? Number(h) : null
         }
       },
+      html: {
+        default: null,
+        renderHTML: () => null
+      },
       width: {
         default: null,
+        renderHTML: () => null,
         parseHTML: el => {
           const svg = el.querySelector('svg')
           const w = svg?.getAttribute('width')
           return w ? Number(w) : null
         }
       }
-    } satisfies Record<Exclude<keyof ExcalidrawAttributes, 'textAlign'>, Attribute>
+    } satisfies Partial<Record<keyof ExcalidrawAttributes, Attribute>>
   },
 
   addCommands() {
     return {
-      insertExcalidraw: (attrs: ExcalidrawAttributes) => {
+      insertExcalidraw: attrs => {
         return ({ commands }) => {
           return commands.insertContent({ attrs, type: this.name })
         }
@@ -85,7 +95,7 @@ export const Excalidraw = Node.create({
   renderHTML({ HTMLAttributes, node }) {
     const { elements, textAlign } = node.attrs as ExcalidrawAttributes
 
-    const attrs = mergeAttributes(omit(HTMLAttributes, ['elements', 'height', 'width']), {
+    const attrs = mergeAttributes(HTMLAttributes, {
       'data-excalidraw-align': textAlign,
       'data-type': 'excalidraw'
     })

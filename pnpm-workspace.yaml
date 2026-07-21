@@ -23,9 +23,9 @@ patchedDependencies:
 catalogMode: prefer
 cleanupUnusedCatalogs: true
 catalog:
-  '@aws-sdk/client-s3': ^3.1088.0
-  '@aws-sdk/s3-request-presigner': ^3.1088.0
-  '@base-ui/react': 1.6.0
+  '@aws-sdk/client-s3': ^3.1104.0
+  '@aws-sdk/s3-request-presigner': ^3.1104.0
+  '@base-ui/react': 1.7.0
   '@commitlint/cli': ^21.2.1
   '@commitlint/config-conventional': ^21.2.0
   '@elysiajs/eden': ^1.4.9
@@ -34,31 +34,30 @@ catalog:
   '@fancyapps/ui': ^6.1.14
   '@ffmpeg/ffmpeg': ^0.12.15
   '@ffmpeg/util': ^0.12.2
-  '@hookform/resolvers': ^5.4.0
+  '@hookform/resolvers': ^5.7.1
   '@japont/unicode-range': ^1.0.0
   '@monaco-editor/loader': ^1.7.0
   '@neondatabase/auth': 0.4.2-beta
-  '@next/env': ^16.2.10
-  '@next/eslint-plugin-next': ^16.2.10
+  '@next/env': ^16.3.0
+  '@next/eslint-plugin-next': ^16.3.0
   '@octokit/rest': ^22.0.1
-  '@prisma/adapter-neon': ^7.8.0
-  '@prisma/client': ^7.8.0
-  '@shikijs/colorized-brackets': ^4.3.1
-  '@shikijs/monaco': ^4.3.1
-  '@shikijs/transformers': ^4.3.1
-  '@sinclair/typebox': ^0.34.52
+  '@prisma/adapter-neon': ^7.9.1
+  '@prisma/client': ^7.9.1
+  '@shikijs/colorized-brackets': ^4.4.2
+  '@shikijs/monaco': ^4.4.2
+  '@shikijs/transformers': ^4.4.2
   '@svgr/webpack': ^8.1.0
-  '@tailwindcss/postcss': ^4.3.2
+  '@tailwindcss/postcss': ^4.3.3
   '@tailwindcss/typography': ^0.5.20
-  '@tailwindcss/vite': ^4.3.2
+  '@tailwindcss/vite': ^4.3.3
   '@tanstack/react-table': ^8.21.3
-  '@types/node': ^26.1.1
-  '@types/react': ^19.2.17
-  '@types/react-dom': ^19.2.3
+  '@types/node': ^26.1.2
+  '@types/react': ^19.2.18
+  '@types/react-dom': ^19.2.4
   '@types/wicg-file-system-access': ^2023.10.7
-  '@vercel/edge-config': ^1.4.3
-  '@vercel/functions': ^3.7.5
-  '@vitejs/plugin-react': ^6.0.3
+  '@vercel/edge-config': ^1.5.1
+  '@vercel/functions': ^3.8.0
+  '@vitejs/plugin-react': ^6.0.5
   badge-maker: ^6.0.0
   class-variance-authority: ^0.7.1
   clsx: ^2.1.1
@@ -67,83 +66,85 @@ catalog:
   dayjs: ^1.11.21
   echarts: ^6.1.0
   elysia: ^1.4.29
-  es-toolkit: ^1.49.0
+  es-toolkit: ^1.50.0
   eslint: ^9.39.4
   eslint-config-prettier: ^10.1.8
-  eslint-plugin-perfectionist: ^5.10.0
+  eslint-plugin-perfectionist: ^5.10.1
   eslint-plugin-prettier: ^5.5.6
   eslint-plugin-react: ^7.37.5
   eslint-plugin-react-hooks: ^7.1.1
   eslint-plugin-unused-imports: ^4.4.1
-  globals: ^17.7.0
+  globals: ^17.9.0
   husky: ^9.1.7
   input-otp: ^1.4.2
-  lint-staged: ^17.0.8
-  lucide-react: ^1.24.0
-  monaco-editor: 0.55.1
-  motion: ^12.42.2
-  next: ^16.2.10
+  lint-staged: ^17.3.0
+  lucide-react: ^1.29.0
+  monaco-editor: 0.54.0
+  motion: ^13.0.0
+  next: ^16.3.0
   next-themes: ^0.4.6
   nextjs-toploader: ^3.9.17
-  npm-check-updates: ^22.2.9
-  prettier: ^3.9.5
+  npm-check-updates: ^23.0.1
+  prettier: ^3.9.6
   prettier-plugin-tailwindcss: ^0.8.1
-  prisma: ^7.8.0
+  prisma: ^7.9.1
   prisma-extension-pagination: ^0.7.6
   prisma-json-types-generator: ^5.1.1
-  react: ^19.2.7
-  react-dom: ^19.2.7
-  react-hook-form: ^7.81.0
+  react: ^19.2.8
+  react-dom: ^19.2.8
+  react-hook-form: ^7.84.0
   react-resizable-panels: ^4.12.2
-  react-window: ^2.2.7
+  react-window: ^2.3.0
   react-window-infinite-loader: ^2.0.1
   schema-dts: ^2.0.0
-  shadcn: ^4.13.0
-  shiki: ^4.3.1
+  shadcn: ^4.16.2
+  shiki: ^4.4.2
   sonner: ^2.0.7
   sucrase: ^3.35.1
   superjson: ^2.2.6
-  swr: ^2.4.2
+  swr: ^2.5.0
   tailwind-merge: ^3.6.0
-  tailwindcss: ^4.3.2
-  tm-grammars: ^1.31.15
-  tsx: ^4.23.1
+  tailwindcss: ^4.3.3
+  tm-grammars: ^1.32.3
+  tsx: ^4.23.9
   tw-animate-css: ^1.4.0
   typescript: ^6.0.3
-  typescript-eslint: ^8.64.0
+  typescript-eslint: ^8.66.0
   uuidv7: ^1.2.1
-  vercel: ^56.2.1
-  vite: ^8.1.4
+  vercel: ^58.7.1
+  vite: ^8.2.1
   zod: ^4.4.3
-  tsdown: ^0.22.8
+  tsdown: ^0.22.14
   hash-wasm: ^4.12.0
-  '@tiptap/react': ^3.28.0
-  '@tiptap/pm': ^3.28.0
-  '@tiptap/starter-kit': ^3.28.0
-  '@tiptap/extension-table': ^3.28.0
-  '@tiptap/extension-list': ^3.28.0
-  '@tiptap/extension-subscript': ^3.28.0
-  '@tiptap/extension-superscript': ^3.28.0
-  '@tiptap/extension-text-style': ^3.28.0
-  '@tiptap/extension-text-align': ^3.28.0
-  '@tiptap/extension-typography': ^3.28.0
-  '@tiptap/extension-highlight': ^3.28.0
+  '@tiptap/react': ^3.29.2
+  '@tiptap/pm': ^3.29.2
+  '@tiptap/starter-kit': ^3.29.2
+  '@tiptap/extension-table': ^3.29.2
+  '@tiptap/extension-list': ^3.29.2
+  '@tiptap/extension-subscript': ^3.29.2
+  '@tiptap/extension-superscript': ^3.29.2
+  '@tiptap/extension-text-style': ^3.29.2
+  '@tiptap/extension-text-align': ^3.29.2
+  '@tiptap/extension-typography': ^3.29.2
+  '@tiptap/extension-highlight': ^3.29.2
   culori: ^4.0.2
   '@types/culori': ^4.0.1
-  '@tiptap/core': ^3.28.0
-  '@tiptap/extension-emoji': ^3.28.0
-  '@tiptap/extensions': ^3.28.0
-  tm-themes: ^1.12.2
-  '@tiptap/static-renderer': ^3.28.0
-  '@tailwindcss/cli': ^4.3.2
-  '@tiptap/markdown': ^3.28.0
-  '@tiptap/extension-mathematics': ^3.28.0
-  katex: ^0.17.0
+  '@tiptap/core': ^3.29.2
+  '@tiptap/extension-emoji': ^3.29.2
+  '@tiptap/extensions': ^3.29.2
+  tm-themes: ^1.12.3
+  '@tiptap/static-renderer': ^3.29.2
+  '@tailwindcss/cli': ^4.3.3
+  '@tiptap/markdown': ^3.29.2
+  '@tiptap/extension-mathematics': ^3.29.2
+  katex: ^0.18.1
   raw-loader: ^4.0.2
-  '@tiptap/html': ^3.28.0
+  '@tiptap/html': ^3.29.2
   '@intevation/tiptap-extension-office-paste': ^0.1.2
-  immer: ^11.1.11
+  immer: ^11.1.16
   react-use: ^17.6.1
   use-immer: ^0.11.0
   '@excalidraw/excalidraw': ^0.18.1
   '@excalidraw/utils': 0.1.3-test32
+  elysia-rate-limit: 4.6.2
+  '@swc/helpers': ^0.5.23

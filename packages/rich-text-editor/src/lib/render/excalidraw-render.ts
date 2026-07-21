@@ -1,9 +1,5 @@
 import { ExcalidrawElement } from '@excalidraw/excalidraw/element/types'
 import { ResizableBoxSize } from '@repo/ui/components-self/resizable-box'
-import { findChildren } from '@tiptap/core'
-import { Node as ProseMirrorNode } from '@tiptap/pm/model'
-
-import { ExcalidrawAttributes } from '../../extensions/excalidraw'
 
 /**
  * 将宽高应用到 SVG 的 width/height 属性上
@@ -55,44 +51,4 @@ export async function renderExcalidrawElements(elements: readonly ExcalidrawElem
   } catch {
     return null
   }
-}
-
-/**
- * 预渲染文档中所有 `excalidraw` 节点为 SVG
- */
-export async function renderExcalidrawNodes(pmNode: ProseMirrorNode) {
-  const cache = new WeakMap<ProseMirrorNode, null | string>()
-  const tasks: Promise<void>[] = []
-
-  for (const { node } of findChildren(pmNode, child => child.type.name === 'excalidraw')) {
-    const { elements, height, textAlign, width } = node.attrs as Partial<ExcalidrawAttributes>
-    if (!Array.isArray(elements) || elements.length === 0) {
-      cache.set(node, null)
-      continue
-    }
-
-    tasks.push(
-      renderExcalidrawElements(elements)
-        .then(svg => {
-          if (!svg) {
-            cache.set(node, null)
-            return
-          }
-          cache.set(
-            node,
-            `<div data-type="excalidraw" data-excalidraw-align="${textAlign}">
-              ${applySizeToSvg(svg, { height, width })}
-              <script type="application/json">${JSON.stringify(elements)}</script>
-            </div>`
-          )
-        })
-        .catch(() => {
-          cache.set(node, null)
-        })
-    )
-  }
-
-  await Promise.all(tasks)
-
-  return cache
 }

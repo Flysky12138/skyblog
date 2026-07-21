@@ -63,6 +63,7 @@ export function PostResizeButton({ className, ...props }: PostResizeButtonProps)
           }
         `}</Style>
       )}
+
       <Button
         aria-label="resize toggle"
         aria-pressed={isFullPage}

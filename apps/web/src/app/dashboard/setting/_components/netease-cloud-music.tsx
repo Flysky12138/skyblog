@@ -17,7 +17,7 @@ export function NeteaseCloudMusic() {
 
   const { data, isLoading, mutate } = useSWR(
     '0198eb7d-3b40-742f-92ae-219524cbafa9',
-    () => rpc['edge-config'].get.get({ query: { key: VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE } }).then(unwrap),
+    () => rpc['edge-config'].get({ query: { key: VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE } }).then(unwrap),
     {
       fallbackData: {
         value: ''

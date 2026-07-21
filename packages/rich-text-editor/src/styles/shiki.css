@@ -1,23 +1,27 @@
 .tiptap {
+  --spacing-digit-code: 2ch;
+
   pre {
     @apply relative font-semibold tab-2;
     @apply bg-(--shiki-light-bg) dark:bg-(--shiki-dark-bg);
 
     code {
-      /* counter-reset: line; */
       @apply grid min-w-fit auto-rows-fr whitespace-pre;
       @apply not-2xl:text-[length:inherit];
     }
 
-    /* &[data-line-digits='2'] {
-      --digist-width: 2em;
+    &[data-line-digits='1'] {
+      --digit-width: 1ch;
+    }
+    &[data-line-digits='2'] {
+      --digit-width: 2ch;
     }
     &[data-line-digits='3'] {
-      --digist-width: 3em;
+      --digit-width: 3ch;
     }
     &[data-line-digits='4'] {
-      --digist-width: 4em;
-    } */
+      --digit-width: 4ch;
+    }
 
     .line {
       span {
@@ -26,13 +30,12 @@
       }
 
       /* 行号 */
-      /* &:is([data-line-digits] *):not(.node-codeBlock *)::before {
-        content: counter(line);
-        counter-increment: line;
-        width: calc(0px + var(--digist-width, 1.5em));
-        @apply inline-block pr-3 text-end tabular-nums;
+      &:is([data-line-digits] *)::before {
+        content: attr(data-line);
+        width: var(--digit-width, 0);
+        @apply me-(--spacing-digit-code) inline-block text-end tabular-nums;
         @apply text-slate-500;
-      } */
+      }
 
       /* 行高亮 */
       &.highlighted {
@@ -43,11 +46,9 @@
       /* 标记增删的行 */
       &.diff {
         @apply after:absolute after:left-1;
-
         &.add {
           @apply after:text-green-500 after:content-["+"];
         }
-
         &.remove {
           @apply after:text-red-500 after:content-["-"];
         }
@@ -55,11 +56,28 @@
     }
   }
 
-  /* BFC */
   .node-codeBlock {
+    /* BFC */
     @apply prose-margin-pre;
     pre {
       @apply my-0;
+    }
+
+    /* 行号宽度 */
+    &:has(pre[data-line-digits='1']) {
+      --digit-width: calc(1ch + var(--spacing-digit-code));
+    }
+    &:has(pre[data-line-digits='2']) {
+      --digit-width: calc(2ch + var(--spacing-digit-code));
+    }
+    &:has(pre[data-line-digits='3']) {
+      --digit-width: calc(3ch + var(--spacing-digit-code));
+    }
+    &:has(pre[data-line-digits='4']) {
+      --digit-width: calc(4ch + var(--spacing-digit-code));
+    }
+    code[data-node-view-wrapper] {
+      padding-inline-start: var(--digit-width, 0);
     }
   }
 }

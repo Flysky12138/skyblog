@@ -9,6 +9,7 @@ export abstract class Service {
       where: { id },
       select: {
         commentCount: true,
+        content: true,
         createdAt: true,
         isPublished: true,
         updatedAt: true,

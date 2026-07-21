@@ -3,7 +3,7 @@
 import { useLatestRef } from '@repo/react-hooks'
 import { ResizableBox, ResizableBoxSize } from '@repo/ui/components-self/resizable-box'
 import { NodeViewProps, NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react'
-import { isEqual } from 'es-toolkit'
+import { isEqual, mapValues } from 'es-toolkit'
 import React from 'react'
 
 import { ExcalidrawAttributes } from '../../extensions/excalidraw'
@@ -93,6 +93,10 @@ function ExcalidrawViewInner({ editor, getPos, node }: NodeViewProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elements, hasElements])
 
+  React.useEffect(() => {
+    editor.chain().focus().updateAttributes('excalidraw', { html: svg }).run()
+  }, [editor, svg])
+
   if (!hasElements) return null
 
   return (
@@ -103,13 +107,7 @@ function ExcalidrawViewInner({ editor, getPos, node }: NodeViewProps) {
         size={size}
         onResize={updateSvgSize}
         onResizeEnd={newSize => {
-          const pos = getPos()
-          if (typeof pos !== 'number') return
-          editor
-            .chain()
-            .setNodeSelection(pos)
-            .updateAttributes('excalidraw', { height: Math.round(newSize.height), width: Math.round(newSize.width) })
-            .run()
+          editor.chain().focus().updateAttributes('excalidraw', mapValues(newSize, Math.round)).run()
         }}
       >
         {svg ? (

@@ -126,12 +126,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
                 )}
                 tabIndex={-1}
               />
-              <article
-                dangerouslySetInnerHTML={{
-                  __html: post.content
-                }}
-                className="tiptap font-article"
-              />
+              <article dangerouslySetInnerHTML={{ __html: post.content }} className="tiptap font-article" />
             </Card>
 
             <Show when={!!prev || !!next}>

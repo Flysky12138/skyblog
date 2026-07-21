@@ -69,7 +69,7 @@ export const onInit: MonacoEditorProps['onInit'] = (monaco, language) => {
     })
 
     // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+
     monaco.languages.typescript.typescriptDefaults.addExtraLib(
       `
         declare module 'echarts' {

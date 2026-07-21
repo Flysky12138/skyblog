@@ -3,7 +3,7 @@ import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { serializeAttrsToHTMLString } from '@tiptap/static-renderer/pm/html-string'
 
 import { CodeBlockShikiAttributes } from '../../extensions/code-block-shiki'
-import { defaultDarkTheme, defaultLanguage, defaultLightTheme, highlightCode } from '../shiki/highlighter'
+import { defaultDarkTheme, defaultLanguage, defaultLightTheme, highlightCode } from '../shiki'
 
 /**
  * 预高亮文档中所有 `codeBlock` 节点
@@ -16,11 +16,13 @@ export async function renderCodeBlocks(pmNode: ProseMirrorNode) {
     const {
       darkTheme = defaultDarkTheme,
       language = defaultLanguage,
-      lightTheme = defaultLightTheme
+      lightTheme = defaultLightTheme,
+      showLineNumbers = false
     } = node.attrs as Partial<CodeBlockShikiAttributes>
 
     const task = highlightCode(node.textContent, {
       lang: language,
+      showLineNumbers,
       themes: { dark: darkTheme, light: lightTheme }
     })
       .then(html =>

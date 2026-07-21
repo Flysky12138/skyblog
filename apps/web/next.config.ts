@@ -1,24 +1,22 @@
-import path from 'node:path'
+import { NextConfig } from 'next'
+
 import './env.zod'
 
-import { NextConfig } from 'next'
+import path from 'node:path'
 
 // 内容安全策略 (CSP)
 // CSP 是一种安全机制，用于限制网页的哪些内容可以加载、执行、显示、或使用
 // https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
 const cspMap = {
   'default-src': ["'self'"],
-  'img-src': [
-    "'self'",
-    'blob:',
-    'data:',
-    'https://avatars.githubusercontent.com/u/',
-    'https://lh3.googleusercontent.com/a/',
-    process.env.NEXT_PUBLIC_R2_URL,
-    '*.music.126.net',
-    '*.r2.cloudflarestorage.com'
-  ],
+  'font-src': ["'self'", 'data:', 'https://esm.sh/@excalidraw/'],
+  'frame-ancestors': ["'none'"],
+  'frame-src': ["'self'", 'blob:'],
   'media-src': ["'self'", process.env.NEXT_PUBLIC_R2_URL, '*.music.126.net', '*.r2.cloudflarestorage.com'],
+  'object-src': ["'none'"],
+  'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'", process.env.NEXT_PUBLIC_CDN_FFMPEG],
+  'style-src': ["'self'", "'unsafe-inline'"],
+  'worker-src': ["'self'", 'blob:'],
   'connect-src': [
     "'self'",
     'blob:',
@@ -29,13 +27,16 @@ const cspMap = {
     '*.r2.cloudflarestorage.com',
     'https://esm.sh/@excalidraw/'
   ],
-  'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'", process.env.NEXT_PUBLIC_CDN_FFMPEG],
-  'style-src': ["'self'", "'unsafe-inline'"],
-  'worker-src': ["'self'", 'blob:'],
-  'frame-src': ["'self'", 'blob:'],
-  'font-src': ["'self'", 'data:', 'https://esm.sh/@excalidraw/'],
-  'object-src': ["'none'"],
-  'frame-ancestors': ["'none'"]
+  'img-src': [
+    "'self'",
+    'blob:',
+    'data:',
+    'https://avatars.githubusercontent.com/u/',
+    'https://lh3.googleusercontent.com/a/',
+    process.env.NEXT_PUBLIC_R2_URL,
+    '*.music.126.net',
+    '*.r2.cloudflarestorage.com'
+  ]
 }
 
 const headers: NextConfig['headers'] = () => [
@@ -81,31 +82,37 @@ const nextConfig: NextConfig = {
   headers,
   images,
   pageExtensions: ['ts', 'tsx'],
+  partialPrefetching: true,
+  reactCompiler: true,
   reactStrictMode: true,
   rewrites,
+  staticPageGenerationTimeout: 600,
   transpilePackages: ['@repo/chart-preview', '@repo/monaco-editor', '@repo/react-hooks', '@repo/ui', '@repo/rich-text-editor'],
   typedRoutes: true,
-  turbopack: {
-    root: path.join(process.cwd(), '../..'),
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js'
-      },
-      '*': {
-        condition: { query: '?raw' },
-        loaders: ['raw-loader'],
-        as: '*.js'
-      }
-    }
-  },
   devIndicators: {
     position: 'bottom-right'
   },
+  experimental: {
+    turbopackRustReactCompiler: true,
+    useOffline: true
+  },
+  turbopack: {
+    root: path.join(process.cwd(), '../..'),
+    rules: {
+      '*': {
+        as: '*.js',
+        condition: { query: '?raw' },
+        loaders: ['raw-loader']
+      },
+      '*.svg': {
+        as: '*.js',
+        loaders: ['@svgr/webpack']
+      }
+    }
+  },
   typescript: {
     ignoreBuildErrors: true
-  },
-  staticPageGenerationTimeout: 600
+  }
 }
 
 export default nextConfig

@@ -17,9 +17,7 @@ export abstract class Service {
       }
     })
 
-    if (!file) {
-      return null
-    }
+    if (!file) return null
 
     return getSignedUrl(
       s3,

@@ -154,6 +154,7 @@ export function DownloadModal({ songs: staticSongs }: DownloadModalProps) {
         <div className="flex items-center justify-between border-b border-divide px-2.5 pt-3 pb-3 shadow-xs md:mt-0">
           <Checkbox
             checked={selected.size === songs.length}
+            className="cursor-pointer"
             disabled={isDownloading}
             onClick={() => {
               if (selected.size === songs.length) {
@@ -262,7 +263,7 @@ export function DownloadModal({ songs: staticSongs }: DownloadModalProps) {
         </div>
 
         <List
-          className="no-scrollbar"
+          className="no-scrollbar scroll-fade-b"
           overscanCount={8}
           rowComponent={Row}
           rowCount={isDownloading ? selected.size : songs.length}
@@ -302,7 +303,7 @@ function Row({ ariaAttributes, getProgress, index, isDownloading, isSelected, so
         onRowClick?.(song)
       }}
     >
-      {!isDownloading && <Checkbox checked={isSelected(song)} className="mx-1" />}
+      {!isDownloading && <Checkbox checked={isSelected(song)} className="pointer-events-none mx-1" />}
       <img
         alt={song.al.name}
         crossOrigin="anonymous"

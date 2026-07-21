@@ -1,10 +1,10 @@
-import { NextProxy, NextResponse, userAgent } from 'next/server'
+import { NextProxy, NextResponse, ProxyConfig, userAgent } from 'next/server'
 
 import { authServer } from '@/lib/auth/server'
 
 import { isDev } from './lib/utils'
 
-export const config = {
+export const config: ProxyConfig = {
   matcher: '/((?!_next/data|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)'
 }
 

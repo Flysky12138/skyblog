@@ -11,7 +11,7 @@ import {
 } from '@repo/ui/components/context-menu'
 import { cn } from '@repo/ui/lib/utils'
 import { NodeViewProps, NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react'
-import { isEqual } from 'es-toolkit'
+import { isEqual, mapValues } from 'es-toolkit'
 import React from 'react'
 
 import { ImageAttributes } from '../../extensions/image'
@@ -50,10 +50,7 @@ function ImageViewInner({ editor, node }: NodeViewProps) {
           onResize={setSize}
           onResizeEnd={(newSize, oldSize) => {
             if (isEqual(newSize, oldSize)) return
-            editor
-              .chain()
-              .updateAttributes('image', { height: Math.round(newSize.height), width: Math.round(newSize.width) })
-              .run()
+            editor.chain().updateAttributes('image', mapValues(newSize, Math.round)).run()
           }}
         >
           <ContextMenuTrigger>

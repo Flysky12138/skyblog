@@ -58,9 +58,9 @@ export function AudioPlayerModal({ open: controlledOpen, song, onOpenChange }: A
   return (
     <DialogDrawer
       open={open}
-      onOpenChange={isOpen => {
-        setOpen(isOpen)
-        if (!isOpen) {
+      onOpenChange={newOpen => {
+        setOpen(newOpen)
+        if (!newOpen) {
           router.back()
         }
       }}

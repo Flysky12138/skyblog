@@ -25,7 +25,7 @@ export function PostInfo({ defaultValue, id }: PostInfoProps) {
     mutate
   } = useSWR(['0198eb97-be8c-705d-9037-48eb6a95c13a', id], () => rpc.posts({ id }).get().then(unwrap), {
     fallbackData: defaultValue,
-    refreshInterval: 20 * 1000
+    refreshInterval: 20_000
   })
 
   // 增加访问量
@@ -50,7 +50,7 @@ export function PostInfo({ defaultValue, id }: PostInfoProps) {
         }, false)
         setViewed(true)
       })()
-    }, 5 * 1000)
+    }, 5_000)
 
     return () => {
       ignore = true

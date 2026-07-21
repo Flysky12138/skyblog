@@ -2,13 +2,13 @@ import { PrismaNeon } from '@prisma/adapter-neon'
 import { pagination } from 'prisma-extension-pagination'
 import { serialize } from 'superjson'
 
-import { PrismaClient as InternalClient } from '@/generated/internal/client'
+import { PrismaClient as PrismaAuthClient } from '@/generated/auth/client'
 import { PrismaClient } from '@/generated/prisma/client'
 
 import { isDev } from './utils'
 
-function internalClientSingleton() {
-  return new InternalClient({
+function prismaAuthClientSingleton() {
+  return new PrismaAuthClient({
     adapter: new PrismaNeon({ connectionString: process.env.DATABASE_URL })
   })
 }
@@ -44,17 +44,17 @@ function prismaClientSingleton() {
 
 // 每次热重载都会重新执行模块代码。只实例化一次，避免内存爆增
 const globalForPrisma = globalThis as unknown as {
-  internal?: ReturnType<typeof internalClientSingleton>
   prisma?: ReturnType<typeof prismaClientSingleton>
+  prismaAuth?: ReturnType<typeof prismaAuthClientSingleton>
 }
 
 export const prisma = globalForPrisma.prisma ?? prismaClientSingleton()
 /**
  * 访问 Neon 平台自带表的 Prisma Client
  */
-export const internal = globalForPrisma.internal ?? internalClientSingleton()
+export const prismaAuth = globalForPrisma.prismaAuth ?? prismaAuthClientSingleton()
 
 if (isDev()) {
   globalForPrisma.prisma = prisma
-  globalForPrisma.internal = internal
+  globalForPrisma.prismaAuth = prismaAuth
 }

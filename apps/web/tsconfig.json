@@ -1,11 +1,10 @@
 {
   "extends": "../../tsconfig.nextjs.json",
   "compilerOptions": {
-    "lib": ["DOM", "ESNext", "WebWorker"],
+    "lib": ["DOM", "ESNext", "WebWorker", "DOM.AsyncIterable"],
     "paths": {
       "@/*": ["./src/*"],
       "~/*": ["./*"]
-      // "@repo/ui/*": ["../../packages/ui/src/*"]
     },
     "types": ["wicg-file-system-access"]
   },

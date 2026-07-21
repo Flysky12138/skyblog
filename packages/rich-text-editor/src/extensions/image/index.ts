@@ -1,5 +1,4 @@
 import { Attribute, mergeAttributes, Node, nodeInputRule } from '@tiptap/core'
-import { omit } from 'es-toolkit'
 
 import { ImageView } from '../../components/view/image-view'
 
@@ -82,7 +81,10 @@ export const Image = Node.create<ImageOptions>({
       },
       widthFull: {
         default: false,
-        parseHTML: el => el.getAttribute('data-width-full') === 'true'
+        parseHTML: el => el.getAttribute('data-width-full') === 'true',
+        renderHTML: attributes => ({
+          'data-width-full': attributes.widthFull ? 'true' : undefined
+        })
       }
     } satisfies Record<Exclude<keyof ImageAttributes, 'textAlign'>, Attribute>
   },
@@ -133,13 +135,12 @@ export const Image = Node.create<ImageOptions>({
   },
 
   renderHTML({ HTMLAttributes, node }) {
-    const { textAlign, widthFull } = node.attrs as ImageAttributes
+    const { textAlign } = node.attrs as ImageAttributes
 
     return [
       'img',
-      mergeAttributes(omit(HTMLAttributes, ['widthFull']), this.options.HTMLAttributes, {
+      mergeAttributes(HTMLAttributes, this.options.HTMLAttributes, {
         'data-image-align': textAlign,
-        'data-width-full': widthFull ? 'true' : undefined,
         decoding: 'async',
         loading: 'lazy'
       })

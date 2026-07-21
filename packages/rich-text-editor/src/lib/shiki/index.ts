@@ -26,16 +26,22 @@ export async function highlightCode(
      */
     preserveMarkers?: boolean
     /**
+     * 是否显示行号
+     *
+     * @default false
+     */
+    showLineNumbers?: boolean
+    /**
      * @default 'classic'
      */
     structure?: 'classic' | 'inline'
-    themes: {
+    themes?: {
       dark?: BundledTheme
       light?: BundledTheme
     }
   }
 ) {
-  const { lang = defaultLanguage, preserveMarkers = false, structure = 'classic', themes = {} } = options
+  const { lang = defaultLanguage, preserveMarkers = false, showLineNumbers = false, structure = 'classic', themes = {} } = options
 
   const h = await getHighlighter()
 
@@ -80,7 +86,7 @@ export async function highlightCode(
       // 保留 notation 标记
       ...(preserveMarkers ? [transformerPreserveNotationMarkers()] : []),
       // 行号
-      transformerLineNumbers(),
+      ...(showLineNumbers ? [transformerLineNumbers()] : []),
 
       // 为 Shiki 设计的常用转换器的集合
       // https://shiki.tmrs.site/packages/transformers

@@ -1,6 +1,5 @@
 'use client'
 
-import { Card } from '@repo/ui/components-self/card'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui/components/dialog'
 import { ColumnDef, getCoreRowModel, getPaginationRowModel, getSortedRowModel, PaginationState, useReactTable } from '@tanstack/react-table'
 import { EyeIcon } from 'lucide-react'
@@ -11,15 +10,15 @@ import { DataTable } from '@/components/data-table'
 import { DataTableRowActionButton, DataTableRowsDeleteButton } from '@/components/data-table/data-table-action'
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
 import { getColumnConfig } from '@/components/data-table/utils'
+import { JsonViewer } from '@/components/json-viewer'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
 
 export default function Page() {
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10
+    pageSize: 15
   })
-
   const { data, isLoading, mutate } = useSWR(
     ['0198eb9a-1aa7-77d8-9b1d-0f0f7efb4130', pagination],
     () => {
@@ -34,7 +33,7 @@ export default function Page() {
     },
     {
       keepPreviousData: true,
-      refreshInterval: 10 * 1000
+      refreshInterval: 10_000
     }
   )
 
@@ -76,25 +75,7 @@ export default function Page() {
       },
       cell: ({ row }) => (
         <div className="flex justify-end gap-2">
-          <Dialog>
-            <DialogTrigger render={<DataTableRowActionButton />}>
-              <EyeIcon />
-            </DialogTrigger>
-            <DialogContent className="max-w-3xl" fullScreen="sm">
-              <DialogHeader>
-                <DialogTitle>访客</DialogTitle>
-                <DialogDescription>访客的详细信息</DialogDescription>
-              </DialogHeader>
-              <Card
-                className="rounded-md p-3 font-code text-sm whitespace-pre-wrap"
-                render={
-                  <pre>
-                    <code>{JSON.stringify(row.original, null, 2)}</code>
-                  </pre>
-                }
-              />
-            </DialogContent>
-          </Dialog>
+          <VisitActionsCell row={row} />
         </div>
       )
     }
@@ -135,5 +116,29 @@ export default function Page() {
         <DataTablePagination table={table} />
       </div>
     </div>
+  )
+}
+
+function VisitActionsCell({ row }: { row: { original: Record<string, unknown> } }) {
+  const [json, setJson] = React.useState<object>({})
+  return (
+    <Dialog
+      onOpenChange={newOpen => {
+        if (newOpen) {
+          setJson(row.original)
+        }
+      }}
+    >
+      <DialogTrigger render={<DataTableRowActionButton />}>
+        <EyeIcon />
+      </DialogTrigger>
+      <DialogContent className="max-w-3xl" fullScreen="sm">
+        <DialogHeader>
+          <DialogTitle>访客</DialogTitle>
+          <DialogDescription>访客的详细信息</DialogDescription>
+        </DialogHeader>
+        <JsonViewer json={json} />
+      </DialogContent>
+    </Dialog>
   )
 }

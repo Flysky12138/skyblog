@@ -7,7 +7,7 @@ import { cn } from '@repo/ui/lib/utils'
 import { RowData, Table } from '@tanstack/react-table'
 import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon } from 'lucide-react'
 
-const pageSizes = [10, 20, 25, 30, 40, 50, 100]
+const pageSizes = [10, 15, 20, 25, 30, 40, 50, 100]
 
 interface DataTablePaginationProps<TData extends RowData> {
   className?: string

@@ -1,6 +1,4 @@
-import { isBrowser } from 'es-toolkit'
-
-const isTouchDevice = isBrowser() ? window.matchMedia('(pointer: coarse)').matches : false
+import { isTouchDevice } from './utils'
 
 /**
  * Trigger haptic feedback on mobile devices.
@@ -17,7 +15,7 @@ const isTouchDevice = isBrowser() ? window.matchMedia('(pointer: coarse)').match
  */
 export function haptic(pattern: number | number[] = 50) {
   try {
-    if (!isTouchDevice) return
+    if (!isTouchDevice()) return
 
     if ('vibrate' in navigator) {
       navigator.vibrate(pattern)
@@ -32,13 +30,13 @@ export function haptic(pattern: number | number[] = 50) {
     const input = document.createElement('input')
     input.type = 'checkbox'
     input.setAttribute('switch', '')
-    label.appendChild(input)
+    label.append(input)
 
     try {
-      document.head.appendChild(label)
+      document.head.append(label)
       label.click()
     } finally {
-      document.head.removeChild(label)
+      label.remove()
     }
   } catch (error) {
     console.error(error)

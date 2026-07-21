@@ -12,12 +12,12 @@ import { VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
 
-export function Live2D() {
+export function Tiptap() {
   const id = React.useId()
 
   const { data, isLoading, mutate } = useSWR(
-    '0198eb99-8641-71ad-be7d-5ef3f52eda9b',
-    () => rpc['edge-config'].get({ query: { key: VERCEL_EDGE_CONFIG_KEY.LIVE2D_SRC } }).then(unwrap),
+    '019fa7ef-e7b6-70ec-9a64-dbbdeb024ea3',
+    () => rpc['edge-config'].get({ query: { key: VERCEL_EDGE_CONFIG_KEY.POST_ID_FOR_TAPTIP } }).then(unwrap),
     {
       fallbackData: {
         value: ''
@@ -28,7 +28,9 @@ export function Live2D() {
   const [{ loading }, handleUpdate] = useAsyncFn(async (value: string) => {
     try {
       await toastPromise(
-        rpc.dashboard['edge-config'].action.patch({ items: [{ key: VERCEL_EDGE_CONFIG_KEY.LIVE2D_SRC, operation: 'upsert', value }] }).then(unwrap),
+        rpc.dashboard['edge-config'].action
+          .patch({ items: [{ key: VERCEL_EDGE_CONFIG_KEY.POST_ID_FOR_TAPTIP, operation: 'upsert', value }] })
+          .then(unwrap),
         {
           success: '修改成功'
         }
@@ -43,14 +45,14 @@ export function Live2D() {
   return (
     <FieldGroup>
       <Field>
-        <FieldLabel htmlFor={id}>Live2D</FieldLabel>
+        <FieldLabel htmlFor={id}>Tiptap</FieldLabel>
         <ButtonGroup>
           <Input
             autoComplete="off"
             className="text-ellipsis"
             disabled={disabled}
             id={id}
-            placeholder=".json or .zip"
+            placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
             value={data.value}
             onChange={event => {
               void mutate({ value: event.target.value }, false)

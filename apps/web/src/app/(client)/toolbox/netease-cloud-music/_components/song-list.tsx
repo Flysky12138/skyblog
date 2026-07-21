@@ -42,7 +42,7 @@ export function SongList({ hasMore, loadMoreRows, songs, onRowClick }: SongListP
       className="rounded-md"
       render={
         <List
-          className="no-scrollbar overscroll-none"
+          className="no-scrollbar scroll-fade-b overscroll-none"
           overscanCount={8}
           rowComponent={Row}
           rowCount={rowCount}

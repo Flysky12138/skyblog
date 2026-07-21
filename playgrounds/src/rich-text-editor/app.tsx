@@ -1,6 +1,7 @@
 import '@repo/rich-text-editor/style.css'
 import { Tiptap, useEditor } from '@repo/rich-text-editor'
 import { ExtensionKit } from '@repo/rich-text-editor/extensions'
+import { renderJSONContentToHTMLString } from '@repo/rich-text-editor/render'
 import { ToolBar } from '@repo/rich-text-editor/toolbar'
 import { Card } from '@repo/ui/components-self/card'
 import { FancyboxRegister } from '@repo/ui/components-self/fancybox'
@@ -15,6 +16,11 @@ import React from 'react'
 import content from './content.json'
 
 export function App() {
+  const [open, setOpen] = React.useState(false)
+  const [doc, setDoc] = React.useState('')
+
+  const { ThemeIcon } = useTheme()
+
   const editor = useEditor({
     content,
     contentType: 'json',
@@ -30,17 +36,12 @@ export function App() {
       }
     }
   })
-  const { ThemeIcon } = useTheme()
 
-  const [open, setOpen] = React.useState(false)
-  const [doc, setDoc] = React.useState('')
-
-  if (!editor) {
-    return null
-  }
+  if (!editor) return null
 
   const handlePreview = async () => {
-    const html = await editor.getHTMLAsync()
+    const json = editor.getJSON()
+    const html = await renderJSONContentToHTMLString(json, { extensions: editor.extensionManager.baseExtensions })
     React.startTransition(() => {
       setDoc(html)
       setOpen(true)

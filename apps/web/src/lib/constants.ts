@@ -33,7 +33,11 @@ export const VERCEL_EDGE_CONFIG_KEY = {
   /**
    * 网易云音乐 cookie
    */
-  NETEASE_CLOUD_MUSIC_COOKIE: 'netease-cloud-music-cookie'
+  NETEASE_CLOUD_MUSIC_COOKIE: 'netease-cloud-music-cookie',
+  /**
+   * 文章 ID
+   */
+  POST_ID_FOR_TAPTIP: 'post-id-for-taptip'
 } as const
 
 /**
