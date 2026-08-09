@@ -193,7 +193,7 @@ export function FriendEditModal({ children, value, onSubmit }: FriendEditModalPr
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor={field.name}>描述</FieldLabel>
                   <Textarea
-                    className="min-h-24"
+                    className="min-h-[6lh] resize-none"
                     {...field}
                     aria-invalid={fieldState.invalid}
                     autoComplete="off"

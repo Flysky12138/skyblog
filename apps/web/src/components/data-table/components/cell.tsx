@@ -9,12 +9,10 @@ import { useCellContext, useTableContext } from '../hooks'
 /**
  * 日期
  */
-export function DataTableCellDate() {
-  const cell = useCellContext<Date | string>()
+export function DataTableCellDate(): string {
+  const cell = useCellContext<string>()
 
-  const date = cell.getValue()
-
-  return date instanceof Date ? TimeHelper.formatDate(date) : date
+  return TimeHelper.formatDate(cell.getValue())
 }
 
 /**

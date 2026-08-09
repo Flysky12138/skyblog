@@ -83,7 +83,7 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
               <FieldLabel htmlFor="summary">描述</FieldLabel>
               <Textarea
                 autoComplete="off"
-                className="min-h-24"
+                className="min-h-[6lh] resize-none"
                 id="summary"
                 value={post.summary ?? ''}
                 onChange={event => {

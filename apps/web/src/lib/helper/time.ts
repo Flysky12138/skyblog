@@ -15,6 +15,8 @@ dayjs.extend(updateLocale)
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
+type Time = Date | dayjs.Dayjs | null | number | string | undefined
+
 export abstract class TimeHelper {
   /**
    * 后端给的 ISO 时间转指定字符串
@@ -24,7 +26,7 @@ export abstract class TimeHelper {
    * @example
    * formatDate(new Date()) // 2024-05-29 08:19:52
    */
-  static formatDate(time: Date, template = 'YYYY-MM-DD HH:mm:ss') {
+  static formatDate(time: Time, template = 'YYYY-MM-DD HH:mm:ss') {
     return dayjs(time).format(template)
   }
 
@@ -46,7 +48,7 @@ export abstract class TimeHelper {
    * @example
    * fromNow(new Date()) // 几秒前
    */
-  static fromNow(time: Date) {
+  static fromNow(time: Time) {
     return dayjs(time).fromNow()
   }
 
@@ -58,7 +60,7 @@ export abstract class TimeHelper {
    * @example
    * timeToSeconds('11:11.000') // 671.001
    */
-  static timeToSeconds(time: string, format = 'mm:ss.SSS') {
+  static timeToSeconds(time: Time, format = 'mm:ss.SSS') {
     const now = dayjs('00:00.000', 'mm:ss.SSS')
     const t = dayjs(time, format)
     return (t.valueOf() - now.valueOf()) / 1000

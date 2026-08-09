@@ -61,19 +61,25 @@ export function PostTable() {
     }),
     columnHelper.accessor('categories', {
       header: '分类',
-      size: 100,
-      cell: ({ getValue }) =>
-        getValue()
-          .map(({ category }) => category.name)
-          .join('、')
+      size: 150,
+      cell: ({ getValue }) => (
+        <div className="truncate">
+          {getValue()
+            .map(({ category }) => category.name)
+            .join('、')}
+        </div>
+      )
     }),
     columnHelper.accessor('tags', {
       header: '标签',
-      size: 100,
-      cell: ({ getValue }) =>
-        getValue()
-          .map(({ tag }) => tag.name)
-          .join('、')
+      minSize: 150,
+      cell: ({ getValue }) => (
+        <div className="truncate">
+          {getValue()
+            .map(({ tag }) => tag.name)
+            .join('、')}
+        </div>
+      )
     }),
     columnHelper.accessor('viewCount', {
       header: '浏览量',

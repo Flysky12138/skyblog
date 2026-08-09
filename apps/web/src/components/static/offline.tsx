@@ -1,23 +1,25 @@
 'use client'
 
+import { toast } from '@repo/ui/base'
 import { useOffline } from 'next/offline'
+import React from 'react'
 
 export function Offline() {
   const isOffline = useOffline()
 
-  if (!isOffline) return null
+  React.useEffect(() => {
+    if (!isOffline) return
 
-  return (
-    <>
-      <style>{`
-        html {
-          overflow: hidden;
-        }
-      `}</style>
+    const id = toast.warning('当前处于离线状态，请检查网络连接', {
+      dismissible: false,
+      duration: Infinity,
+      richColors: true
+    })
 
-      <div className="fixed inset-0 z-100 flex items-center justify-center backdrop-blur-md" role="status">
-        Offline. Pending requests will retry once you are back online.
-      </div>
-    </>
-  )
+    return () => {
+      toast.dismiss(id)
+    }
+  }, [isOffline])
+
+  return null
 }
