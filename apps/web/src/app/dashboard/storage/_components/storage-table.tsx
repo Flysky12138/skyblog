@@ -6,7 +6,7 @@ import { CloudUploadIcon, EyeIcon, FolderIcon, LinkIcon, Undo2Icon } from 'lucid
 import useSWR from 'swr'
 
 import { DataTableWrapper } from '@/components/data-table'
-import { DataTableRowActionButton, DataTableRowDeleteButton } from '@/components/data-table/data-table-action'
+import { DataTableRowActionButton, DataTableRowDeleteButton } from '@/components/data-table/components/action'
 import { Show } from '@/components/show'
 import { FileHelper } from '@/lib/helper/file'
 import { TimeHelper } from '@/lib/helper/time'

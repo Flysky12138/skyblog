@@ -6,7 +6,7 @@ import React from 'react'
 import useSWR from 'swr'
 
 import { DataTableWrapper } from '@/components/data-table'
-import { DataTableRowActionButton } from '@/components/data-table/data-table-action'
+import { DataTableRowActionButton } from '@/components/data-table/components/action'
 import { Show } from '@/components/show'
 import { FileHelper } from '@/lib/helper/file'
 import { rpc, unwrap } from '@/lib/http/rpc'

@@ -1,14 +1,10 @@
 'use client'
 
-import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { produce } from 'immer'
 import { PencilIcon } from 'lucide-react'
 import useSWR from 'swr'
 
-import { CategoryUpdateBodyType } from '@/app/api/[[...elysia]]/dashboard/posts/categories/model'
-import { DataTable } from '@/components/data-table'
-import { DataTableRowActionButton, DataTableRowDeleteButton } from '@/components/data-table/data-table-action'
-import { getColumnConfig } from '@/components/data-table/utils'
+import { createAppColumnHelper, useAppTable } from '@/components/data-table/hooks'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
 
@@ -16,100 +12,106 @@ import { POST_CATEGORY_SWR_KEY } from '../utils'
 import { PostCategoryEditModal } from './post-category-edit-modal'
 
 export function PostCategoryTable() {
-  const {
-    data: categories,
-    isLoading,
-    mutate
-  } = useSWR(POST_CATEGORY_SWR_KEY, () => rpc.dashboard.posts.categories.get().then(unwrap), {
+  const { data, isLoading, mutate } = useSWR(POST_CATEGORY_SWR_KEY, () => rpc.dashboard.posts.categories.get().then(unwrap), {
     fallbackData: []
   })
 
-  type RowData = Row<(typeof categories)[number]>
+  type RowData = (typeof data)[number]
 
-  // 更新
-  const handleUpdate = async (row: RowData, body: CategoryUpdateBodyType) => {
-    try {
-      const data = await toastPromise(rpc.dashboard.posts.categories({ id: row.original.id }).put(body).then(unwrap), {
-        success: '更新成功'
-      })
-      await mutate(current => {
-        return produce(current, draft => {
-          draft?.splice(row.index, 1, data)
-        })
-      }, false)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const columnHelper = createAppColumnHelper<RowData>()
 
-  // 删除
-  const handleDelete = async (row: RowData) => {
-    try {
-      await toastPromise(rpc.dashboard.posts.categories({ id: row.original.id }).delete().then(unwrap), {
-        success: '删除成功'
-      })
-      await mutate(current => {
-        return produce(current, draft => {
-          draft?.splice(row.index, 1)
-        })
-      }, false)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const columns: ColumnDef<(typeof categories)[number]>[] = [
-    getColumnConfig('index'),
-    {
-      accessorKey: 'name',
+  const columns = columnHelper.columns([
+    columnHelper.display({
+      header: '#',
+      id: 'idnex',
+      size: 42,
+      cell: ({ row }) => row.getDisplayIndex() + 1
+    }),
+    columnHelper.accessor('name', {
       header: '标题',
       size: 120,
       meta: {
         autoWidth: true
       }
-    },
-    getColumnConfig('updatedAt'),
-    getColumnConfig('createdAt'),
-    {
+    }),
+    columnHelper.accessor('updatedAt', {
+      header: '更新时间',
+      size: 180,
+      sortFn: 'datetime',
+      meta: {
+        enableSorting: true
+      },
+      cell: ({ cell }) => <cell.Date />
+    }),
+    columnHelper.accessor('createdAt', {
+      header: '创建时间',
+      size: 180,
+      sortFn: 'datetime',
+      meta: {
+        enableSorting: true
+      },
+      cell: ({ cell }) => <cell.Date />
+    }),
+    columnHelper.display({
       header: '操作',
       id: 'actions',
       size: 100,
       meta: {
         align: 'end'
       },
-      cell: ({ row }) => (
+      cell: ({ cell, row }) => (
         <div className="flex justify-end gap-2">
           <PostCategoryEditModal
             value={row.original}
             onSubmit={async body => {
-              await handleUpdate(row, body)
+              try {
+                const data = await toastPromise(rpc.dashboard.posts.categories({ id: row.original.id }).put(body).then(unwrap), {
+                  success: '更新成功'
+                })
+                await mutate(current => {
+                  return produce(current, draft => {
+                    draft?.splice(row.index, 1, data)
+                  })
+                }, false)
+              } catch (error) {
+                console.error(error)
+              }
             }}
           >
-            <DataTableRowActionButton>
+            <cell.Button>
               <PencilIcon />
-            </DataTableRowActionButton>
+            </cell.Button>
           </PostCategoryEditModal>
-          <DataTableRowDeleteButton
+          <cell.ButtonDelete
             title={row.original.name}
             onConfirm={async () => {
-              await handleDelete(row)
+              try {
+                await toastPromise(rpc.dashboard.posts.categories({ id: row.original.id }).delete().then(unwrap), {
+                  success: '删除成功'
+                })
+                await mutate(current => {
+                  return produce(current, draft => {
+                    draft?.splice(row.index, 1)
+                  })
+                }, false)
+              } catch (error) {
+                console.error(error)
+              }
             }}
           />
         </div>
       )
-    }
-  ]
+    })
+  ])
 
-  const table = useReactTable({
+  const table = useAppTable({
     columns,
-    data: categories,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    meta: {
-      isLoading
-    },
-    getRowId: row => row.id
+    data
   })
 
-  return <DataTable table={table} />
+  return (
+    <table.AppTable>
+      <table.Table isLoading={isLoading} />
+    </table.AppTable>
+  )
 }

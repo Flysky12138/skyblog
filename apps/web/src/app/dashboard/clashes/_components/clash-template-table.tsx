@@ -1,14 +1,10 @@
 'use client'
 
-import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { produce } from 'immer'
 import { PencilIcon, PlusIcon } from 'lucide-react'
 import useSWR from 'swr'
 
-import { ClashTemplateCreateBodyType, ClashTemplateUpdateBodyType } from '@/app/api/[[...elysia]]/dashboard/clashes/templates/model'
-import { DataTable } from '@/components/data-table'
-import { DataTableRowActionButton, DataTableRowDeleteButton } from '@/components/data-table/data-table-action'
-import { getColumnConfig } from '@/components/data-table/utils'
+import { createAppColumnHelper, useAppTable } from '@/components/data-table/hooks'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
 
@@ -16,131 +12,134 @@ import { ClashTemplateEditModal } from './clash-template-edit-modal'
 import { SWR_KEY_CLASH_TEMPLATES } from './utils'
 
 export function ClashTemplateTable() {
-  const {
-    data: clashTemplates,
-    isLoading,
-    mutate
-  } = useSWR(SWR_KEY_CLASH_TEMPLATES, () => rpc.dashboard.clashes.templates.get().then(unwrap), {
+  const { data, isLoading, mutate } = useSWR(SWR_KEY_CLASH_TEMPLATES, () => rpc.dashboard.clashes.templates.get().then(unwrap), {
     fallbackData: []
   })
 
-  type RowData = Row<(typeof clashTemplates)[number]>
+  type RowData = (typeof data)[number]
 
-  // 创建
-  const handleCreate = async (body: ClashTemplateCreateBodyType) => {
-    try {
-      const data = await toastPromise(rpc.dashboard.clashes.templates.post(body).then(unwrap), {
-        success: '创建成功'
-      })
-      await mutate(current => {
-        return produce(current, draft => {
-          draft?.unshift(data)
-        })
-      }, false)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const columnHelper = createAppColumnHelper<RowData>()
 
-  // 删除
-  const handleDelete = async (row: RowData) => {
-    try {
-      await toastPromise(rpc.dashboard.clashes.templates({ id: row.original.id }).delete().then(unwrap), {
-        success: '删除成功'
-      })
-      await mutate(current => {
-        return produce(current, draft => {
-          draft?.splice(row.index, 1)
-        })
-      }, false)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  // 更新
-  const handleUpdate = async (row: RowData, body: ClashTemplateUpdateBodyType) => {
-    try {
-      const data = await toastPromise(rpc.dashboard.clashes.templates({ id: row.original.id }).put(body).then(unwrap), {
-        success: '更新成功'
-      })
-      await mutate(current => {
-        return produce(current, draft => {
-          draft?.splice(row.index, 1, data)
-        })
-      }, false)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const columns: ColumnDef<(typeof clashTemplates)[number]>[] = [
-    getColumnConfig('index'),
-    {
-      accessorKey: 'name',
+  const columns = columnHelper.columns([
+    columnHelper.display({
+      header: '#',
+      id: 'idnex',
+      size: 42,
+      cell: ({ row }) => row.getDisplayIndex() + 1
+    }),
+    columnHelper.accessor('name', {
       header: '名称',
       size: 180,
       meta: {
         autoWidth: true
       }
-    },
-    {
-      accessorKey: '_count',
+    }),
+    columnHelper.accessor('_count.clashes', {
       header: '被使用',
       size: 100,
       meta: {
         align: 'center'
+      }
+    }),
+    columnHelper.accessor('createdAt', {
+      header: '创建时间',
+      size: 180,
+      sortFn: 'datetime',
+      meta: {
+        enableSorting: true
       },
-      cell: ({ row }) => row.original._count.clashes
-    },
-    getColumnConfig('createdAt'),
-    getColumnConfig('updatedAt'),
-    {
+      cell: ({ cell }) => <cell.Date />
+    }),
+    columnHelper.accessor('updatedAt', {
+      header: '更新时间',
+      size: 180,
+      sortFn: 'datetime',
+      meta: {
+        enableSorting: true
+      },
+      cell: ({ cell }) => <cell.Date />
+    }),
+    columnHelper.display({
       id: 'actions',
       size: 100,
       meta: {
         align: 'end'
       },
-      cell: ({ row }) => (
+      cell: ({ cell, row }) => (
         <div className="flex justify-end gap-2">
           <ClashTemplateEditModal
             value={row.original}
             onSubmit={async body => {
-              await handleUpdate(row, body)
+              try {
+                const data = await toastPromise(rpc.dashboard.clashes.templates({ id: row.original.id }).put(body).then(unwrap), {
+                  success: '更新成功'
+                })
+                await mutate(current => {
+                  return produce(current, draft => {
+                    draft?.splice(row.index, 1, data)
+                  })
+                }, false)
+              } catch (error) {
+                console.error(error)
+              }
             }}
           >
-            <DataTableRowActionButton>
+            <cell.Button>
               <PencilIcon />
-            </DataTableRowActionButton>
+            </cell.Button>
           </ClashTemplateEditModal>
-          <DataTableRowDeleteButton
+          <cell.ButtonDelete
             title={row.original.name}
             onConfirm={async () => {
-              await handleDelete(row)
+              try {
+                await toastPromise(rpc.dashboard.clashes.templates({ id: row.original.id }).delete().then(unwrap), {
+                  success: '删除成功'
+                })
+                await mutate(current => {
+                  return produce(current, draft => {
+                    draft?.splice(row.index, 1)
+                  })
+                }, false)
+              } catch (error) {
+                console.error(error)
+              }
             }}
           />
         </div>
       ),
-      header: () => (
-        <ClashTemplateEditModal onSubmit={handleCreate}>
-          <DataTableRowActionButton>
+      header: ({ header }) => (
+        <ClashTemplateEditModal
+          onSubmit={async body => {
+            try {
+              const data = await toastPromise(rpc.dashboard.clashes.templates.post(body).then(unwrap), {
+                success: '创建成功'
+              })
+              await mutate(current => {
+                return produce(current, draft => {
+                  draft?.unshift(data)
+                })
+              }, false)
+            } catch (error) {
+              console.error(error)
+            }
+          }}
+        >
+          <header.Button>
             <PlusIcon />
-          </DataTableRowActionButton>
+          </header.Button>
         </ClashTemplateEditModal>
       )
-    }
-  ]
+    })
+  ])
 
-  const table = useReactTable({
+  const table = useAppTable({
     columns,
-    data: clashTemplates,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    meta: {
-      isLoading
-    },
-    getRowId: row => row.id
+    data
   })
 
-  return <DataTable table={table} />
+  return (
+    <table.AppTable>
+      <table.Table isLoading={isLoading} />
+    </table.AppTable>
+  )
 }

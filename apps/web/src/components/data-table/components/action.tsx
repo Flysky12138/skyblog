@@ -14,10 +14,13 @@ import {
 import { Button } from '@repo/ui/components/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui/components/tooltip'
 import { cn } from '@repo/ui/lib/utils'
-import { RowData, Table } from '@tanstack/react-table'
+import { RowData } from '@tanstack/react-table'
+import { pick } from 'es-toolkit'
 import { TrashIcon } from 'lucide-react'
 import React from 'react'
 import { useAsyncFn } from 'react-use'
+
+import { useTableContext } from '../hooks'
 
 /**
  * 列表行操作按钮
@@ -46,7 +49,9 @@ export function DataTableRowActionButton({
     />
   )
 
-  if (!tooltip) return button
+  if (!tooltip) {
+    return button
+  }
 
   if (typeof tooltip === 'string') {
     tooltip = {
@@ -108,44 +113,50 @@ export function DataTableRowDeleteButton({
 /**
  * 列表行批量删除按钮
  */
-export function DataTableRowsDeleteButton<TData extends RowData>({
-  table,
+export function DataTableRowsDeleteButton<T extends RowData>({
   title,
   onConfirm
 }: {
-  table: Table<TData>
   title: string
-  onConfirm: (payload: { rows: TData[] }) => Promise<void>
+  onConfirm: (payload: { rows: T[] }) => Promise<void>
 }) {
-  const selectedRows = table.getFilteredSelectedRowModel().rows.map(row => row.original)
+  const table = useTableContext()
 
-  const [{ loading }, handleConfirm] = useAsyncFn(async () => {
-    await onConfirm({ rows: selectedRows })
-  }, [onConfirm, selectedRows])
-
-  if (selectedRows.length === 0) return <i />
+  const [{ loading }, handleConfirm] = useAsyncFn((rows: T[]) => onConfirm({ rows }), [onConfirm])
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger render={<Button size="sm" variant="destructive" />}>已选择 {selectedRows.length} 项</AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{`此操作无法撤消，将永久删除 ${selectedRows.length} 项`}</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel className="min-w-18">取消</AlertDialogCancel>
-          <AlertDialogAction
-            className="min-w-32"
-            disabled={loading}
-            onClick={() => {
-              void handleConfirm()
-            }}
-          >
-            确定
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <table.Subscribe selector={state => pick(state, ['pagination', 'rowSelection'])}>
+      {() => {
+        const selectedRows = table.getFilteredSelectedRowModel().rows.map(row => row.original) as T[]
+
+        if (selectedRows.length === 0) {
+          return <i />
+        }
+
+        return (
+          <AlertDialog>
+            <AlertDialogTrigger render={<Button size="sm" variant="destructive" />}>已选择 {selectedRows.length} 项</AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{title}</AlertDialogTitle>
+                <AlertDialogDescription>{`此操作无法撤消，将永久删除 ${selectedRows.length} 项`}</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="min-w-18">取消</AlertDialogCancel>
+                <AlertDialogAction
+                  className="min-w-32"
+                  disabled={loading}
+                  onClick={() => {
+                    void handleConfirm(selectedRows)
+                  }}
+                >
+                  确定
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )
+      }}
+    </table.Subscribe>
   )
 }

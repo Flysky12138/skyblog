@@ -1,18 +1,14 @@
 'use client'
 
 import { Switch } from '@repo/ui/components/switch'
-import { ColumnDef, getCoreRowModel, getPaginationRowModel, getSortedRowModel, PaginationState, Row, useReactTable } from '@tanstack/react-table'
+import { PaginationState } from '@tanstack/react-table'
 import { produce } from 'immer'
 import { EyeIcon, PencilIcon } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import useSWR from 'swr'
 
-import { DataTable } from '@/components/data-table'
-import { DataTableRowActionButton, DataTableRowDeleteButton } from '@/components/data-table/data-table-action'
-import { DataTableColumnSortHeader } from '@/components/data-table/data-table-column-header'
-import { DataTablePagination } from '@/components/data-table/data-table-pagination'
-import { getColumnConfig } from '@/components/data-table/utils'
+import { createAppColumnHelper, useAppTable } from '@/components/data-table/hooks'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
 
@@ -39,76 +35,54 @@ export function PostTable() {
     }
   )
 
-  type RowData = Row<NonNullable<typeof data>['posts'][number]>
+  type RowData = NonNullable<typeof data>['posts'][number]
 
-  // 更新
-  const handleUpdate = async (row: RowData) => {
-    try {
-      const post = await toastPromise(rpc.dashboard.posts({ id: row.original.id }).put({ isPublished: !row.original.isPublished }).then(unwrap), {
-        success: '更新成功'
-      })
-      await mutate(current => {
-        return produce(current, draft => {
-          draft?.posts.splice(row.index, 1, post)
-        })
-      }, false)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const columnHelper = createAppColumnHelper<RowData>()
 
-  // 删除
-  const handleDelete = async (row: RowData) => {
-    try {
-      await toastPromise(rpc.dashboard.posts({ id: row.original.id }).delete().then(unwrap), {
-        success: '删除成功'
-      })
-      await mutate(current => {
-        return produce(current, draft => {
-          draft?.posts.splice(row.index, 1)
-        })
-      }, data?.posts.length === 1)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const columns: ColumnDef<NonNullable<typeof data>['posts'][number]>[] = [
-    getColumnConfig('index'),
-    {
-      accessorKey: 'title',
+  const columns = columnHelper.columns([
+    columnHelper.display({
+      header: '#',
+      id: 'idnex',
+      size: 42,
+      cell: ({ row }) => row.getDisplayIndex() + 1
+    }),
+    columnHelper.accessor('title', {
       header: '标题',
       size: 250,
-      cell: ({ row }) => <div className="truncate">{row.original.title}</div>
-    },
-    {
-      accessorKey: 'summary',
+      cell: ({ getValue }) => <div className="truncate">{getValue()}</div>
+    }),
+    columnHelper.accessor('summary', {
       header: '描述',
       minSize: 300,
       meta: {
         autoWidth: true
       },
-      cell: ({ row }) => <div className="line-clamp-2 whitespace-normal">{row.original.summary}</div>
-    },
-    {
-      accessorKey: 'categories',
+      cell: ({ getValue }) => <div className="line-clamp-2 whitespace-normal">{getValue()}</div>
+    }),
+    columnHelper.accessor('categories', {
       header: '分类',
       size: 100,
-      cell: ({ row }) => row.original.categories.map(({ category }) => category.name).join('、')
-    },
-    {
-      accessorKey: 'tags',
+      cell: ({ getValue }) =>
+        getValue()
+          .map(({ category }) => category.name)
+          .join('、')
+    }),
+    columnHelper.accessor('tags', {
       header: '标签',
       size: 100,
-      cell: ({ row }) => row.original.tags.map(({ tag }) => tag.name).join('、')
-    },
-    {
-      accessorKey: 'viewCount',
+      cell: ({ getValue }) =>
+        getValue()
+          .map(({ tag }) => tag.name)
+          .join('、')
+    }),
+    columnHelper.accessor('viewCount', {
+      header: '浏览量',
       size: 100,
-      header: ({ column }) => <DataTableColumnSortHeader column={column} title="浏览量" />
-    },
-    {
-      accessorKey: 'isPublished',
+      meta: {
+        enableSorting: true
+      }
+    }),
+    columnHelper.accessor('isPublished', {
       header: '公开',
       size: 60,
       cell: ({ row }) => (
@@ -116,65 +90,87 @@ export function PostTable() {
           <Switch
             checked={row.original.isPublished}
             onCheckedChange={() => {
-              void handleUpdate(row)
+              void (async () => {
+                try {
+                  const post = await toastPromise(
+                    rpc.dashboard.posts({ id: row.original.id }).put({ isPublished: !row.original.isPublished }).then(unwrap),
+                    {
+                      success: '更新成功'
+                    }
+                  )
+                  await mutate(current => {
+                    return produce(current, draft => {
+                      draft?.posts.splice(row.index, 1, post)
+                    })
+                  }, false)
+                } catch (error) {
+                  console.error(error)
+                }
+              })()
             }}
           />
         </div>
       )
-    },
-    {
+    }),
+    columnHelper.display({
       header: '操作',
       id: 'actions',
       size: 140,
       meta: {
         align: 'end'
       },
-      cell: ({ row }) => (
+      cell: ({ cell, row }) => (
         <div className="flex justify-end gap-2">
-          <DataTableRowActionButton
+          <cell.Button
             nativeButton={false}
             render={<Link className="cursor-pointer" href={`/posts/${row.original.slug ?? row.original.id}`} target="_blank" />}
           >
             <EyeIcon />
-          </DataTableRowActionButton>
-          <DataTableRowActionButton nativeButton={false} render={<Link className="cursor-pointer" href={`/dashboard/posts/${row.original.id}`} />}>
+          </cell.Button>
+          <cell.Button nativeButton={false} render={<Link className="cursor-pointer" href={`/dashboard/posts/${row.original.id}`} />}>
             <PencilIcon />
-          </DataTableRowActionButton>
-          <DataTableRowDeleteButton
+          </cell.Button>
+          <cell.ButtonDelete
             title={row.original.title}
             onConfirm={async () => {
-              await handleDelete(row)
+              try {
+                await toastPromise(rpc.dashboard.posts({ id: row.original.id }).delete().then(unwrap), {
+                  success: '删除成功'
+                })
+                await mutate(current => {
+                  return produce(current, draft => {
+                    draft?.posts.splice(row.index, 1)
+                  })
+                }, data?.posts.length === 1)
+              } catch (error) {
+                console.error(error)
+              }
             }}
           />
         </div>
       )
-    }
-  ]
+    })
+  ])
 
-  const table = useReactTable({
+  const table = useAppTable({
     columns,
     data: data?.posts ?? [],
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
     pageCount: data?.pagination.pageCount ?? 0,
-    meta: {
-      isLoading
-    },
     state: {
       pagination
     },
-    getRowId: row => row.id,
     onPaginationChange: setPagination
   })
 
   return (
-    <div className="space-y-4">
-      <DataTable table={table} />
-      <div className="flex items-center justify-end">
-        <DataTablePagination table={table} />
+    <table.AppTable>
+      <div className="space-y-4">
+        <table.Table isLoading={isLoading} />
+        <div className="flex items-center justify-end">
+          <table.Pagination isLoading={isLoading} />
+        </div>
       </div>
-    </div>
+    </table.AppTable>
   )
 }

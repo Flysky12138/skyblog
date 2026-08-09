@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { TrashIcon } from 'lucide-react'
 
 import { DataTableWrapper } from '@/components/data-table'
-import { DataTableRowActionButton } from '@/components/data-table/data-table-action'
+import { DataTableRowActionButton } from '@/components/data-table/components/action'
 import { FileHelper } from '@/lib/helper/file'
 
 import { StorageFileIcon } from './storage-file-icon'

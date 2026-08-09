@@ -4,16 +4,13 @@ import { Treaty } from '@elysiajs/eden'
 import { useCopy } from '@repo/react-hooks'
 import { toast } from '@repo/ui/base'
 import { Switch } from '@repo/ui/components/switch'
-import { ColumnDef, getCoreRowModel, getSortedRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { produce } from 'immer'
 import { CopyIcon, PencilIcon, PlayIcon, PlusIcon } from 'lucide-react'
 import { useAsyncFn } from 'react-use'
 import useSWR from 'swr'
 
-import { CronCreateBodyType, CronUpdateBodyType } from '@/app/api/[[...elysia]]/dashboard/crons/model'
-import { DataTable } from '@/components/data-table'
-import { DataTableRowActionButton, DataTableRowDeleteButton } from '@/components/data-table/data-table-action'
-import { getColumnConfig } from '@/components/data-table/utils'
+import { DataTableRowActionButton } from '@/components/data-table/components/action'
+import { createAppColumnHelper, useAppTable } from '@/components/data-table/hooks'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
 
@@ -26,163 +23,167 @@ export function CronTable() {
     }
   })
 
-  const {
-    data: crons,
-    isLoading,
-    mutate
-  } = useSWR('019dd3e1-517a-74ed-8435-8f4ff96ddd0c', () => rpc.dashboard.crons.get().then(unwrap), {
+  const { data, isLoading, mutate } = useSWR('019dd3e1-517a-74ed-8435-8f4ff96ddd0c', () => rpc.dashboard.crons.get().then(unwrap), {
     fallbackData: []
   })
 
-  type RowData = Row<(typeof crons)[number]>
+  type RowData = (typeof data)[number]
 
-  // 创建
-  const handleCreate = async (body: CronCreateBodyType) => {
-    try {
-      const data = await toastPromise(rpc.dashboard.crons.post(body).then(unwrap), {
-        success: '创建成功'
-      })
-      await mutate(current => {
-        return produce(current, draft => {
-          draft?.unshift(data)
-        })
-      }, false)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const columnHelper = createAppColumnHelper<RowData>()
 
-  // 删除
-  const handleDelete = async (row: RowData) => {
-    try {
-      await toastPromise(rpc.dashboard.crons({ id: row.original.id }).delete().then(unwrap), {
-        success: '删除成功'
-      })
-      await mutate(current => {
-        return produce(current, draft => {
-          draft?.splice(row.index, 1)
-        })
-      }, false)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  // 更新
-  const handleUpdate = async (row: RowData, body: CronUpdateBodyType) => {
-    try {
-      const data = await toastPromise(rpc.dashboard.crons({ id: row.original.id }).put(body).then(unwrap), {
-        success: '更新成功'
-      })
-      await mutate(current => {
-        return produce(current, draft => {
-          draft?.splice(row.index, 1, data)
-        })
-      }, false)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  // 修改状态
-  const handleChangeStatus = async (row: RowData) => {
-    try {
-      const data = await toastPromise(rpc.dashboard.crons({ id: row.original.id }).put({ isEnabled: !row.original.isEnabled }).then(unwrap), {
-        success: '修改成功'
-      })
-      await mutate(current => {
-        return produce(current, draft => {
-          draft?.splice(row.index, 1, data)
-        })
-      }, false)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const columns: ColumnDef<(typeof crons)[number]>[] = [
-    getColumnConfig('index'),
-    {
-      accessorKey: 'name',
+  const columns = columnHelper.columns([
+    columnHelper.display({
+      header: '#',
+      id: 'idnex',
+      size: 42,
+      cell: ({ row }) => row.getDisplayIndex() + 1
+    }),
+    columnHelper.accessor('name', {
       header: '名称',
       size: 250,
       meta: {
         autoWidth: true
       }
-    },
-    getColumnConfig('updatedAt'),
-    getColumnConfig('createdAt'),
-    {
-      accessorKey: 'isEnabled',
+    }),
+    columnHelper.accessor('updatedAt', {
+      header: '更新时间',
+      size: 180,
+      sortFn: 'datetime',
+      meta: {
+        enableSorting: true
+      },
+      cell: ({ cell }) => <cell.Date />
+    }),
+    columnHelper.accessor('createdAt', {
+      header: '创建时间',
+      size: 180,
+      sortFn: 'datetime',
+      meta: {
+        enableSorting: true
+      },
+      cell: ({ cell }) => <cell.Date />
+    }),
+    columnHelper.accessor('isEnabled', {
       header: '开关',
       size: 60,
-      cell: ({ row }) => (
+      cell: ({ getValue, row }) => (
         <div className="leading-0">
           <Switch
-            checked={row.original.isEnabled}
+            checked={getValue()}
             onCheckedChange={() => {
-              void handleChangeStatus(row)
+              void (async () => {
+                try {
+                  const data = await toastPromise(
+                    rpc.dashboard.crons({ id: row.original.id }).put({ isEnabled: !row.original.isEnabled }).then(unwrap),
+                    {
+                      success: '修改成功'
+                    }
+                  )
+                  await mutate(current => {
+                    return produce(current, draft => {
+                      draft?.splice(row.index, 1, data)
+                    })
+                  }, false)
+                } catch (error) {
+                  console.error(error)
+                }
+              })()
             }}
           />
         </div>
       )
-    },
-    {
+    }),
+    columnHelper.display({
       id: 'actions',
       size: 160,
       meta: {
         align: 'end'
       },
-      cell: ({ row }) => (
+      cell: ({ cell, row }) => (
         <div className="flex justify-end gap-2">
           <DataTableRowRunButton row={row.original} />
-          <DataTableRowActionButton
+          <cell.Button
             onClick={() => {
               copy(new URL(`/api/crons/${row.original.id}`, window.origin).href)
             }}
           >
             <CopyIcon />
-          </DataTableRowActionButton>
+          </cell.Button>
           <CronEditModal
             value={row.original}
             onSubmit={async body => {
-              await handleUpdate(row, body)
+              try {
+                const data = await toastPromise(rpc.dashboard.crons({ id: row.original.id }).put(body).then(unwrap), {
+                  success: '更新成功'
+                })
+                await mutate(current => {
+                  return produce(current, draft => {
+                    draft?.splice(row.index, 1, data)
+                  })
+                }, false)
+              } catch (error) {
+                console.error(error)
+              }
             }}
           >
-            <DataTableRowActionButton>
+            <cell.Button>
               <PencilIcon />
-            </DataTableRowActionButton>
+            </cell.Button>
           </CronEditModal>
-          <DataTableRowDeleteButton
+          <cell.ButtonDelete
             title={row.original.name}
             onConfirm={async () => {
-              await handleDelete(row)
+              try {
+                await toastPromise(rpc.dashboard.crons({ id: row.original.id }).delete().then(unwrap), {
+                  success: '删除成功'
+                })
+                await mutate(current => {
+                  return produce(current, draft => {
+                    draft?.splice(row.index, 1)
+                  })
+                }, false)
+              } catch (error) {
+                console.error(error)
+              }
             }}
           />
         </div>
       ),
-      header: () => (
-        <CronEditModal onSubmit={handleCreate}>
-          <DataTableRowActionButton>
+      header: ({ header }) => (
+        <CronEditModal
+          onSubmit={async body => {
+            try {
+              const data = await toastPromise(rpc.dashboard.crons.post(body).then(unwrap), {
+                success: '创建成功'
+              })
+              await mutate(current => {
+                return produce(current, draft => {
+                  draft?.unshift(data)
+                })
+              }, false)
+            } catch (error) {
+              console.error(error)
+            }
+          }}
+        >
+          <header.Button>
             <PlusIcon />
-          </DataTableRowActionButton>
+          </header.Button>
         </CronEditModal>
       )
-    }
-  ]
+    })
+  ])
 
-  const table = useReactTable({
+  const table = useAppTable({
     columns,
-    data: crons,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    meta: {
-      isLoading
-    },
-    getRowId: row => row.id
+    data
   })
 
-  return <DataTable table={table} />
+  return (
+    <table.AppTable>
+      <table.Table isLoading={isLoading} />
+    </table.AppTable>
+  )
 }
 
 // 运行按键
