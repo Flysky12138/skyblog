@@ -29,6 +29,7 @@ export default async function Page({ searchParams }: PageProps<'/'>) {
           <h2 className="flex items-center gap-2">
             {post.pinOrder > 0 && <AwardIcon size={20} />}
             <Link
+              prefetch
               className="font-heading text-xl focus-within:text-link-foreground hover:text-link-foreground"
               href={`/posts/${post.slug ?? post.id}`}
             >

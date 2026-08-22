@@ -1,7 +1,6 @@
-import { NextConfig } from 'next'
-
 import './env.zod'
 
+import { NextConfig } from 'next'
 import path from 'node:path'
 
 // 内容安全策略 (CSP)

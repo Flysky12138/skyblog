@@ -135,7 +135,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
                   <Card
                     className="not-hover:bg-transparent"
                     render={
-                      <Item aria-label="previous post" render={<Link href={`/posts/${prev.slug ?? prev.id}`} />}>
+                      <Item aria-label="previous post" render={<Link prefetch href={`/posts/${prev.slug ?? prev.id}`} />}>
                         <ItemContent>
                           <ItemDescription>上一页</ItemDescription>
                           <ItemTitle>{prev.title}</ItemTitle>
@@ -148,7 +148,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
                   <Card
                     className="not-hover:bg-transparent"
                     render={
-                      <Item aria-label="next post" className="sm:col-start-2" render={<Link href={`/posts/${next.slug ?? next.id}`} />}>
+                      <Item aria-label="next post" className="sm:col-start-2" render={<Link prefetch href={`/posts/${next.slug ?? next.id}`} />}>
                         <ItemContent className="items-end">
                           <ItemDescription>下一页</ItemDescription>
                           <ItemTitle>{next.title}</ItemTitle>
