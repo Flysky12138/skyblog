@@ -8,6 +8,10 @@
 
 @source './**/*.{ts,tsx}';
 
+/* 子包没有单独导出 CSS 文件（样式文件中使用了 @source 匹配）；则需要在这里通过 @source 来匹配文件，才能生成用到的 CSS */
+@source '../../../packages/chart-preview/src';
+@source '../../../packages/components/src';
+
 @theme inline {
   --height-header: 3.125rem;
   --height-main: calc(100dvh - var(--height-header));

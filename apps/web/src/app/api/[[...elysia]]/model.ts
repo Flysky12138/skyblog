@@ -1,5 +1,5 @@
 import { Elysia } from 'elysia'
-import { z } from 'zod'
+import z from 'zod'
 
 // 分页验证
 export const PaginationQuerySchema = z.strictObject({

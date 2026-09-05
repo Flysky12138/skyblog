@@ -1,5 +1,6 @@
 'use client'
 
+import { useObjectUrl } from '@repo/react-hooks'
 import { useTheme } from '@repo/ui/hooks/use-theme'
 import { cn } from '@repo/ui/lib/utils'
 import React from 'react'
@@ -17,26 +18,22 @@ export function ChartPreview({ cdnUrl, className, content }: ChartPreviewProps) 
 
   const iframeRef = React.useRef<HTMLIFrameElement>(null)
 
-  const url = React.useMemo(() => {
+  const blob = React.useMemo(() => {
     const html = htmlRaw
       .replace('{{theme}}', isDark ? 'dark' : 'light')
       .replace('{{runtime}}', cdnUrl ?? new URL('../../dist/index.iife.js', import.meta.url).href)
-    const blob = new Blob([html], { type: 'text/html' })
-    return URL.createObjectURL(blob)
+    return new Blob([html], { type: 'text/html' })
   }, [cdnUrl, isDark])
 
-  React.useEffect(() => {
-    return () => {
-      URL.revokeObjectURL(url)
-    }
-  }, [url])
+  const url = useObjectUrl(blob)
 
-  const handleRender = React.useEffectEvent(() => {
+  const handleRender = () => {
     iframeRef.current?.contentWindow?.postMessage(content, '*')
-  })
+  }
 
   React.useEffect(() => {
     handleRender()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content])
 
   return (

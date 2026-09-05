@@ -23,5 +23,8 @@
     "react-dom": "catalog:",
     "tailwindcss": "catalog:",
     "vite": "catalog:"
+  },
+  "dependencies": {
+    "@repo/components": "workspace:*"
   }
 }

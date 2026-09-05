@@ -2,9 +2,9 @@
 
 import { ChartPreview } from '@repo/chart-preview'
 import { MonacoEditor } from '@repo/monaco-editor'
-import { useMounted } from '@repo/react-hooks'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@repo/ui/components/resizable'
 import React from 'react'
+import { browser } from 'react-dom'
 import { useDebounce, useWindowSize } from 'react-use'
 import { transform } from 'sucrase'
 
@@ -14,11 +14,12 @@ import { ECHARTS_TEMPLATE, onInit } from './utils'
 const cdnUrl = new URL('/chart-preview/index.iife.js', process.env.NEXT_PUBLIC_WEBSITE_URL).href
 
 export default function Page() {
+  React.use(browser())
+
   const [code, setCode] = React.useState(ECHARTS_TEMPLATE)
   const [options, setOptions] = React.useState(code)
 
   const { width } = useWindowSize()
-  const isMounted = useMounted()
 
   const getOptions = () => {
     try {
@@ -37,8 +38,6 @@ export default function Page() {
     100,
     [code]
   )
-
-  if (!isMounted) return null
 
   return (
     <ResizablePanelGroup orientation={width < 1024 ? 'vertical' : 'horizontal'}>

@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@repo/ui/components-self/theme'
+import { ThemeProvider } from '@repo/components/theme'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 

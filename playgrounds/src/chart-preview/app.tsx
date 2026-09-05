@@ -1,6 +1,6 @@
 import '@repo/ui/globals.css'
 import { ChartPreview } from '@repo/chart-preview'
-import { DropdownMenuThemeRadio } from '@repo/ui/components-self/theme'
+import { DropdownMenuThemeRadio } from '@repo/components/theme'
 
 import chartOption from './chart-option.json?raw'
 

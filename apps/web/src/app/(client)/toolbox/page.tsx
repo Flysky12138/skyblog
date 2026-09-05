@@ -1,4 +1,4 @@
-import { Card } from '@repo/ui/components-self/card'
+import { Card } from '@repo/components/card'
 import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from '@repo/ui/components/item'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/tabs'
 import { ExternalLinkIcon } from 'lucide-react'

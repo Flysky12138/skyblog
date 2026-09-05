@@ -1,10 +1,17 @@
 declare namespace NodeJS {
   interface ProcessEnv {
     /**
+     * neon database direct url
+     *
+     * @example
+     * "postgresql://neondb_owner:xxxxx@ep-ancient-river-xxxxx.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+     */
+    readonly DATABASE_DIRECT_URL: string
+    /**
      * neon database url
      *
      * @example
-     * "postgresql://neondb_owner:xxxxx@ep-ancient-river-xxxxx-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&pgbouncer=true&connect_timeout=30&pool_timeout=30"
+     * "postgresql://neondb_owner:xxxxx@ep-ancient-river-xxxxx-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
      */
     readonly DATABASE_URL: string
     /**

@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import z from 'zod'
 
 export const SongDetailResponseSchema = z.object({
   dt: z.int(),
@@ -24,10 +24,10 @@ export const SongDetailResponseSchema = z.object({
 export type SongDetailResponseType = z.infer<typeof SongDetailResponseSchema>
 
 export const LyricResponseSchema = z.object({
-  lrcText: z.string().nullable(),
-  lrc: z
+  content: z.string().nullable(),
+  lyric: z
     .object({
-      lyric: z.string(),
+      text: z.string(),
       time: z.number()
     })
     .array()

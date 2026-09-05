@@ -1,6 +1,6 @@
 'use client'
 
-import { DropdownMenuThemeRadio } from '@repo/ui/components-self/theme'
+import { DropdownMenuThemeRadio } from '@repo/components/theme'
 import { SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem } from '@repo/ui/components/sidebar'
 import { Skeleton } from '@repo/ui/components/skeleton'
 import { Switch } from '@repo/ui/components/switch'

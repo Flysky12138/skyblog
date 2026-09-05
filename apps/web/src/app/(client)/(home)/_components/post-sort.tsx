@@ -27,6 +27,7 @@ export function PostSort({ className, direction, field }: PostSortProps) {
     const url = new URL(window.location.href)
     url.searchParams.set('field', field)
     url.searchParams.set('direction', direction)
+    url.searchParams.sort()
     router.push(url.href)
   }
 

@@ -10,6 +10,7 @@ const sortObjectRulesEntry: FlatConfig.RuleEntry = [
   {
     groups: ['unknown', 'multiline-property', ['method', 'onEvent'], 'multiline-method'],
     order: 'asc',
+    partitionByNewLine: true,
     type: 'natural',
     customGroups: [
       {

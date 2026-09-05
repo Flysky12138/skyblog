@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import z from 'zod'
 
 export const TagCreateBodySchema = z.strictObject({
   name: z.string().nonempty()

@@ -20,6 +20,7 @@
     "@excalidraw/excalidraw": "catalog:",
     "@excalidraw/utils": "catalog:",
     "@intevation/tiptap-extension-office-paste": "catalog:",
+    "@repo/components": "workspace:*",
     "@repo/react-hooks": "workspace:*",
     "@repo/ui": "workspace:*",
     "@shikijs/colorized-brackets": "catalog:",
@@ -52,7 +53,6 @@
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "@tailwindcss/cli": "catalog:",
     "@tailwindcss/typography": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",

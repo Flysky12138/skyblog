@@ -3,7 +3,7 @@ import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
   {
-    ignores: ['./src/components/', './src/hooks/use-mobile.ts', './src/lib/']
+    ignores: ['./src/components/', './src/hooks/use-mobile.ts']
   },
   reactConfig,
   {

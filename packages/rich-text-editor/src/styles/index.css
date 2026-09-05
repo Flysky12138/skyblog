@@ -3,6 +3,7 @@
 @import '@repo/ui/globals.css';
 
 @import './blockquote.css' layer(components);
+@import './emoji.css' layer(components);
 @import './excalidraw.css' layer(components);
 @import './img.css' layer(components);
 @import './list.css' layer(components);

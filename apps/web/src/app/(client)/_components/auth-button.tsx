@@ -1,6 +1,7 @@
 'use client'
 
-import { ButtonLink, buttonVariants } from '@repo/ui/components/button'
+import { ButtonLink } from '@repo/components/button'
+import { buttonVariants } from '@repo/ui/components/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui/components/tooltip'
 import { LayoutDashboardIcon, LogInIcon, UserRoundCogIcon } from 'lucide-react'
 
@@ -9,7 +10,9 @@ import { authClient } from '@/lib/auth/client'
 export function AuthButton() {
   const { data: session, isPending } = authClient.useSession()
 
-  if (isPending) return <div className={buttonVariants({ className: 'pointer-events-none', size: 'icon', variant: 'outline' })} />
+  if (isPending) {
+    return <div className={buttonVariants({ className: 'pointer-events-none', size: 'icon', variant: 'outline' })} />
+  }
 
   if (!session) {
     return (

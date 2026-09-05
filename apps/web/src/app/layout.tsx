@@ -1,8 +1,8 @@
 import '@/globals.css'
 
-import { FancyboxRegister } from '@repo/ui/components-self/fancybox'
-import { NoiseTexture } from '@repo/ui/components-self/noise-texture'
-import { ThemeProvider } from '@repo/ui/components-self/theme'
+import { FancyboxRegister } from '@repo/components/fancybox'
+import { NoiseTexture } from '@repo/components/noise-texture'
+import { ThemeProvider } from '@repo/components/theme'
 import { Toaster } from '@repo/ui/components/sonner'
 import { TooltipProvider } from '@repo/ui/components/tooltip'
 import { cn } from '@repo/ui/lib/utils'

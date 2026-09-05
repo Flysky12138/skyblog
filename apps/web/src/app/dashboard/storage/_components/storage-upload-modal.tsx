@@ -1,11 +1,11 @@
 'use client'
 
 import { Treaty } from '@elysiajs/eden'
-import { FileSelect } from '@repo/ui/components-self/file-select'
+import { FileSelect } from '@repo/components/file-select'
 import { Button } from '@repo/ui/components/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui/components/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/tabs'
-import { difference, limitAsync, remove, unionWith } from 'es-toolkit'
+import { difference, limitAsync, mapAsync, remove, unionWith } from 'es-toolkit'
 import { FileIcon, FolderIcon, TrashIcon, UploadIcon } from 'lucide-react'
 import React from 'react'
 import { useAsyncFn, useBeforeUnload } from 'react-use'
@@ -90,33 +90,36 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
 
   // 上传文件
   const [{ loading: isUploading }, handleUpload] = useAsyncFn(async () => {
-    const promise = async (file: FileEntry) => {
-      const data = await toastPromise(
-        Storage.uploadFile({
-          file: file.rawFile,
-          s3ObjectKey: file.id,
-          directory: {
-            id,
-            names: file.path.split('/').filter(Boolean).slice(0, -1)
+    return mapAsync(
+      filelist.waiting,
+      async file => {
+        const data = await toastPromise(
+          Storage.uploadFile({
+            file: file.rawFile,
+            s3ObjectKey: file.id,
+            directory: {
+              id,
+              names: file.path.split('/').filter(Boolean).slice(0, -1)
+            }
+          }),
+          {
+            description: file.path,
+            loading: '正在上传',
+            success: '上传成功'
           }
-        }),
-        {
-          description: file.path,
-          loading: '正在上传',
-          success: '上传成功'
-        }
-      )
+        )
 
-      setFilelist(draft => {
-        draft.uploaded.push(file)
-        remove(draft.waiting, item => item.id === file.id && item.path === file.path)
-      })
+        setFilelist(draft => {
+          draft.uploaded.push(file)
+          remove(draft.waiting, item => item.id === file.id && item.path === file.path)
+        })
 
-      await onUploaded?.(data)
-    }
-    const limit = limitAsync(promise, 3)
-
-    return Promise.allSettled(filelist.waiting.map(limit))
+        await onUploaded?.(data)
+      },
+      {
+        concurrency: 3
+      }
+    )
   }, [filelist, onUploaded])
 
   useBeforeUnload(isUploading, '正在上传中，不要关闭窗口')

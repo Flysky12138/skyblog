@@ -1,5 +1,5 @@
+import { Card } from '@repo/components/card'
 import { highlightCode } from '@repo/rich-text-editor/shiki'
-import { Card } from '@repo/ui/components-self/card'
 import { Spinner } from '@repo/ui/components/spinner'
 import { cn } from '@repo/ui/lib/utils'
 import useSWR from 'swr'

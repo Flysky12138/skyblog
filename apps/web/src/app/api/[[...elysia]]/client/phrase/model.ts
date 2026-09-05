@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import z from 'zod'
 
 export const PhraseDetailResponseSchema = z.strictObject({
   from: z.string(),

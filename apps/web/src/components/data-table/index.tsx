@@ -1,10 +1,9 @@
 'use client'
 
-import { Card } from '@repo/ui/components-self/card'
+import { Card } from '@repo/components/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@repo/ui/components/table'
 import { cn } from '@repo/ui/lib/utils'
 import { SortDirection } from '@tanstack/react-table'
-import { pick } from 'es-toolkit'
 import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon, LucideIcon } from 'lucide-react'
 import React from 'react'
 
@@ -19,62 +18,58 @@ export function DataTable({ isLoading }: DataTableProps) {
 
   return (
     <DataTableWrapper>
-      <table.Subscribe selector={state => pick(state, ['pagination', 'sorting'])}>
-        {() => (
-          <Table
-            className="min-w-full table-fixed"
-            style={{
-              width: table.getTotalSize()
-            }}
-          >
-            <TableHeader>
-              {table.getHeaderGroups().map(headerGroup => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map(h => (
-                    <table.AppHeader key={h.id} header={h}>
-                      {header => (
-                        <TableHead
-                          className={cn('', getAlignClassName(header.column.columnDef.meta?.align))}
-                          colSpan={header.colSpan}
-                          style={{
-                            width: header.column.columnDef.meta?.autoWidth ? undefined : header.column.getSize()
-                          }}
-                        >
-                          {header.isPlaceholder ? null : header.column.columnDef.meta?.enableSorting ? <RowsSort /> : <header.FlexRender />}
-                        </TableHead>
-                      )}
-                    </table.AppHeader>
-                  ))}
-                </TableRow>
+      <Table
+        className="min-w-full table-fixed"
+        style={{
+          width: table.getTotalSize()
+        }}
+      >
+        <TableHeader>
+          {table.getHeaderGroups().map(headerGroup => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map(h => (
+                <table.AppHeader key={h.id} header={h}>
+                  {header => (
+                    <TableHead
+                      className={cn('', getAlignClassName(header.column.columnDef.meta?.align))}
+                      colSpan={header.colSpan}
+                      style={{
+                        width: header.column.columnDef.meta?.autoWidth ? undefined : header.column.getSize()
+                      }}
+                    >
+                      {header.isPlaceholder ? null : header.column.columnDef.meta?.enableSorting ? <RowsSort /> : <header.FlexRender />}
+                    </TableHead>
+                  )}
+                </table.AppHeader>
               ))}
-            </TableHeader>
+            </TableRow>
+          ))}
+        </TableHeader>
 
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map(row => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() ? 'selected' : undefined}>
-                    {row.getAllCells().map(c => (
-                      <table.AppCell key={c.id} cell={c}>
-                        {cell => (
-                          <TableCell className={cn('', getAlignClassName(cell.column.columnDef.meta?.align))}>
-                            <cell.FlexRender />
-                          </TableCell>
-                        )}
-                      </table.AppCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={table.getAllColumns().length}>
-                    <span className="sticky left-1/2 inline-block -translate-x-1/2">{isLoading ? 'Loading...' : 'No results.'}</span>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        )}
-      </table.Subscribe>
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map(row => (
+              <TableRow key={row.id} data-state={row.getIsSelected() ? 'selected' : undefined}>
+                {row.getAllCells().map(c => (
+                  <table.AppCell key={c.id} cell={c}>
+                    {cell => (
+                      <TableCell className={cn('', getAlignClassName(cell.column.columnDef.meta?.align))}>
+                        <cell.FlexRender />
+                      </TableCell>
+                    )}
+                  </table.AppCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={table.getAllColumns().length}>
+                <span className="sticky left-1/2 inline-block -translate-x-1/2">{isLoading ? 'Loading...' : 'No results.'}</span>
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
     </DataTableWrapper>
   )
 }
@@ -122,7 +117,7 @@ function RowsSort() {
         const { aria, handler, icon: Icon } = record[header.column.getIsSorted() || 'none']
 
         return (
-          <button aria-sort={aria} className="flex items-center gap-1.5 select-none focus-visible:ring-3 *:[svg]:size-4" onClick={handler}>
+          <button aria-label={aria} className="flex items-center gap-1.5 select-none focus-visible:ring-3 *:[svg]:size-4" onClick={handler}>
             <header.FlexRender />
             <Icon />
           </button>

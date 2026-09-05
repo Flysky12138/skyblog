@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import z from 'zod'
 
 export const VisitCreateBodySchema = z.strictObject({
   browser: z.string().nullish(),

@@ -1,4 +1,4 @@
-import { Card } from '@repo/ui/components-self/card'
+import { Card } from '@repo/components/card'
 import { Skeleton } from '@repo/ui/components/skeleton'
 
 export default function Loading() {

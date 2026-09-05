@@ -1,6 +1,6 @@
 'use cache'
 
-import { Card } from '@repo/ui/components-self/card'
+import { Card } from '@repo/components/card'
 import { CardDescription, CardHeader, CardTitle } from '@repo/ui/components/card'
 import { cacheLife, cacheTag } from 'next/cache'
 import Link from 'next/link'

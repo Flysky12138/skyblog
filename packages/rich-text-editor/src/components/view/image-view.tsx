@@ -1,6 +1,6 @@
 'use client'
 
-import { ResizableBox, ResizableBoxSize } from '@repo/ui/components-self/resizable-box'
+import { ResizableBox, ResizableBoxSize } from '@repo/components/resizable-box'
 import {
   ContextMenu,
   ContextMenuCheckboxItem,

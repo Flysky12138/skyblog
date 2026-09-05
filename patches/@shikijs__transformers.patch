@@ -1,0 +1,43 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 96a7ae7583ecdf2d15a6f245b5162cafa34dc253..924c18d008b170d6949c3c3d2ea1a8bdc2b01e8a 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -155,7 +155,7 @@ function createCommentNotationTransformer(name, regex, onMatch, matchAlgorithm)
+ 		name,
+ 		code(code) {
+ 			const lines = code.children.filter((i) => i.type === "element");
+-			const linesToRemove = [];
++			// const linesToRemove = [];
+ 			code.data ??= {};
+ 			const data = code.data;
+ 			data._shiki_notation ??= parseComments(lines, ["jsx", "tsx"].includes(this.options.lang), matchAlgorithm);
+@@ -177,7 +177,7 @@ function createCommentNotationTransformer(name, regex, onMatch, matchAlgorithm)
+ 				else if (matchAlgorithm === "v3") comment.info[1] = v3ClearEndCommentPrefix(comment.info[1]);
+ 				const isEmpty = comment.info[1].trim().length === 0;
+ 				if (isEmpty) comment.info[1] = "";
+-				if (isEmpty && comment.isLineCommentOnly) linesToRemove.push(comment.line);
++				// if (isEmpty && comment.isLineCommentOnly) linesToRemove.push(comment.line);
+ 				else if (isEmpty && comment.isJsxStyle) comment.line.children.splice(comment.line.children.indexOf(comment.token) - 1, 3);
+ 				else if (isEmpty) {
+ 					if (comment.additionalTokens) for (let j = comment.additionalTokens.length - 1; j >= 0; j--) {
+@@ -197,13 +197,13 @@ function createCommentNotationTransformer(name, regex, onMatch, matchAlgorithm)
+ 					}
+ 				}
+ 			}
+-			for (const line of linesToRemove) {
+-				const index = code.children.indexOf(line);
+-				const nextLine = code.children[index + 1];
+-				let removeLength = 1;
+-				if (nextLine?.type === "text" && nextLine?.value === "\n") removeLength = 2;
+-				code.children.splice(index, removeLength);
+-			}
++			// for (const line of linesToRemove) {
++			// 	const index = code.children.indexOf(line);
++			// 	const nextLine = code.children[index + 1];
++			// 	let removeLength = 1;
++			// 	if (nextLine?.type === "text" && nextLine?.value === "\n") removeLength = 2;
++			// 	code.children.splice(index, removeLength);
++			// }
+ 		}
+ 	};
+ }

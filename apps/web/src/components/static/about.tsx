@@ -18,7 +18,9 @@ export async function About() {
         <span>主题</span>
         <OuterLink href="https://www.shadcn.com.cn">Shadcn</OuterLink>
       </div>
-      <span className="text-xs">Built by vercel on {new Date().toUTCString()}</span>
+      <span suppressHydrationWarning className="text-xs">
+        Built by vercel on {new Date().toUTCString()}
+      </span>
     </div>
   )
 }

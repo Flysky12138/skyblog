@@ -1,6 +1,6 @@
-import { Container } from '@repo/ui/components-self/container'
-import { DropdownMenuThemeRadio } from '@repo/ui/components-self/theme'
-import { ButtonLink } from '@repo/ui/components/button'
+import { ButtonLink } from '@repo/components/button'
+import { Container } from '@repo/components/container'
+import { DropdownMenuThemeRadio } from '@repo/components/theme'
 import { ToolCaseIcon } from 'lucide-react'
 import Link from 'next/link'
 
@@ -18,7 +18,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
     <>
       <Header>
         <Container className="flex h-full items-center gap-4">
-          <Link aria-label="to home page" className="focus-visible:ring-3" href="/">
+          <Link prefetch aria-label="to home page" className="focus-visible:ring-3" href="/">
             <Logo />
           </Link>
           <span aria-hidden="true" className="grow" />

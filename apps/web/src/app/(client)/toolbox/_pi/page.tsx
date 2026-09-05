@@ -1,6 +1,6 @@
 'use client'
 
-import { Card } from '@repo/ui/components-self/card'
+import { Card } from '@repo/components/card'
 import { Alert, AlertTitle } from '@repo/ui/components/alert'
 import { Button } from '@repo/ui/components/button'
 import { ButtonGroup } from '@repo/ui/components/button-group'

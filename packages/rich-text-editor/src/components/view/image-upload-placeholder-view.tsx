@@ -1,6 +1,6 @@
 'use client'
 
-import { FileSelect } from '@repo/ui/components-self/file-select'
+import { FileSelect } from '@repo/components/file-select'
 import { NodeViewProps, NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react'
 import { ImageUpIcon } from 'lucide-react'
 

@@ -11,7 +11,6 @@
     "./components/button": "./src/components-override/button.tsx",
     "./components/dialog": "./src/components-override/dialog.tsx",
     "./components/sonner": "./src/components-override/sonner.tsx",
-    "./components-self/*": "./src/components-self/*.tsx",
     "./base": "./src/base.ts",
     "./globals.css": "./src/styles/globals.css",
     "./postcss.config": "./postcss.config.mjs",
@@ -24,21 +23,15 @@
     "@fancyapps/ui": "catalog:",
     "@repo/react-hooks": "workspace:*",
     "class-variance-authority": "catalog:",
-    "clsx": "catalog:",
     "cmdk": "catalog:",
+    "cn": "catalog:",
     "culori": "catalog:",
-    "es-toolkit": "catalog:",
     "input-otp": "catalog:",
     "lucide-react": "catalog:",
-    "next": "catalog:",
     "next-themes": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:",
     "react-resizable-panels": "catalog:",
-    "react-use": "catalog:",
-    "schema-dts": "catalog:",
     "sonner": "catalog:",
-    "tailwind-merge": "catalog:",
     "tw-animate-css": "catalog:"
   },
   "devDependencies": {
@@ -47,7 +40,6 @@
     "@types/culori": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
-    "@types/react-dom": "catalog:",
     "shadcn": "catalog:",
     "tailwindcss": "catalog:"
   }

@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import z from 'zod'
 
 import { CACHE_TAG, VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
 

@@ -1,10 +1,9 @@
 'use client'
 
-import { Card } from '@repo/ui/components-self/card'
+import { Card } from '@repo/components/card'
 import { Spinner } from '@repo/ui/components/spinner'
 import { cn } from '@repo/ui/lib/utils'
 import Link from 'next/link'
-import React from 'react'
 import { List, RowComponentProps } from 'react-window'
 import { useInfiniteLoader } from 'react-window-infinite-loader'
 
@@ -13,28 +12,19 @@ import { AlbumResponseType } from '@/app/api/[[...elysia]]/client/netease-cloud-
 interface RowProps {
   hasMore?: boolean
   songs: AlbumResponseType['songs']
-  onRowClick?: (song: RowProps['songs'][number]) => void
 }
 
 interface SongListProps extends RowProps {
   loadMoreRows: () => Promise<void>
 }
 
-export function SongList({ hasMore, loadMoreRows, songs, onRowClick }: SongListProps) {
+export function SongList({ hasMore, loadMoreRows, songs }: SongListProps) {
   const rowCount = hasMore ? songs.length + 1 : songs.length
 
-  const isLoadingMoreRef = React.useRef(false)
-
   const onRowsRendered = useInfiniteLoader({
+    loadMoreRows,
     rowCount,
-    isRowLoaded: index => !hasMore || index < songs.length,
-    loadMoreRows: async () => {
-      if (!hasMore) return
-      if (isLoadingMoreRef.current) return
-      isLoadingMoreRef.current = true
-      await loadMoreRows()
-      isLoadingMoreRef.current = false
-    }
+    isRowLoaded: index => index < songs.length || !hasMore
   })
 
   return (
@@ -42,12 +32,12 @@ export function SongList({ hasMore, loadMoreRows, songs, onRowClick }: SongListP
       className="rounded-md"
       render={
         <List
-          className="no-scrollbar scroll-fade-b overscroll-none"
+          className="no-scrollbar grow-0! scroll-fade-b overscroll-none"
           overscanCount={8}
           rowComponent={Row}
           rowCount={rowCount}
           rowHeight={48}
-          rowProps={{ hasMore, songs, onRowClick }}
+          rowProps={{ hasMore, songs }}
           onRowsRendered={onRowsRendered}
         />
       }
@@ -55,7 +45,7 @@ export function SongList({ hasMore, loadMoreRows, songs, onRowClick }: SongListP
   )
 }
 
-function Row({ ariaAttributes, hasMore, index, songs, style, onRowClick }: RowComponentProps & RowProps) {
+function Row({ ariaAttributes, hasMore, index, songs, style }: RowComponentProps & RowProps) {
   if (hasMore && index >= songs.length) {
     return (
       <div className="flex items-center justify-center" style={style} {...ariaAttributes}>
@@ -80,9 +70,6 @@ function Row({ ariaAttributes, hasMore, index, songs, style, onRowClick }: RowCo
       scroll={false}
       style={style}
       {...ariaAttributes}
-      onClick={() => {
-        onRowClick?.(song)
-      }}
     >
       <img
         alt={song.al.name}

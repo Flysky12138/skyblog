@@ -1,8 +1,10 @@
 import { Extensions, getSchemaByResolvedExtensions, JSONContent, resolveExtensions } from '@tiptap/core'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { renderToHTMLString } from '@tiptap/static-renderer/pm/html-string'
+import { groupBy, mapValues } from 'es-toolkit'
 import { renderToString } from 'katex'
 
+import { ExtensionKitOptions } from '../../extensions'
 import { ExcalidrawAttributes } from '../../extensions/excalidraw'
 import { renderCodeBlocks } from './code-block-render'
 
@@ -30,19 +32,36 @@ export async function renderJSONContentToHTMLString(
     pmNode = pmNode.copy(content.cut(0, content.size - lastChildSize))
   }
 
+  // 高亮代码块
   const highlighted = await renderCodeBlocks(pmNode)
+
+  // 所有插件的配置项
+  const extensionsOptions = mapValues(
+    groupBy(resolvedExtensions, item => item.name),
+    item => item[0].options as false
+  )
 
   return renderToHTMLString({
     content: pmNode,
     extensions,
     options: {
       nodeMapping: {
-        blockMath: ({ node }) => `<div data-type="block-math">${renderToString(node.attrs.latex as string)}</div>`,
         codeBlock: ({ node }) => highlighted.get(node) ?? `<pre><code>${node.attrs.content}</code></pre>`,
-        inlineMath: ({ node }) => `<span data-type="inline-math">${renderToString(node.attrs.latex as string)}</span>`,
+        blockMath: ({ node }) => {
+          const tex = node.attrs.latex as string
+          const mathOptions = extensionsOptions.Mathematics as ExtensionKitOptions['math']
+          if (!mathOptions) return ''
+          return `<div data-type="block-math">${renderToString(tex, mathOptions.katexOptions)}</div>`
+        },
         excalidraw: ({ node }) => {
           const { html, textAlign } = node.attrs as ExcalidrawAttributes
           return html ? `<div data-type="excalidraw" data-excalidraw-align="${textAlign}">${html}</div>` : ''
+        },
+        inlineMath: ({ node }) => {
+          const tex = node.attrs.latex as string
+          const mathOptions = extensionsOptions.Mathematics as ExtensionKitOptions['math']
+          if (!mathOptions) return ''
+          return `<span data-type="inline-math">${renderToString(tex, mathOptions.katexOptions)}</span>`
         }
       },
       unhandledMark: () => '',

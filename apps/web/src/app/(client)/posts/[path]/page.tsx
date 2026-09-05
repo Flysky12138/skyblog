@@ -1,8 +1,8 @@
 'use cache'
 
-import { Card } from '@repo/ui/components-self/card'
-import { JsonLD } from '@repo/ui/components-self/json-ld'
-import { ButtonLink } from '@repo/ui/components/button'
+import { ButtonLink } from '@repo/components/button'
+import { Card } from '@repo/components/card'
+import { JsonLD } from '@repo/components/json-ld'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '@repo/ui/components/item'
 import { cn } from '@repo/ui/lib/utils'
 import { PencilLineIcon } from 'lucide-react'
@@ -59,7 +59,9 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
   const { path: idOrSlug } = await params
 
   const { post, user } = await getPost(idOrSlug)
-  if (!post) return notFound()
+  if (!post) {
+    return notFound()
+  }
 
   cacheTag(CACHE_TAG.POST(post.id))
 
@@ -160,18 +162,6 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
               </div>
             </Show>
           </div>
-
-          {/* <DisplayByConditional condition={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.TOC) === POST_CARD_VISIBILITY_MASK.TOC}>
-            <Card
-              aria-label="post toc"
-              data-slot="post-toc"
-              render={
-                <PostToc>
-                  <MDXHeading component={PostTocHeading} source={post.content} />
-                </PostToc>
-              }
-            />
-          </DisplayByConditional> */}
         </div>
       )}
     </>

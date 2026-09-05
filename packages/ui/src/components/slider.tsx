@@ -1,15 +1,14 @@
 import { Slider as SliderPrimitive } from "@base-ui/react/slider"
+import { cn } from "cn"
 
-import { cn } from "@repo/ui/lib/utils"
-
-function Slider<T extends number | number[]>({
+function Slider({
   className,
   defaultValue,
   value,
   min = 0,
   max = 100,
   ...props
-}: SliderPrimitive.Root.Props<T>) {
+}: SliderPrimitive.Root.Props) {
   const _values = Array.isArray(value)
     ? value
     : Array.isArray(defaultValue)

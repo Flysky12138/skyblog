@@ -1,5 +1,5 @@
 import OfficePaste from '@intevation/tiptap-extension-office-paste'
-import { Extension, Extensions } from '@tiptap/core'
+import { Extension, Extensions, Mark, Node } from '@tiptap/core'
 import { Emoji, EmojiOptions } from '@tiptap/extension-emoji'
 import { Highlight, HighlightOptions } from '@tiptap/extension-highlight'
 import { TaskItem, TaskItemOptions, TaskList, TaskListOptions } from '@tiptap/extension-list'
@@ -13,6 +13,7 @@ import { Typography, TypographyOptions } from '@tiptap/extension-typography'
 import { Placeholder, PlaceholderOptions } from '@tiptap/extensions'
 import { Markdown, MarkdownExtensionOptions } from '@tiptap/markdown'
 import { StarterKit, StarterKitOptions } from '@tiptap/starter-kit'
+import { cloneDeep, mapValues, mergeWith } from 'es-toolkit'
 
 import { getMathClickHandler } from '../lib/dialog-bridge/math-dialog-bridge'
 import { CodeBlockShiki, CodeBlockShikiOptions } from './code-block-shiki'
@@ -95,6 +96,179 @@ export interface ExtensionKitOptions {
   typography: false | Partial<TypographyOptions>
 }
 
+type ExtensionKitConfig = {
+  [K in keyof ExtensionKitOptions]: {
+    option: ((customOptions: Partial<ExtensionKitOptions>) => Exclude<ExtensionKitOptions[K], false>) | ExtensionKitOptions[K]
+    target: Extension | Mark | Node
+  }
+}
+
+const extensionKitConfig: ExtensionKitConfig = {
+  codeBlockShiki: {
+    option: {},
+    target: CodeBlockShiki
+  },
+  emoji: {
+    target: Emoji,
+    option: {
+      enableEmoticons: true
+    }
+  },
+  excalidraw: {
+    option: false,
+    target: Excalidraw
+  },
+  highlight: {
+    target: Highlight,
+    option: {
+      multicolor: true
+    }
+  },
+  image: {
+    target: Image,
+    option: {
+      HTMLAttributes: {
+        'data-fancybox': ''
+      }
+    }
+  },
+  imageUploadPlaceholder: {
+    option: {},
+    target: ImageUploadPlaceholder
+  },
+  insertLine: {
+    option: false,
+    target: InsertLine
+  },
+  markdown: {
+    target: Markdown,
+    option: {
+      indentation: {
+        size: 2,
+        style: 'tab'
+      },
+      markedOptions: {
+        gfm: true
+      }
+    }
+  },
+  markdownPaste: {
+    option: false,
+    target: MarkdownPaste
+  },
+  math: {
+    target: Mathematics,
+    option: {
+      blockOptions: {
+        onClick(node, pos) {
+          getMathClickHandler()?.({ node, pos })
+        }
+      },
+      inlineOptions: {
+        onClick(node, pos) {
+          getMathClickHandler()?.({ node, pos })
+        }
+      },
+      katexOptions: {
+        output: 'html',
+        throwOnError: false
+      }
+    }
+  },
+  officePaste: {
+    option: false,
+    target: OfficePaste
+  },
+  placeholder: {
+    target: Placeholder,
+    option: {
+      placeholder: 'Write something …'
+    }
+  },
+  searchAndReplacePlugin: {
+    option: {},
+    target: SearchAndReplace
+  },
+  starterKit: {
+    target: StarterKit,
+    option: options => ({
+      codeBlock: options.codeBlockShiki === false ? {} : false,
+      link: {
+        enableClickSelection: true,
+        openOnClick: false
+      }
+    })
+  },
+  subscript: {
+    option: {},
+    target: Subscript
+  },
+  superscript: {
+    option: {},
+    target: Superscript
+  },
+  tableKit: {
+    target: TableKit,
+    option: {
+      table: {
+        cellMinWidth: 120,
+        renderWrapper: true,
+        resizable: true
+      }
+    }
+  },
+  tableStyle: {
+    option: {},
+    target: TableStyle
+  },
+  taskItem: {
+    target: TaskItem,
+    option: {
+      nested: true
+    }
+  },
+  taskList: {
+    option: {},
+    target: TaskList
+  },
+  textAlign: {
+    target: TextAlign,
+    option: {
+      alignments: ['start', 'center', 'end', 'justify', 'left', 'right'],
+      types: ['heading', 'paragraph', 'image', 'excalidraw']
+    }
+  },
+  textStyleKit: {
+    option: {},
+    target: TextStyleKit
+  },
+  typography: {
+    option: {},
+    target: Typography
+  }
+}
+
+/**
+ * 与默认插件配置合并
+ */
+export function mergeExtensionKitOptionsWithDefault(customOptions: Partial<ExtensionKitOptions>) {
+  return mapValues(extensionKitConfig, ({ option }, name) => {
+    const defaultExtensionOption = (typeof option === 'function' ? option(customOptions) : cloneDeep(option)) || {}
+
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    return mergeWith(defaultExtensionOption, customOptions[name] || {}, (defaultValue, sourceValue, key) => {
+      // 这个插件的事件需要保留双方内容，不使用覆盖
+      if (name === 'math' && typeof defaultValue === 'function' && key === 'onClick') {
+        type OnClickType = NonNullable<NonNullable<MathematicsOptions['blockOptions']>['onClick']>
+        return ((...args) => {
+          Reflect.apply(defaultValue as OnClickType, undefined, args)
+          Reflect.apply(sourceValue as OnClickType, undefined, args)
+        }) as OnClickType
+      }
+    })
+  })
+}
+
 /**
  * 插件合集，带默认配置
  */
@@ -104,189 +278,13 @@ export const ExtensionKit = Extension.create<ExtensionKitOptions>({
   addExtensions() {
     const extensions: Extensions = []
 
-    if (this.options.codeBlockShiki !== false) {
-      extensions.push(CodeBlockShiki.configure(this.options.codeBlockShiki))
-    }
+    const options = mergeExtensionKitOptionsWithDefault(this.options)
 
-    if (this.options.emoji !== false) {
-      extensions.push(
-        Emoji.configure(
-          this.options.emoji ?? {
-            enableEmoticons: true
-          }
-        )
-      )
-    }
+    for (const [name, option] of Object.entries(extensionKitConfig) as [keyof ExtensionKitConfig, ValueOf<ExtensionKitConfig>][]) {
+      // 用户主动禁用这个插件
+      if (this.options[name] === false) continue
 
-    if (this.options.excalidraw !== false) {
-      extensions.push(Excalidraw.configure(this.options.excalidraw))
-    }
-
-    if (this.options.highlight !== false) {
-      extensions.push(
-        Highlight.configure(
-          this.options.highlight ?? {
-            multicolor: true
-          }
-        )
-      )
-    }
-
-    if (this.options.image !== false) {
-      extensions.push(
-        Image.configure(
-          this.options.image ?? {
-            HTMLAttributes: {
-              'data-fancybox': ''
-            }
-          }
-        )
-      )
-    }
-
-    if (this.options.imageUploadPlaceholder !== false) {
-      extensions.push(ImageUploadPlaceholder.configure(this.options.imageUploadPlaceholder))
-    }
-
-    if (this.options.insertLine !== false) {
-      extensions.push(InsertLine.configure(this.options.insertLine))
-    }
-
-    if (this.options.markdown !== false) {
-      extensions.push(
-        Markdown.configure(
-          this.options.markdown ?? {
-            indentation: {
-              size: 2,
-              style: 'tab'
-            },
-            markedOptions: {
-              gfm: true
-            }
-          }
-        )
-      )
-    }
-
-    if (this.options.markdownPaste !== false) {
-      extensions.push(MarkdownPaste)
-    }
-
-    if (this.options.math !== false) {
-      const { blockOptions, inlineOptions, ...mathOptions } = this.options.math || {}
-      extensions.push(
-        Mathematics.configure({
-          katexOptions: {
-            throwOnError: false
-          },
-          ...mathOptions,
-          blockOptions: {
-            ...blockOptions,
-            onClick(node, pos) {
-              blockOptions?.onClick?.(node, pos)
-              getMathClickHandler()?.({ node, pos })
-            }
-          },
-          inlineOptions: {
-            ...inlineOptions,
-            onClick(node, pos) {
-              inlineOptions?.onClick?.(node, pos)
-              getMathClickHandler()?.({ node, pos })
-            }
-          }
-        })
-      )
-    }
-
-    if (this.options.officePaste !== false) {
-      extensions.push(OfficePaste)
-    }
-
-    if (this.options.placeholder !== false) {
-      extensions.push(
-        Placeholder.configure(
-          this.options.placeholder ?? {
-            placeholder: 'Write something …'
-          }
-        )
-      )
-    }
-
-    if (this.options.searchAndReplacePlugin !== false) {
-      extensions.push(SearchAndReplace.configure(this.options.searchAndReplacePlugin))
-    }
-
-    if (this.options.starterKit !== false) {
-      extensions.push(
-        StarterKit.configure(
-          this.options.starterKit ?? {
-            codeBlock: this.options.codeBlockShiki === false,
-            link: {
-              enableClickSelection: true,
-              openOnClick: false
-            }
-          }
-        )
-      )
-    }
-
-    if (this.options.subscript !== false) {
-      extensions.push(Subscript.configure(this.options.subscript))
-    }
-
-    if (this.options.superscript !== false) {
-      extensions.push(Superscript.configure(this.options.superscript))
-    }
-
-    if (this.options.tableKit !== false) {
-      extensions.push(
-        TableKit.configure(
-          this.options.tableKit ?? {
-            table: {
-              cellMinWidth: 120,
-              renderWrapper: true,
-              resizable: true
-            }
-          }
-        )
-      )
-    }
-
-    if (this.options.tableStyle !== false) {
-      extensions.push(TableStyle.configure(this.options.tableStyle))
-    }
-
-    if (this.options.taskItem !== false) {
-      extensions.push(
-        TaskItem.configure(
-          this.options.taskItem ?? {
-            nested: true
-          }
-        )
-      )
-    }
-
-    if (this.options.taskList !== false) {
-      extensions.push(TaskList.configure(this.options.taskList))
-    }
-
-    if (this.options.textAlign !== false) {
-      extensions.push(
-        TextAlign.configure(
-          this.options.textAlign ?? {
-            alignments: ['start', 'center', 'end', 'justify', 'left', 'right'],
-            types: ['heading', 'paragraph', 'image', 'excalidraw']
-          }
-        )
-      )
-    }
-
-    if (this.options.textStyleKit !== false) {
-      extensions.push(TextStyleKit.configure(this.options.textStyleKit))
-    }
-
-    if (this.options.typography !== false) {
-      extensions.push(Typography.configure(this.options.typography))
+      extensions.push(option.target.configure(options[name]))
     }
 
     return extensions

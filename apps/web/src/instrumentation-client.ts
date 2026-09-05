@@ -1,5 +1,6 @@
+import 'zod/compile'
 import { initialLanguage2ZhCN } from '@repo/monaco-editor'
-import { z } from 'zod'
+import z from 'zod'
 import { zhCN } from 'zod/v4/locales'
 
 z.config(zhCN())

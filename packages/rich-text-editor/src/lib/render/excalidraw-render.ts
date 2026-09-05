@@ -1,5 +1,5 @@
 import { ExcalidrawElement } from '@excalidraw/excalidraw/element/types'
-import { ResizableBoxSize } from '@repo/ui/components-self/resizable-box'
+import { ResizableBoxSize } from '@repo/components/resizable-box'
 
 /**
  * 将宽高应用到 SVG 的 width/height 属性上

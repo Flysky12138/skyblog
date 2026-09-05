@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import z from 'zod'
 
 export const authSchema = z.object({
   email: z.email({ error: '请输入正确的邮箱地址 ' }),

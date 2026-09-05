@@ -1,8 +1,9 @@
 'use client'
 
+import { Fancybox } from '@repo/components/fancybox'
+import { FileSelect } from '@repo/components/file-select'
+import { useObjectUrl } from '@repo/react-hooks'
 import { toast } from '@repo/ui/base'
-import { Fancybox } from '@repo/ui/components-self/fancybox'
-import { FileSelect } from '@repo/ui/components-self/file-select'
 import { Badge } from '@repo/ui/components/badge'
 import { Button } from '@repo/ui/components/button'
 import { ButtonGroup, ButtonGroupSeparator } from '@repo/ui/components/button-group'
@@ -12,7 +13,6 @@ import { Slider } from '@repo/ui/components/slider'
 import { Tabs, TabsList, TabsTrigger } from '@repo/ui/components/tabs'
 import { remove } from 'es-toolkit'
 import { ChevronLeftIcon, ChevronRightIcon, ImageUpIcon } from 'lucide-react'
-import Image from 'next/image'
 import React from 'react'
 import { useDebounce, useLocalStorage } from 'react-use'
 
@@ -26,15 +26,15 @@ const DEFAULT_QUALITY = 70
 export default function Page() {
   const [files, setFiles] = React.useState<File[]>([])
   const [compressedFile, setCompressedFile] = React.useState<Blob>()
-
   const compressedFileCache = React.useRef(new WeakMap<File, Blob | undefined>())
+  const filesUrl = useObjectUrl(files)
+  const compressedFileUrl = useObjectUrl(compressedFile)
 
   const [activeTab, setActiveTab] = React.useState<StringLiteralsOrString<'compressed' | 'original'>>('compressed')
   const [activeFileIndex, setActiveFileIndex] = React.useState(0)
 
   const [ext, setExt] = useLocalStorage<null | string>('image-compression:ext', null)
   const [quality, setQuality] = useLocalStorage('image-compression:quality', DEFAULT_QUALITY)
-
   const currentQuality = quality ?? DEFAULT_QUALITY
 
   // 清除缓存
@@ -56,26 +56,6 @@ export default function Page() {
     if (!ext) return
     return imageCompressionGroup.find(item => item.ext === ext)
   }, [ext])
-
-  // 原图链接
-  const filesUrl = React.useMemo(() => files.map(file => URL.createObjectURL(file)), [files])
-  React.useEffect(() => {
-    return () => {
-      filesUrl.forEach(url => URL.revokeObjectURL(url))
-    }
-  }, [filesUrl])
-
-  // 压缩图片链接
-  const compressedFileUrl = React.useMemo(() => {
-    if (!compressedFile) return
-    return URL.createObjectURL(compressedFile)
-  }, [compressedFile])
-  React.useEffect(() => {
-    if (!compressedFileUrl) return
-    return () => {
-      URL.revokeObjectURL(compressedFileUrl)
-    }
-  }, [compressedFileUrl])
 
   // 压缩图片的方法
   const handleCompressImage = async (file: File | null) => {
@@ -188,12 +168,10 @@ export default function Page() {
         <div className="flex grow gap-5 not-md:flex-col">
           <Button className="relative h-auto grow rounded-md" variant="outline" onClick={handlePreview}>
             <React.Activity mode={activeTab === 'original' ? 'visible' : 'hidden'}>
-              <Image fill alt="original-image" className="size-full object-contain" src={filesUrl[activeFileIndex]} />
+              <img alt="original image" className="size-full object-contain" src={filesUrl[activeFileIndex]} />
             </React.Activity>
             <React.Activity mode={activeTab === 'compressed' ? 'visible' : 'hidden'}>
-              {compressedFile && compressedFileUrl && (
-                <Image fill alt="compressed-image" className="size-full object-contain" src={compressedFileUrl} />
-              )}
+              {compressedFile && compressedFileUrl && <img alt="compressed image" className="size-full object-contain" src={compressedFileUrl} />}
             </React.Activity>
             <ButtonGroup className="absolute top-2 right-2">
               <Badge variant="secondary">{FileHelper.formatFileSize(activeFile.size)}</Badge>
@@ -232,7 +210,15 @@ export default function Page() {
               {selectedItem ? (
                 <>
                   <FieldDescription>质量范围为 (1~100)，当前质量 {currentQuality}</FieldDescription>
-                  <Slider className="mt-1" max={100} min={1} step={1} value={quality} onValueChange={setQuality} />
+                  <Slider
+                    className="mt-1"
+                    max={100}
+                    min={1}
+                    value={[quality!]}
+                    onValueChange={value => {
+                      setQuality(value as number)
+                    }}
+                  />
                 </>
               ) : (
                 <Slider disabled className="mt-1" />

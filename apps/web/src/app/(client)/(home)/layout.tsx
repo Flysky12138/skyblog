@@ -1,4 +1,4 @@
-import { Card } from '@repo/ui/components-self/card'
+import { Card } from '@repo/components/card'
 import React from 'react'
 
 import { CardButtons } from './_components/card-buttons'
@@ -18,12 +18,8 @@ export default function Layout({ children }: React.PropsWithChildren) {
         <div className="flex shrink-0 flex-col gap-bp-3 sm:w-56 md:w-64">
           <CardDeveloper />
           <CardWolf />
-          <React.Suspense>
-            <CardButtons />
-          </React.Suspense>
-          <div className="sticky top-[calc(var(--height-header)+(--spacing(9)))] empty:hidden">
-            <CardGuestInfo />
-          </div>
+          <CardButtons />
+          <CardGuestInfo className="sticky top-[calc(var(--height-header)+(--spacing(9)))]" />
         </div>
       </div>
     </>

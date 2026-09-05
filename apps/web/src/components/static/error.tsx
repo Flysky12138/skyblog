@@ -1,6 +1,6 @@
 'use client'
 
-import { Card } from '@repo/ui/components-self/card'
+import { Card } from '@repo/components/card'
 import { Button } from '@repo/ui/components/button'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from '@repo/ui/components/empty'
 import { cn } from '@repo/ui/lib/utils'

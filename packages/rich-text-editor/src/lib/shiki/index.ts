@@ -3,11 +3,11 @@ import { transformerMetaHighlight, transformerNotationDiff, transformerNotationH
 import { BundledLanguage, BundledTheme, createHighlighter, Highlighter, SpecialLanguage } from 'shiki'
 
 import { transformerLineNumbers } from './transformer-line-numbers'
-import { transformerPreserveNotationMarkers } from './transformer-preserve-markers'
+import { transformerRemoveNotationMarkers } from './transformer-remove-markers'
 
-export const defaultLightTheme = 'one-light' satisfies BundledTheme
-export const defaultDarkTheme = 'one-dark-pro' satisfies BundledTheme
-export const defaultLanguage = 'plaintext' satisfies BundledLanguage | SpecialLanguage
+export const SHIKI_DEFAULT_LIGHT_THEME = 'one-light' satisfies BundledTheme
+export const SHIKI_DEFAULT_DARK_THEME = 'one-dark-pro' satisfies BundledTheme
+export const SHIKI_DEFAULT_LANGUAGE = 'plaintext' satisfies BundledLanguage | SpecialLanguage
 
 let highlighter: Highlighter | null = null
 let promise: null | Promise<Highlighter> = null
@@ -17,14 +17,20 @@ let promise: null | Promise<Highlighter> = null
  */
 export async function highlightCode(
   code: string,
-  options: {
+  {
+    lang = SHIKI_DEFAULT_LANGUAGE,
+    removeMarkers = true,
+    showLineNumbers = false,
+    structure = 'classic',
+    themes = {}
+  }: {
     lang?: BundledLanguage | SpecialLanguage
     /**
-     * 是否保留代码中的标记
+     * 是否移除代码中的标记行，比如：`// [!code highlight]`
      *
-     * @default false
+     * @default true
      */
-    preserveMarkers?: boolean
+    removeMarkers?: boolean
     /**
      * 是否显示行号
      *
@@ -41,12 +47,10 @@ export async function highlightCode(
     }
   }
 ) {
-  const { lang = defaultLanguage, preserveMarkers = false, showLineNumbers = false, structure = 'classic', themes = {} } = options
-
   const h = await getHighlighter()
 
-  themes.light ??= defaultLightTheme
-  themes.dark ??= defaultDarkTheme
+  themes.light ??= SHIKI_DEFAULT_LIGHT_THEME
+  themes.dark ??= SHIKI_DEFAULT_DARK_THEME
 
   // 动态加载语言
   try {
@@ -83,16 +87,16 @@ export async function highlightCode(
       // https://shiki.tmrs.site/packages/colorized-brackets
       transformerColorizedBrackets(),
 
-      // 保留 notation 标记
-      ...(preserveMarkers ? [transformerPreserveNotationMarkers()] : []),
-      // 行号
-      ...(showLineNumbers ? [transformerLineNumbers()] : []),
-
       // 为 Shiki 设计的常用转换器的集合
       // https://shiki.tmrs.site/packages/transformers
       transformerNotationDiff(),
       transformerNotationHighlight(),
-      transformerMetaHighlight()
+      transformerMetaHighlight(),
+
+      // 行号
+      ...(showLineNumbers ? [transformerLineNumbers()] : []),
+      // 保留 notation 标记
+      ...(removeMarkers ? [transformerRemoveNotationMarkers()] : [])
     ]
   })
 }
@@ -101,16 +105,21 @@ export async function highlightCode(
  * 创建高亮渲染器
  */
 async function getHighlighter() {
-  if (highlighter) return highlighter
-  if (promise) return promise
+  try {
+    if (highlighter) return highlighter
+    if (promise) return await promise
 
-  promise = createHighlighter({
-    langs: [defaultLanguage],
-    themes: [defaultLightTheme, defaultDarkTheme]
-  })
+    promise = createHighlighter({
+      langs: [SHIKI_DEFAULT_LANGUAGE],
+      themes: [SHIKI_DEFAULT_LIGHT_THEME, SHIKI_DEFAULT_DARK_THEME]
+    })
 
-  highlighter = await promise
-  promise = null
+    highlighter = await promise
+    promise = null
 
-  return highlighter
+    return highlighter
+  } catch (error) {
+    promise = null
+    throw error
+  }
 }

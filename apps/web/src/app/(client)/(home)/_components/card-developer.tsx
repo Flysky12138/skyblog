@@ -1,9 +1,9 @@
 'use cache'
 
 import { Octokit } from '@octokit/rest'
-import { Card } from '@repo/ui/components-self/card'
+import { ButtonLink } from '@repo/components/button'
+import { Card } from '@repo/components/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/avatar'
-import { ButtonLink } from '@repo/ui/components/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui/components/tooltip'
 import { cn } from '@repo/ui/lib/utils'
 import { MailIcon } from 'lucide-react'

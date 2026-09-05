@@ -8,7 +8,7 @@ export function parseLyric(lyric?: string) {
 
   const matcher = lyric.matchAll(/\[([\d:.]+)\]\r*(.*)$/gm)
   let lyrics = Array.from(matcher, ([_, second, lrc]) => ({
-    lyric: lrc.trim(),
+    text: lrc.trim(),
     time: TimeHelper.timeToSeconds(second, 'mm:ss.'.padEnd(second.length, 'S'))
   }))
 
@@ -16,7 +16,7 @@ export function parseLyric(lyric?: string) {
   lyrics = lyrics.filter((lyric, index) => {
     if (index === 0) return true
     const preLyric = lyrics[index - 1]
-    if (lyric.lyric === preLyric.lyric) return false // 前后歌词一样
+    if (lyric.text === preLyric.text) return false // 前后歌词一样
     if (lyric.time < preLyric.time) return false // 时间不是单调非递减
     return true
   })

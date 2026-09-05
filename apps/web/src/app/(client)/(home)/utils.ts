@@ -1,5 +1,5 @@
 import { cacheLife, cacheTag } from 'next/cache'
-import { z } from 'zod'
+import z from 'zod'
 
 import { Prisma } from '@/generated/prisma/client'
 import { CACHE_TAG } from '@/lib/constants'

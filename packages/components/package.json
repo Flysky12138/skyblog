@@ -1,0 +1,30 @@
+{
+  "name": "@repo/components",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "eslint --fix --max-warnings 0",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    "./*": "./src/*.tsx"
+  },
+  "dependencies": {
+    "@fancyapps/ui": "catalog:",
+    "@repo/react-hooks": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "es-toolkit": "catalog:",
+    "lucide-react": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-use": "catalog:",
+    "schema-dts": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:"
+  }
+}

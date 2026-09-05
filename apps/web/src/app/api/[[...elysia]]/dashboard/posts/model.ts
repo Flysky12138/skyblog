@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import z from 'zod'
 
 export const PostCreateBodySchema = z.strictObject({
   authorId: z.uuidv4(),

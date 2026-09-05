@@ -122,7 +122,15 @@ export function DataTableRowsDeleteButton<T extends RowData>({
 }) {
   const table = useTableContext()
 
-  const [{ loading }, handleConfirm] = useAsyncFn((rows: T[]) => onConfirm({ rows }), [onConfirm])
+  const actionsRef = React.useRef<NonNullable<React.ComponentProps<typeof AlertDialog>['actionsRef']>['current']>(null)
+
+  const [{ loading }, handleConfirm] = useAsyncFn(
+    async (rows: T[]) => {
+      await onConfirm({ rows })
+      actionsRef.current?.close()
+    },
+    [onConfirm]
+  )
 
   return (
     <table.Subscribe selector={state => pick(state, ['pagination', 'rowSelection'])}>
@@ -134,7 +142,7 @@ export function DataTableRowsDeleteButton<T extends RowData>({
         }
 
         return (
-          <AlertDialog>
+          <AlertDialog actionsRef={actionsRef}>
             <AlertDialogTrigger render={<Button size="sm" variant="destructive" />}>已选择 {selectedRows.length} 项</AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -142,7 +150,9 @@ export function DataTableRowsDeleteButton<T extends RowData>({
                 <AlertDialogDescription>{`此操作无法撤消，将永久删除 ${selectedRows.length} 项`}</AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel className="min-w-18">取消</AlertDialogCancel>
+                <AlertDialogCancel className="min-w-18" disabled={loading}>
+                  取消
+                </AlertDialogCancel>
                 <AlertDialogAction
                   className="min-w-32"
                   disabled={loading}

@@ -20,11 +20,6 @@ V8k4cBFK9snQXE9/DDaFt6Rr7iVZMldczhC0JNgTz+SHXT6CBHuX3e9SdB1Ua44o
 ncaTWz7OBGLbCiK45wIDAQAB
 -----END PUBLIC KEY-----`
 
-const cookieObjToString = (cookie: Record<string, string>): string =>
-  Object.entries(cookie)
-    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
-    .join('; ')
-
 /**
  * 发送请求到网易云音乐 API
  */
@@ -36,13 +31,7 @@ export async function neteaseRequest<T>(
     crypto: 'eapi' | 'weapi'
   }
 ) {
-  const cookieObj = (() => {
-    if (typeof options.cookie === 'string') {
-      return cookieStringToObj(options.cookie)
-    } else {
-      return { ...options.cookie }
-    }
-  })()
+  const cookieObj = typeof options.cookie === 'string' ? cookieStringToObj(options.cookie) : { ...options.cookie }
 
   let url: string
   let formData: URLSearchParams
@@ -98,6 +87,10 @@ export async function neteaseRequest<T>(
     }
   })
 
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`)
+  }
+
   const setCookie = response.headers.getSetCookie?.() ?? []
   const resCookie = setCookie.map((x: string) => x.replace(/\s*Domain=[^(;|$)]+;*/, ''))
 
@@ -113,7 +106,7 @@ export async function neteaseRequest<T>(
 /**
  * AES-128-CBC 加密，返回 base64
  */
-function aesCbcEncrypt(text: string, key: string, iv: string): string {
+function aesCbcEncrypt(text: string, key: string, iv: string) {
   const cipher = crypto.createCipheriv('aes-128-cbc', Buffer.from(key), Buffer.from(iv))
   let encrypted = cipher.update(text, 'utf8', 'base64')
   encrypted += cipher.final('base64')
@@ -123,35 +116,46 @@ function aesCbcEncrypt(text: string, key: string, iv: string): string {
 /**
  * AES-128-ECB 加密，返回大写 hex
  */
-function aesEcbEncrypt(text: string, key: string): string {
-  const cipher = crypto.createCipheriv('aes-128-ecb', Buffer.from(key), null as unknown as Buffer)
+function aesEcbEncrypt(text: string, key: string) {
+  const cipher = crypto.createCipheriv('aes-128-ecb', Buffer.from(key), null)
   let encrypted = cipher.update(text, 'utf8', 'hex')
   encrypted += cipher.final('hex')
   return encrypted.toUpperCase()
 }
 
-function cookieStringToObj(cookie: string): Record<string, string> {
+function cookieObjToString(cookie: Record<string, string>) {
+  return Object.entries(cookie)
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    .join('; ')
+}
+
+function cookieStringToObj(cookie: string) {
   if (!cookie) return {}
+
   const obj: Record<string, string> = {}
+
   for (const item of cookie.split(';')) {
     const [key, ...rest] = item.trim().split('=')
     if (key && rest.length > 0) {
       obj[key.trim()] = rest.join('=').trim()
     }
   }
+
   return obj
 }
 
 /**
  * eapi 加密
  */
-function eapiEncrypt(uri: string, data: Record<string, unknown>): { params: string } {
+function eapiEncrypt(uri: string, data: Record<string, unknown>) {
   const text = JSON.stringify(data)
   const message = `nobody${uri}use${text}md5forencrypt`
   const digest = crypto.createHash('md5').update(message).digest('hex')
   const encryptedData = `${uri}-36cd479b6b5-${text}-36cd479b6b5-${digest}`
 
-  return { params: aesEcbEncrypt(encryptedData, EAPI_KEY) }
+  return {
+    params: aesEcbEncrypt(encryptedData, EAPI_KEY)
+  }
 }
 
 /**
@@ -161,19 +165,21 @@ function eapiEncrypt(uri: string, data: Record<string, unknown>): { params: stri
  * 而 Node.js crypto RSA_NO_PADDING 要求输入严格等于 key 长度（128 字节）。
  * 此处将原文右对齐填充至 128 字节以保证兼容。
  */
-function rsaEncrypt(str: string): string {
+function rsaEncrypt(str: string) {
   const buffer = Buffer.from(str, 'utf8')
   const padded = Buffer.alloc(128)
+
   buffer.copy(padded, 128 - buffer.length)
 
   const encrypted = crypto.publicEncrypt({ key: RSA_PUBLIC_KEY, padding: crypto.constants.RSA_NO_PADDING }, padded)
+
   return encrypted.toString('hex')
 }
 
 /**
  * weapi 加密
  */
-function weapiEncrypt(data: Record<string, unknown>): { encSecKey: string; params: string } {
+function weapiEncrypt(data: Record<string, unknown>) {
   const text = JSON.stringify(data)
 
   // 第一次 AES-CBC 加密
@@ -191,5 +197,8 @@ function weapiEncrypt(data: Record<string, unknown>): { encSecKey: string; param
   // RSA 加密（逆转后的密钥）
   const encSecKey = rsaEncrypt(secretKey.split('').reverse().join(''))
 
-  return { encSecKey, params }
+  return {
+    encSecKey,
+    params
+  }
 }

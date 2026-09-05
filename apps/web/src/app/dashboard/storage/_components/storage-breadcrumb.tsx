@@ -1,6 +1,6 @@
 'use client'
 
-import { Card } from '@repo/ui/components-self/card'
+import { Card } from '@repo/components/card'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@repo/ui/components/breadcrumb'
 import { Skeleton } from '@repo/ui/components/skeleton'
 import React from 'react'

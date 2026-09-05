@@ -1,7 +1,7 @@
 'use client'
 
+import { ResizableBox, ResizableBoxSize } from '@repo/components/resizable-box'
 import { useLatestRef } from '@repo/react-hooks'
-import { ResizableBox, ResizableBoxSize } from '@repo/ui/components-self/resizable-box'
 import { NodeViewProps, NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react'
 import { isEqual, mapValues } from 'es-toolkit'
 import React from 'react'

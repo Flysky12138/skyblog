@@ -1,6 +1,8 @@
-import { z } from 'zod'
+import { colors } from 'es-toolkit/server'
+import z from 'zod'
 
 const envSchema = z.object({
+  DATABASE_DIRECT_URL: z.url().startsWith('postgresql://'),
   DATABASE_URL: z.url().startsWith('postgresql://'),
   EDGE_ID: z.templateLiteral([z.string().length(4), '_', z.string()]),
   NEON_AUTH_BASE_URL: z.httpUrl().endsWith('neondb/auth'),
@@ -9,7 +11,7 @@ const envSchema = z.object({
   NEXT_PUBLIC_CDN_MONACO_EDITOR: z.string().endsWith('min/vs'),
   NEXT_PUBLIC_DESCRIPTION: z.string(),
   NEXT_PUBLIC_GITHUB_NAME: z.string(),
-  NEXT_PUBLIC_PAGE_POSTCARD_COUNT: z.coerce.number().min(3).max(20),
+  NEXT_PUBLIC_PAGE_POSTCARD_COUNT: z.coerce.number().min(1).max(20),
   NEXT_PUBLIC_R2_URL: z.httpUrl().refine(it => !it.endsWith('/')),
   NEXT_PUBLIC_TITLE: z.string(),
   NEXT_PUBLIC_WEBSITE_URL: z.url().refine(it => !it.endsWith('/')),
@@ -26,6 +28,6 @@ const envSchema = z.object({
 const { error, success } = envSchema.safeParse(process.env)
 
 if (!success) {
-  console.log('\x1b[31m%s\x1b[0m', JSON.stringify(error.issues, null, 2))
+  console.log(colors.red(JSON.stringify(error.issues, null, 2)))
   process.exit(1)
 }

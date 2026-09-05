@@ -40,8 +40,8 @@ export abstract class Service {
     }>('/api/song/lyric', { _nmclfl: 1, id, kv: -1, lv: -1, rv: -1, tv: -1 }, { cookie, crypto: 'eapi' })
 
     return {
-      lrc: parseLyric(res.body.lrc.lyric),
-      lrcText: res.body.lrc.lyric
+      content: res.body.lrc.lyric,
+      lyric: parseLyric(res.body.lrc.lyric)
     }
   }
 

@@ -1,6 +1,6 @@
-import { z } from 'zod'
+import z from 'zod'
 
 export const VisitDeleteBodySchema = z.object({
-  ids: z.coerce.number().array()
+  ids: z.coerce.bigint().array().min(1).max(100)
 })
 export type VisitDeleteBodyType = z.infer<typeof VisitDeleteBodySchema>

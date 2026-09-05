@@ -50,6 +50,7 @@ NEXT_PUBLIC_R2_URL="https://r2.flysky.xyz"
 ## https://console.neon.tech
 ## https://github.com/settings/developers
 DATABASE_URL="postgresql://neondb_owner:xxxxx@ep-ancient-river-xxxxx-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+DATABASE_DIRECT_URL="postgresql://neondb_owner:xxxxx@ep-ancient-river-xxxxx.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 NEON_AUTH_BASE_URL="https://ep-wispy-silence-xxxxx.neonauth.ap-southeast-1.aws.neon.tech/neondb/auth"
 NEON_AUTH_COOKIE_SECRET="lFljjfMX9Uxl47JksllrbPg9wTIHXYnUI/vI6d3qE84="
 ```

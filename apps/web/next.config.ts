@@ -32,6 +32,7 @@ const cspMap = {
     'data:',
     'https://avatars.githubusercontent.com/u/',
     'https://lh3.googleusercontent.com/a/',
+    'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/',
     process.env.NEXT_PUBLIC_R2_URL,
     '*.music.126.net',
     '*.r2.cloudflarestorage.com'
@@ -86,7 +87,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   rewrites,
   staticPageGenerationTimeout: 600,
-  transpilePackages: ['@repo/chart-preview', '@repo/monaco-editor', '@repo/react-hooks', '@repo/ui', '@repo/rich-text-editor'],
+  transpilePackages: ['@repo/chart-preview', '@repo/components', '@repo/monaco-editor', '@repo/react-hooks', '@repo/rich-text-editor', '@repo/ui'],
   typedRoutes: true,
   devIndicators: {
     position: 'bottom-right'

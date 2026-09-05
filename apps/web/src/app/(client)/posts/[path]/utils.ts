@@ -2,7 +2,7 @@ import { ExtensionKit } from '@repo/rich-text-editor/extensions'
 import { renderJSONContentToHTMLString } from '@repo/rich-text-editor/render'
 import { cacheLife, cacheTag } from 'next/cache'
 import React from 'react'
-import { z } from 'zod'
+import z from 'zod'
 
 import { CACHE_TAG } from '@/lib/constants'
 import { prisma, prismaAuth } from '@/lib/prisma'

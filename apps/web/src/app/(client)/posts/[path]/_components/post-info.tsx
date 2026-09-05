@@ -58,7 +58,9 @@ export function PostInfo({ defaultValue, id }: PostInfoProps) {
     }
   }, [session?.user.role, id, isPending, mutate, post?.isPublished, setViewed, viewed])
 
-  if (!post) return <Skeleton className="h-5.25 w-60" />
+  if (!post) {
+    return <Skeleton className="h-5.25 w-60" />
+  }
 
   return (
     <p className="text-sm break-all text-muted-foreground">

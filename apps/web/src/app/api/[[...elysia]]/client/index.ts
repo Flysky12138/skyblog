@@ -1,7 +1,6 @@
 import Elysia from 'elysia'
 import { rateLimit } from 'elysia-rate-limit'
 
-import { crons } from './crons'
 import { edgeConfig } from './edge-config'
 import { ipinfo } from './ipinfo'
 import { neteaseCloudMusic } from './netease-cloud-music'
@@ -17,7 +16,6 @@ export const client = new Elysia()
       scoping: 'scoped'
     })
   )
-  .use(crons)
   .use(edgeConfig)
   .use(ipinfo)
   .use(neteaseCloudMusic)

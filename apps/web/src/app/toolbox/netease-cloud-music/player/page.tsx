@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 
-import { AudioPlayer } from './_components/audio-player'
+import { AudioPlayer } from '../../../../components/audio-player'
 import { getLyric, getSongDetails, getSongUrl } from './utils'
 
 export async function generateMetadata({ searchParams }: PageProps<'/toolbox/netease-cloud-music/player'>): Promise<Metadata> {
@@ -26,7 +26,14 @@ export async function generateMetadata({ searchParams }: PageProps<'/toolbox/net
 export default async function Page({ searchParams }: PageProps<'/toolbox/netease-cloud-music/player'>) {
   const { id } = (await searchParams) as { id: string }
 
-  const [song, url, lyric] = await Promise.all([getSongDetails(id), getSongUrl(id), getLyric(id)])
+  const [song, url, { lyric }] = await Promise.all([getSongDetails(id), getSongUrl(id), getLyric(id)])
 
-  return <AudioPlayer className="w-full overflow-hidden rounded-lg shadow-xs" lyric={lyric} song={song} url={url} />
+  return (
+    <div className="max-w-lg">
+      <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-clip">
+        <img alt={song.name} className="size-full scale-110 object-cover object-bottom blur-lg" src={song.al.picUrl} />
+      </div>
+      <AudioPlayer className="w-full overflow-hidden rounded-lg shadow-xs" lyric={lyric} song={song} src={url} />
+    </div>
+  )
 }

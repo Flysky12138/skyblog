@@ -1,9 +1,9 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { ButtonLink } from '@repo/components/button'
 import { toast } from '@repo/ui/base'
 import { Button } from '@repo/ui/components/button'
-import { ButtonLink } from '@repo/ui/components/button'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet } from '@repo/ui/components/field'
 import { Input } from '@repo/ui/components/input'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@repo/ui/components/input-otp'
@@ -14,7 +14,7 @@ import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'nextjs-toploader/app'
 import { Controller, useForm } from 'react-hook-form'
 import { useAsyncFn } from 'react-use'
-import { z } from 'zod'
+import z from 'zod'
 
 import { authClient } from '@/lib/auth/client'
 
@@ -55,11 +55,21 @@ export default function Page() {
     }
   }, [])
 
-  // 验证邮箱/登录
+  // 邮箱登录/验证
   const [{ loading: loading2 }, onSubmit] = useAsyncFn(async (values: z.infer<typeof formSchema>) => {
     try {
-      const fn = isSignIn ? authClient.signIn.emailOtp : authClient.emailOtp.verifyEmail
-      const { data, error } = await fn(pick(values, ['email', 'otp']))
+      if (isSignIn) {
+        const { data, error } = await authClient.signIn.emailOtp(pick(values, ['email', 'otp']))
+        if (error) {
+          throw new Error(error.message)
+        } else {
+          toast.success(`登录成功，欢迎 ${data.user.name} 👏`)
+          router.replace('/')
+        }
+        return
+      }
+
+      const { data, error } = await authClient.emailOtp.verifyEmail(pick(values, ['email', 'otp']))
       if (error) {
         throw new Error(error.message)
       } else {

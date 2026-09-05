@@ -1,4 +1,4 @@
-import { GradientText } from '@repo/ui/components-self/gradient-text'
+import { GradientText } from '@repo/components/gradient-text'
 
 export function Logo() {
   return (

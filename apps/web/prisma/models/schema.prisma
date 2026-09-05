@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../../src/generated/prisma"
+  provider        = "prisma-client"
+  previewFeatures = ["typedSql"]
+  output          = "../../src/generated/prisma"
 }
 
 generator json {
@@ -8,5 +9,5 @@ generator json {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
 }

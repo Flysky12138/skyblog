@@ -1,7 +1,7 @@
 'use cache'
 
-import { Card } from '@repo/ui/components-self/card'
-import { ButtonLink } from '@repo/ui/components/button'
+import { ButtonLink } from '@repo/components/button'
+import { Card } from '@repo/components/card'
 import { HandshakeIcon, PackageIcon } from 'lucide-react'
 import { cacheLife, cacheTag } from 'next/cache'
 

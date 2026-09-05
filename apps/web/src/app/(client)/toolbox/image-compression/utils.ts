@@ -51,7 +51,9 @@ export async function compressImageByCanvas({ file, mimeType, quality }: Compres
   return new Promise((resolve, reject) => {
     canvas.toBlob(
       blob => {
-        if (!blob) return reject(new Error('图片格式错误，获取信息失败'))
+        if (!blob) {
+          return reject(new Error('图片格式错误，获取信息失败'))
+        }
         resolve(blob)
       },
       mimeType,

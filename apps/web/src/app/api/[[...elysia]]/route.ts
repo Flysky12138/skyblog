@@ -7,11 +7,9 @@ import { isDev } from '@/lib/utils'
 import { clashes } from './clashes'
 import { client } from './client'
 import { dashboard } from './dashboard'
-import { files } from './files'
 
 export const app = new Elysia({ prefix: '/api' })
   .use(clashes)
-  .use(files)
   .mapResponse(async ({ responseValue }) => {
     if (isDev()) return
 

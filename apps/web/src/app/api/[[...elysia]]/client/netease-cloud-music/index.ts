@@ -1,5 +1,5 @@
 import { Elysia } from 'elysia'
-import { z } from 'zod'
+import z from 'zod'
 
 import { AlbumResponseSchema, PlaylistResponseSchema, SearchQuerySchema, SearchResponseSchema } from './model'
 import { Service } from './service'

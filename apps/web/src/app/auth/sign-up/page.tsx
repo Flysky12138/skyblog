@@ -12,7 +12,7 @@ import { useRouter } from 'nextjs-toploader/app'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useAsyncFn } from 'react-use'
-import { z } from 'zod'
+import z from 'zod'
 
 import { authClient } from '@/lib/auth/client'
 

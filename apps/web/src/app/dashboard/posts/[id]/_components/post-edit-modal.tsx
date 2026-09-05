@@ -1,7 +1,7 @@
 'use client'
 
-import { Card } from '@repo/ui/components-self/card'
-import { FileSelect } from '@repo/ui/components-self/file-select'
+import { Card } from '@repo/components/card'
+import { FileSelect } from '@repo/components/file-select'
 import { Button } from '@repo/ui/components/button'
 import {
   Combobox,
@@ -207,6 +207,7 @@ export function PostEditModal({ children, value: post, onChange: setPost }: Post
                 {post.coverFileId ? (
                   <>
                     <img
+                      alt="post cover"
                       height={post.coverFile?.metadata?.height}
                       src={Storage.getPublicUrl(post.coverFileId)}
                       width={post.coverFile?.metadata?.width}

@@ -1,4 +1,4 @@
-import { ButtonLink } from '@repo/ui/components/button'
+import { ButtonLink } from '@repo/components/button'
 import { MailIcon } from 'lucide-react'
 
 export function AuthEmailButton() {

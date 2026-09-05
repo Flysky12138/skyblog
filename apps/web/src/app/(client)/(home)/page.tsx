@@ -1,7 +1,8 @@
-import { Card } from '@repo/ui/components-self/card'
+import { Card } from '@repo/components/card'
 import { pick } from 'es-toolkit'
 import { AwardIcon, ShapesIcon, TagIcon } from 'lucide-react'
 import Link from 'next/link'
+import React from 'react'
 
 import { PostCategroyTag } from './_components/post-categroy-tag'
 import { PostPagination } from './_components/post-pagination'
@@ -38,9 +39,6 @@ export default async function Page({ searchParams }: PageProps<'/'>) {
           </h2>
           <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-secondary-foreground">
             <PostUpdateAt updatedAt={post.updatedAt} />
-            {/* <Typography endDecorator="·" level="body-xs" startDecorator={<QuestionAnswerRounded sx={{ fontSize: '1.1em' }} />}>
-              评论数 {0}
-            </Typography> */}
             <PostCategroyTag icon={ShapesIcon} queryKey="categories" values={post.categories.map(({ category }) => category)} />
             <PostCategroyTag icon={TagIcon} queryKey="tags" values={post.tags.map(({ tag }) => tag)} />
           </div>
@@ -48,7 +46,9 @@ export default async function Page({ searchParams }: PageProps<'/'>) {
         </Card>
       ))}
 
-      <PostPagination {...pagination} />
+      <React.Suspense>
+        <PostPagination searchParams={searchParams} {...pagination} />
+      </React.Suspense>
     </>
   )
 }

@@ -1,8 +1,8 @@
 'use client'
 
 import { Treaty } from '@elysiajs/eden'
+import { Fancybox } from '@repo/components/fancybox'
 import { mergeProps, useRender } from '@repo/ui/base'
-import { Fancybox } from '@repo/ui/components-self/fancybox'
 
 import { FileHelper } from '@/lib/helper/file'
 import { rpc } from '@/lib/http/rpc'
@@ -26,7 +26,7 @@ export function StorageFileView({ file, render, onClick, ...props }: StorageFile
           Fancybox.show([{ src: url }])
           break
         case 'pdf':
-          window.open(url, '_blank')
+          window.open(url, '_blank', 'noopener')
           break
       }
     }

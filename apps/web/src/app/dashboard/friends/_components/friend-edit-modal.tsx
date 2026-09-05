@@ -2,7 +2,7 @@
 
 import { Treaty } from '@elysiajs/eden'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Card } from '@repo/ui/components-self/card'
+import { Card } from '@repo/components/card'
 import { Button } from '@repo/ui/components/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui/components/dialog'
 import { Field, FieldError, FieldGroup, FieldLabel, FieldTitle } from '@repo/ui/components/field'
@@ -32,7 +32,8 @@ interface FriendEditModalProps {
 export function FriendEditModal({ children, value, onSubmit }: FriendEditModalProps) {
   const [cover, setCover] = React.useState<Treaty.Data<typeof rpc.dashboard.friends.cover.post>>()
   const [oldCover, setOldCover] = React.useState<{ height?: number; url: string; width?: number }>()
-  const [needUploadCover, setNeedUploadCover] = React.useState(false)
+
+  const needUploadCoverRef = React.useRef(false)
 
   const form = useForm({
     defaultValues: { description: null, name: '', screenshotFileId: null, siteUrl: '' },
@@ -40,21 +41,24 @@ export function FriendEditModal({ children, value, onSubmit }: FriendEditModalPr
   })
 
   const [siteUrl] = form.watch(['siteUrl'])
-  const siteUrlInvalid = !FriendCreateBodySchema.shape.siteUrl.safeParse(siteUrl).success
+  const siteUrlInvalid = !FriendCreateBodySchema.shape.siteUrl.validate(siteUrl)
 
   // 获取封面
   const [{ loading }, handleGetCover] = useAsyncFn(async (url: string) => {
     const data = await rpc.dashboard.friends.cover.post({ url }).then(unwrap)
     setCover(data)
-    setNeedUploadCover(true)
+    needUploadCoverRef.current = true
   }, [])
 
   // 上传封面
   const handleUploadCover = async () => {
-    if (!needUploadCover) return
+    if (!needUploadCoverRef.current) return
     if (!cover) return
 
     const res = await fetch(cover.data)
+    if (!res.ok) {
+      throw new Error('Failed to fetch cover')
+    }
     const blob = await res.blob()
     const file = new File([blob], `${randomString(16)}.${cover.ext}`, { type: blob.type })
 
@@ -165,9 +169,9 @@ export function FriendEditModal({ children, value, onSubmit }: FriendEditModalPr
                 <FieldTitle>封面</FieldTitle>
                 <Card className="relative overflow-hidden rounded-md">
                   {cover ? (
-                    <img data-fancybox height={cover.height} src={cover.data} width={cover.width} />
+                    <img data-fancybox alt="cover" height={cover.height} src={cover.data} width={cover.width} />
                   ) : (
-                    oldCover && <img data-fancybox height={oldCover.height} src={oldCover.url} width={oldCover.width} />
+                    oldCover && <img data-fancybox alt="old cover" height={oldCover.height} src={oldCover.url} width={oldCover.width} />
                   )}
                   {(cover ?? oldCover) && (
                     <Button
@@ -176,7 +180,7 @@ export function FriendEditModal({ children, value, onSubmit }: FriendEditModalPr
                       onClick={() => {
                         setOldCover(undefined)
                         setCover(undefined)
-                        setNeedUploadCover(false)
+                        needUploadCoverRef.current = false
                         form.setValue('screenshotFileId', null)
                       }}
                     >
