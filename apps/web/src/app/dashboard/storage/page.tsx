@@ -11,11 +11,11 @@ import { StorageTable } from './_components/storage-table'
 const getId = () => (isBrowser() ? (new URLSearchParams(window.location.search).get('id') ?? STORAGE.ROOT_DIRECTORY_ID) : STORAGE.ROOT_DIRECTORY_ID)
 
 export default function Page() {
-  const [id, setId] = React.useState<string>(getId)
+  const [id, setId] = React.useState(getId)
 
   const handleChange = (id: string) => {
     setId(id)
-    window.history.pushState({}, '', `/dashboard/storage?id=${id}`)
+    window.history.pushState(null, '', `?id=${id}`)
   }
 
   return (

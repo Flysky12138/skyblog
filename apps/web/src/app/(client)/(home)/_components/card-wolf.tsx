@@ -1,7 +1,6 @@
 'use client'
 
 import { Card } from '@repo/ui/components-self/card'
-import { motion } from 'motion/react'
 import React from 'react'
 
 const GAP = 0.2
@@ -9,8 +8,6 @@ const GAP = 0.2
 export function CardWolf() {
   const divRef = React.useRef<HTMLDivElement>(null)
   const canvasRef = React.useRef<HTMLCanvasElement>(null)
-
-  const [isMounted, setIsMounted] = React.useState(false)
 
   const draw = () => {
     const div = divRef.current
@@ -35,7 +32,7 @@ export function CardWolf() {
       })
     })
 
-    setIsMounted(true)
+    divRef.current?.classList.add('opacity-100')
   }
 
   React.useEffect(() => {
@@ -48,22 +45,9 @@ export function CardWolf() {
 
   return (
     <Card className="overflow-hidden p-2 select-none">
-      <motion.div
-        ref={divRef}
-        animate={isMounted ? 'visible' : 'hidden'}
-        className="aspect-43/50"
-        initial="hidden"
-        variants={{
-          hidden: {
-            opacity: 0
-          },
-          visible: {
-            opacity: 1
-          }
-        }}
-      >
+      <div ref={divRef} className="aspect-43/50 opacity-0 transition-opacity">
         <canvas ref={canvasRef} />
-      </motion.div>
+      </div>
     </Card>
   )
 }

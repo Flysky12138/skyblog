@@ -26,7 +26,7 @@ export const ipinfo = new Elysia({ prefix: '/ipinfo' }).get('/', async ({ reques
       return status(500, { message: '获取 IP 信息失败' })
     }
 
-    const data = (await res.json()) as object
+    const data = (await res.json()) as Record<string, string>
 
     return data
   } catch (error) {

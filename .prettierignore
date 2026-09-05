@@ -15,4 +15,3 @@ apps/web/README.md
 
 packages/ui/src/components/
 packages/ui/src/hooks/use-mobile.ts
-packages/ui/src/lib/

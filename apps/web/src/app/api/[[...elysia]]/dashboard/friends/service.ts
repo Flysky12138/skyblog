@@ -76,6 +76,10 @@ export abstract class Service {
       }
     })
 
+    if (!res.ok) {
+      throw new Error('Failed to generate cover')
+    }
+
     const arrayBuffer = await res.arrayBuffer()
     const base64 = Buffer.from(arrayBuffer).toString('base64')
 

@@ -55,11 +55,8 @@ export abstract class AesGcm {
     // 原始内容转 8 位无符号整型数组
     const source = new TextEncoder().encode(JSON.stringify(data))
 
-    // 加密
-    const buffer = await crypto.subtle.encrypt(this.#algorithm(iv), key, source)
-
-    // 导出可传输密钥（可以在网络上传输的格式）
-    const jwk = await crypto.subtle.exportKey('jwk', key)
+    // 加密，导出可传输密钥（可以在网络上传输的格式）
+    const [buffer, jwk] = await Promise.all([crypto.subtle.encrypt(this.#algorithm(iv), key, source), crypto.subtle.exportKey('jwk', key)])
 
     // 编码 - 初始化向量、可传输密钥
     let ivJwk = JSON.stringify({ iv: Buffer.from(iv).toString('base64'), jwk } satisfies IvJwk)

@@ -98,6 +98,10 @@ export async function neteaseRequest<T>(
     }
   })
 
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`)
+  }
+
   const setCookie = response.headers.getSetCookie?.() ?? []
   const resCookie = setCookie.map((x: string) => x.replace(/\s*Domain=[^(;|$)]+;*/, ''))
 

@@ -11,7 +11,7 @@ export abstract class Storage {
    * @param id 文件 ID
    */
   static getPublicUrl(id: string) {
-    return `${process.env.NEXT_PUBLIC_WEBSITE_URL}/api/files/${id}/url`
+    return `${process.env.NEXT_PUBLIC_WEBSITE_URL}/files/${id}`
   }
 
   /**
@@ -42,15 +42,9 @@ export abstract class Storage {
 
     // 检查文件是否已上传
     const objectDetail = await rpc.dashboard.storage.objects({ key: s3ObjectKey }).get().then(unwrap)
-    let bucket = objectDetail?.bucket
 
-    // 上传文件
-    if (!bucket) {
-      bucket = await Storage.#chunkUpload({
-        file,
-        key: s3ObjectKey
-      })
-    }
+    // 未上传则上传文件
+    const bucket = objectDetail?.bucket || (await Storage.#chunkUpload({ file, key: s3ObjectKey }))
 
     // 保存记录到数据库
     return rpc.dashboard.storage.files

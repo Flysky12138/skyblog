@@ -33,16 +33,18 @@ export abstract class Service {
 
     // 从最深到最浅逐层删除，避免 Restrict 约束
     const depths = [...byDepth.keys()].sort((a, b) => b - a)
-    for (const depth of depths) {
-      const ids = byDepth.get(depth)!
-      await prisma.directory.deleteMany({
-        where: {
-          id: {
-            in: ids
+    await prisma.$transaction(async ctx => {
+      for (const depth of depths) {
+        const ids = byDepth.get(depth)!
+        await ctx.directory.deleteMany({
+          where: {
+            id: {
+              in: ids
+            }
           }
-        }
-      })
-    }
+        })
+      }
+    })
   }
 
   /**

@@ -8,6 +8,10 @@ import React from 'react'
 import { CodeBlockShikiAttributes } from '../../extensions/code-block-shiki'
 import { highlightCode } from '../../lib/shiki'
 
+export const CodeBlockView = ReactNodeViewRenderer(CodeBlockViewInner, {
+  contentDOMElementTag: 'code'
+})
+
 export function CodeBlockViewInner({ editor, getPos, node }: NodeViewProps) {
   const [highlightedHtml, setHighlightedHtml] = React.useState('')
 
@@ -21,7 +25,7 @@ export function CodeBlockViewInner({ editor, getPos, node }: NodeViewProps) {
       try {
         const html = await highlightCode(codeContent, {
           lang: language,
-          preserveMarkers: true,
+          removeMarkers: false,
           showLineNumbers,
           themes: {
             dark: darkTheme,
@@ -95,7 +99,3 @@ export function CodeBlockViewInner({ editor, getPos, node }: NodeViewProps) {
     </NodeViewWrapper>
   )
 }
-
-export const CodeBlockView = ReactNodeViewRenderer(CodeBlockViewInner, {
-  contentDOMElementTag: 'code'
-})

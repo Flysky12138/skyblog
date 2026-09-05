@@ -26,7 +26,7 @@ export function StorageFileView({ file, render, onClick, ...props }: StorageFile
           Fancybox.show([{ src: url }])
           break
         case 'pdf':
-          window.open(url, '_blank')
+          window.open(url, '_blank', 'noopener')
           break
       }
     }

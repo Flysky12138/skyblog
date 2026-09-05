@@ -1,5 +1,7 @@
 import { ShikiTransformer } from 'shiki'
 
+type Element = Parameters<NonNullable<ShikiTransformer['line']>>[0]
+
 /**
  * 为代码行添加行号
  *
@@ -7,22 +9,23 @@ import { ShikiTransformer } from 'shiki'
  * - 为每一行添加 `data-line` 属性，配合 CSS `::before` 显示行号
  */
 export function transformerLineNumbers(): ShikiTransformer {
-  let totalLines = 0
-
   return {
     name: 'line-numbers',
 
-    line(node, line) {
-      node.properties['data-line'] = String(line)
-    },
+    root(node) {
+      const pre = node.children.find((node): node is Element => node.type === 'element' && node.tagName === 'pre')
+      if (!pre) return
 
-    pre(node) {
-      node.properties['data-line-digits'] = String(totalLines).length
-    },
+      const code = pre.children.find((node): node is Element => node.type === 'element' && node.tagName === 'code')
+      if (!code) return
 
-    preprocess(code) {
-      totalLines = code.split('\n').length
-      return code
+      const lines = code.children.filter((node): node is Element => node.type === 'element' && node.tagName === 'span')
+
+      pre.properties['data-line-digits'] = String(lines.length).length
+
+      for (const [index, line] of lines.entries()) {
+        line.properties['data-line'] = String(index + 1)
+      }
     }
   }
 }

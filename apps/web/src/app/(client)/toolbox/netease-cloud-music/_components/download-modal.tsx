@@ -20,11 +20,11 @@ import dayjs from 'dayjs'
 import { limitAsync } from 'es-toolkit'
 import { DownloadIcon, MusicIcon, ScrollTextIcon } from 'lucide-react'
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { useAsyncFn, useBeforeUnload, useMap, useSet } from 'react-use'
 import { List, RowComponentProps } from 'react-window'
 
 import { AlbumResponseType } from '@/app/api/[[...elysia]]/client/netease-cloud-music/model'
-import { Portal } from '@/components/portal'
 import { Show } from '@/components/show'
 import { ATTRIBUTE } from '@/lib/constants'
 import { AudioFFmpeg } from '@/lib/ffmpeg/audio'
@@ -136,15 +136,16 @@ export function DownloadModal({ songs: staticSongs }: DownloadModalProps) {
 
   return (
     <DialogDrawer>
-      <Portal selector={`#${ATTRIBUTE.ID.NAV_CONTAINER_DOWNLOAD}`}>
+      {ReactDOM.createPortal(
         <DialogDrawerTrigger
           render={
             <Button size="icon">
               <DownloadIcon />
             </Button>
           }
-        />
-      </Portal>
+        />,
+        document.getElementById(ATTRIBUTE.ID.NAV_CONTAINER_DOWNLOAD)!
+      )}
       <DialogDrawerContent dialogClassName="max-w-xl p-0! gap-0 overflow-hidden" showCloseButton={false}>
         <DialogDrawerHeader className="sr-only">
           <DialogDrawerTitle>歌曲下载面板</DialogDrawerTitle>

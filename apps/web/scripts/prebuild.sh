@@ -5,5 +5,5 @@ pnpm exec tsx scripts/cli/cp.ts node_modules/@repo/chart-preview/dist/ public/ch
 
 pnpm run db:generate
 pnpm run db:generate:auth
-pnpm run db:deploy
+pnpm exec prisma migrate deploy
 pnpm run db:seed

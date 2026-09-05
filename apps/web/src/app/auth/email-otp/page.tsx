@@ -55,11 +55,21 @@ export default function Page() {
     }
   }, [])
 
-  // 验证邮箱/登录
+  // 邮箱登录/验证
   const [{ loading: loading2 }, onSubmit] = useAsyncFn(async (values: z.infer<typeof formSchema>) => {
     try {
-      const fn = isSignIn ? authClient.signIn.emailOtp : authClient.emailOtp.verifyEmail
-      const { data, error } = await fn(pick(values, ['email', 'otp']))
+      if (isSignIn) {
+        const { data, error } = await authClient.signIn.emailOtp(pick(values, ['email', 'otp']))
+        if (error) {
+          throw new Error(error.message)
+        } else {
+          toast.success(`登录成功，欢迎 ${data.user.name} 👏`)
+          router.replace('/')
+        }
+        return
+      }
+
+      const { data, error } = await authClient.emailOtp.verifyEmail(pick(values, ['email', 'otp']))
       if (error) {
         throw new Error(error.message)
       } else {

@@ -1,7 +1,7 @@
 import { isBrowser } from 'es-toolkit'
 import React from 'react'
 
-interface State {
+interface ScrollState {
   x: number
   xProgress: number
   y: number
@@ -9,11 +9,11 @@ interface State {
 }
 
 export function useWindowScrollState() {
-  const [state, setState] = React.useState(getState)
+  const [state, setState] = React.useState(getScrollState)
 
   React.useEffect(() => {
     const handler = () => {
-      const newState = getState()
+      const newState = getScrollState()
       setState(oldState => {
         if (oldState.x === newState.x && oldState.y === newState.y) return oldState
         return newState
@@ -33,7 +33,7 @@ export function useWindowScrollState() {
   return state
 }
 
-function getState(): State {
+function getScrollState(): ScrollState {
   if (!isBrowser()) {
     return { x: 0, xProgress: 0, y: 0, yProgress: 0 }
   }

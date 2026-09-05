@@ -57,9 +57,7 @@ export default function Page() {
         toast.error(error instanceof Error ? error.message : String(error))
       },
       onSuccess: () => {
-        const url = new URL(window.location.href)
-        url.searchParams.set('search', encodeURIComponent(search))
-        window.history.replaceState({}, '', url.toString())
+        window.history.replaceState(null, '', `?search=${encodeURIComponent(search)}`)
       }
     }
   )

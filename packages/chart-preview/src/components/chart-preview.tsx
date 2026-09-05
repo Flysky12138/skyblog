@@ -31,12 +31,13 @@ export function ChartPreview({ cdnUrl, className, content }: ChartPreviewProps) 
     }
   }, [url])
 
-  const handleRender = React.useEffectEvent(() => {
+  const handleRender = () => {
     iframeRef.current?.contentWindow?.postMessage(content, '*')
-  })
+  }
 
   React.useEffect(() => {
     handleRender()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content])
 
   return (

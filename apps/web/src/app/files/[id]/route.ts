@@ -1,10 +1,10 @@
 import { Elysia } from 'elysia'
+import { z } from 'zod'
 
-import { idModel } from '../model'
 import { Service } from './service'
 
-export const files = new Elysia({ prefix: '/files' }).use(idModel).get(
-  '/:id/url',
+const app = new Elysia({ prefix: '/files' }).get(
+  '/:id',
   async ({ params, redirect, status }) => {
     const url = await Service.url(params.id)
 
@@ -15,6 +15,11 @@ export const files = new Elysia({ prefix: '/files' }).use(idModel).get(
     return redirect(url, 307)
   },
   {
-    params: 'uuidv7'
+    params: z.strictObject({
+      id: z.uuidv7()
+    })
   }
 )
+
+export const GET = app.fetch
+export const OPTIONS = app.fetch

@@ -18,7 +18,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
     <>
       <Header>
         <Container className="flex h-full items-center gap-4">
-          <Link aria-label="to home page" className="focus-visible:ring-3" href="/">
+          <Link prefetch aria-label="to home page" className="focus-visible:ring-3" href="/">
             <Logo />
           </Link>
           <span aria-hidden="true" className="grow" />

@@ -160,18 +160,6 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
               </div>
             </Show>
           </div>
-
-          {/* <DisplayByConditional condition={(post.visibilityMask & POST_CARD_VISIBILITY_MASK.TOC) === POST_CARD_VISIBILITY_MASK.TOC}>
-            <Card
-              aria-label="post toc"
-              data-slot="post-toc"
-              render={
-                <PostToc>
-                  <MDXHeading component={PostTocHeading} source={post.content} />
-                </PostToc>
-              }
-            />
-          </DisplayByConditional> */}
         </div>
       )}
     </>

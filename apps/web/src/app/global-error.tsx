@@ -6,7 +6,7 @@ import { ErrorPage, ErrorProps } from '@/components/static/error'
 
 export default function GlobalError(props: ErrorProps) {
   return (
-    <html>
+    <html lang="zh-CN">
       <body className="flex min-h-screen items-center justify-center">
         <ThemeProvider>
           <ErrorPage {...props} />

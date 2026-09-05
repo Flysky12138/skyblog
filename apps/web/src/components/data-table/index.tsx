@@ -122,7 +122,7 @@ function RowsSort() {
         const { aria, handler, icon: Icon } = record[header.column.getIsSorted() || 'none']
 
         return (
-          <button aria-sort={aria} className="flex items-center gap-1.5 select-none focus-visible:ring-3 *:[svg]:size-4" onClick={handler}>
+          <button aria-label={aria} className="flex items-center gap-1.5 select-none focus-visible:ring-3 *:[svg]:size-4" onClick={handler}>
             <header.FlexRender />
             <Icon />
           </button>

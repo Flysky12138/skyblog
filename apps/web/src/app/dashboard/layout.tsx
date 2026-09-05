@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import { cookies } from 'next/headers'
 
 import { Header } from './_components/header'
+import { Main } from './_components/main'
 import { SidebarLogo } from './_components/sidebar-logo'
 import { SidebarMain } from './_components/sidebar-main'
 import { SidebarTheme } from './_components/sidebar-theme'
@@ -47,7 +48,7 @@ export default async function Layout({ children }: React.PropsWithChildren) {
       </Sidebar>
       <div className="flex grow flex-col overflow-auto">
         <Header className="shrink-0 md:hidden" />
-        <main className="h-full bg-root p-4 md:p-8">{children}</main>
+        <Main>{children}</Main>
       </div>
     </SidebarProvider>
   )

@@ -21,8 +21,7 @@ import {
   PlusIcon,
   SettingsIcon,
   UserIcon,
-  UserRoundSearchIcon,
-  WebhookIcon
+  UserRoundSearchIcon
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -75,7 +74,6 @@ const menus: Menu[] = [
     label: 'Other',
     group: [
       { href: '/dashboard/clashes', icon: <Clash />, name: 'Clash' },
-      { href: '/dashboard/crons', icon: <WebhookIcon />, name: 'Cron' },
       { href: '/dashboard/setting', icon: <SettingsIcon />, name: '设置' }
     ]
   }

@@ -9,7 +9,6 @@ import { ArrowLeftIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'nextjs-toploader/app'
-import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useAsyncFn } from 'react-use'
 import { z } from 'zod'
@@ -47,11 +46,10 @@ export default function Page() {
     }
   }, [])
 
-  React.useEffect(() => {
-    if (!error) return
+  if (error) {
     toast.error(error)
     router.replace('/auth/forgot-password')
-  }, [error, router])
+  }
 
   return (
     <FieldSet disabled={loading} inert={loading}>

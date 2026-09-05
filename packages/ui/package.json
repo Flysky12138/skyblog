@@ -24,8 +24,8 @@
     "@fancyapps/ui": "catalog:",
     "@repo/react-hooks": "workspace:*",
     "class-variance-authority": "catalog:",
-    "clsx": "catalog:",
     "cmdk": "catalog:",
+    "cn": "catalog:",
     "culori": "catalog:",
     "es-toolkit": "catalog:",
     "input-otp": "catalog:",
@@ -38,7 +38,6 @@
     "react-use": "catalog:",
     "schema-dts": "catalog:",
     "sonner": "catalog:",
-    "tailwind-merge": "catalog:",
     "tw-animate-css": "catalog:"
   },
   "devDependencies": {

@@ -3,7 +3,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 import { prisma } from '@/lib/prisma'
 
-import { s3 } from '../dashboard/storage/utils'
+import { s3 } from '../../api/[[...elysia]]/dashboard/storage/utils'
 
 export abstract class Service {
   /**

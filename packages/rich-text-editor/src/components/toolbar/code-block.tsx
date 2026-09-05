@@ -15,7 +15,7 @@ import { grammars } from 'tm-grammars'
 import { themes } from 'tm-themes'
 
 import { CodeBlockShikiAttributes } from '../../extensions/code-block-shiki'
-import { defaultDarkTheme, defaultLanguage, defaultLightTheme } from '../../lib/shiki'
+import { SHIKI_DEFAULT_DARK_THEME, SHIKI_DEFAULT_LANGUAGE, SHIKI_DEFAULT_LIGHT_THEME } from '../../lib/shiki'
 import { ToggleButton } from './_components/button'
 
 // 语言列表
@@ -40,10 +40,10 @@ export function CodeBlock() {
       : {}
     return {
       canDo: editor.can().toggleCodeBlock(),
-      darkTheme: darkTheme ?? defaultDarkTheme,
+      darkTheme: darkTheme ?? SHIKI_DEFAULT_DARK_THEME,
       isActive: editor.isActive('codeBlock'),
-      language: language ?? defaultLanguage,
-      lightTheme: lightTheme ?? defaultLightTheme,
+      language: language ?? SHIKI_DEFAULT_LANGUAGE,
+      lightTheme: lightTheme ?? SHIKI_DEFAULT_LIGHT_THEME,
       showLineNumbers
     }
   })

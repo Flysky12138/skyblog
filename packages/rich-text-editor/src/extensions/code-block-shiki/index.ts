@@ -3,7 +3,7 @@ import { Attribute, Node, textblockTypeInputRule } from '@tiptap/core'
 import { BundledLanguage, BundledTheme, SpecialLanguage } from 'shiki'
 
 import { CodeBlockView } from '../../components/view/code-block-view'
-import { defaultDarkTheme, defaultLanguage, defaultLightTheme } from '../../lib/shiki'
+import { SHIKI_DEFAULT_DARK_THEME, SHIKI_DEFAULT_LANGUAGE, SHIKI_DEFAULT_LIGHT_THEME } from '../../lib/shiki'
 
 export interface CodeBlockShikiAttributes {
   darkTheme: BundledTheme
@@ -216,10 +216,10 @@ export const CodeBlockShiki = Node.create<CodeBlockShikiOptions>({
 
   addOptions() {
     return {
-      lang: defaultLanguage,
+      lang: SHIKI_DEFAULT_LANGUAGE,
       themes: {
-        dark: defaultDarkTheme,
-        light: defaultLightTheme
+        dark: SHIKI_DEFAULT_DARK_THEME,
+        light: SHIKI_DEFAULT_LIGHT_THEME
       }
     }
   },
@@ -248,7 +248,7 @@ export const CodeBlockShiki = Node.create<CodeBlockShikiOptions>({
   },
 
   parseMarkdown(token, { createNode, createTextNode }): MarkdownParseResult {
-    const language = (token.lang as string | undefined) ?? defaultLanguage
+    const language = (token.lang as string | undefined) ?? SHIKI_DEFAULT_LANGUAGE
     return createNode('codeBlock', { language }, token.text ? [createTextNode(token.text)] : [])
   },
 
