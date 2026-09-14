@@ -21,9 +21,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
           <React.Suspense>
             <CardButtons />
           </React.Suspense>
-          <div className="sticky top-[calc(var(--height-header)+(--spacing(9)))] empty:hidden">
-            <CardGuestInfo />
-          </div>
+          <CardGuestInfo className="sticky top-[calc(var(--height-header)+(--spacing(9)))]" />
         </div>
       </div>
     </>

@@ -1,13 +1,18 @@
 'use client'
 
 import { Card } from '@repo/ui/components-self/card'
+import { cn } from '@repo/ui/lib/utils'
 import { motion } from 'motion/react'
 import React from 'react'
 import useSWR from 'swr'
 
 import { rpc, unwrap } from '@/lib/http/rpc'
 
-export function CardGuestInfo() {
+interface CardGuestInfoProps {
+  className?: string
+}
+
+export function CardGuestInfo({ className }: CardGuestInfoProps) {
   const [hasAnimated, setHasAnimated] = React.useState(false)
 
   const { data: ipinfo } = useSWR('0198eb97-946a-74df-9214-aebb698e4c11', () => rpc.ipinfo.get().then(unwrap))
@@ -16,7 +21,7 @@ export function CardGuestInfo() {
 
   return (
     <Card
-      className="space-y-3 p-card"
+      className={cn('space-y-3 p-card', className)}
       render={
         hasAnimated ? undefined : (
           <motion.div

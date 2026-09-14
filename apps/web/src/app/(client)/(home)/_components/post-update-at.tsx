@@ -1,5 +1,8 @@
+'use client'
+
 import { CalendarDaysIcon } from 'lucide-react'
-import { connection } from 'next/server'
+import React from 'react'
+import { browser } from 'react-dom'
 
 import { TimeHelper } from '@/lib/helper/time'
 
@@ -7,8 +10,8 @@ interface PostUpdateAtProps {
   updatedAt: Date
 }
 
-export async function PostUpdateAt({ updatedAt }: PostUpdateAtProps) {
-  await connection()
+export function PostUpdateAt({ updatedAt }: PostUpdateAtProps) {
+  React.use(browser())
 
   return (
     <>
