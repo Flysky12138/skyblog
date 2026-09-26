@@ -295,7 +295,7 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
               <Spinner className="size-8" />
             </div>
           ) : (
-            <Tiptap.Content className="font-article" />
+            <Tiptap.Content />
           )}
         </div>
       </Tiptap>

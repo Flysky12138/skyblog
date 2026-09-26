@@ -170,7 +170,7 @@ const extensionKitConfig: ExtensionKitConfig = {
         }
       },
       katexOptions: {
-        output: 'html',
+        output: 'mathml',
         throwOnError: false
       }
     }

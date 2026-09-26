@@ -1,6 +1,6 @@
 .tiptap {
   [data-type='excalidraw'] {
-    @apply prose-margin-pre;
+    margin-block-start: calc(var(--tiptap-flow) / 0.875);
 
     svg {
       @apply max-w-full;

@@ -21,13 +21,13 @@
 
   /* BFC */
   .node-image {
-    @apply prose-margin-img;
+    margin-block-start: var(--tiptap-flow);
     img {
       @apply my-0;
     }
   }
 
   .node-imageUploadPlaceholder {
-    @apply prose-margin-img;
+    margin-block-start: var(--tiptap-flow);
   }
 }

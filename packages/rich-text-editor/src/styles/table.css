@@ -1,6 +1,6 @@
 .tiptap {
   table {
-    @apply w-auto;
+    @apply w-auto border-collapse;
 
     th,
     td {
@@ -71,7 +71,7 @@
     @apply overflow-x-auto;
 
     /* BFC */
-    @apply prose-margin-table;
+    margin-block-start: var(--tiptap-flow);
     table {
       @apply my-0;
     }

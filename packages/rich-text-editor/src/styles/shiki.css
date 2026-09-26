@@ -58,7 +58,7 @@
 
   .node-codeBlock {
     /* BFC */
-    @apply prose-margin-pre;
+    margin-block-start: calc(var(--tiptap-flow) / 0.875);
     pre {
       @apply my-0;
     }

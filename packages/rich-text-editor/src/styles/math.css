@@ -1,4 +1,4 @@
-@import 'katex/dist/katex.min.css';
+/* @import 'katex/dist/katex.min.css'; */
 
 .tiptap {
   .tiptap-mathematics-render {
@@ -18,7 +18,12 @@
   }
 
   [data-type='block-math'] {
-    @apply my-4 p-4 text-center;
+    margin-block-start: var(--tiptap-flow);
+    margin-block-end: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-block: 0.25em;
+    text-align: center;
   }
 
   .inline-math-error,

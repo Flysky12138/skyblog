@@ -90,7 +90,7 @@ export default function Page() {
   }
 
   return (
-    <div className="container mx-auto font-article">
+    <div className="container mx-auto">
       <Tiptap editor={editor}>
         <Card className="h-full overflow-clip rounded-none">
           {/* 工具栏 */}
@@ -121,7 +121,7 @@ export default function Page() {
                 >
                   <PresentationIcon />
                 </Button>
-                <DialogContent className="max-w-5xl bg-card font-article">
+                <DialogContent className="max-w-5xl bg-card">
                   <article dangerouslySetInnerHTML={{ __html: doc }} className="tiptap" />
                 </DialogContent>
               </Dialog>
