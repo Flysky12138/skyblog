@@ -8,6 +8,9 @@
     "lint": "eslint --fix --max-warnings 0",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "@repo/components": "workspace:*"
+  },
   "devDependencies": {
     "@repo/chart-preview": "workspace:*",
     "@repo/eslint-config": "workspace:*",
@@ -23,8 +26,5 @@
     "react-dom": "catalog:",
     "tailwindcss": "catalog:",
     "vite": "catalog:"
-  },
-  "dependencies": {
-    "@repo/components": "workspace:*"
   }
 }

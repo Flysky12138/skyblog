@@ -35,8 +35,8 @@ minimumReleaseAgeExclude:
 catalogMode: prefer
 cleanupUnusedCatalogs: true
 catalog:
-  '@aws-sdk/client-s3': ^3.1141.0
-  '@aws-sdk/s3-request-presigner': ^3.1141.0
+  '@aws-sdk/client-s3': ^3.1142.0
+  '@aws-sdk/s3-request-presigner': ^3.1142.0
   '@base-ui/react': 1.8.0
   '@commitlint/cli': ^21.2.3
   '@commitlint/config-conventional': ^21.2.3
