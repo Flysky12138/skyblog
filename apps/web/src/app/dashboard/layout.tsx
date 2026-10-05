@@ -1,6 +1,9 @@
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarProvider, SidebarRail } from '@repo/ui/components/sidebar'
 import { Metadata } from 'next'
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
+
+import { authServer } from '@/lib/auth/server'
 
 import { Header } from './_components/header'
 import { Main } from './_components/main'
@@ -21,6 +24,16 @@ export const metadata: Metadata = {
 }
 
 export default async function Layout({ children }: React.PropsWithChildren) {
+  const { data: session } = await authServer.getSession()
+
+  if (session?.user.banned) {
+    redirect('/ban')
+  }
+
+  if (session?.user.role !== 'admin') {
+    redirect('/auth/sign-in')
+  }
+
   const cookieStore = await cookies()
   const defaultOpen = cookieStore.has('sidebar_state') ? cookieStore.get('sidebar_state')?.value === 'true' : true
 

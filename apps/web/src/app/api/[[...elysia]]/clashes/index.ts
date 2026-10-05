@@ -1,13 +1,13 @@
 import { Elysia } from 'elysia'
+import z from 'zod'
 
 import { replaceVariables } from '@/app/dashboard/clashes/_components/utils'
 import { getRealIp, getUserVisitInfo } from '@/lib/http/headers'
 import { isDev } from '@/lib/utils'
 
-import { idModel } from '../model'
 import { Service } from './service'
 
-export const clashes = new Elysia({ prefix: '/clashes' }).use(idModel).get(
+export const clashes = new Elysia({ prefix: '/clashes' }).get(
   '/:id',
   async ({ params, redirect, request, status }) => {
     const ip = isDev() ? '0.0.0.0' : getRealIp(request)
@@ -31,6 +31,8 @@ export const clashes = new Elysia({ prefix: '/clashes' }).use(idModel).get(
     })
   },
   {
-    params: 'uuidv7'
+    params: z.strictObject({
+      id: z.uuidv7()
+    })
   }
 )
