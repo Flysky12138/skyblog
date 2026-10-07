@@ -93,6 +93,8 @@ const nextConfig: NextConfig = {
     position: 'bottom-right'
   },
   experimental: {
+    turbopackGc: true,
+    turbopackLazyDynamicImports: true,
     turbopackRustReactCompiler: true,
     useOffline: true
   },

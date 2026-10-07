@@ -50,8 +50,8 @@ catalog:
   '@japont/unicode-range': ^1.0.0
   '@monaco-editor/loader': ^1.7.0
   '@neondatabase/auth': 0.5.0-beta
-  '@next/env': ^16.3.8
-  '@next/eslint-plugin-next': ^16.3.8
+  '@next/env': ^16.4.0
+  '@next/eslint-plugin-next': ^16.4.0
   '@octokit/rest': ^22.0.1
   '@prisma/adapter-neon': ^7.10.0
   '@prisma/client': ^7.10.0
@@ -90,7 +90,7 @@ catalog:
   lucide-react: ^1.50.0
   monaco-editor: 0.54.0
   motion: ^14.0.0
-  next: ^16.3.8
+  next: ^16.4.0
   next-themes: ^0.4.6
   nextjs-toploader: ^3.9.17
   npm-check-updates: ^23.1.0

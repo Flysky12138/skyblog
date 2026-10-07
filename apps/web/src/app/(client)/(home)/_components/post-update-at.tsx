@@ -1,8 +1,8 @@
 'use client'
 
 import { CalendarDaysIcon } from 'lucide-react'
+import { io } from 'next/cache'
 import React from 'react'
-import { browser } from 'react-dom'
 
 import { TimeHelper } from '@/lib/helper/time'
 
@@ -11,7 +11,7 @@ interface PostUpdateAtProps {
 }
 
 export function PostUpdateAt({ updatedAt }: PostUpdateAtProps) {
-  React.use(browser())
+  React.use(io())
 
   return (
     <>
