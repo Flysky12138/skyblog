@@ -23,14 +23,10 @@ import { PostResizeButton } from './_components/post-resize-button'
 import { getPost } from './utils'
 
 export async function generateMetadata({ params }: PageProps<'/posts/[path]'>): Promise<Metadata> {
-  cacheLife('max')
-
   const { path: idOrSlug } = await params
 
   const { post, user } = await getPost(idOrSlug)
   if (!post) return {}
-
-  cacheTag(CACHE_TAG.POST(post.id))
 
   return {
     category: post.categories.map(({ category }) => category.name).join(','),

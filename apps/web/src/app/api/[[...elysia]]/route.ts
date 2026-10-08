@@ -14,6 +14,7 @@ export const app = new Elysia({ prefix: '/api' })
     if (isDev()) return
 
     const { buffer, ivJwk } = await AesGcm.encrypt(responseValue)
+
     return new Response(buffer, {
       headers: {
         'Content-Type': 'application/octet-stream',

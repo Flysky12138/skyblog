@@ -1,8 +1,7 @@
 import { get } from '@vercel/edge-config'
 import { toMerged } from 'es-toolkit'
-import { cacheLife, cacheTag } from 'next/cache'
 
-import { CACHE_TAG, VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
+import { VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
 
 import { neteaseRequest } from './core'
 import { AlbumResponseType, PlaylistResponseType, SearchQueryType, SearchResponseType } from './model'
@@ -13,10 +12,6 @@ export abstract class Service {
    * 获取专辑详情
    */
   static async album(id: number): Promise<AlbumResponseType> {
-    'use cache'
-    cacheLife('days')
-    cacheTag(CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
-
     const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
 
     const res = await neteaseRequest<{
@@ -41,10 +36,6 @@ export abstract class Service {
    * 获取歌单列表
    */
   static async playlist(id: number): Promise<PlaylistResponseType> {
-    'use cache'
-    cacheLife('days')
-    cacheTag(CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
-
     const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
 
     const res = await neteaseRequest<{
@@ -65,10 +56,6 @@ export abstract class Service {
    * 搜索
    */
   static async search({ keywords, limit = 100, page = 0, type = 1 }: SearchQueryType): Promise<SearchResponseType> {
-    'use cache'
-    cacheLife('days')
-    cacheTag(CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE)
-
     const cookie = await get<string>(VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE)
 
     const res = await neteaseRequest<{

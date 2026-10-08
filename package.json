@@ -35,7 +35,7 @@
     "prettier-plugin-tailwindcss": "catalog:",
     "typescript": "catalog:"
   },
-  "packageManager": "pnpm@12.9.1",
+  "packageManager": "pnpm@12.10.1",
   "engines": {
     "node": ">=24"
   }

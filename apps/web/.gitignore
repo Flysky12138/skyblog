@@ -44,5 +44,3 @@ scripts/prisma/backups/
 .env*.local
 
 .env*
-
-.env*

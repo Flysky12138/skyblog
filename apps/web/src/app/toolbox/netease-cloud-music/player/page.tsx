@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { cacheLife } from 'next/cache'
 
 import { AutosizeAudioPlayer } from './_components/autosize-audio-player'
 import { getLyric, getSongDetails, getSongUrl } from './utils'
@@ -6,7 +7,7 @@ import { getLyric, getSongDetails, getSongUrl } from './utils'
 export async function generateMetadata({ searchParams }: PageProps<'/toolbox/netease-cloud-music/player'>): Promise<Metadata> {
   const { id } = (await searchParams) as { id: string }
 
-  const [song, url] = await Promise.all([getSongDetails(id), getSongUrl(id)])
+  const { song, url } = await getSongData(id)
 
   return {
     description: undefined,
@@ -26,7 +27,7 @@ export async function generateMetadata({ searchParams }: PageProps<'/toolbox/net
 export default async function Page({ searchParams }: PageProps<'/toolbox/netease-cloud-music/player'>) {
   const { id } = (await searchParams) as { id: string }
 
-  const [song, url, { lyric }] = await Promise.all([getSongDetails(id), getSongUrl(id), getLyric(id)])
+  const { lyric, song, url } = await getSongData(id)
 
   return (
     <div className="max-w-lg">
@@ -36,4 +37,17 @@ export default async function Page({ searchParams }: PageProps<'/toolbox/netease
       <AutosizeAudioPlayer className="w-full overflow-hidden rounded-lg shadow-xs" lyric={lyric} song={song} src={url} />
     </div>
   )
+}
+
+async function getSongData(id: number | string) {
+  'use cache'
+  cacheLife('max')
+
+  const [song, url, { lyric }] = await Promise.all([getSongDetails(id), getSongUrl(id), getLyric(id)])
+
+  return {
+    lyric,
+    song,
+    url
+  }
 }

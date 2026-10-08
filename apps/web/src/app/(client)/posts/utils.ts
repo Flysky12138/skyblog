@@ -1,7 +1,8 @@
 import { mapValues } from 'es-toolkit'
-import React from 'react'
+import { cacheLife, cacheTag } from 'next/cache'
 
 import { Post } from '@/generated/prisma/client'
+import { CACHE_TAG } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
 
 import { createPostOrderByInput, POST_WHERE_INPUT } from '../utils'
@@ -9,7 +10,11 @@ import { createPostOrderByInput, POST_WHERE_INPUT } from '../utils'
 /**
  * 获取所有文章，过滤了且使用默认排序
  */
-export const getPosts = React.cache(async () => {
+export async function getPosts() {
+  'use cache'
+  cacheLife('max')
+  cacheTag(CACHE_TAG.POSTS)
+
   return prisma.post.findMany({
     orderBy: createPostOrderByInput(),
     where: POST_WHERE_INPUT,
@@ -19,7 +24,7 @@ export const getPosts = React.cache(async () => {
       updatedAt: true
     }
   })
-})
+}
 
 /**
  * 获取相邻文章

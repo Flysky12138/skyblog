@@ -34,7 +34,7 @@ const admin = new Elysia({ name: 'admin' })
   .use(auth)
   .onBeforeHandle(({ status, user }) => {
     if (user.role !== 'admin') {
-      return status(401)
+      return status(403)
     }
   })
   .as('scoped')
