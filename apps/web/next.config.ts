@@ -108,7 +108,12 @@ const nextConfig: NextConfig = {
       },
       '*.svg': {
         as: '*.js',
-        loaders: ['@svgr/webpack']
+        loaders: ['@svgr/webpack'],
+        condition: {
+          not: {
+            query: '?url'
+          }
+        }
       }
     }
   },

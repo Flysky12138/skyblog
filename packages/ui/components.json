@@ -21,5 +21,7 @@
     "lib": "@repo/ui/lib",
     "hooks": "@repo/ui/hooks"
   },
-  "registries": {}
+  "registries": {
+    "@ogimagecn": "https://ogimagecn.vercel.app/r/{name}.json"
+  }
 }
