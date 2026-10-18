@@ -40,7 +40,7 @@
 
     a {
       @apply text-link-foreground no-underline;
-      &[target='_blank']:not(:has(img))::after {
+      &[target='_blank']:not(:empty):not(:has(*))::after {
         content: '\2197';
         font-size: 0.85em;
       }

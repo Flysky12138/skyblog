@@ -1,6 +1,6 @@
 import { ButtonLink } from '@repo/components/button'
 import { Container } from '@repo/components/container'
-import { DropdownMenuThemeRadio } from '@repo/components/theme'
+import { ThemeToggle } from '@repo/components/theme'
 import { ToolCaseIcon } from 'lucide-react'
 import Link from 'next/link'
 
@@ -29,7 +29,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
             <ToolCaseIcon />
           </ButtonLink>
           <hr className="h-4 w-0.5 rounded-full bg-divide" />
-          <DropdownMenuThemeRadio />
+          <ThemeToggle />
           <AuthButton />
         </Container>
       </Header>

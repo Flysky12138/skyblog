@@ -64,7 +64,7 @@ interface InteractiveGridSelectorProps {
 type TableAlignment = (typeof TABLE_ALIGNMENTS)[number]['value']
 
 export function Table() {
-  const actionsRef = React.useRef<NonNullable<React.ComponentProps<typeof DropdownMenu>['actionsRef']>['current']>(null)
+  const actionsRef = React.useRef<ShadcnComponentActionsRef<typeof DropdownMenu>>(null)
 
   const { editor } = useTiptap()
   const { currentAlignment, currentBorder, currentPadding, hasHeaderRow, isActive } = useTiptapState(({ editor }) => {

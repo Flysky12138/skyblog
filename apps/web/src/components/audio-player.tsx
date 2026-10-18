@@ -18,9 +18,9 @@ export interface AudioPlayerProps {
   autoplay?: boolean
   className?: string
   loading?: boolean
-  lyric: LyricResponseType['lyric']
+  lyric?: LyricResponseType['lyric']
   song: SongDetailResponseType
-  src: string
+  src?: null | string
   onNext?: () => void
   onPrev?: () => void
 }
@@ -70,6 +70,56 @@ export function AudioPlayer({ autoplay, className, loading, lyric, song, src, on
       audio.removeEventListener('ended', handleEnded)
     }
   }, [audioRef, autoplay, loop])
+
+  // 媒体会话：歌曲信息和操作注册
+  React.useEffect(() => {
+    if (!('mediaSession' in navigator)) return
+
+    const session = navigator.mediaSession
+
+    session.metadata = new MediaMetadata({
+      album: song.al.name,
+      artist: song.ar.map(item => item.name).join(', '),
+      title: song.name,
+      artwork: [96, 128, 192, 256, 384, 512].map(size => ({
+        sizes: `${size}x${size}`,
+        src: `${song.al.picUrl.replace('http:', 'https:')}?param=${size}y${size}`,
+        type: 'image/jpeg'
+      }))
+    })
+
+    const handlers: [MediaSessionAction, MediaSessionActionHandler][] = [
+      ['play', () => void handlePlay()],
+      ['pause', () => audioRef.current?.pause()],
+      ['previoustrack', () => onPrev?.()],
+      ['nexttrack', () => onNext?.()]
+    ]
+
+    for (const [action, handler] of handlers) {
+      try {
+        session.setActionHandler(action, handler)
+      } catch {
+        // 当前浏览器不支持该操作
+      }
+    }
+
+    return () => {
+      for (const [action] of handlers) {
+        try {
+          session.setActionHandler(action, null)
+        } catch {
+          // 忽略不支持的操作
+        }
+      }
+    }
+  }, [audioRef, onNext, onPrev, song])
+
+  // 单独同步播放状态
+  React.useEffect(() => {
+    if (!('mediaSession' in navigator)) return
+
+    navigator.mediaSession.playbackState = playing ? 'playing' : 'paused'
+  }, [playing])
 
   return (
     <section aria-label="audio player" className={className}>

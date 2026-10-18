@@ -2,7 +2,7 @@ import { ThemeProvider } from '@repo/components/theme'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
-import { App } from './rich-text-editor/app'
+import { App } from './monaco-editor/app'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

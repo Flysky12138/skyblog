@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { useIsMobile } from '@repo/ui/hooks/use-mobile'
 import { cn } from '@repo/ui/lib/utils'
 import dayjs from 'dayjs'
-import { mapAsync } from 'es-toolkit'
+import { forEachAsync } from 'es-toolkit'
 import { DownloadIcon, MusicIcon, ScrollTextIcon } from 'lucide-react'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -123,7 +123,7 @@ export function DownloadDrawer({ songs: staticSongs }: DownloadDrawerProps) {
         }
       }
 
-      await mapAsync(
+      await forEachAsync(
         Array.from(selected),
         async song => {
           try {

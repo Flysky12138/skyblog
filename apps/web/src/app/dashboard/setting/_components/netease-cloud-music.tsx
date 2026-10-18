@@ -10,7 +10,7 @@ import { useAsyncFn } from 'react-use'
 import useSWR from 'swr'
 import z from 'zod'
 
-import { CACHE_TAG, VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
+import { VERCEL_EDGE_CONFIG_KEY } from '@/lib/constants'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
 
@@ -27,7 +27,7 @@ const formSchema = z.object({
 
     const schema = z.object({
       __csrf: z.string().regex(/^[a-f0-9]{32}$/),
-      MUSIC_U: z.string().regex(/^[A-Z0-9]{738}$/)
+      MUSIC_U: z.string().regex(/^[A-Z0-9]{700,}$/)
     })
 
     const result = schema.safeParse(data)
@@ -75,7 +75,6 @@ export function NeteaseCloudMusic() {
       await toastPromise(
         rpc.dashboard['edge-config'].action
           .patch({
-            cacheTags: [CACHE_TAG.EDGE_CONFIG.NETEASE_CLOUD_MUSIC_COOKIE],
             items: [{ key: VERCEL_EDGE_CONFIG_KEY.NETEASE_CLOUD_MUSIC_COOKIE, operation: 'upsert', value }]
           })
           .then(unwrap),

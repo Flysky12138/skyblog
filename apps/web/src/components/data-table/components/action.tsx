@@ -122,7 +122,7 @@ export function DataTableRowsDeleteButton<T extends RowData>({
 }) {
   const table = useTableContext()
 
-  const actionsRef = React.useRef<NonNullable<React.ComponentProps<typeof AlertDialog>['actionsRef']>['current']>(null)
+  const actionsRef = React.useRef<ShadcnComponentActionsRef<typeof AlertDialog>>(null)
 
   const [{ loading }, handleConfirm] = useAsyncFn(
     async (rows: T[]) => {

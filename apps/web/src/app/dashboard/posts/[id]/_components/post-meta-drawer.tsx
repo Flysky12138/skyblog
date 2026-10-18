@@ -47,7 +47,7 @@ export type PostSubmitEventType = 'create' | 'normal' | 'secret'
 type ComboboxValue = PostMetaDrawerProps['value']['tags'][number]['tag']
 
 const formSchema = z.object({
-  title: z.string().min(1, '请填写标题').max(100, '标题过长')
+  title: z.string().nonempty('请填写标题').max(100, '标题过长')
 })
 
 interface PostMetaDrawerProps {
@@ -80,7 +80,7 @@ export function PostMetaDrawer({ isCreate, value: post, onChange: setPost, onSub
     form.setValues(pick(post, formSchema.keyof().options))
   }, [form, post])
 
-  const actionsRef = React.useRef<NonNullable<React.ComponentProps<typeof Drawer>['actionsRef']>['current']>(null)
+  const actionsRef = React.useRef<ShadcnComponentActionsRef<typeof Drawer>>(null)
   const handleSubmit = async (type: PostSubmitEventType) => {
     const valid = await form.trigger()
     if (!valid) {
@@ -172,8 +172,9 @@ export function PostMetaDrawer({ isCreate, value: post, onChange: setPost, onSub
             <Field>
               <FieldTitle>分类</FieldTitle>
               <Combobox
-                autoHighlight
                 multiple
+                isItemEqualToValue={(item, value) => item.id === value.id}
+                itemToStringValue={value => value.name}
                 items={categories}
                 value={post.categories.map(({ category }) => category)}
                 onValueChange={payload => {
@@ -218,8 +219,9 @@ export function PostMetaDrawer({ isCreate, value: post, onChange: setPost, onSub
             <Field>
               <FieldTitle>标签</FieldTitle>
               <Combobox
-                autoHighlight
                 multiple
+                isItemEqualToValue={(item, value) => item.id === value.id}
+                itemToStringValue={value => value.name}
                 items={tags}
                 value={post.tags.map(({ tag }) => tag)}
                 onValueChange={payload => {

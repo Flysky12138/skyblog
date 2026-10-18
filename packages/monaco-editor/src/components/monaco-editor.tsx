@@ -51,7 +51,7 @@ export interface MonacoEditorRef {
 
 export function MonacoEditor({
   className,
-  isDiffMode,
+  isDiffMode = false,
   language,
   options,
   originalValue = '',
@@ -63,143 +63,218 @@ export function MonacoEditor({
   onInit,
   ...props
 }: MonacoEditorProps) {
-  options ??= {}
-
-  // 容器
   const containerRef = React.useRef<HTMLDivElement>(null)
-  // Monaco
+
+  // Monaco 实例
   const monacoRef = React.useRef<Monaco>(undefined)
-  // 模型
+
+  // 文本模型
   const modelRef = React.useRef<editor.ITextModel>(undefined)
   const originalModelRef = React.useRef<editor.ITextModel>(undefined)
-  // 编辑器
+
+  // 编辑器实例
   const editorRef = React.useRef<editor.IStandaloneCodeEditor>(undefined)
   const diffEditorRef = React.useRef<editor.IStandaloneDiffEditor>(undefined)
-  // 内容监听器
+
+  // 资源
   const changeListenerRef = React.useRef<IDisposable>(undefined)
+  const initializedRef = React.useRef(false)
+
+  // 防止外部更新 value 时触发 onChange
+  const syncingRef = React.useRef(false)
 
   const [isMounted, setIsMounted] = React.useState(false)
 
-  // 主题
   const { isDark } = useTheme()
   const theme = themes[isDark ? 0 : 1]
 
-  // 配置
-  const _options = React.useMemo(() => createMonacoEditorInitialOptions({ ...options, language, theme }), [language, options, theme])
+  const _options = React.useMemo(() => createMonacoEditorInitialOptions({ ...options, language, theme }), [options, language, theme])
 
-  // 销毁
+  // 获取当前实际编辑器
+  const getActiveEditor = React.useEffectEvent(() => {
+    return isDiffMode ? diffEditorRef.current?.getModifiedEditor() : editorRef.current
+  })
+
+  // 销毁编辑器和模型
   const handleDestroy = React.useEffectEvent(() => {
     changeListenerRef.current?.dispose()
+    changeListenerRef.current = undefined
 
     editorRef.current?.dispose()
     diffEditorRef.current?.dispose()
 
+    editorRef.current = undefined
+    diffEditorRef.current = undefined
+
     modelRef.current?.dispose()
     originalModelRef.current?.dispose()
 
-    editorRef.current = undefined
-    diffEditorRef.current = undefined
     modelRef.current = undefined
     originalModelRef.current = undefined
-    changeListenerRef.current = undefined
   })
 
-  // 创建
+  // 创建编辑器
   const handleCreate = React.useEffectEvent((monaco?: Monaco) => {
-    if (!containerRef.current) {
-      console.warn('Monaco Editor root element not found')
-      return
-    }
-    if (!monaco) return
+    const container = containerRef.current
+
+    if (!container || !monaco) return
 
     handleDestroy()
 
+    const modifiedModel = monaco.editor.createModel(value, language)
+    modelRef.current = modifiedModel
+
     if (isDiffMode) {
-      modelRef.current = monaco.editor.createModel(value, language)
-      originalModelRef.current = monaco.editor.createModel(originalValue, language)
-      diffEditorRef.current = monaco.editor.createDiffEditor(containerRef.current, _options)
-      diffEditorRef.current.setModel({
-        modified: modelRef.current,
-        original: originalModelRef.current
+      const originalModel = monaco.editor.createModel(originalValue, language)
+
+      originalModelRef.current = originalModel
+
+      const diffEditor = monaco.editor.createDiffEditor(container, _options)
+
+      diffEditorRef.current = diffEditor
+
+      diffEditor.setModel({
+        modified: modifiedModel,
+        original: originalModel
       })
     } else {
-      modelRef.current = monaco.editor.createModel(value, language)
-      editorRef.current = monaco.editor.create(containerRef.current, {
+      editorRef.current = monaco.editor.create(container, {
         ..._options,
-        model: modelRef.current
+        model: modifiedModel
       })
     }
 
-    changeListenerRef.current = editorRef.current?.onDidChangeModelContent(() => {
-      const val = editorRef.current!.getValue()
-      onChange?.(val)
+    const activeEditor = isDiffMode ? diffEditorRef.current?.getModifiedEditor() : editorRef.current
+
+    changeListenerRef.current = activeEditor?.onDidChangeModelContent(() => {
+      if (syncingRef.current) return
+
+      onChange?.(activeEditor.getValue())
     })
   })
 
-  // 初始化
+  // 初始化 Monaco 和 Shiki
   React.useEffect(() => {
     let ignore = false
 
-    void (async () => {
-      const monaco = await loader.init()
+    const init = async () => {
+      let highlighter: Awaited<ReturnType<typeof createHighlighter>> | undefined
 
-      if (ignore) return
+      try {
+        const monaco = await loader.init()
 
-      monacoRef.current = monaco
+        if (ignore) return
 
-      onInit?.(monaco, language)
+        monacoRef.current = monaco
 
-      const langs = [language]
-      const highlighter = await createHighlighter({ langs, themes })
-      langs.forEach(id => monaco.languages.register({ id }))
-      shikiToMonaco(highlighter, monaco)
+        onInit?.(monaco, language)
 
-      handleCreate(monaco)
+        highlighter = await createHighlighter({
+          langs: [language],
+          themes
+        })
 
-      setIsMounted(true)
-    })()
+        if (ignore) {
+          highlighter.dispose()
+          return
+        }
+
+        monaco.languages.register({ id: language })
+        shikiToMonaco(highlighter, monaco)
+
+        handleCreate(monaco)
+
+        initializedRef.current = true
+        setIsMounted(true)
+      } catch (error) {
+        if (!ignore) {
+          console.error('Failed to initialize Monaco Editor:', error)
+        }
+
+        highlighter?.dispose()
+      }
+    }
+
+    void init()
 
     return () => {
       ignore = true
+      initializedRef.current = false
       handleDestroy()
     }
+    // 初始化只执行一次，使用最新的 props
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // 配置更新
+  // 更新编辑器配置
   React.useEffect(() => {
     editorRef.current?.updateOptions(_options)
     diffEditorRef.current?.updateOptions(_options)
   }, [_options])
 
-  // 切换编辑器
+  // 切换普通模式和 Diff 模式
   React.useEffect(() => {
+    if (!initializedRef.current) return
+
     handleCreate(monacoRef.current)
   }, [isDiffMode])
 
-  // 内容监听
+  // 同步外部内容
   React.useEffect(() => {
-    if (isDiffMode) {
-      if (!diffEditorRef.current) return
-      if (originalValue !== diffEditorRef.current.getModel()?.original.getValue()) {
-        diffEditorRef.current.getModel()?.original.setValue(originalValue)
-      }
-      if (value !== diffEditorRef.current.getModel()?.modified.getValue()) {
-        diffEditorRef.current.getModel()?.modified.setValue(value)
-      }
-    } else {
-      if (!editorRef.current) return
-      if (value !== editorRef.current.getValue()) {
-        editorRef.current.setValue(value)
-      }
-    }
-  }, [isDiffMode, originalValue, value])
+    const monaco = monacoRef.current
+    if (!monaco || !initializedRef.current) return
 
-  // 抛出属性
-  React.useImperativeHandle(ref, () => ({
-    editor: editorRef.current,
-    format: () => editorRef.current?.getAction('editor.action.formatDocument')?.run()
-  }))
+    syncingRef.current = true
+
+    try {
+      // 更新修改侧内容
+      const modifiedModel = modelRef.current
+
+      if (modifiedModel && modifiedModel.getValue() !== value) {
+        modifiedModel.setValue(value)
+      }
+
+      // 更新对比侧原始内容
+      const originalModel = originalModelRef.current
+
+      if (originalModel && originalModel.getValue() !== originalValue) {
+        originalModel.setValue(originalValue)
+      }
+
+      // 同步语言
+      if (modifiedModel && modifiedModel.getLanguageId() !== language) {
+        monaco.editor.setModelLanguage(modifiedModel, language)
+      }
+
+      if (originalModel && originalModel.getLanguageId() !== language) {
+        monaco.editor.setModelLanguage(originalModel, language)
+      }
+    } finally {
+      syncingRef.current = false
+    }
+  }, [value, originalValue, language, isDiffMode])
+
+  // 同步主题
+  React.useEffect(() => {
+    const monaco = monacoRef.current
+    if (!monaco) return
+
+    monaco.editor.setTheme(theme)
+  }, [theme])
+
+  // 暴露实例和方法
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      get editor() {
+        return getActiveEditor()
+      },
+
+      format: () => getActiveEditor()?.getAction('editor.action.formatDocument')?.run()
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isDiffMode]
+  )
 
   return (
     <section
@@ -221,13 +296,14 @@ export function MonacoEditor({
         ref={containerRef}
         className="size-full"
         onKeyDown={event => {
-          if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
+          if (event.key.toLowerCase() === 's' && (event.ctrlKey || event.metaKey)) {
             event.preventDefault()
           }
         }}
       />
+
       {!isMounted && (
-        <div className="absolute inset-0 flex items-center justify-center" data-slot="monaco-loading">
+        <div className="absolute inset-0 flex items-center justify-center bg-muted/60" data-slot="monaco-loading">
           Loading...
         </div>
       )}

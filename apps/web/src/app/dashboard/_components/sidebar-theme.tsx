@@ -1,30 +1,34 @@
 'use client'
 
-import { DropdownMenuThemeRadio } from '@repo/components/theme'
-import { SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem } from '@repo/ui/components/sidebar'
+import { AnimatedIcon } from '@repo/components/theme'
+import { useMounted } from '@repo/react-hooks'
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@repo/ui/components/sidebar'
 import { Skeleton } from '@repo/ui/components/skeleton'
-import { Switch } from '@repo/ui/components/switch'
 import { useTheme } from '@repo/ui/hooks/use-theme'
 
 export function SidebarTheme() {
-  const { isDark, ThemeIcon } = useTheme()
+  const isMounted = useMounted()
+  const { ThemeIcon, themeText, toggleTheme } = useTheme()
+
+  if (!isMounted) {
+    return <Skeleton className="h-8" />
+  }
 
   return (
     <SidebarMenu>
-      <DropdownMenuThemeRadio
-        nativeButton={false}
-        render={
-          <SidebarMenuItem tabIndex={-1}>
-            <SidebarMenuButton tooltip="深色模式">
-              <ThemeIcon /> 深色模式
-            </SidebarMenuButton>
-            <SidebarMenuAction className="pointer-events-none mr-2" tabIndex={-1}>
-              <Switch checked={isDark} tabIndex={-1} />
-            </SidebarMenuAction>
-          </SidebarMenuItem>
-        }
-        skeleton={<Skeleton className="h-8" />}
-      />
+      <SidebarMenuItem
+        tabIndex={-1}
+        onClick={() => {
+          toggleTheme()
+        }}
+      >
+        <SidebarMenuButton tooltip="主题">
+          <AnimatedIcon className="shrink-0">
+            <ThemeIcon />
+          </AnimatedIcon>
+          {themeText}
+        </SidebarMenuButton>
+      </SidebarMenuItem>
     </SidebarMenu>
   )
 }

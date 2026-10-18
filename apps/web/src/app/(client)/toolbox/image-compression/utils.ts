@@ -1,4 +1,11 @@
-interface CompressImageByCanvas {
+/**
+ * 使用 canvas 压缩图片
+ */
+export async function compressImageByCanvas({
+  file,
+  mimeType,
+  quality
+}: {
   file: File
   /**
    * 输出图片格式
@@ -8,29 +15,7 @@ interface CompressImageByCanvas {
    * 压缩质量 0~1
    */
   quality: number
-}
-
-interface ImageCompressionGroup {
-  /**
-   * 输出文件扩展名
-   */
-  ext: string
-  /**
-   * 输出图片格式
-   */
-  mimeType: string
-  name: string
-}
-
-export const imageCompressionGroup: ImageCompressionGroup[] = [
-  { ext: 'jpg', mimeType: 'image/jpeg', name: 'JPEG' },
-  { ext: 'webp', mimeType: 'image/webp', name: 'WEBP' }
-]
-
-/**
- * 使用 canvas 压缩图片
- */
-export async function compressImageByCanvas({ file, mimeType, quality }: CompressImageByCanvas): Promise<Blob> {
+}): Promise<Blob> {
   const img = new Image()
   img.src = URL.createObjectURL(file)
 

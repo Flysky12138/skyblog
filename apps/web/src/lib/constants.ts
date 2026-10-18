@@ -3,8 +3,7 @@
  */
 export const ATTRIBUTE = {
   ID: {
-    NAV_CONTAINER_DOWNLOAD: 'nav-container-download',
-    POST_CONTAINER: 'post-container'
+    NAV_CONTAINER_DOWNLOAD: 'nav-container-download'
   }
 } as const
 
@@ -26,10 +25,6 @@ export const HEADER_KEY = {
  * key of vercel edge config store
  */
 export const VERCEL_EDGE_CONFIG_KEY = {
-  /**
-   * live2d 直链
-   */
-  LIVE2D_SRC: 'live2d-src',
   /**
    * 网易云音乐 cookie
    */
@@ -54,11 +49,9 @@ export enum POST_CARD_VISIBILITY_MASK {
  */
 export const CACHE_TAG = {
   AUTHORS: 'authors',
+  EDGE_CONFIG: {},
   FRIENDS: 'friends',
   POSTS: 'posts',
-  EDGE_CONFIG: {
-    NETEASE_CLOUD_MUSIC_COOKIE: 'netease-cloud-music-cookie'
-  },
   AUTHOR: (id: string) => `authors:${id}` as const,
   FRIEND: (id: string) => `friends:${id}` as const,
   POST: (id: string) => `posts:${id}` as const

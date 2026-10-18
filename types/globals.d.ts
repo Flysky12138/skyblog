@@ -23,3 +23,8 @@ type Method = 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT'
  * 协议
  */
 type Protocol = 'http:' | 'https:'
+
+/**
+ * Shadcn UI 组件动作引用
+ */
+type ShadcnComponentActionsRef<T extends React.FC> = NonNullable<React.ComponentProps<T>['actionsRef']>['current']

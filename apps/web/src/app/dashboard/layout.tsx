@@ -26,11 +26,15 @@ export const metadata: Metadata = {
 export default async function Layout({ children }: React.PropsWithChildren) {
   const { data: session } = await authServer.getSession()
 
-  if (session?.user.banned) {
+  if (!session) {
+    redirect('/auth/sign-in')
+  }
+
+  if (session.user.banned) {
     redirect('/ban')
   }
 
-  if (session?.user.role !== 'admin') {
+  if (session.user.role !== 'admin') {
     redirect('/auth/sign-in')
   }
 

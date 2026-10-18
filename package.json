@@ -8,8 +8,7 @@
     "typecheck": "pnpm -r --parallel run typecheck",
     "format": "prettier --write .",
     "ncu": "ncu -i --format group -w",
-    "prepare": "husky",
-    "doctor": "pnpx react-doctor@latest --verbose"
+    "prepare": "husky"
   },
   "commitlint": {
     "extends": [
@@ -35,7 +34,7 @@
     "prettier-plugin-tailwindcss": "catalog:",
     "typescript": "catalog:"
   },
-  "packageManager": "pnpm@12.10.1",
+  "packageManager": "pnpm@12.15.0",
   "engines": {
     "node": ">=24"
   }

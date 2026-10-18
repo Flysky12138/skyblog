@@ -6,6 +6,7 @@
 @import '@repo/font-split/noto-color-emoji-regular.css';
 
 @import '@repo/ui/globals.css';
+@import '@repo/components/style.css';
 @import '@repo/monaco-editor/style.css';
 @import '@repo/rich-text-editor/style.css';
 
