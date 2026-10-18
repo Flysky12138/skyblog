@@ -3,7 +3,6 @@
 import { Content, Tiptap, useEditor } from '@repo/rich-text-editor'
 import { ExtensionKit } from '@repo/rich-text-editor/extensions'
 import { ToolBar, Separator as ToolBarSeparator } from '@repo/rich-text-editor/toolbar'
-import { toast } from '@repo/ui/base'
 import { Button } from '@repo/ui/components/button'
 import { Separator } from '@repo/ui/components/separator'
 import { Spinner } from '@repo/ui/components/spinner'
@@ -15,7 +14,6 @@ import useSWR from 'swr'
 import { useImmer } from 'use-immer'
 
 import { StorageUploadModal } from '@/app/dashboard/storage/_components/storage-upload-modal'
-import { authClient } from '@/lib/auth/client'
 import { STORAGE } from '@/lib/constants'
 import { rpc, unwrap } from '@/lib/http/rpc'
 import { toastPromise } from '@/lib/toast'
@@ -26,7 +24,6 @@ import { createInitialPost } from './utils'
 
 export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   const router = useRouter()
-  const { data: session } = authClient.useSession()
 
   const { id } = React.use(params)
   const isCreate = id === 'create'
@@ -52,31 +49,26 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
   })
 
   // 获取文章数据，仅仅为了缓存
-  const { data, isLoading } = useSWR(
-    isCreate ? null : ['019f84e6-d45f-7630-869b-bbab2af4a4f7', id],
-    () => rpc.dashboard.posts({ id }).get().then(unwrap),
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      onSuccess: setPost
-    }
-  )
+  const { isLoading } = useSWR(isCreate ? null : ['019f84e6-d45f-7630-869b-bbab2af4a4f7', id], () => rpc.dashboard.posts({ id }).get().then(unwrap), {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    onSuccess: setPost
+  })
 
   // 填充编辑器内容
   React.useEffect(() => {
-    if (!data) return
     if (!editor) return
     const timer = setTimeout(() => {
       editor
         .chain()
         .setMeta('addToHistory', false)
-        .setContent(JSON.parse(data.content ?? 'null') as Content, { contentType: 'json' })
+        .setContent(JSON.parse(post.content ?? 'null') as Content, { contentType: 'json' })
         .run()
     }, 0)
     return () => {
       clearTimeout(timer)
     }
-  }, [data, editor])
+  }, [post, editor])
 
   if (!editor) return null
 
@@ -93,14 +85,9 @@ export default function Page({ params }: PageProps<'/dashboard/posts/[id]'>) {
       visibilityMask: post.visibilityMask
     }
     if (type === 'create') {
-      if (!session?.user?.id) {
-        toast.error('请先登录', { richColors: true })
-        return
-      }
-      const data = await toastPromise(rpc.dashboard.posts.post({ authorId: session.user.id, ...baseData }).then(unwrap), {
+      const data = await toastPromise(rpc.dashboard.posts.post(baseData).then(unwrap), {
         success: '创建成功'
       })
-      setPost(createInitialPost())
       router.replace(`/dashboard/posts/${data.id}`)
     } else {
       await toastPromise(

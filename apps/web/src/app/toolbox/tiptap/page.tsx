@@ -1,17 +1,16 @@
 'use client'
 
 import { Card } from '@repo/components/card'
-import { DropdownMenuThemeRadio } from '@repo/components/theme'
+import { ThemeToggle } from '@repo/components/theme'
 import { useWindowScrollState } from '@repo/react-hooks'
 import { Tiptap, useEditor } from '@repo/rich-text-editor'
 import { ExtensionKit } from '@repo/rich-text-editor/extensions'
 import { renderJSONContentToHTMLString } from '@repo/rich-text-editor/render'
 import { ToolBar } from '@repo/rich-text-editor/toolbar'
-import { Button, buttonVariants } from '@repo/ui/components/button'
+import { Button } from '@repo/ui/components/button'
 import { Dialog, DialogContent } from '@repo/ui/components/dialog'
 import { Separator } from '@repo/ui/components/separator'
 import { Spinner } from '@repo/ui/components/spinner'
-import { useTheme } from '@repo/ui/hooks/use-theme'
 import { cn } from '@repo/ui/lib/utils'
 import { PresentationIcon } from 'lucide-react'
 import React from 'react'
@@ -24,7 +23,6 @@ export default function Page() {
   const [open, setOpen] = React.useState(false)
   const [doc, setDoc] = React.useState('')
 
-  const { ThemeIcon } = useTheme()
   const { y } = useWindowScrollState()
 
   const editor = useEditor({
@@ -102,14 +100,7 @@ export default function Page() {
           >
             <ToolBar className="flex flex-wrap justify-center p-3">
               <hr className="h-4 w-0.5 rounded-full bg-divide" />
-              <DropdownMenuThemeRadio
-                render={
-                  <Button aria-label="theme toggle" size="icon-sm" variant="outline">
-                    <ThemeIcon />
-                  </Button>
-                }
-                skeleton={<div className={buttonVariants({ className: 'pointer-events-none', size: 'icon-sm', variant: 'outline' })} />}
-              />
+              <ThemeToggle size="icon-sm" />
               <Dialog open={open} onOpenChange={setOpen}>
                 <Button
                   aria-label="预览"

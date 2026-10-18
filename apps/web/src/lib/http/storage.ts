@@ -1,4 +1,4 @@
-import { limitAsync, range } from 'es-toolkit'
+import { mapAsync, range } from 'es-toolkit'
 
 import { STORAGE } from '../constants'
 import { FileHelper } from '../helper/file'
@@ -108,10 +108,11 @@ export abstract class Storage {
         PartNumber: partNumber
       }
     }
-    const limit = limitAsync(partUpload, 5)
 
     // 开始上传
-    const parts = await Promise.all(range(Math.ceil(file.size / partSize)).map(limit))
+    const parts = await mapAsync(range(Math.ceil(file.size / partSize)), partUpload, {
+      concurrency: 5
+    })
 
     // 完成上传
     const { Bucket } = await rpc.dashboard.storage.objects['multipart-upload'].complete.post({ key, parts, uploadId }).then(unwrap)

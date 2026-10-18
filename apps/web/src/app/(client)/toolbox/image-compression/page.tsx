@@ -11,17 +11,17 @@ import { Field, FieldDescription, FieldGroup, FieldLabel, FieldTitle } from '@re
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@repo/ui/components/select'
 import { Slider } from '@repo/ui/components/slider'
 import { Tabs, TabsList, TabsTrigger } from '@repo/ui/components/tabs'
-import { remove } from 'es-toolkit'
+import { pick, remove } from 'es-toolkit'
 import { ChevronLeftIcon, ChevronRightIcon, ImageUpIcon } from 'lucide-react'
 import React from 'react'
-import { useDebounce, useLocalStorage } from 'react-use'
+import { useDebounce } from 'react-use'
+import { useShallow } from 'zustand/shallow'
 
 import { DirectoryHelper } from '@/lib/helper/directory'
 import { FileHelper } from '@/lib/helper/file'
+import { useImageCompressionStore } from '@/store/image-compression'
 
-import { compressImageByCanvas, imageCompressionGroup } from './utils'
-
-const DEFAULT_QUALITY = 70
+import { compressImageByCanvas } from './utils'
 
 export default function Page() {
   const [files, setFiles] = React.useState<File[]>([])
@@ -33,9 +33,9 @@ export default function Page() {
   const [activeTab, setActiveTab] = React.useState<StringLiteralsOrString<'compressed' | 'original'>>('compressed')
   const [activeFileIndex, setActiveFileIndex] = React.useState(0)
 
-  const [ext, setExt] = useLocalStorage<null | string>('image-compression:ext', null)
-  const [quality, setQuality] = useLocalStorage('image-compression:quality', DEFAULT_QUALITY)
-  const currentQuality = quality ?? DEFAULT_QUALITY
+  const { ext, extList, quality, setExt, setQuality } = useImageCompressionStore(
+    useShallow(state => pick(state, ['ext', 'extList', 'quality', 'setExt', 'setQuality']))
+  )
 
   // 清除缓存
   const handleResetCompressedFileCache = () => {
@@ -54,8 +54,8 @@ export default function Page() {
   // 压缩图片格式
   const selectedItem = React.useMemo(() => {
     if (!ext) return
-    return imageCompressionGroup.find(item => item.ext === ext)
-  }, [ext])
+    return extList.find(item => item.ext === ext)
+  }, [ext, extList])
 
   // 压缩图片的方法
   const handleCompressImage = async (file: File | null) => {
@@ -65,7 +65,7 @@ export default function Page() {
     return compressImageByCanvas({
       file,
       mimeType: selectedItem.mimeType,
-      quality: currentQuality / 100
+      quality: quality / 100
     })
   }
 
@@ -86,7 +86,7 @@ export default function Page() {
       }
     },
     200,
-    [activeFile, ext, currentQuality]
+    [activeFile, ext, quality]
   )
 
   // 压缩图片并保存
@@ -186,7 +186,7 @@ export default function Page() {
             <Field>
               <FieldLabel>目标格式</FieldLabel>
               <Select
-                items={imageCompressionGroup.map(item => ({
+                items={extList.map(item => ({
                   label: item.name,
                   value: item.ext
                 }))}
@@ -198,7 +198,7 @@ export default function Page() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    {imageCompressionGroup.map(item => (
+                    {extList.map(item => (
                       <SelectItem key={item.ext} value={item.ext}>
                         {item.name}
                       </SelectItem>
@@ -211,12 +211,12 @@ export default function Page() {
               <FieldTitle>图片质量</FieldTitle>
               {selectedItem ? (
                 <>
-                  <FieldDescription>质量范围为 (1~100)，当前质量 {currentQuality}</FieldDescription>
+                  <FieldDescription>质量范围为 (1~100)，当前质量 {quality}</FieldDescription>
                   <Slider
                     className="mt-1"
                     max={100}
                     min={1}
-                    value={[quality!]}
+                    value={[quality]}
                     onValueChange={value => {
                       setQuality(value as number)
                     }}

@@ -3,8 +3,7 @@
  */
 export const ATTRIBUTE = {
   ID: {
-    NAV_CONTAINER_DOWNLOAD: 'nav-container-download',
-    POST_CONTAINER: 'post-container'
+    NAV_CONTAINER_DOWNLOAD: 'nav-container-download'
   }
 } as const
 

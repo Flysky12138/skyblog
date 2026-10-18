@@ -75,7 +75,17 @@ export function DataTable({ isLoading }: DataTableProps) {
 }
 
 export function DataTableWrapper({ className, ...props }: React.ComponentProps<typeof Card>) {
-  return <Card className={cn('overflow-hidden rounded-md dark:ring-0', '*:pointer-coarse:no-scrollbar **:[th]:border-b-2', className)} {...props} />
+  return (
+    <Card
+      className={cn(
+        'overflow-hidden rounded-md dark:ring-0',
+        '*:pointer-coarse:no-scrollbar **:[th]:border-b-2',
+        '*:data-[slot=table-container]:scroll-fade-x',
+        className
+      )}
+      {...props}
+    />
+  )
 }
 
 function getAlignClassName(align: ColumnMeta['align']) {

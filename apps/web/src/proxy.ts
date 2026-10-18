@@ -13,10 +13,15 @@ export const proxy: NextProxy = async request => {
   if (['/dashboard', '/api/dashboard'].some(url => request.nextUrl.pathname.startsWith(url))) {
     const hasToken = request.cookies.has('__Secure-neon-auth.session_token')
 
+    if (!hasToken) {
+      return NextResponse.redirect(new URL('/auth/sign-in', request.url))
+    }
+
+    const hasJwt = request.cookies.has('__Secure-neon-auth.local.session_data')
     const jwt = request.cookies.get('__Secure-neon-auth.local.session_data')?.value
     const validJwt = z.validate(z.jwt({ alg: 'HS256' }), jwt)
 
-    if (!hasToken || !validJwt) {
+    if (hasJwt && !validJwt) {
       return NextResponse.redirect(new URL('/auth/sign-in', request.url))
     }
   }

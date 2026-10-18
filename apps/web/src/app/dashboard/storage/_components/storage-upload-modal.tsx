@@ -5,7 +5,7 @@ import { FileSelect } from '@repo/components/file-select'
 import { Button } from '@repo/ui/components/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui/components/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/tabs'
-import { difference, limitAsync, mapAsync, remove, unionWith } from 'es-toolkit'
+import { difference, forEachAsync, mapAsync, remove, unionWith } from 'es-toolkit'
 import { FileIcon, FolderIcon, TrashIcon, UploadIcon } from 'lucide-react'
 import React from 'react'
 import { useAsyncFn, useBeforeUnload } from 'react-use'
@@ -59,7 +59,7 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
   // 选择文件
   const onChange = async (files: File[]) => {
     try {
-      const getFileInfo = async (file: File) => ({
+      const getFileInfo = async (file: File): Promise<FileEntry> => ({
         id: await FileHelper.getFileHash(file),
         name: file.name,
         path: file.webkitRelativePath || file.name,
@@ -67,10 +67,11 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
         size: file.size,
         type: file.type
       })
-      const limit = limitAsync(getFileInfo, 10)
 
-      const fileEntries: FileEntry[] = await toastPromiseDelay(
-        Promise.all(files.map(limit)),
+      const fileEntries = await toastPromiseDelay(
+        mapAsync(files, getFileInfo, {
+          concurrency: 10
+        }),
         {
           error: '文件 SHA256 计算失败',
           loading: '正在计算文件 SHA256'
@@ -90,7 +91,7 @@ export function StorageUploadModal({ children, id, onUploaded }: StorageUploadMo
 
   // 上传文件
   const [{ loading: isUploading }, handleUpload] = useAsyncFn(async () => {
-    return mapAsync(
+    return forEachAsync(
       filelist.waiting,
       async file => {
         const data = await toastPromise(

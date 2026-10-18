@@ -36,14 +36,12 @@ export default function Page() {
 
   useEffectOnce(() => {
     if (!id) return
-
     setCurrentSong(id)
   })
 
   React.useEffect(() => {
     if (!song) return
     if (song.id === id) return
-
     router.replace(`${pathname}?id=${song.id}`)
   }, [id, pathname, router, song])
 
@@ -60,24 +58,20 @@ export default function Page() {
       } catch (error) {
         toast.error('获取音频失败')
       }
-      return ''
+      return null
     },
     {
-      fallbackData: '',
+      revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false
     }
   )
+
   // 获取歌词
-  const {
-    data: { lyric }
-  } = useSWR(id ? ['019e73c9-89e8-7702-b94a-412d41eb70ff', id] : null, () => getLyric(id), {
+  const { data: lyric } = useSWR(id ? ['019e73c9-89e8-7702-b94a-412d41eb70ff', id] : null, () => getLyric(id), {
+    revalidateIfStale: false,
     revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    fallbackData: {
-      content: null,
-      lyric: []
-    }
+    revalidateOnReconnect: false
   })
 
   return (
@@ -99,7 +93,7 @@ export default function Page() {
               </DialogDescription>
             </DialogHeader>
 
-            <AudioPlayer autoplay loading={isLoading} lyric={lyric} song={song} src={url} onNext={next} onPrev={prev} />
+            <AudioPlayer autoplay loading={isLoading} lyric={lyric?.lyric} song={song} src={url} onNext={next} onPrev={prev} />
           </DialogContent>
         }
       />

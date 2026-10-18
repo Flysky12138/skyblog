@@ -4,7 +4,6 @@ import { ButtonLink } from '@repo/components/button'
 import { Card } from '@repo/components/card'
 import { JsonLD } from '@repo/components/json-ld'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '@repo/ui/components/item'
-import { cn } from '@repo/ui/lib/utils'
 import { PencilLineIcon } from 'lucide-react'
 import { Metadata } from 'next'
 import { cacheLife, cacheTag } from 'next/cache'
@@ -14,12 +13,11 @@ import { notFound } from 'next/navigation'
 import { Show } from '@/components/show'
 import { ShowByAuth } from '@/components/show/show-by-auth'
 import { Style } from '@/components/style'
-import { ATTRIBUTE, CACHE_TAG, POST_CARD_VISIBILITY_MASK } from '@/lib/constants'
+import { CACHE_TAG, POST_CARD_VISIBILITY_MASK } from '@/lib/constants'
 import { Storage } from '@/lib/http/storage'
 
 import { getPosts, getPrevNextPost } from '../utils'
 import { PostInfo } from './_components/post-info'
-import { PostResizeButton } from './_components/post-resize-button'
 import { getPost } from './utils'
 
 export async function generateMetadata({ params }: PageProps<'/posts/[path]'>): Promise<Metadata> {
@@ -110,20 +108,7 @@ export default async function Page({ params }: PageProps<'/posts/[path]'>) {
       {post.content && (
         <div className="flex gap-bp-2">
           <div className="grid w-full gap-bp-4">
-            <Card
-              aria-label="post content"
-              className="group/article relative overflow-hidden px-3 py-5 md:px-5 md:py-8"
-              data-slot="post-content"
-              id={ATTRIBUTE.ID.POST_CONTAINER}
-            >
-              <PostResizeButton
-                className={cn(
-                  'opacity-0 group-hover/article:opacity-100',
-                  'absolute inset-e-1 top-1 z-10 inline-flex',
-                  'aria-pressed:fixed aria-pressed:inset-e-[calc(var(--scrollbar-width,0)+(--spacing(1)))]'
-                )}
-                tabIndex={-1}
-              />
+            <Card aria-label="post content" className="relative overflow-hidden px-3 py-5 md:px-5 md:py-8" data-slot="post-content">
               <article dangerouslySetInnerHTML={{ __html: post.content }} className="tiptap" />
             </Card>
 

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export function useAudio(src?: string) {
+export function useAudio(src?: null | string) {
   const audioRef = React.useRef<HTMLAudioElement>(null)
 
   const [playing, setPlaying] = React.useState(false)

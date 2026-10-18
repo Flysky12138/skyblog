@@ -35,11 +35,12 @@ export abstract class Service {
   /**
    * 创建文章
    */
-  static async create({ categories, tags, ...body }: PostCreateBodyType) {
+  static async create({ categories, tags, ...body }: PostCreateBodyType, authorId: string) {
     const data = await prisma.post.create({
       include,
       data: {
         ...body,
+        authorId,
         categories: {
           create: categories?.map(name => ({
             category: {

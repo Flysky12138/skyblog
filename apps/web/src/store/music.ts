@@ -42,7 +42,6 @@ function middleware(fn: StateCreator<MusicStore>) {
 
 export const useMusicStore = create<MusicStore>()(
   middleware((set, get) => ({
-    playing: false,
     playMode: 'sequence',
     volume: 1,
 
@@ -85,11 +84,11 @@ export const useMusicStore = create<MusicStore>()(
       }
 
       if (playMode === 'sequence') {
-        const playOrder = range(count)
+        const newPlayOrder = range(count)
         set({
-          currentIndex: Math.max(0, playOrder.indexOf(currentSongIndex)),
+          currentIndex: newPlayOrder.indexOf(currentSongIndex),
           playMode,
-          playOrder
+          playOrder: newPlayOrder
         })
         return
       }

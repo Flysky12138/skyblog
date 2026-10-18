@@ -50,10 +50,3 @@ type StringLiteralsOrString<T extends string> = (string & {}) | T
  * 取对象值
  */
 type ValueOf<T> = Required<T>[keyof T]
-
-type Without<T, U> = Partial<Record<Exclude<keyof T, keyof U>, never>>
-
-/**
- * 对象进行异或
- */
-type XOR<T, U> = T | U extends object ? (T & Without<U, T>) | (U & Without<T, U>) : T | U

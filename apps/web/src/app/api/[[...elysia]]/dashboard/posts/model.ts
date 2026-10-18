@@ -1,7 +1,6 @@
 import z from 'zod'
 
 export const PostCreateBodySchema = z.strictObject({
-  authorId: z.uuidv4(),
   categories: z.string().array().nullish(),
   content: z.string().nullish(),
   coverFileId: z.uuidv7().nullish(),
